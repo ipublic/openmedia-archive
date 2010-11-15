@@ -1,13 +1,13 @@
 base: &base
-# database_prefix: "ipublic_org_"
-database_suffix: _<%= RAILS_ENV %>
 
 development:
   host: localhost
   port: 5984
+  database_suffix: _<%= Rails.env %>
   <<: *base
   
 test:
   host: localhost
   port: 5984
+  database_suffix: _<%= Rails.env %>
   <<: *base

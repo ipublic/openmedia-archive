@@ -2,8 +2,9 @@ begin
 
   env = ENV['RAILS_ENV'] || 'development'
 
-  couchdb_config = YAML::load(ERB.new(IO.read(RAILS_ROOT + "/config/couchdb.yml")).result)[env]
+  couchdb_config = YAML::load(ERB.new(IO.read(Rails.root.to_s + "/config/couchdb.yml")).result)[env]
 
+  puts couchdb_config.inspect
   host      = couchdb_config["host"]      || 'localhost'
   port      = couchdb_config["port"]      || '5984'
   database  = couchdb_config["database"]
@@ -33,4 +34,7 @@ else
   }
 
   COUCHDB_SERVER = CouchRest.new COUCHDB_CONFIG[:host_path]
+
+  SITE_DATABASE = COUCHDB_SERVER.database("site#{db_suffix}")
+  STAGING_DATABASE = COUCHDB_SERVER.database("staging#{db_suffix}")  
 end

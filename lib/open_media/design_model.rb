@@ -1,6 +1,6 @@
-module Openmedia
+module OpenMedia
 
-  class Design <  CouchRest::Design
+  class DesignModel <  CouchRest::Design
     extend ActiveModel::Naming
 
     include CouchRest::Model::Persistence

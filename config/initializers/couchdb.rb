@@ -4,7 +4,6 @@ begin
 
   couchdb_config = YAML::load(ERB.new(IO.read(Rails.root.to_s + "/config/couchdb.yml")).result)[env]
 
-  puts couchdb_config.inspect
   host      = couchdb_config["host"]      || 'localhost'
   port      = couchdb_config["port"]      || '5984'
   database  = couchdb_config["database"]

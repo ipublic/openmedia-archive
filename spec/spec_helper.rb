@@ -28,5 +28,5 @@ end
 
 def reset_test_db!
   SITE_DATABASE.recreate!
-  STAGING_DATABASE.recreate!  
+  STAGING_DATABASE.recreate!
 end

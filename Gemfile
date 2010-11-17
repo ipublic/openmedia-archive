@@ -1,10 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.1'
+gem 'rails', '3.0.3'
 gem 'couchrest_model', '1.0.0.beta8', :git => 'git://github.com/couchrest/couchrest_model.git'
 
 group :test, :development do
   gem "rspec-rails", '2.1.0'
+  gem 'autotest'
+  gem 'autotest-rails'
 end
 
 # Bundle edge Rails instead:

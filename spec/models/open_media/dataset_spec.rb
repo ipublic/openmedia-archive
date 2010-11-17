@@ -105,6 +105,41 @@ describe OpenMedia::Dataset do
     end
 
   end
+
+  describe 'metadata' do
+    it 'should save' do
+      @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
+      @dataset.save
+      OpenMedia::Dataset.find(@dataset.id).metadata.title.should == 'Meta Title'
+    end
+
+    it 'should have creator association' do
+      creator = OpenMedia::Organization.create!(:name=>'Org 1')
+      @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
+      @dataset.metadata.creator = creator
+      @dataset.save
+
+      OpenMedia::Dataset.find(@dataset.id).metadata.creator.id.should == creator.id
+    end
+
+    it 'should have publisher association' do
+      publisher = OpenMedia::Organization.create!(:name=>'Org 1')
+      @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
+      @dataset.metadata.publisher = publisher
+      @dataset.save
+
+      OpenMedia::Dataset.find(@dataset.id).metadata.publisher.id.should == publisher.id
+    end
+
+    it 'should have maintainer association' do
+      maintainer = OpenMedia::Organization.create!(:name=>'Org 1')
+      @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
+      @dataset.metadata.maintainer = maintainer
+      @dataset.save
+
+      OpenMedia::Dataset.find(@dataset.id).metadata.maintainer.id.should == maintainer.id
+    end    
+  end
   
   
 end

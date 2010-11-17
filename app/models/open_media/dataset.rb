@@ -8,6 +8,9 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   property :title
   property :dataset_properties, [Property]
+  property :metadata, Metadata
+
+  timestamps!
   
   validates :title, :presence=>true
 
@@ -38,8 +41,6 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   def delete_dataset_property(name)
     self.dataset_properties.delete(self.dataset_properties.detect{|ds| ds.name==name})
   end  
-
-
 
 
 private

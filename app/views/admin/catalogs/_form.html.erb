@@ -1,0 +1,23 @@
+<div id="forms">
+  <%= form_for :catalog, :url => admin_catalogs_path do |f| %>
+  <div class="grid_6">
+    <div class="box">
+      <h2><%= @catalog.new_record? ? "New Catalog" : @catalog.title %></h2>
+      <div class="block">
+	<%= f.error_messages %>
+	<%= f.hidden_field :rev, :value => @catalog['_rev'] if @catalog['_rev'] %>
+	<% @catalog.metadata ||= OpenMedia::Metadata.new %>
+	<fieldset>
+	  <p><%= f.label :title, 'Catalog title' %> <%= f.text_field :title %></p>
+	  <%= render :partial => 'admin/metadatas/form', :locals => { :metadata => @metadata } %>
+	</fieldset>
+
+      </div>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+  </div>
+  <% end %>	
+</div>

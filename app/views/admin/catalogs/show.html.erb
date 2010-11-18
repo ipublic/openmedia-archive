@@ -1,0 +1,29 @@
+<% title "Catalogs" %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%= link_to "List all", admin_catalogs_path %> | 
+		<%= link_to "Edit", edit_admin_catalog_path(@catalog) %> |
+		<%= link_to 'Delete', admin_catalog_path(@catalog), 
+					:confirm => "Are you sure you want to delete this catalog: #{@catalog.title}?", 
+					:method => :delete %>
+		</p>
+	<hr />
+</div>
+<div class="grid_5">
+	<div class="box">
+		<h2><%= @catalog.title %> Data Catalog</h2>
+		<div class="block">
+			<p><b>URI:</b><br/> <%= @catalog.uri %></p>
+			<%= render :partial => 'admin/metadatas/show', :locals => {:metadata => @catalog.metadata } %>
+		</div>
+	</div>
+</div>
+
+<div class="grid_7">
+	<div class="box" id="tables">
+		<h2>Datasets</h2>
+		<div class="block">
+			<%= render :partial => 'admin/datasets/list_datasets', :locals => {:datasets => @datasets } %>
+		</div>
+	</div>
+</div>

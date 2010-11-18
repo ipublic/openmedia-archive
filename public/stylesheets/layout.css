@@ -1,0 +1,729 @@
+/*
+-----------------------------------------------
+Based upon Grey Box Method - Layout CSS
+----------------------------------------------- */
+
+body {
+	background: #eee;
+	background: #D9E8F5;
+	background:#304269;
+	background:#fff;
+	border-top: 5px solid #000;
+	color: #333;
+	font-size: 13px;
+	font-size: 12px;
+	padding: 0 0 40px;
+}
+
+
+/* anchors
+----------------------------------------------- */
+a {
+	color: #000;
+	color:#304269;
+	font-weight:bold;
+	text-decoration: none;
+}
+a:hover {
+	color:#333;
+	color:#F26101;
+}
+
+
+/* 960 grid system container background
+----------------------------------------------- */
+.container_12,
+.container_16 {
+	background:#fff;
+}
+
+
+/* headings
+----------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {line-height:1.2em; margin-bottom:.3em;}
+h2 {margin-top:1em;}
+h5 {font-size:1.2em;}
+h6 {font-size:1em; text-transform:uppercase;}
+
+
+h1 a {
+	font-weight:normal;
+}
+
+
+/* branding
+----------------------------------------------- */
+
+#header {
+	/*
+	background-image: url("/images/openmedia_logo.png");
+  background-repeat: no-repeat;
+  background-position: top left;
+	*/
+	margin-top: 15px;
+	margin-bottom: 20px;
+}
+
+/*
+h1#branding {
+	font-weight:normal;
+	font-size:2.5em;
+	text-align:left;
+	padding:.7em 1em;
+	margin-bottom:0;
+	background:#aaa;
+	background:#91bed4;
+}
+*/
+#frontpage .spotlight {
+float: left;
+width: 235px;
+padding: 0px;
+padding-left : 70px;
+margin: 0 10px 20px 5px;
+
+}
+
+.grid_4 .spotlight {
+	background:#91bed4;
+	
+}
+
+#frontpage .spotlight h2 {
+font: normal normal normal 1.75em/.80em auto, sans-serif;
+padding: 0;
+margin: 0 0 0.5em -60px;
+
+}
+
+#frontpage .spotlight h2 a {
+text-decoration : none;
+padding-left : 60px;
+padding-bottom : 60px;
+display : block;
+}
+
+#frontpage .spotlight img {
+display: block;
+padding: 0.5em;
+}
+
+#frontpage .spotlight p a,
+#frontpage .spotlight p a:hover {	
+display : block;
+color : #000;
+text-decoration : none;
+}
+
+#frontpage .spotlight p {
+font-size : 1em;
+margin: -60px 0 .5em 0;
+}
+
+#frontpage_load_data {
+background : transparent url(images/rails.png) 0 -90px no-repeat;
+}
+
+#frontpage-support {
+background : transparent url(./images/icon-support.png) 0 -90px no-repeat;
+}
+
+#frontpage-develop {
+background : transparent url(./images/icon-develop.png) 0 -90px no-repeat;
+}
+
+#frontpage-learn:hover, 
+#frontpage-support:hover, 
+#frontpage-develop:hover {
+background-position : 0 0;
+}
+
+/* page heading
+----------------------------------------------- */
+h2#page-heading {
+	color: #F26101;
+	font-size:1.5em;
+	font-weight:normal;
+	padding:.5em;
+	margin:0 0 10px 0;
+	border-bottom:1px solid #ccc;
+}
+
+#search {
+	padding: 15px 10px 0px 10px;
+	float: right;
+}
+
+
+/* boxes
+----------------------------------------------- */
+.box {
+	background:#ddd;
+	background:#fff;
+	margin-bottom:20px;
+	border: 1px solid #ccc;
+	padding:10px 10px 1px 10px;
+  -moz-border-radius: .5em;
+  -webkit-border-radius: .5em;
+  border-radius: .5em;
+}
+
+.rounded_corners {
+  -moz-border-radius: .5em;
+  -webkit-border-radius: .5em;
+  border-radius: .5em;
+}
+
+.box h2 {
+	font-size:1.2em;
+	font-weight:normal;
+	color:#fff;
+	background:#333;
+	background:#304269;
+	margin:-10px -10px 0 -10px;
+	padding:6px 12px;
+	
+	-moz-border-radius-topright: .5em;
+	-moz-border-radius-topleft: .5em;
+  -webkit-border-top-right-radius: .5em;
+  -webkit-border-top-left-radius: .5em;
+  border-radius: 10px;
+/*
+text-transform:uppercase;
+*/
+}
+.box h2 a,
+.box h2 a.visible {
+	color:#fff;
+	background:#333 url("../img/switch_minus.gif") 97% 50% no-repeat;
+	display:block;
+	padding:6px 12px;
+	margin:-6px -12px;
+	border:none;
+}
+.grid_4 .box h2 a {
+	background-position: 97% 50%;
+}
+.grid_5 .box h2 a {
+	background-position: 98% 50%;
+}
+.grid_12 .box h2 a {
+	background-position: 99% 50%;
+}
+
+
+.box h2 a.hidden,
+.box h2 a.hidden:hover {
+	background-image: url("../img/switch_plus.gif");
+}
+.box h2 a:hover {
+	background-color:#111;
+}
+.block {
+	padding-top:10px;
+}
+div.menu {
+	padding:0;
+}
+div.menu h2 {
+	margin:0;
+}
+div.menu .block {
+	padding-top:0;
+}
+
+
+/* paragraphs, quotes and lists
+----------------------------------------------- */
+p {
+	margin-bottom:1em;
+}
+blockquote {
+	font-family: Georgia, 'Times New Roman', serif;
+	font-size:1.2em;
+	padding-left:1em;
+	border-left:4px solid #ccc;
+}
+blockquote cite {
+	font-size:.9em;
+}
+ul, ol {
+	padding-top:0;
+}
+
+
+/* menus
+----------------------------------------------- */
+ul.menu {
+	list-style:none;
+	border-top:1px solid #bbb;
+}
+ul.menu li {
+	margin:0;
+}
+ul.menu li a {
+	display:block;
+	padding:4px 10px;
+	border-bottom:1px solid #ccc;
+}
+ul.menu li a:hover {
+	background:#eee;
+}
+ul.menu li a:active {
+	background:#ccc;
+}
+
+
+/* submenus
+----------------------------------------------- */
+ul.menu ul {
+	list-style:none;
+	margin:0;
+}
+ul.menu ul li a {
+	padding-left:30px;
+}
+
+
+/* section menus
+----------------------------------------------- */
+ul.section {
+	border-top:0;
+	margin-bottom:0;
+}
+ul.section li {
+	text-transform:uppercase;
+}
+ul.section li a {
+	background:#bbb;
+}
+ul.section li a:hover {
+	background:#aaa;
+}
+ul.section li a:active {
+	color:#fff;
+	background:#666;
+}
+ul.section li li a {
+	background:#ddd;
+	border-bottom:1px solid #eee;
+}
+ul.section li li a:hover {
+	background:#ccc;
+}
+ul.section li li a:active {
+	color:#000;
+	background:#fff;
+}
+ul.section ul li {
+	text-transform:none;
+}
+ul.section ul.current li a {
+	background:#eee;
+	border-bottom:1px solid #fff;
+}
+ul.section ul.current li a:hover {
+	background:#ddd;
+}
+ul.section ul.current li a:active {
+	background:#fff;
+}
+ul.section li a.current {
+	color:#fff;
+	background:#666;
+}
+ul.section li a.current:hover {
+	background:#555;
+}
+ul.section li a.current:active {
+	background:#444;
+}
+ul.section li a.active {
+	background:#fff;
+	cursor:default;
+}
+ul.section li.current > a.active,
+ul.section li.current > a.active:hover {
+	color:#fff;
+	background:#666;
+	cursor:default;
+}
+
+
+/* table
+----------------------------------------------- */
+table {
+	width:100%;
+	border:1px solid #bbb;
+	margin-bottom:10px;
+}
+col.colC {
+	width:8em;
+}
+th, td {
+	padding:.2em 1em;
+	text-align:left;	
+}
+thead th { 
+	font-size:.8em;
+	font-style:italic;
+	border-bottom:2px solid #888;
+	border-bottom:2px solid #304269;
+	background:#ddd;
+	padding:.4em 1em .2em;
+}
+thead th.table-head {
+	font-size:.8em;
+	font-weight:normal;
+	text-transform:uppercase;
+	color:#fff;
+	background:#555;
+	border:1px solid #555;
+}
+tbody th,
+tbody td {
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #bbb;
+	border-top:1px solid #D9E8F5;
+	border-bottom:1px solid #D9E8F5;
+	background:#eee;
+	background:#fff;	
+}
+tbody tr.odd th,
+tbody tr.odd td {
+	background:#fff;
+}
+tfoot th,
+tfoot td {
+	border-top:2px solid #666;
+	background:#eee;
+}
+tfoot tr.total th,
+tfoot tr.total td {
+	border-top:6px double #666;
+}
+tfoot tr.total th {
+	text-transform:uppercase;
+}
+th.currency,
+td.currency {
+	text-align:right;
+}
+
+
+/* forms
+----------------------------------------------- */
+
+form {
+	overflow:hidden;
+}
+
+fieldset {
+	border:1px solid #bbb;
+	padding:10px;
+	position:relative;
+	background:#e9e9e9;
+	background:#D9E8F5;
+	margin-bottom:10px;
+}
+legend {
+	font-size:1.1em;
+	padding:.4em .8em;
+	background:#fff;
+	border:1px solid #bbb;
+}
+form p.date select {
+	width:26%;
+}
+form p.notice {
+	font-weight:bold;
+}
+
+/* ------ */
+/*form, form ul, form li, fieldset, textarea {
+	margin: 0;
+	padding: 0;
+}
+
+label, input, select, textarea, form li span {
+	display: block;
+}
+
+form ul, form li {
+	list-style-type: none;
+}
+
+form li {
+	clear: both; 
+	height: 1%;
+	overflow: auto;
+}
+
+fieldset {
+	border: 0;
+}
+
+label, form li span {
+float: left;
+line-height:2em;
+width: 25%;
+padding-right: 1em;
+width: 9em;
+}
+
+input, select, textarea {
+	width:60%;
+	margin-left: 10em;
+float: left;
+}
+
+fieldset label, fieldset input {
+	float: left;
+}
+
+fieldset label {
+	clear: left;
+	width: 4.25em;
+	width: 32%;
+	margin-right:3%;
+	padding-right: .75em;
+}
+
+fieldset input {
+	margin-left: 5em; 
+	margin-right: 1.5em;
+}
+
+.required {
+	position: relative;
+	padding-right: 3.3em;
+}
+
+.required label span.warning {
+	position: absolute;
+	right: 0;
+	width: auto;
+	color: rgb(192,0,0);
+}
+*/
+/* ------ */
+
+fieldset p label {
+	width:98%;
+}
+fieldset p input {
+	width:98%;
+}
+fieldset p select {
+	width:99%;
+}
+fieldset.login p {
+	margin-bottom:1em;
+	margin-top:0pt;
+}
+fieldset.login p label {
+	float:left;
+	line-height:2em;
+	margin-right:3%;
+	text-align:right;
+	width:32%;
+}
+fieldset.login p input {
+	width:60%;
+}
+fieldset.login input.button {
+	margin-left:35%;
+}
+input.search.text {
+	width:50%;
+}
+input.search.button {
+	width:28%;
+	margin-left:2%;
+}
+.buttonSubmit {
+	font-size: .95em;
+	float: right;
+	position: relative;
+/*
+margin-right: 10px;
+margin-left: 95px;
+*/
+}
+
+
+/* articles
+----------------------------------------------- */
+.articles {
+	padding:0;
+}
+.articles h2 {
+	margin:0;
+}
+#articles {
+	padding-top:0;
+}
+.article {
+	border-top:1px solid #666;
+	padding-top:.5em;
+}
+.box .article {
+	border-top:3px solid #fff;
+	padding:13px 10px 0 10px;
+	background: #D9E8F5;
+	background: #fff;
+}
+
+.box .articles {
+	background: #D9E8F5;	
+	background: #fff;
+}
+
+.article h2 {
+	font-size:2em;
+	font-weight:normal;
+	text-transform:none;
+	color:#333;
+	background:transparent;
+	padding:0;
+	margin:0;
+	border:none;
+}
+.article h3 {
+	margin-bottom:.2em;
+	font-size:1.6em;
+}
+.box .first {
+	border-top:none;
+}
+.article h4 {
+	font-size:1.2em;
+	text-transform:uppercase;
+	margin-bottom:.5em;
+}
+.article a.image {
+	float:left; 
+	margin:3px 10px 3px 0; 
+	padding:4px;
+	border:1px solid #bbb;
+	background:#fff;
+}
+.article a.image:hover {
+	border:1px solid #666;
+}
+.article a.image img {
+	float:left; 
+}
+.article p.meta {
+	color:#666;
+	border-top:1px dotted #999;
+	border-bottom:1px dotted #999;
+	padding:.3em 0;
+	margin-bottom:.8em;
+}
+
+
+/* site information
+----------------------------------------------- */
+#site_info .box {
+	color:#ccc;
+	background:#666;
+	background:#304269;
+	margin-bottom:10px;
+}
+#site_info a {
+	color:#fff;
+}
+#site_info a:hover {
+	color:#000;
+}
+
+
+/* AJAX sliding shelf
+----------------------------------------------- */
+#loading {float:right; margin-right:14px; margin-top:-2px;}
+.block {padding-bottom:1px;}
+
+
+/* Accordian
+----------------------------------------------- */
+.toggler {
+	color: #222;
+	margin: 0;
+	padding: 2px 5px;
+	background: #eee;
+	border-bottom: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	border-top: 1px solid #f5f5f5;
+	border-left: 1px solid #f5f5f5;
+	font-size:1.1em;
+	font-weight: normal;
+}
+.element h4 {
+	margin: 0;
+	padding:4px;
+	line-height:1.2em;
+}
+.element p {
+	margin: 0;
+	padding: 4px;
+}
+.float-right {
+	padding:10px 20px;
+	float:right;
+}
+
+#accordian-block {
+	padding-bottom:10px;
+}
+
+
+/* Mootools Kwicks
+----------------------------------------------- */
+#kwick-box { 
+	padding:0;
+	overflow:hidden;
+}
+#kwick-box h2 { 
+	margin:0;
+}
+#kwick {
+	position: relative;
+}
+#kwick .kwicks {
+	display: block;
+	background: #999;
+	height: 120px;
+	list-style:none;
+	margin:0;
+	overflow:hidden;
+}
+#kwick li {
+	float: left;
+	margin:0;
+	padding:0;
+}
+#kwick .kwick {
+	display: block;
+	cursor: pointer;
+	overflow: hidden;
+	height: 100px;
+	width: 215px;
+	padding: 10px;
+	background: #fff;
+}
+#kwick .kwick span {
+	color:#fff;
+}
+#kwick .one {
+	background: #666;
+}
+#kwick .two {
+	background: #777;
+}
+#kwick .three {
+	background: #888;
+}
+#kwick .four {
+	background: #999;
+}

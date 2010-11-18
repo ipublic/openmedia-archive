@@ -1,0 +1,28 @@
+<% title "Site" %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%= link_to 'Edit', edit_admin_site_path %>
+		</p>
+	<hr/>
+</div>
+	<div class="grid_5">
+		<div class="box">
+			<h2>Site: <%=h @site.openmedia_name %></h2>
+			<div class="block">
+				<h5>General</h5>
+		    <p><b>Domain URL:</b> <br/><%=h @site.url %></p>
+		    <p><b>Administrator Contact:</b> <br/></p>
+		    <p><b>Business Contact:</b> <br/></p>
+
+				<h5>Systems</h5>
+		    <p><b>Internal CouchDB server URI:</b> <br/><%=h @site.internal_couchdb_server_uri %></p>
+		    <p><b>Public CouchDB server URI:</b> <br/><%=h @site.public_couchdb_server_uri %></p>
+
+				<h5>GNIS</h5>
+				<%= render :partial => 'admin/gnis/show', :locals => {:gnis => @gnis }  %>
+			
+				<h5>Services</h5>
+		    <p><b>GoogleMap API Key:</b> <br/><%=h @site.googlemap_api_key %></p>
+			</div>
+		</div>
+</div>

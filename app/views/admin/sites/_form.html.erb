@@ -1,0 +1,42 @@
+<div id="forms">
+	<% form_for :site, :url => admin_site_path do |f| %>
+		<div class="grid_6">
+			<div class="box">
+				<h2><%= @site.openmedia_name || "Setup Site" %></h2>
+				<div class="block">
+				  <%= f.error_messages %>
+					<%= f.hidden_field :rev, :value => @site['_rev'] if @site['_rev'] %>
+					<legend>General</legend>
+					<fieldset>
+					  <p><%= f.label :url, 'Domain URL' %> <%= f.text_field :url %></p>
+					  <p><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name %></p>
+
+					  <p><%= f.label :adminstrator_contact_id, 'Administrator Contact' %> 
+							 <%= f.select :adminstrator_contact_id, contact_collection, {:prompt => 'Select contact'}  %></p>
+					  <p><%= f.label :business_contact_id, 'Business Contact' %> 
+							 <%= f.select :business_contact_id, contact_collection, {:prompt => 'Select contact'}  %></p>
+					</fieldset>
+					
+					<legend>Systems</legend>
+					<fieldset>
+					  <p><%= f.label :internal_couchdb_server_uri, 'Internal CouchDB server URI' %> <%= f.text_field :internal_couchdb_server_uri %></p>
+					  <p><%= f.label :public_couchdb_server_uri, 'Public CouchDB server URI' %> <%= f.text_field :public_couchdb_server_uri %></p>
+					</fieldset>
+
+					<legend>GNIS</legend>
+					<fieldset>
+						<%= render :partial => 'admin/gnis/form', :locals => {:gnis => @gnis }  %>
+					</fieldset>
+					
+					<legend>Services</legend>
+					<fieldset>
+					  <p><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key %></p>
+					</fieldset>
+				</div>
+			</div>
+			<p>
+				<%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+			</p>
+		</div>
+	<% end %>	
+</div>

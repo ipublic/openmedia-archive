@@ -49,6 +49,26 @@ Openmedia::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
+  
+  root :to => "admin/home#index"
+
+  match '/admin' => 'admin/home#index', :as => :admin
+  match '/about' => 'admin/home#about', :as => :about
+
+  namespace :admin do
+    resource :site
+    resource :dashboard
+    resources :datasets
+    resources :catalogs
+    resource :community
+    resource :site    
+    resources :settings
+    resources :organizations    
+  end
+
+  resource :account, :to=>"users"
+  resources :users
+  resources :user_sessions
 
   # See how all your routes lay out with "rake routes"
 

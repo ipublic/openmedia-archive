@@ -1,0 +1,15 @@
+<p><b>Description:</b> <br/><%= metadata['description'] %></p>
+<p><b>Keywords:</b> <br/><%= metadata["keywords"] %></p>
+<p><b>Metadata URI:</b> <br/><%= metadata['uri'] %></p>
+<p><b>Conforms to:</b> <br/><%= metadata['conforms_to'] %></p>
+<p><b>Creator agency:</b> <br/><%= get_organization_name(metadata['creator_organization_id']) %></p>
+<p><b>Maintainer agency:</b> <br/><%= get_organization_name(metadata["maintainer_organization_id"])  %></p>
+<p><b>Publisher agency:</b> <br/><%= get_organization_name(metadata["publisher_organization_id"])  %></p>
+<p><b>Beginning date:</b> <br/><%= format_metadata_date(metadata["beginning_date"]) %></p>
+<p><b>Ending date:</b> <br/><%= format_metadata_date(metadata["ending_date"]) %></p>
+<p><b>Geographic coverage:</b> <br/><%= metadata['geographic_coverage'] %></p>
+<p><b>Type:</b> <br/><%= metadata["type"] %></p>
+<p><b>Language:</b> <br/><%= metadata["language"] %></p>
+<p><b>Created date:</b> <br/><%= format_metadata_date(metadata["created_date"]) %></p>
+<p><b>Last updated:</b> <br/><%= format_metadata_date(metadata["last_updated"]) %></p>
+<p><b>Rights:</b> <br/><%= metadata["rights"] %></p>

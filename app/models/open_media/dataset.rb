@@ -1,5 +1,3 @@
-require 'open_media/design_model'
-
 class OpenMedia::Dataset < OpenMedia::DesignModel
   
   use_database STAGING_DATABASE  
@@ -8,7 +6,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   property :title
   property :dataset_properties, [Property]
-  property :metadata, Metadata
+  property :metadata, OpenMedia::Metadata
 
   timestamps!
   

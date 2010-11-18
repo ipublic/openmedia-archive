@@ -1,0 +1,22 @@
+<div class="block" id="tables">
+	<table>
+		<thead>
+		<tr>
+			<th>Title</th>
+			<th>No. Records</th>
+			<th>Description</th>
+			<th>Updated</th>
+		</tr>
+		</thead>
+		<% unless @datasets.nil? %>
+			<% @datasets.each do |ds| %>
+			  <tr>
+					<td><%= link_to ds.title, [:admin, ds] %></td>
+					<td>&nbsp;</td>
+					<td><%= ds.metadata['description'] unless ds.metadata.nil? %></td>
+					<td><%= ds.updated_at.to_s(:full) %></td>
+			  </tr>
+			<% end %>
+		<% end %>
+	</table>
+</div>

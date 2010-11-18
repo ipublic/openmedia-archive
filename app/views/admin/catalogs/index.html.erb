@@ -1,0 +1,35 @@
+<% title "Catalogs" %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%= link_to 'New Catalog', new_admin_catalog_path %>
+	</p>
+	<hr/>
+</div>
+<div class="grid_12">
+	<p>Catalogs provide a way to group published datasets for search and browse</p>
+	<div class="box">
+		<h2>Catalogs List</h2>
+		<div class="block" id="tables">
+			<table>
+				<thead>
+				<tr>
+					<th>Title</th>
+					<th>No. Datasets</th>
+					<th>Description</th>
+					<th>Updated</th>
+				</tr>
+				</thead>
+				<% unless @catalogs.nil? %>
+					<% @catalogs.each do |catalog| %>
+					  <tr>
+							<td><%= link_to catalog.title, admin_catalog_path(catalog) %></td>
+							<td><%= catalog.datasets.count %></td>
+							<td><%= catalog.metadata['description'] if catalog.metadata %></td>
+							<td><%= catalog.updated_at.to_s(:full) %></td>
+					  </tr>
+					<% end %>
+				<% end %>
+			</table>
+		</div>
+	</div>
+</div>

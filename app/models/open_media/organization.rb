@@ -39,9 +39,9 @@ class OpenMedia::Organization < CouchRest::Model::Base
 private
   def generate_identifier
     unless abbreviation.blank? 
-      self['identifier'] = self.class.to_s.split('::').last.downcase + '_' + abbreviation.rstrip.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+      self['identifier'] = self.class.name.demodulize.downcase + '_' + abbreviation.rstrip.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
     else
-      self['identifier'] = self.class.to_s.split('::').last.downcase + '_' + name.rstrip.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+      self['identifier'] = self.class.name.demodulize.downcase + '_' + name.rstrip.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
     end
   end
   

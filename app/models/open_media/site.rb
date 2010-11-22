@@ -10,8 +10,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :identifier,  :read_only => true
   property :url
   property :openmedia_name, :default => "Civic OpenMedia"
-  property :adminstrator_contact_id, OpenMedia::Contact
-  property :business_contact_id, OpenMedia::Contact
+  belongs_to :adminstrator_contact_id, :class_name=>'OpenMedia::Contact'
+  belongs_to :business_contact_id, :class_name=>'OpenMedia::Contact'
   
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"

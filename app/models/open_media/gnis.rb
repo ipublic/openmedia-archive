@@ -16,6 +16,6 @@ class OpenMedia::Gnis < Hash
   property :longitude
   property :elevation
   
-  validates_numericality_of :latitude
+  validates_numericality_of :latitude, :longitude, :allow_nil=>true
 
 end

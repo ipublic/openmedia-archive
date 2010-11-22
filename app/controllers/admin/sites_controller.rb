@@ -2,12 +2,7 @@ class Admin::SitesController < ApplicationController
   
   def new
     @site = OpenMedia::Site.new
-    @gnis = OpenMedia::Gnis.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @site }
-    end
+    @site.gnis = OpenMedia::Gnis.new
   end
   
   def create

@@ -18,4 +18,8 @@ describe Admin::SitesController do
     response.should render_template('new')
   end
 
+  it 'should allow saving new sites' do
+    lambda { post :create, :site => { :url=>'http://sample.com' } }.should change(OpenMedia::Site, :count).by(1)
+  end
+
 end

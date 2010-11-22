@@ -22,8 +22,12 @@ describe OpenMedia::Catalog do
   end
 
   it 'should save and generate an id correctly' do
-    @catalog.save.should be_true
+    lambda { @catalog.save}.should change(OpenMedia::Catalog, :count).by(1)
     @catalog.id.should == 'catalog_catalog_4'
+  end
+
+  it 'should be able to fetch its datasets' do
+    
   end
 
 end

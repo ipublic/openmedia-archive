@@ -9,7 +9,7 @@ describe OpenMedia::Organization do
   end
   
   it 'should save and generate an id correctly' do
-    @org.save.should be_true
+    lambda { @org.save}.should change(OpenMedia::Organization, :count).by(1)
     @org.id.should == 'organization_organization_3'
   end
 

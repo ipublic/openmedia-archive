@@ -9,7 +9,7 @@ describe OpenMedia::Site do
   end
   
   it 'should save and generate an id correctly' do
-    @org.save.should be_true
+    lambda { @org.save }.should change(OpenMedia::Site, :count).by(1)
     @org.id.should == 'http_somesite_com'
   end
 

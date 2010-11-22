@@ -12,12 +12,15 @@ class OpenMedia::Catalog < CouchRest::Model::Base
   property :identifier
   property :metadata, OpenMedia::Metadata
 
+  collection_of :datasets, :class_name=>'OpenMedia::Dataset'  
+  
   validates :title, :presence=>true, :uniqueness => true
   validates_presence_of :metadata
 
-  timestamps!
 
-  collection_of :datasets, :class_name=>'OpenMedia::Dataset'
+  
+  
+  timestamps!
   
   ## Callbacks
   before_save :generate_identifier
@@ -25,6 +28,15 @@ class OpenMedia::Catalog < CouchRest::Model::Base
   ## Views
   view_by :title
   view_by :title, :identifier
+  view_by :dataset_id,
+    :map =>
+      "function(doc) {
+         if ((doc['couchrest-type'] == 'OpenMedia::Catalog') && doc.dataset_ids!=null) {         
+	   doc.dataset_ids.forEach(function(ds_id) { 
+	     emit(ds_id, null); 
+	   });        
+         }
+      }"
 
   def publisher_organization_name
     result = Organization.get(self.metadata['publisher_organization_id']).name

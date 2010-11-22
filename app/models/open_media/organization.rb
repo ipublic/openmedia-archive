@@ -10,7 +10,7 @@ class OpenMedia::Organization < CouchRest::Model::Base
   property :website_url
   property :phones, [OpenMedia::Phone]
   property :addresses, [OpenMedia::Address]
-  property :contacts, [OpenMedia::Contact]
+  collection_of :contacts, :class_name=>'OpenMedia::Contact'
   property :note
   
   # TODO: Add ability to upload agency logo 

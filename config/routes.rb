@@ -61,7 +61,9 @@ Openmedia::Application.routes.draw do
     resources :datasets do
       member do
         get :upload
-        post :upload_file
+        put :upload_file
+        get :new_import
+        put :import
       end
     end
     resources :catalogs

@@ -1,0 +1,15 @@
+<table>
+	<thead>
+		<tr>
+			<th>Property</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<% @record.attributes.each do |attrib_name| %>
+		<tr>
+			<td><%= attrib_name %></td>
+			<td><%= @record.get(attrib_name) %></td>
+		</tr>
+	<% end %>
+</table>
+< Previous | Next >

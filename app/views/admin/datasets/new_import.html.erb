@@ -43,13 +43,11 @@
 		<div class="block">
 			<div class="box">
 				<h5>Dataset title: <%= @dataset.title %></h5>
-				<% form_for([:admin, @dataset], :url => {:action => 'initialize_document'}) do |f| %>
-					<% fields_for @property do |p| %>
-						<p><%= p.label :name, "Unique ID property:" %><b/> 
-							 <%= p.select(:name, sorted_attribute_list(@xtab[0]), {:prompt => '-OpenMedia Generated-'}) %>
-						</p>
-					<% end %>
-					<%= render :partial => 'show_record' %>
+				<%= form_for :dataset, :url => import_admin_dataset_path(@dataset.identifier), :html=>{:method=>:put} do |f| %>
+				  <p><%= f.label :unique_id_property, "Unique ID property:" %><b/> 
+				    <%= f.select(:unique_id_property, @property_options, {:prompt => '-OpenMedia Generated-'}) %>
+				  </p>
+				  <%= render :partial => 'record', :object=>@record %>
 				  <p><%= submit_tag 'Import' %></p>
 				<% end %>
 			</div>

@@ -23,7 +23,7 @@
 	<% @datasets.each do |ds| %>
 	<tr>
 	  <td><%= ds.catalogs.collect{|c| c.title}.join(', ') %></td>
-	  <td><%= link_to ds.title, admin_dataset_path(ds.class_name) %></td>
+	  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
 	  <td><%= ds.metadata['description'] unless ds.metadata.nil? %></td>
 	  <td><%= ds.updated_at.to_s(:full) %></td>
 	</tr>

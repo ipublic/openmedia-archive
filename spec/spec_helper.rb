@@ -30,3 +30,15 @@ def reset_test_db!
   SITE_DATABASE.recreate!
   STAGING_DATABASE.recreate!
 end
+
+def create_test_catalog(data={})
+  OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
+end
+
+def create_test_dataset(data={})
+  c = data.delete(:catalog)
+  ds = OpenMedia::Dataset.new({:title=>'Test Dataset'}.merge(data))  
+  ds.catalog_ids = c ? [c.id] : [create_test_catalog.id]
+  ds.save!
+  return ds
+end

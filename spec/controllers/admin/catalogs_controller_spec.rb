@@ -5,7 +5,8 @@ describe Admin::CatalogsController do
 
   before(:each) do
     reset_test_db!
-    1.upto(3) {|i| OpenMedia::Catalog.create!(:title=>"Catalog #{i}", :metadata =>{ }) }
+    @catalogs = []
+    1.upto(3) {|i| @catalogs << create_test_catalog(:title=>"Catalog #{i}") }
   end
   
   it 'should show list of catalogs' do
@@ -15,15 +16,13 @@ describe Admin::CatalogsController do
   end
 
   it 'should show details of a catalog' do
-    c = OpenMedia::Catalog.create!(:title=>'Test Catalog', :metadata=>{ })
-    get :show, :id=>c.id
+    get :show, :id=>@catalogs[0].id
     response.should be_success
     response.should render_template('show')        
   end
 
   it 'should allow catalog deletion' do
-    c = OpenMedia::Catalog.create!(:title=>'Test Catalog', :metadata=>{ })
-    delete :destroy, :id=>c.id
+    delete :destroy, :id=>@catalogs[0].id
     response.should redirect_to(admin_catalogs_path)
   end
   

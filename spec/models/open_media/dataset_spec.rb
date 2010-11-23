@@ -4,7 +4,7 @@ describe OpenMedia::Dataset do
 
   before(:each) do
     reset_test_db!
-    @catalog = OpenMedia::Catalog.create!(:title=>'Test Catalog', :metadata => { })
+    @catalog = create_test_catalog
     @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')
     @dataset.catalogs = [@catalog]
   end
@@ -13,8 +13,12 @@ describe OpenMedia::Dataset do
     @dataset.should be_a_kind_of CouchRest::Design      
   end
 
-  it 'should generate a safe class name' do
-    @dataset.class_name.should == 'CrimeTest3'
+  it 'should generate a safe identifier' do
+    @dataset.identifier.should == 'CrimeTest3'
+  end
+
+  it 'should generate a model name based on identifier' do
+    @dataset.model_name.should == 'OpenMedia::Dataset::CrimeTest3'
   end
 
   it 'should require at least one catalog' do
@@ -22,12 +26,20 @@ describe OpenMedia::Dataset do
     @dataset.should_not be_valid
     @dataset.errors[:catalog_ids].should_not be_nil
   end
+
+  it 'has_header_row should default to true' do
+    @dataset.has_header_row.should be_true
+  end
   
-  it 'should save and generate id as _design/Dataset/class_name' do
+  it 'should save and generate id as _design/Dataset/identifier' do
     @dataset.save
     @dataset.persisted?.should be_true
     @dataset.catalogs.size.should == 1
     @dataset.id.should == '_design/Dataset/CrimeTest3'
+  end
+
+  it 'should default to comma for the delimiter_character' do
+    @dataset.delimiter_character.should == ','
   end
 
   it 'should allow access to all datasets' do
@@ -81,8 +93,8 @@ describe OpenMedia::Dataset do
 
   it 'should know which catalogs it belongs to' do
     @dataset.save!    
-    c1 = OpenMedia::Catalog.create!(:title=>'C1', :metadata=>{ })
-    c2 = OpenMedia::Catalog.create!(:title=>'C2', :metadata=>{ })
+    c1 = create_test_catalog(:title=>'C1')
+    c2 = create_test_catalog(:title=>'C2')
     c1.datasets << @dataset; c1.save
     c2.datasets << @dataset; c2.save
     @dataset = OpenMedia::Dataset.get(@dataset.id)  # reload from db
@@ -94,8 +106,8 @@ describe OpenMedia::Dataset do
   end
 
   it 'should allow catalogs to be set' do
-    c1 = OpenMedia::Catalog.create!(:title=>'C1', :metadata=>{ })
-    c2 = OpenMedia::Catalog.create!(:title=>'C2', :metadata=>{ })    
+    c1 = create_test_catalog(:title=>'C1')
+    c2 = create_test_catalog(:title=>'C2')
     @dataset.catalog_ids = [c1.id, c2.id]
     @dataset.save!
     
@@ -131,6 +143,12 @@ describe OpenMedia::Dataset do
       dd2.should_not be_valid
       dd2.errors[:title].should_not be_nil
     end
+
+    it 'should allow updates' do
+      @dataset.save!
+      @dataset.delimiter_character = '^'
+      lambda { @dataset.save! }.should_not raise_error
+    end
   end
 
   describe "managing properties" do
@@ -152,7 +170,7 @@ describe OpenMedia::Dataset do
       rtn_prop = @dataset.get_dataset_property(@prop0.name)
       rtn_prop.name.should == @prop0.name
     end
-   
+    
     it "should return nil for a property that doesn't exist" do
       @dataset.dataset_properties.clear
       @dataset.dataset_properties <<  @prop0
@@ -203,8 +221,30 @@ describe OpenMedia::Dataset do
       @dataset.save
 
       OpenMedia::Dataset.get(@dataset.id).metadata.maintainer.id.should == maintainer.id
-    end    
+    end
+
   end
-  
+
+  describe 'importing' do
+    before(:each) do
+      reset_test_db!
+      @csv_data = StringIO.new("A,B,C\n1,2,3\n4,5,6")
+      @dataset.initialize_properties!(@csv_data)            
+    end
+
+    it 'should allow dataset to be initialized with properties' do
+      @dataset.dataset_properties.size.should == 3
+      @dataset.dataset_properties.collect{|p| p.name}.should == %w(A B C)
+      @dataset.dataset_properties.collect{|p| p.data_type}.should == %w(string string string)
+      @dataset.attachments.size.should == 1
+    end
+
+    it 'should import data' do
+      @dataset.import!(@csv_data)
+      @dataset.model.should == OpenMedia::Dataset::CrimeTest3
+      @dataset.model.count.should == 2
+    end
+    
+  end 
   
 end

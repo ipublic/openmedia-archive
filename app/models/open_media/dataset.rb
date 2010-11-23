@@ -1,3 +1,5 @@
+require 'ruport'
+
 class OpenMedia::Dataset < OpenMedia::DesignModel
   
   use_database STAGING_DATABASE  
@@ -6,8 +8,11 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   after_save :update_catalogs
 
   property :title
+  property :delimiter_character, :default=>','
+  property :has_header_row, TrueClass, :default => true
   property :dataset_properties, [Property]
   property :metadata, OpenMedia::Metadata
+  property :unique_id_property
 
   timestamps!
   
@@ -61,18 +66,44 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.dataset_properties.delete(self.dataset_properties.detect{|ds| ds.name==name})
   end
 
-  def imports
-    OpenMedia::Import.by_dataset_id
-  end
-
-  def class_name    
+  def identifier    
     self.title.gsub(/^(\d+)(.*)/,'\2').titleize.gsub(/[^\w\d]/,'')
   end
+
+  def model_name
+    "OpenMedia::Dataset::#{identifier}"
+  end
+
+
+  def initialize_properties!(source)
+    rtable = Ruport::Data::Table.parse(source, :has_names=>self.has_header_row,
+                                        :csv_options => { :col_sep => self.delimiter_character })
+    rtable[0].attributes.each do |a|
+      self.dataset_properties << OpenMedia::Property.new(:name=>a, :data_type=>OpenMedia::Property::STRING_TYPE)
+    end
+    source.rewind
+    attachment_attrs = {:file=>source, :name=>'sample-data'}
+    attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
+    self.create_attachment(attachment_attrs)                              
+    self.save!
+  end
+
+  def get_sample_record(record_number)
+    rtable = Ruport::Data::Table.parse(self.sample_data, :has_names=>self.has_header_row,
+                                        :csv_options => { :col_sep => self.delimiter_character })
+    rtable[record_number]
+  end
+
+  def sample_data
+    self.read_attachment('sample-data')
+  end
+
+
 
 
 private
   def dataset_validation
-    if self.class.all.detect{|ds| ds.title==self.title}
+    if self.class.all.detect{|ds| (ds.id != self.id && ds.title==self.title) }
       self.errors.add(:title, 'must be unique')
     end
 
@@ -82,7 +113,7 @@ private
   end
 
   def generate_id
-    self.id = "_design/Dataset/" + self.class_name
+    self.id = "_design/Dataset/" + self.identifier
   end
 
   def update_catalogs

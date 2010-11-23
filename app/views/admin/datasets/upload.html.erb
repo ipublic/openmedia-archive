@@ -29,9 +29,9 @@
 			<div class="box">
 				<h5>Dataset title: <%= @dataset.title %></h5>
 				<hr/><h5>File</h5>
-				<% form_for([:admin, @dataset], :url => {:action => 'upload_file'}, :html => {:multipart => true}) do |f| %>
+				<%= form_for :dataset, :url => upload_file_admin_dataset_path(@dataset.identifier), :html => {:multipart => true, :method=>:put} do |f| %>
 					<p><b><%= f.label :delimiter_character, "Column Separator:" %><b/> <%= f.text_field :delimiter_character %></p>
-					<p><%= f.label :column_header_row, "Column names in first row?:" %><b/> <%= check_box "dataset", "column_header_row" %></p>
+					<p><%= f.label :has_header_row, "Column names in first row?:" %><b/> <%= f.check_box :has_header_row %></p>
 					<p>
 					  <%= label_tag 'filename', 'File name:' %><br/>
 					  <%= file_field_tag 'uploaded_file' %>

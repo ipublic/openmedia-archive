@@ -1,8 +1,11 @@
 class OpenMedia::Property < Hash
+
+  STRING_TYPE = 'string'
+  
   include CouchRest::Model::CastedModel
 
   property :name, :readonly=>true
-  property :type
+  property :data_type
   property :display_name
   property :definition
   property :default_value

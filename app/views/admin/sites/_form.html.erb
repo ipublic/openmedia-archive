@@ -1,5 +1,5 @@
 <div id="forms">
-	<% form_for :site, :url => admin_site_path do |f| %>
+	<%= form_for :site, :url => admin_site_path do |f| %>
 		<div class="grid_6">
 			<div class="box">
 				<h2><%= @site.openmedia_name || "Setup Site" %></h2>

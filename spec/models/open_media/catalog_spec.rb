@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe OpenMedia::Catalog do
 
   before(:each) do
@@ -20,14 +19,23 @@ describe OpenMedia::Catalog do
     c2.should_not be_valid
     c2.errors[:title].should_not be_nil
   end
-
+  
   it 'should save and generate an id correctly' do
     lambda { @catalog.save}.should change(OpenMedia::Catalog, :count).by(1)
     @catalog.id.should == 'catalog_catalog_4'
   end
 
   it 'should be able to fetch its datasets' do
-    
+    @catalog.save
+    ds1 = OpenMedia::Dataset.new(:title=>"DS1")
+    ds1.catalog_ids = [@catalog.id]
+    ds1.save!
+    ds2 = OpenMedia::Dataset.new(:title=>"DS2")
+    ds2.catalog_ids = [@catalog.id]
+    ds2.save!
+    @catalog.datasets = [ds1, ds2]
+    @catalog = OpenMedia::Catalog.first
+    @catalog.dataset_ids.should == [ds1.id, ds2.id]    
   end
 
 end

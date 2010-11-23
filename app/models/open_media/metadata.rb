@@ -43,6 +43,11 @@ class OpenMedia::Metadata < Hash
   # string or URL describing usage, disclaimers 
   property :license, :alias => :rights
 
+  def keywords=(keywords)
+    write_attribute('keywords', (keywords.is_a?(Array) ? keywords : keywords.split(',')))
+  end
+
+
   ## Validations
 #  validates_presence_of :creator_organization_id
 

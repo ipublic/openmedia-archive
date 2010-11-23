@@ -8,8 +8,5 @@ $(function() {
 	})
 });
 $(function() {
-	$("#metadata_last_updated").datepicker();
-	$("#metadata_created_date").datepicker();
-	$("#metadata_beginning_date").datepicker();
-	$("#metadata_ending_date").datepicker();
+    $('p.date input').datepicker();
 });

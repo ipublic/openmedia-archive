@@ -58,7 +58,12 @@ Openmedia::Application.routes.draw do
   namespace :admin do
     resource :site
     resource :dashboard
-    resources :datasets
+    resources :datasets do
+      member do
+        get :upload
+        post :upload_file
+      end
+    end
     resources :catalogs
     resource :community
     resource :site    

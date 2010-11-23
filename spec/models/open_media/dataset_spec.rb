@@ -1,26 +1,41 @@
 require 'spec_helper'
 
-
 describe OpenMedia::Dataset do
 
   before(:each) do
     reset_test_db!
-    @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')    
+    @catalog = OpenMedia::Catalog.create!(:title=>'Test Catalog', :metadata => { })
+    @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')
+    @dataset.catalogs = [@catalog]
   end
   
   it 'should be a couchdb design document' do
     @dataset.should be_a_kind_of CouchRest::Design      
   end
+
+  it 'should generate a safe class name' do
+    @dataset.class_name.should == 'CrimeTest3'
+  end
+
+  it 'should require at least one catalog' do
+    @dataset.catalog_ids = []
+    @dataset.should_not be_valid
+    @dataset.errors[:catalog_ids].should_not be_nil
+  end
   
-  it 'should save and generate id as _design/Dataset/ClassName' do
+  it 'should save and generate id as _design/Dataset/class_name' do
     @dataset.save
     @dataset.persisted?.should be_true
+    @dataset.catalogs.size.should == 1
     @dataset.id.should == '_design/Dataset/CrimeTest3'
   end
 
   it 'should allow access to all datasets' do
     @dataset.save
-    OpenMedia::Dataset.create!(:title=>'dataset 2')
+    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
+    ds2.catalogs = [@catalog]
+    ds2.save
+    
     dd = CouchRest::Design.new
     dd.name='another design doc'
     dd.database = STAGING_DATABASE
@@ -31,7 +46,9 @@ describe OpenMedia::Dataset do
 
   it 'should provide count of datasets' do
     @dataset.save
-    OpenMedia::Dataset.create!(:title=>'dataset 2')
+    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
+    ds2.catalogs = [@catalog]
+    ds2.save
     OpenMedia::Dataset.count.should == 2
     dd = CouchRest::Design.new
     dd.name='another design doc'
@@ -40,9 +57,17 @@ describe OpenMedia::Dataset do
     OpenMedia::Dataset.count.should == 2
   end
 
-  it 'should provide access to single datasets' do
+  it 'should be findable by id' do
     @dataset.save
-    d2 = OpenMedia::Dataset.find('_design/Dataset/CrimeTest3')
+    d2 = OpenMedia::Dataset.get('_design/Dataset/CrimeTest3')
+    d2.should_not be_nil
+    d2.id.should == @dataset.id
+    d2.title.should == @dataset.title
+  end
+
+  it 'should be findable by class_name' do
+    @dataset.save
+    d2 = OpenMedia::Dataset.get('CrimeTest3')
     d2.should_not be_nil
     d2.id.should == @dataset.id
     d2.title.should == @dataset.title
@@ -54,13 +79,53 @@ describe OpenMedia::Dataset do
     STAGING_DATABASE.documents(:startkey => '_design', :endkey => '_design0')['rows'].size.should == num_design_docs + 1
   end
 
+  it 'should know which catalogs it belongs to' do
+    @dataset.save!    
+    c1 = OpenMedia::Catalog.create!(:title=>'C1', :metadata=>{ })
+    c2 = OpenMedia::Catalog.create!(:title=>'C2', :metadata=>{ })
+    c1.datasets << @dataset; c1.save
+    c2.datasets << @dataset; c2.save
+    @dataset = OpenMedia::Dataset.get(@dataset.id)  # reload from db
+    @dataset.catalogs.size.should == 3
+    @dataset.catalogs[0].title.should == 'C1'
+    @dataset.catalogs[1].title.should == 'C2'
+    @dataset = OpenMedia::Dataset.first
+    @dataset.catalog_ids.should == [c1.id, c2.id, @catalog.id]
+  end
+
+  it 'should allow catalogs to be set' do
+    c1 = OpenMedia::Catalog.create!(:title=>'C1', :metadata=>{ })
+    c2 = OpenMedia::Catalog.create!(:title=>'C2', :metadata=>{ })    
+    @dataset.catalog_ids = [c1.id, c2.id]
+    @dataset.save!
+    
+    c1 = OpenMedia::Catalog.get(c1.id)
+    c2 = OpenMedia::Catalog.get(c2.id)
+    @dataset = OpenMedia::Dataset.get(@dataset.id)
+    c1.dataset_ids.should == [@dataset.id]
+    c2.dataset_ids.should == [@dataset.id]
+    @dataset.catalogs.size.should == 2
+    @dataset.catalogs.should == [c1, c2]
+  end
+  
+  it 'should be searchable by title' do
+    %w(Apples Applications Bananas).each do |t|
+      ds = OpenMedia::Dataset.new(:title=>t)
+      ds.catalogs = [@catalog]
+      ds.save!
+    end
+
+    OpenMedia::Dataset.search('App').size.should == 2
+    OpenMedia::Dataset.search('Ban').size.should == 1
+  end
+
   describe 'validation' do
     it 'should require a title' do
       lambda{ OpenMedia::Dataset.create! }.should raise_error
     end
 
     it 'should require titles to be unique' do
-      @dataset.save
+      @dataset.save!
       dd2 = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')
       dd2.save.should be_false
       dd2.should_not be_valid
@@ -110,7 +175,7 @@ describe OpenMedia::Dataset do
     it 'should save' do
       @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
       @dataset.save
-      OpenMedia::Dataset.find(@dataset.id).metadata.title.should == 'Meta Title'
+      OpenMedia::Dataset.get(@dataset.id).metadata.title.should == 'Meta Title'
     end
 
     it 'should have creator association' do
@@ -119,7 +184,7 @@ describe OpenMedia::Dataset do
       @dataset.metadata.creator = creator
       @dataset.save
 
-      OpenMedia::Dataset.find(@dataset.id).metadata.creator.id.should == creator.id
+      OpenMedia::Dataset.get(@dataset.id).metadata.creator.id.should == creator.id
     end
 
     it 'should have publisher association' do
@@ -128,7 +193,7 @@ describe OpenMedia::Dataset do
       @dataset.metadata.publisher = publisher
       @dataset.save
 
-      OpenMedia::Dataset.find(@dataset.id).metadata.publisher.id.should == publisher.id
+      OpenMedia::Dataset.get(@dataset.id).metadata.publisher.id.should == publisher.id
     end
 
     it 'should have maintainer association' do
@@ -137,7 +202,7 @@ describe OpenMedia::Dataset do
       @dataset.metadata.maintainer = maintainer
       @dataset.save
 
-      OpenMedia::Dataset.find(@dataset.id).metadata.maintainer.id.should == maintainer.id
+      OpenMedia::Dataset.get(@dataset.id).metadata.maintainer.id.should == maintainer.id
     end    
   end
   

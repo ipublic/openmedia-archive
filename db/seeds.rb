@@ -23,75 +23,75 @@ OpenMedia::Organization.create!({
 ## Add Default Catalogs
 date_stamp = Date.today.to_json
 
-OpenMedia::Catalog.create!({
-  :title => 'Staging', 
-  :database_store => 'staging', 
-  :metadata => {
-    :description => "A workspace for transforming, curating and preparing Datasets for publication.  Staging catalog contents are visible only to local site.",
-    :dcmi_type => 'Dataset',
-    :language => 'en-US',
-    :beginning_date => date_stamp,
-    :ending_date => date_stamp,
-    :created_date => date_stamp,
-    :last_updated => date_stamp,
-    :license => ''
-    # :uri
-    # :creator_organization_id
-    # :publisher_organization_id
-    # :maintainer_organization_id
-    # :conforms_to => 
-    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
-    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
-    # :released, :type => Date  #, :alias => :date, :cast_as => 'Date', :init_method => 'parse'
-    # :license, :alias => :rights
-  }
-})
-
-
-OpenMedia::Catalog.create!({
-  :title => 'Commmunity', 
-  :database_store => 'community', 
-  :metadata => {
-    :description => 'A repository for data, templates and content shared among OpenMedia community members. Community catalog contents are shared with other OpenMedia sites.',
-    :type => 'Dataset',
-    :language => 'en-US',
-    :creator_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
-    :publisher_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
-    :maintainer_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
-    :created_date => date_stamp,
-    :last_updated => date_stamp,
-    :released => date_stamp,
-    :license => ''
-    # :conforms_to => 
-    # :uri =>
-    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
-    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
-    # :beginning_date => date_stamp,
-    # # :ending_date => date_stamp
-  }
-})
-  
-OpenMedia::Catalog.create!({
-  :title => 'Public', 
-  :database_store => 'public', 
-  :metadata => {
-    :description => "Published Datasets. Public catalog contents are accessible to the public.",
-    :dcmi_type => 'Dataset',
-    :language => 'en-US',
-    :beginning_date => date_stamp,
-    :ending_date => date_stamp,
-    :created_date => date_stamp,
-    :last_updated => date_stamp,
-    :license => ''
-    # :uri
-    # :creator_organization_id
-    # :publisher_organization_id
-    # :maintainer_organization_id
-    # :conforms_to => 
-    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
-    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
-  }
-})
+#OpenMedia::Catalog.create!({
+#  :title => 'Staging', 
+#  :database_store => 'staging', 
+#  :metadata => {
+#    :description => "A workspace for transforming, curating and preparing Datasets for publication.  Staging catalog contents are visible only to local site.",
+#    :dcmi_type => 'Dataset',
+#    :language => 'en-US',
+#    :beginning_date => date_stamp,
+#    :ending_date => date_stamp,
+#    :created_date => date_stamp,
+#    :last_updated => date_stamp,
+#    :license => ''
+#    # :uri
+#    # :creator_organization_id
+#    # :publisher_organization_id
+#    # :maintainer_organization_id
+#    # :conforms_to => 
+#    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
+#    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
+#    # :released, :type => Date  #, :alias => :date, :cast_as => 'Date', :init_method => 'parse'
+#    # :license, :alias => :rights
+#  }
+#})
+#
+#
+#OpenMedia::Catalog.create!({
+#  :title => 'Commmunity', 
+#  :database_store => 'community', 
+#  :metadata => {
+#    :description => 'A repository for data, templates and content shared among OpenMedia community members. Community catalog contents are shared with other OpenMedia sites.',
+#    :type => 'Dataset',
+#    :language => 'en-US',
+#    :creator_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
+#    :publisher_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
+#    :maintainer_organization_id => OpenMedia::Organization.by_name(:key => "iPublic, LLC").first.identifier.to_s,
+#    :created_date => date_stamp,
+#    :last_updated => date_stamp,
+#    :released => date_stamp,
+#    :license => ''
+#    # :conforms_to => 
+#    # :uri =>
+#    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
+#    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
+#    # :beginning_date => date_stamp,
+#    # # :ending_date => date_stamp
+#  }
+#})
+#  
+#OpenMedia::Catalog.create!({
+#  :title => 'Public', 
+#  :database_store => 'public', 
+#  :metadata => {
+#    :description => "Published Datasets. Public catalog contents are accessible to the public.",
+#    :dcmi_type => 'Dataset',
+#    :language => 'en-US',
+#    :beginning_date => date_stamp,
+#    :ending_date => date_stamp,
+#    :created_date => date_stamp,
+#    :last_updated => date_stamp,
+#    :license => ''
+#    # :uri
+#    # :creator_organization_id
+#    # :publisher_organization_id
+#    # :maintainer_organization_id
+#    # :conforms_to => 
+#    # :geographic_coverage  => # Geographic bounds, jurisdiction name from controlled vocab, 
+#    # :update_frequency, :alias => :accrual_periodity # , :alias => :update_interval_in_minutes
+#  }
+#})
 
 
 ### STATES

@@ -1,0 +1,58 @@
+<% title "New Dataset" %>
+<div class="grid_4">
+	<div class="box">
+		<h2>Steps</h2>
+		<div class="block">
+			<ol>
+				<li>Define Dataset</li>
+				<li>Upload content</li>
+				<b><li>Import content</li></b>
+			</ol>
+		</div>
+	</div>
+	
+	<div class="box">
+		<h2>About</h2>
+		<div class="block">
+			<p>Review uploaded content.</p>  
+			<p>Verify dataset properties and values are correct.  If not, click your web browser's Back button and change upload settings.</p>
+			<ol>
+				<li>Unique ID property: is one of the properties a unique key for this dataset?  If you don't specify a Unique ID, OpenMedia will generate one for you, but future record updates and linking between datasets may be more difficult.</li>
+				<li>Previous|Next: use these links to browse records.</li>
+				<li>Import: click button to create Staging database records for uploaded dataset values.</li>
+			</ol>
+		</div>
+	</div>
+	
+	<div class="box">
+		<h2>Tools</h2>
+		<div class="block">
+			<ul>
+				<li>Add Property</li>
+				<li>Identify Address properties</li>
+				<li>Identify Coordinate properties</li>
+				<li>Import content</li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+<div class="grid_8">
+	<div class="box">
+		<h2>Uploaded Content</h2>
+		<div class="block">
+			<div class="box">
+				<h5>Dataset title: <%= @dataset.title %></h5>
+				<% form_for([:admin, @dataset], :url => {:action => 'initialize_document'}) do |f| %>
+					<% fields_for @property do |p| %>
+						<p><%= p.label :name, "Unique ID property:" %><b/> 
+							 <%= p.select(:name, sorted_attribute_list(@xtab[0]), {:prompt => '-OpenMedia Generated-'}) %>
+						</p>
+					<% end %>
+					<%= render :partial => 'show_record' %>
+				  <p><%= submit_tag 'Import' %></p>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

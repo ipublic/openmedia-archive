@@ -55,7 +55,7 @@ class Admin::DatasetsController < ApplicationController
     @dataset.update_attributes(params[:dataset])
 
     
-    if true #@dataset.import!(@dataset.sample_data)
+    if @dataset.import_attachment!(OpenMedia::Dataset::SAMPLE_DATA_ATTACHMENT_NAME)
       flash[:notice] = 'Successfully initialized Dataset properties.'
       redirect_to admin_datasets_path
     else

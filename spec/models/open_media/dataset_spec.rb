@@ -17,10 +17,6 @@ describe OpenMedia::Dataset do
     @dataset.identifier.should == 'CrimeTest3'
   end
 
-  it 'should generate a model name based on identifier' do
-    @dataset.model_name.should == 'OpenMedia::Dataset::CrimeTest3'
-  end
-
   it 'should require at least one catalog' do
     @dataset.catalog_ids = []
     @dataset.should_not be_valid
@@ -31,11 +27,11 @@ describe OpenMedia::Dataset do
     @dataset.has_header_row.should be_true
   end
   
-  it 'should save and generate id as _design/Dataset/identifier' do
+  it 'should save and generate id as _design/ModelClassName' do
     @dataset.save
     @dataset.persisted?.should be_true
     @dataset.catalogs.size.should == 1
-    @dataset.id.should == '_design/Dataset/CrimeTest3'
+    @dataset.id.should == "_design/#{@dataset.model_name}"
   end
 
   it 'should default to comma for the delimiter_character' do
@@ -71,7 +67,7 @@ describe OpenMedia::Dataset do
 
   it 'should be findable by id' do
     @dataset.save
-    d2 = OpenMedia::Dataset.get('_design/Dataset/CrimeTest3')
+    d2 = OpenMedia::Dataset.get('_design/OpenMedia::Dataset::CrimeTest3')
     d2.should_not be_nil
     d2.id.should == @dataset.id
     d2.title.should == @dataset.title
@@ -239,12 +235,16 @@ describe OpenMedia::Dataset do
       @dataset.attachments.size.should == 1
     end
 
-    it 'should import data' do
-      @dataset.import!(@csv_data)
+    it 'should generate a CouchRest::Model class for manipulating the data' do
+      @dataset.model_name.should == 'OpenMedia::Dataset::CrimeTest3'
       @dataset.model.should == OpenMedia::Dataset::CrimeTest3
+    end
+
+    it 'should import data from attachments' do
+      @dataset.import_attachment!(@dataset.attachments.keys.first)
       @dataset.model.count.should == 2
     end
-    
+
   end 
   
 end

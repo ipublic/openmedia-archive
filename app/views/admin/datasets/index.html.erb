@@ -17,6 +17,7 @@
 	    <th>Catalogs</th>
 	    <th>Title</th>
 	    <th>Description</th>
+	    <th>Records</th>
 	    <th>Updated</th>
 	  </tr>
 	</thead>
@@ -25,6 +26,7 @@
 	  <td><%= ds.catalogs.collect{|c| c.title}.join(', ') %></td>
 	  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
 	  <td><%= ds.metadata['description'] unless ds.metadata.nil? %></td>
+	  <td><%= ds.model.count %></td>
 	  <td><%= ds.updated_at.to_s(:full) %></td>
 	</tr>
 	<% end %>

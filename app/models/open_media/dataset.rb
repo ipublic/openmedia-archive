@@ -1,10 +1,12 @@
 require 'ruport'
 
 class OpenMedia::Dataset < OpenMedia::DesignModel
+
+  SAMPLE_DATA_ATTACHMENT_NAME = 'sample-data'
   
   use_database STAGING_DATABASE  
 
-  before_create :generate_id
+  before_create :generate_id, :generate_views
   after_save :update_catalogs
 
   property :title
@@ -20,15 +22,15 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   validate :dataset_validation
 
   def self.get(id, db = database)
-    if id =~ /_design\/Dataset\/*/
+    if id =~ /_design\/OpenMedia::Dataset\/*/
       super(id, db)
     else
-      super("_design/Dataset/#{id}", db)
+      super("_design/OpenMedia::Dataset::#{id}", db)
     end
   end
 
   def self.all(opts = {})
-    opts.merge!({:startkey => '_design/Dataset', :endkey => '_design/Dataset0', :include_docs=>true})
+    opts.merge!({:startkey => '_design/OpenMedia::Dataset::', :endkey => '_design/OpenMedia::Dataset::\u9999', :include_docs=>true})
     database.documents(opts)['rows'].collect{|d| create_from_database(d['doc'])}
   end
 
@@ -71,8 +73,16 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   end
 
   def model_name
-    "OpenMedia::Dataset::#{identifier}"
+    "#{self.class.name}::#{identifier}"
   end
+
+  def model
+    if !self.class.const_defined?(self.identifier)
+      self.class.const_set(self.identifier, Class.new(OpenMedia::DatasetModelTemplate))
+    end
+    self.class.const_get(self.identifier)    
+  end
+  
 
 
   def initialize_properties!(source)
@@ -82,7 +92,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
       self.dataset_properties << OpenMedia::Property.new(:name=>a, :data_type=>OpenMedia::Property::STRING_TYPE)
     end
     source.rewind
-    attachment_attrs = {:file=>source, :name=>'sample-data'}
+    attachment_attrs = {:file=>source, :name=>SAMPLE_DATA_ATTACHMENT_NAME}
     attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
     self.create_attachment(attachment_attrs)                              
     self.save!
@@ -95,11 +105,16 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   end
 
   def sample_data
-    self.read_attachment('sample-data')
+    self.read_attachment(SAMPLE_DATA_ATTACHMENT_NAME)
+  end  
+
+  def import_attachment!(attachment_name)
+    rtable = Ruport::Data::Table.parse(self.read_attachment(attachment_name), :has_names=>self.has_header_row,
+                                       :csv_options => { :col_sep => self.delimiter_character })
+    rtable.each do |record|
+      d = self.model.create!(record.data.merge(:import_id=>attachment_name))
+    end
   end
-
-
-
 
 private
   def dataset_validation
@@ -113,8 +128,13 @@ private
   end
 
   def generate_id
-    self.id = "_design/Dataset/" + self.identifier
+    self.id = "_design/#{self.model_name}"
   end
+
+  def generate_views
+    self['views'] = { }  # we have to put views here so that couchrest-model can add its views here later
+  end
+
 
   def update_catalogs
     if @catalogs

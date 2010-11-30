@@ -22,20 +22,12 @@ describe OpenMedia::Dataset do
     @dataset.should_not be_valid
     @dataset.errors[:catalog_ids].should_not be_nil
   end
-
-  it 'has_header_row should default to true' do
-    @dataset.has_header_row.should be_true
-  end
   
   it 'should save and generate id as _design/ModelClassName' do
     @dataset.save
     @dataset.persisted?.should be_true
     @dataset.catalogs.size.should == 1
     @dataset.id.should == "_design/#{@dataset.model_name}"
-  end
-
-  it 'should default to comma for the delimiter_character' do
-    @dataset.delimiter_character.should == ','
   end
 
   it 'should allow access to all datasets' do
@@ -142,7 +134,7 @@ describe OpenMedia::Dataset do
 
     it 'should allow updates' do
       @dataset.save!
-      @dataset.delimiter_character = '^'
+      @dataset.metadata = { :description => 'Test test' }
       lambda { @dataset.save! }.should_not raise_error
     end
   end
@@ -225,10 +217,11 @@ describe OpenMedia::Dataset do
     before(:each) do
       reset_test_db!
       @csv_data = StringIO.new("A,B,C\n1,2,3\n4,5,6")
-      @dataset.initialize_properties!(@csv_data)            
+      @dataset.set_properties([{:name=>'A'},{:name=>'B'}, {:name=>'C'}])
+      @dataset.import_data_file!(@csv_data, :has_header_row=>true, :delimiter_character=>',')            
     end
 
-    it 'should allow dataset to be initialized with properties' do
+    it 'should allow dataset properties to be initialized' do
       @dataset.dataset_properties.size.should == 3
       @dataset.dataset_properties.collect{|p| p.name}.should == %w(A B C)
       @dataset.dataset_properties.collect{|p| p.data_type}.should == %w(string string string)
@@ -240,8 +233,7 @@ describe OpenMedia::Dataset do
       @dataset.model.should == OpenMedia::Dataset::CrimeTest3
     end
 
-    it 'should import data from attachments' do
-      @dataset.import_attachment!(@dataset.attachments.keys.first)
+    it 'should import data from files' do
       @dataset.model.count.should == 2
     end
 

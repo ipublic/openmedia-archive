@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'json'
 
 describe Admin::DatasetsController do
   render_views
@@ -33,46 +34,32 @@ describe Admin::DatasetsController do
     response.should render_template('new')    
   end
 
+  it 'should have action for uploading sample data and getting back properties and upto 10 rows of sample data' do
+    post :upload, :has_header_row=>'1', :delimiter_character=>',', :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
+    response.should be_success
+    response.content_type.should == 'application/json'
+    response_json = JSON.parse(response.body)
+    response_json['properties'].should == %w(A B C D)
+    response_json['rows'].should == [['1','2','3','4'], ['5','6','7','8']]
+  end  
+
   it 'should allow new datasets to be uploaded' do
-    lambda { post :create, :dataset=>{ :title=>'New Dataset', :catalog_ids=>[@catalog.id]} }.should change(OpenMedia::Dataset, :count).by(1)
-    response.should redirect_to(upload_admin_dataset_url(assigns[:dataset].identifier))
+    lambda {
+      post :create, :dataset=>{ :title=>'New Dataset', :catalog_ids=>[@catalog.id], :unique_id_property=>'B',
+                                :has_header_row=>'1', :delimiter_character=>',',
+                                :dataset_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                      {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                      {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}],
+                                :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv') }
+
+    }.should change(OpenMedia::Dataset, :count).by(1)
+    assigns[:dataset].dataset_properties.size.should == 3
+    assigns[:dataset].dataset_properties.collect{|p| p.name}.should == %w(A B D)
+    assigns[:dataset].model.count.should == 2
+    response.should redirect_to(admin_datasets_path)    
   end
 
-  it 'should have form for uploading sample data' do
-    ds = create_test_dataset(:catalog=>@catalog)
-    get :upload, :id=>ds.identifier
-    response.should be_success
-    response.should render_template('upload')
-  end
-
-  it 'should allow sample data upload' do
-    ds = create_test_dataset(:catalog=>@catalog)
-
-    put :upload_file, :id=>ds.identifier, :dataset=>{ :delimiter_character=>',', :has_header_row=>'1' },
-                      :uploaded_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
-    assigns[:dataset].dataset_properties.size.should == 4
-    response.should redirect_to(new_import_admin_dataset_path(ds.identifier))
-  end
-
-  it 'should allow properties to be reviewed before importing' do
-    ds = create_test_dataset(:catalog=>@catalog)
-    File.open('/tmp/test.csv') do |f|
-      ds.initialize_properties!(f)
-    end
-    get :new_import, :id=>ds.identifier
-    response.should be_success
-    response.should render_template('import')
-  end
-
-  it 'accept selected property names and import sample data' do
-    ds = create_test_dataset(:catalog=>@catalog)
-    File.open('/tmp/test.csv') do |f|
-      ds.initialize_properties!(f)
-    end
-    put :import, :id=>ds.identifier, :dataset=>{:unique_id_property=>'B'}
-    response.should redirect_to(admin_datasets_path)
-  end
-
+  it 'should redirect when format is html, and return a 201 when format is json'
 
 
 end

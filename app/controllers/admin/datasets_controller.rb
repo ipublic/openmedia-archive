@@ -1,3 +1,5 @@
+require 'ruport'
+
 class Admin::DatasetsController < ApplicationController
   
   def index
@@ -14,11 +16,26 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def create
+    dataset_properties = params[:dataset].delete(:dataset_properties)
+    data_file = params[:dataset].delete(:data_file)
+    has_header_row = params[:dataset].delete(:has_header_row)
+    delimiter_character = params[:dataset].delete(:delimiter_character)
+    
     @dataset = OpenMedia::Dataset.new(params[:dataset])
+    if dataset_properties
+      dataset_properties.each do |dsp|
+        @dataset.dataset_properties << OpenMedia::Property.new(:name=>dsp[:name], :data_type=>dsp[:data_type])
+      end     
+    end
 
     if @dataset.save
-      flash[:notice] = 'OpenMedia::Dataset successfully created.'
-      redirect_to upload_admin_dataset_path(@dataset.identifier)
+      if data_file
+        data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
+        @dataset.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
+      end
+      
+      flash[:notice] = 'Dataset successfully created.'
+      redirect_to admin_datasets_path
     else
       flash[:error] = 'Unable to create Dataset.'
       render :action => "new"
@@ -26,44 +43,17 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def upload
-    @dataset = OpenMedia::Dataset.get(params[:id])
-  end
-   
-  def upload_file
-    @dataset = OpenMedia::Dataset.get(params[:id])
-    @dataset.update_attributes_without_saving(params[:dataset])
-    @dataset.initialize_properties!(params[:uploaded_file].respond_to?(:tempfile) ? params[:uploaded_file].tempfile :
-                             params[:uploaded_file])
-
-    if @dataset.dataset_properties.size == 0
-      flash[:error] = 'Could not get property names from source file'
-      render :action => 'upload'      
-    else
-      flash[:notice] = 'File successfully uploaded.'
-      redirect_to new_import_admin_dataset_path(@dataset.identifier)      
+    data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
+                             params[:data_file]
+    rtable = Ruport::Data::Table.parse(data_file, :has_names=>params[:has_header_row],
+                                        :csv_options => { :col_sep => params[:delimiter_character] })
+    rtable[0].attributes.each do |a|
     end
-  end
-  
-  def new_import
-    @dataset = OpenMedia::Dataset.get(params[:id])
-    @property_options = @dataset.dataset_properties.collect{|p| [p.name, p.name]}
-    @record = @dataset.get_sample_record(0)    
-  end
-  
-  def import
-    @dataset = OpenMedia::Dataset.get(params[:id])
-    @dataset.update_attributes(params[:dataset])
 
-    
-    if @dataset.import_attachment!(OpenMedia::Dataset::SAMPLE_DATA_ATTACHMENT_NAME)
-      flash[:notice] = 'Successfully initialized Dataset properties.'
-      redirect_to admin_datasets_path
-    else
-      flash[:error] = 'Error initializing Dataset properties.'
-      render :action => "import"
-    end
+    render :json=>{ :properties=>rtable[0].attributes,
+                    :rows=>rtable[0..9].collect{|r| r.to_a} }
   end
-  
+     
   def edit
     @dataset = OpenMedia::Dataset.get(params[:id])
     if @dataset.nil?

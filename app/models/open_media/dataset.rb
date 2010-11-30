@@ -2,16 +2,12 @@ require 'ruport'
 
 class OpenMedia::Dataset < OpenMedia::DesignModel
 
-  SAMPLE_DATA_ATTACHMENT_NAME = 'sample-data'
-  
   use_database STAGING_DATABASE  
 
   before_create :generate_id, :generate_views
   after_save :update_catalogs
 
   property :title
-  property :delimiter_character, :default=>','
-  property :has_header_row, TrueClass, :default => true
   property :dataset_properties, [Property]
   property :metadata, OpenMedia::Metadata
   property :unique_id_property
@@ -83,37 +79,26 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.class.const_get(self.identifier)    
   end
   
+  def set_properties(property_info)
+    property_info.each do |pi|
+      self.dataset_properties << OpenMedia::Property.new(:name=>pi[:name], :data_type=>pi[:data_type] || OpenMedia::Property::STRING_TYPE)
+    end
+  end
 
-
-  def initialize_properties!(source)
-    rtable = Ruport::Data::Table.parse(source, :has_names=>self.has_header_row,
-                                        :csv_options => { :col_sep => self.delimiter_character })
-    rtable[0].attributes.each do |a|
-      self.dataset_properties << OpenMedia::Property.new(:name=>a, :data_type=>OpenMedia::Property::STRING_TYPE)
+  def import_data_file!(source, opts={})
+    opts = {:has_header_row=>true, :delimiter_character=>','}.merge(opts)
+    attachment_name = "import-#{Time.now.to_i}-#{rand(10000)}"
+    rtable = Ruport::Data::Table.parse(source, :has_names=>opts[:has_header_row],
+                                       :csv_options => { :col_sep => opts[:delimiter_character] })
+    rtable.each do |record|
+      property_names = self.dataset_properties.collect{|p| p.name}
+      d = self.model.create!(record.data.slice(property_names).merge(:import_id=>attachment_name))
     end
     source.rewind
-    attachment_attrs = {:file=>source, :name=>SAMPLE_DATA_ATTACHMENT_NAME}
+    attachment_attrs = {:file=>source, :name=>attachment_name}
     attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
     self.create_attachment(attachment_attrs)                              
-    self.save!
-  end
-
-  def get_sample_record(record_number)
-    rtable = Ruport::Data::Table.parse(self.sample_data, :has_names=>self.has_header_row,
-                                        :csv_options => { :col_sep => self.delimiter_character })
-    rtable[record_number]
-  end
-
-  def sample_data
-    self.read_attachment(SAMPLE_DATA_ATTACHMENT_NAME)
-  end  
-
-  def import_attachment!(attachment_name)
-    rtable = Ruport::Data::Table.parse(self.read_attachment(attachment_name), :has_names=>self.has_header_row,
-                                       :csv_options => { :col_sep => self.delimiter_character })
-    rtable.each do |record|
-      d = self.model.create!(record.data.merge(:import_id=>attachment_name))
-    end
+    self.save!    
   end
 
 private

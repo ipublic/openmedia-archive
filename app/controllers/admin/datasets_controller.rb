@@ -33,9 +33,16 @@ class Admin::DatasetsController < ApplicationController
         data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
         @dataset.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
       end
-      
-      flash[:notice] = 'Dataset successfully created.'
-      redirect_to admin_datasets_path
+
+      respond_to do |format|
+        format.html do
+          flash[:notice] = 'Dataset successfully created.'
+          redirect_to admin_datasets_path
+        end
+
+        format.json { render :json=>{id=>@dataset.identifier}, :status=>:created }
+      end
+
     else
       flash[:error] = 'Unable to create Dataset.'
       render :action => "new"

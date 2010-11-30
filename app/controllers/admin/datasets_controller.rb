@@ -65,11 +65,8 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def edit
-    @dataset = Dataset.get(params[:id])
-
-    unless @dataset.nil?
-      @metadata = @dataset.metadata
-    else
+    @dataset = OpenMedia::Dataset.get(params[:id])
+    if @dataset.nil?
       flash[:error] = 'Dataset not found.'
       redirect_to(admin_datasets_url)
     end

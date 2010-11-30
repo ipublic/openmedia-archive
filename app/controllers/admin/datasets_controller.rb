@@ -94,14 +94,14 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def destroy
-    @dataset = Dataset.get(params[:id])
+    @dataset = OpenMedia::Dataset.get(params[:id])
     
     unless @dataset.nil?
       @dataset.destroy
-      redirect_to(admin_datasets_url)
+      redirect_to(admin_datasets_path)
     else
       flash[:error] = "Dataset not found. The Dataset could not be found, refresh the catalog list and try again."
-      redirect_to(admin_datasets_url)
+      redirect_to(admin_datasets_path)
     end
   end
   

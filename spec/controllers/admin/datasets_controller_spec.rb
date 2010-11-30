@@ -59,6 +59,13 @@ describe Admin::DatasetsController do
     response.should redirect_to(admin_datasets_path)    
   end
 
+  it 'should allow datasets to be deleted' do
+    @dataset = OpenMedia::Dataset.first
+    delete :destroy, :id=>@dataset.identifier
+    response.should redirect_to(admin_datasets_path)
+    OpenMedia::Dataset.find(@dataset.identifier).should be_nil
+  end
+
   it 'should redirect when format is html, and return a 201 when format is json'
 
 

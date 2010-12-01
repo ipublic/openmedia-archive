@@ -8,11 +8,21 @@ describe Admin::CatalogsController do
     @catalogs = []
     1.upto(3) {|i| @catalogs << create_test_catalog(:title=>"Catalog #{i}") }
   end
-  
-  it 'should show list of catalogs' do
-    get :index
-    response.should be_success
-    response.should render_template('index')    
+
+  describe 'index action' do
+    it 'should show list of catalogs for html format' do
+      get :index
+      response.should be_success
+      response.should render_template('index')    
+    end
+
+    it 'should give list of catalogs as json for json format' do
+      get :index, :format=>:json
+      response.should be_success
+      response.content_type.should == 'application/json'
+      puts response.body
+      JSON.parse(response.body).size.should == 3
+    end    
   end
 
   it 'should show details of a catalog' do

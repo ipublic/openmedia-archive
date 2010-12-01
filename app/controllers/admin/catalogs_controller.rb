@@ -3,6 +3,12 @@ class Admin::CatalogsController < ApplicationController
   # GET /organizations
   def index
     @catalogs = OpenMedia::Catalog.all
+
+    respond_to do |format|
+      format.html
+      format.json { render :json=>@catalogs.to_json }
+    end
+
   end
 
   # GET /organizations/new

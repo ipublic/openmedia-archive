@@ -92,7 +92,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
                                        :csv_options => { :col_sep => opts[:delimiter_character] })
     rtable.each do |record|
       property_names = self.dataset_properties.collect{|p| p.name}
-      d = self.model.create!(record.data.slice(property_names).merge(:import_id=>attachment_name))
+      d = self.model.create!(record.data.slice(*property_names).merge(:import_id=>attachment_name))
     end
     source.rewind
     attachment_attrs = {:file=>source, :name=>attachment_name}

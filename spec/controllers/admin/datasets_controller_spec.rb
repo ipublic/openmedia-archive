@@ -68,18 +68,21 @@ describe Admin::DatasetsController do
       assigns[:dataset].dataset_properties.size.should == 3
       assigns[:dataset].dataset_properties.collect{|p| p.name}.should == %w(A B D)
       assigns[:dataset].model.count.should == 2
+      response.should redirect_to(admin_datasets_path)          
     end
 
-    it 'should redirect when format is html' do
-      post :create, :dataset=>@dataset_params      
-      response.should redirect_to(admin_datasets_path)    
-    end
+    describe 'as json' do
+      it 'should return a 201 on success' do
+        post :create, :dataset=>@dataset_params, :format=>'json'
+        response.response_code.should == 201
+      end
 
-    it 'should return a 201 when format is json' do
-      post :create, :dataset=>@dataset_params, :format=>'json'
-      response.response_code.should == 201
-    end
+      it 'should return a 400 on error' do
+        create_test_dataset(:title=>'New Dataset')
+        post :create, :dataset=>@dataset_params, :format=>'json'
+        response.response_code.should == 400
+      end
+    end    
   end
-
 
 end

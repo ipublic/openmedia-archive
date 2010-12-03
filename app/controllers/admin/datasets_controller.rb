@@ -1,7 +1,9 @@
 require 'ruport'
 
 class Admin::DatasetsController < ApplicationController
-  
+
+  skip_before_filter :verify_authenticity_token, :only => [:create]
+                                                           
   def index
     @datasets = OpenMedia::Dataset.search(params[:search])
   end
@@ -44,8 +46,18 @@ class Admin::DatasetsController < ApplicationController
       end
 
     else
-      flash[:error] = 'Unable to create Dataset.'
-      render :action => "new"
+      respond_to do |format|
+        format.html do
+          flash[:error] = 'Unable to create Dataset.'
+          render :action => "new"
+        end
+
+        format.json do
+          render :text=>'Unable to create Dataset', :status=>400
+        end
+      end
+
+
     end
   end
   

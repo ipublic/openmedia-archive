@@ -237,6 +237,8 @@ describe OpenMedia::Dataset do
       @dataset.model.count.should == 2
     end
 
+    it 'should delete imported data when dataset is deleted'
+
   end 
   
 end

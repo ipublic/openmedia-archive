@@ -78,6 +78,7 @@ describe Admin::DatasetsController do
       end
 
       it 'should return a 400 on error' do
+        reset_test_db!
         create_test_dataset(:title=>'New Dataset')
         post :create, :dataset=>@dataset_params, :format=>'json'
         response.response_code.should == 400

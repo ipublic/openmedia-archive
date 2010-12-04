@@ -5,7 +5,9 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   use_database STAGING_DATABASE  
 
   before_create :generate_id, :generate_views
+  after_create :update_model_views
   after_save :update_catalogs
+  before_destroy {|ds| ds.model.all.each{|m| m.destroy}}
 
   property :title
   property :dataset_properties, [Property]
@@ -74,7 +76,9 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   def model
     if !self.class.const_defined?(self.identifier)
-      self.class.const_set(self.identifier, Class.new(OpenMedia::DatasetModelTemplate))
+      cls = Class.new(OpenMedia::DatasetModelTemplate)
+      cls.dataset = self
+      self.class.const_set(self.identifier, cls)
     end
     self.class.const_get(self.identifier)    
   end
@@ -117,7 +121,7 @@ private
   end
 
   def generate_views
-    self['views'] = { }  # we have to put views here so that couchrest-model can add its views here later
+    self['views'] = { } # we have to put views here so that couchrest-model can add its views here later
   end
 
 
@@ -132,6 +136,10 @@ private
     end
   end
 
+  def update_model_views
+    self.model.dataset=self
+    self.model.save_design_doc
+  end
 
   
 end

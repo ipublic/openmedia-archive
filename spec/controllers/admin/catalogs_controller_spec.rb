@@ -20,7 +20,6 @@ describe Admin::CatalogsController do
       get :index, :format=>:json
       response.should be_success
       response.content_type.should == 'application/json'
-      puts response.body
       JSON.parse(response.body).size.should == 3
     end    
   end

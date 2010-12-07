@@ -2,6 +2,8 @@ require 'ruport'
 
 class OpenMedia::Dataset < OpenMedia::DesignModel
 
+  TITLE_TAKEN_MSG = "must be unique"
+  
   use_database STAGING_DATABASE  
 
   before_create :generate_id, :generate_views
@@ -108,7 +110,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 private
   def dataset_validation
     if self.class.all.detect{|ds| (ds.id != self.id && ds.title==self.title) }
-      self.errors.add(:title, 'must be unique')
+      self.errors.add(:title, TITLE_TAKEN_MSG)
     end
 
     if self.catalogs.size == 0

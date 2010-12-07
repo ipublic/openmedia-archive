@@ -53,7 +53,7 @@ class Admin::DatasetsController < ApplicationController
         end
 
         format.json do
-          render :text=>'Unable to create Dataset', :status=>400
+          render :text=>@dataset.errors.full_messages*"\n", :status=>400
         end
       end
 

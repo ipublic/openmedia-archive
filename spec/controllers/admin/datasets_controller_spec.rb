@@ -77,11 +77,13 @@ describe Admin::DatasetsController do
         response.response_code.should == 201
       end
 
-      it 'should return a 400 on error' do
+      it 'should return a 400 with error message on error' do
         reset_test_db!
         create_test_dataset(:title=>'New Dataset')
         post :create, :dataset=>@dataset_params, :format=>'json'
         response.response_code.should == 400
+        response.content_type.should == 'application/json'
+        response.body.should == "Title #{OpenMedia::Dataset::TITLE_TAKEN_MSG}"
       end
     end    
   end

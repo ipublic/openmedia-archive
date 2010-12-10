@@ -1,0 +1,17 @@
+<div class="property">    
+  <p style="float: right">
+    <a href="#" class="delete-property">delete</a>
+  </p>
+
+  <p style="width: 45%; float: right">
+    <label>Data type</label>
+    <select name="dataset[dataset_properties][][data_type]">
+      <%= options_for_select OpenMedia::Property::TYPES.collect{|t| [t.titleize, t]}, property.data_type %>
+    </select>
+  </p>
+
+  <p style="width: 45%">
+    <label>Name</label>
+    <input name="dataset[dataset_properties][][name]" size="30" type="text" value="<%= property.name %>"/>
+  </p>
+</div>

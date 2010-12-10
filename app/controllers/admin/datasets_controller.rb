@@ -74,7 +74,7 @@ class Admin::DatasetsController < ApplicationController
   end
      
   def edit
-    @dataset = OpenMedia::Dataset.get(params[:id])
+    @dataset = OpenMedia::Dataset.get(params[:id])    
     if @dataset.nil?
       flash[:error] = 'Dataset not found.'
       redirect_to(admin_datasets_url)
@@ -82,36 +82,28 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def update
-    @dataset = Dataset.get(params[:id])
-    @updated_dataset = Dataset.new(params[:dataset])
+    @dataset = OpenMedia::Dataset.get(params[:id])
+    @dataset.update_attributes_without_saving(params[:dataset])
+    # @dataset.metadata.update_attributes_without_saving(params[:dataset])
 
-    @revs = @dataset['_rev'] + ' ' + @updated_dataset['rev']
-
-    if @dataset['_rev'].eql?(@updated_dataset.delete("rev"))
-      @updated_dataset.delete("couchrest-type")
-      
-      @updated_dataset.metadata = Metadata.new(params[:metadata])
-
-      respond_to do |format|
-        if @dataset.update_attributes(@updated_dataset)
-          flash[:notice] = 'Successfully updated Dataset.'
-          format.html { redirect_to(admin_datasets_path) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @dataset.errors, :status => :unprocessable_entity }
-        end
-      end
-    else
-      # Document revision is out of sync
-      flash[:notice] = 'Update conflict. Dataset has been updated elsewhere, reload Dataset page, then update again. ' + @revs
-      respond_to do |format|
+    respond_to do |format|    
+      if @dataset.save!
+        flash[:notice] = 'Successfully updated Dataset.'
+        format.html { redirect_to(admin_datasets_path) }
+        format.xml  { head :ok }    
+      else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @dataset.errors, :status => :unprocessable_entity }
       end
-    end
+    end      
   end
-  
+
+  def new_property
+    @property = OpenMedia::Property.new
+    render :partial=>'property', :object=>@property, :layout=>nil
+  end
+
+
   def destroy
     @dataset = OpenMedia::Dataset.get(params[:id])
     

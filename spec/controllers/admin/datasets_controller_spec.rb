@@ -88,4 +88,36 @@ describe Admin::DatasetsController do
     end    
   end
 
+  describe 'updating datasets' do
+    before(:each) do
+      @dataset = OpenMedia::Dataset.first
+      @dataset.dataset_properties = [{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                     {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                     {:name=>'C', :data_type=>OpenMedia::Property::STRING_TYPE}]
+      @dataset.save
+
+      get :edit, :id=>@dataset.identifier      
+    end  
+
+    it 'should have page for updating datasets' do
+      response.should be_success
+    end
+
+    it 'should have action for adding new properties' do
+      get :new_property
+      response.should be_success
+      response.should render_template('_property')
+    end
+
+    it 'should save changes to dataset' do
+      put :update, :id=>@dataset.identifier, :dataset=>{ :metadata=>{:keywords=>"one, two, three, four"},
+                                                         :dataset_properties => [{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                                                 {:name=>'C', :data_type=>OpenMedia::Property::STRING_TYPE}] }
+      response.should redirect_to(admin_datasets_path)
+      updated_dataset = OpenMedia::Dataset.get(@dataset.id)
+      updated_dataset.metadata.keywords.should == %w(one two three four)
+      updated_dataset.dataset_properties.collect{|dp| dp.name}.should == %w(A C)
+    end    
+  end
+
 end

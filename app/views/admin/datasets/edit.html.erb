@@ -1,2 +1,15 @@
 <% title "Datasets" %>
-<%= render :partial => 'form' %>
+<div class="grid_8">
+  <div class="box">
+    <h2><%= @dataset.title %></h2>
+    <%= form_for :dataset, :url=>admin_dataset_path(:id=>@dataset.identifier), :html=>{:method=>:put} do |ds| %>
+    <div class="box">
+      <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+    <% end %>
+  </div>
+</div>

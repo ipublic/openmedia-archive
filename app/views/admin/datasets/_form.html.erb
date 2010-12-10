@@ -1,0 +1,22 @@
+<%= ds.error_messages %>
+<fieldset>
+  <legend><b>Basic Info</b></legend>
+  <p>
+    
+    <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@dataset.new_record? %>
+  </p>
+  <p><%= ds.label :catalog_ids, 'Catalogs' %><br/><%= ds.select :catalog_ids, catalog_collection, {}, {:multiple=>true} %></p>				
+  <%= ds.fields_for :metadata, @dataset.metadata do |m| %>
+  <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
+  <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3 %></p>
+  <p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
+  <% end %>				
+</fieldset>	 	
+
+<fieldset id="property-set">
+  <legend><b>Properties</b></legend>
+  <% for property in @dataset.dataset_properties %>
+  <%= render :partial=>'property', :object=>property %>
+  <% end %>
+  <a href="#" id="add-property">add property</a>
+</fieldset>	 	

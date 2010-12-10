@@ -60,6 +60,7 @@ Openmedia::Application.routes.draw do
     resource :dashboard
     resources :datasets do
       collection do
+        get :new_property
         post :upload
       end
     end

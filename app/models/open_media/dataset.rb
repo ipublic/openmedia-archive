@@ -107,6 +107,12 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.save!    
   end
 
+  # this is basically to make fields_for happy
+  def dataset_properties_attributes=(attrs)
+    self.dataset_properties = attrs
+  end
+
+
 private
   def dataset_validation
     if self.class.all.detect{|ds| (ds.id != self.id && ds.title==self.title) }

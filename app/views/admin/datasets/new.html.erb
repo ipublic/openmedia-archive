@@ -1,46 +1,16 @@
 <% title "New Dataset" %>
-<div class="grid_4">
-	<div class="box">
-		<h2>Steps</h2>
-		<div class="block">
-			<ol>
-				<b><li>Define Dataset</li></b>
-				<li>Upload content</li>
-				<li>Import content</li>
-			</ol>
-		</div>
-	</div>
-	<div class="box">
-		<h2>About</h2>
-		<div class="block">
-			<p>Use this process to add new datasets to your site. </p>  <p>You can import content from different sources, including: files, databases and web services. Data is placed in the private Staging catalog where you can further process and filter content before publishing to the public.</p>
-			<ol>
-				<li>Title: choose a descriptive dataset name.</li>
-				<li>Description: include a sentence or two of notes about this content.</li>
-				<li>Keywords: list keywords that you or others might use to describe and search for this content.</li>
-				<li>Last updated: indicate when data content was last modified or current through date.</li>
-				<li>Next: click button to specify source for data content.</li>
-			</ol>
-		</div>
-	</div>
-</div>
 <div class="grid_8">
-	<div class="box">
-		<h2>Define Dataset</h2>
-		<div class="block">
-			<div class="box">
-				<%= form_for :dataset, :url=>admin_datasets_path do |ds| %>
-				<%= ds.error_messages %>
-					<p><%= ds.label :catalog_ids, 'Catalogs' %><br/><%= ds.select :catalog_ids, catalog_collection, {}, {:multiple=>true} %></p>				
-				  <p><%= ds.label :title %> <%= ds.text_field :title %></p>
-					<%= ds.fields_for :metadata, @dataset.metadata do |m| %>
-						<p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
-						<p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3 %></p>
-						<p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
-					<% end %>				
-				  <p><%= submit_tag 'Next' %></p>
-				<% end %>
-			</div>
-		</div>
-	</div>
+  <div class="box">
+    <h2>New Dataset</h2>
+    <%= form_for :dataset, :url=>admin_datasets_path do |ds| %>
+    <div class="box">
+      <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+    <% end %>
+  </div>
 </div>
+

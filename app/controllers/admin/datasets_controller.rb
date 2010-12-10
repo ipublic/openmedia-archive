@@ -3,7 +3,7 @@ require 'ruport'
 class Admin::DatasetsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
-                                                           
+
   def index
     @datasets = OpenMedia::Dataset.search(params[:search])
   end
@@ -15,6 +15,7 @@ class Admin::DatasetsController < ApplicationController
   def new
     @dataset = OpenMedia::Dataset.new
     @dataset.metadata = OpenMedia::Metadata.new
+    @dataset.source = OpenMedia::Source.new(:column_separator=>',', :skip_lines=>0)
   end
   
   def create
@@ -60,18 +61,6 @@ class Admin::DatasetsController < ApplicationController
 
     end
   end
-  
-  def upload
-    data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
-                             params[:data_file]
-    rtable = Ruport::Data::Table.parse(data_file, :has_names=>params[:has_header_row],
-                                        :csv_options => { :col_sep => params[:delimiter_character] })
-    rtable[0].attributes.each do |a|
-    end
-
-    render :json=>{ :properties=>rtable[0].attributes,
-                    :rows=>rtable[0..9].collect{|r| r.to_a} }
-  end
      
   def edit
     @dataset = OpenMedia::Dataset.get(params[:id])    
@@ -100,7 +89,7 @@ class Admin::DatasetsController < ApplicationController
 
   def new_property
     @property = OpenMedia::Property.new
-    render :partial=>'property', :object=>@property, :layout=>nil
+    render :partial=>'property', :locals=>{:base_name=>params[:base_name], :property=>@property}, :layout=>nil
   end
 
 
@@ -116,6 +105,20 @@ class Admin::DatasetsController < ApplicationController
     end
   end
   
+
+  def seed_properties
+    render :layout => nil
+  end
+
+  def extract_seed_properties
+      
+    data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
+                             params[:data_file]
+    rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
+                                        :csv_options => { :col_sep => ',' })
+    render :json=>{ :properties=>rtable[0].attributes }    
+  end
+
 
   
 end

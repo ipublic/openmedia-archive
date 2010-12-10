@@ -61,6 +61,8 @@ Openmedia::Application.routes.draw do
     resources :datasets do
       collection do
         get :new_property
+        get :seed_properties
+        post :extract_seed_properties
         post :upload
       end
     end

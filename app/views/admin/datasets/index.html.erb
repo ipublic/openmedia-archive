@@ -19,6 +19,7 @@
 	    <th>Description</th>
 	    <th>Records</th>
 	    <th>Updated</th>
+	    <th></th>
 	  </tr>
 	</thead>
 	<% @datasets.each do |ds| %>
@@ -28,6 +29,7 @@
 	  <td><%= ds.metadata.description unless ds.metadata.nil? %></td>
 	  <td><%= ds.model.count %></td>
 	  <td><%= ds.updated_at.to_s(:full) %></td>
+	  <td><%= link_to 'edit', edit_admin_dataset_path(ds.identifier) %></td>
 	</tr>
 	<% end %>
       </table>

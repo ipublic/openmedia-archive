@@ -15,6 +15,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   property :dataset_properties, [Property]
   property :metadata, OpenMedia::Metadata
   property :unique_id_property
+  property :source, OpenMedia::Source
 
   timestamps!
   

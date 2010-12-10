@@ -37,7 +37,7 @@ end
 
 def create_test_dataset(data={})
   c = data.delete(:catalog)
-  ds = OpenMedia::Dataset.new({:title=>'Test Dataset'}.merge(data))  
+  ds = OpenMedia::Dataset.new({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
   ds.catalog_ids = c ? [c.id] : [create_test_catalog.id]
   ds.save!
   return ds

@@ -16,7 +16,42 @@
 <fieldset id="property-set">
   <legend><b>Properties</b></legend>
   <% for property in @dataset.dataset_properties %>
-  <%= render :partial=>'property', :object=>property %>
+  <%= render :partial=>'property', :locals=>{ :base_name=>'dataset[dataset_properties][]', :property=>property } %>
   <% end %>
-  <a href="#" id="add-property">add property</a>
+  <a href="#" class="add-property" rel="dataset[dataset_properties][]">add property</a>
+</fieldset>	 	
+
+
+<fieldset>
+  <legend><b>Source</b></legend>
+  <%= ds.fields_for :source, @dataset.source do |s| %>
+  <p>
+    <%= s.label :source_type %>
+    <%= s.select :source_type, OpenMedia::Source::TYPES.collect {|t| [t.titleize, t]} %>
+  </p>
+
+  <p id="parser">
+    <%= s.label :parser %>
+    <%= s.select :parser, OpenMedia::Source::PARSERS.collect {|p| [p.titleize, p]} %>
+  </p>
+
+  <p>
+    <%= s.label :column_separator %>
+    <%= s.text_field :column_separator %>
+  </p>
+
+  <p>
+    <%= s.label :skip_lines %>
+    <%= s.text_field :skip_lines %>
+  </p>
+
+  <p>
+    <a href="#" class="seed-properties" style="float: right">Import Properties From File</a>
+    <b>Properties</b>
+  </p>
+  <% for property in @dataset.source.source_properties %>
+  <%= render :partial=>'property', :locals=>{ :base_name=>'dataset[source][source_properties][]', :property=>property } %>
+  <% end %>
+  <a href="#" class="add-property" rel="dataset[source][source_properties][]">add property</a>
+  <% end %>
 </fieldset>	 	

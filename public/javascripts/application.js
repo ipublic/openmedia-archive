@@ -22,6 +22,7 @@ $(function() {
     });
 
     $('a.seed-properties').click(function() {
+	var link = this;
 	$('<div/>').attr('id', 'seed-properties-dialog').appendTo(document.body);
 	$('#seed-properties-dialog').load('/admin/datasets/seed_properties', function() {
 	    $('#seed-properties-dialog').dialog({width: 400,
@@ -39,8 +40,8 @@ $(function() {
 
 	    $('#seed-properties-form').iframePostForm({
 		complete: function(response) {
-		    alert('done');
-		    alert(response);
+		    $(response).insertAfter($(link).parent());		    
+		    $('#seed-properties-dialog').dialog('close');
 		}
 	    });
 

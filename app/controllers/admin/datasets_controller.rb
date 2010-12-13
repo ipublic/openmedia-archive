@@ -116,9 +116,8 @@ class Admin::DatasetsController < ApplicationController
                              params[:data_file]
     rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
                                         :csv_options => { :col_sep => ',' })
-    render :json=>{ :properties=>rtable[0].attributes }    
+    @properties = rtable[0].attributes.collect{|name| OpenMedia::Property.new(:name=>name)}
+    render :layout => nil
   end
-
-
   
 end

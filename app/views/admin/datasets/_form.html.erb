@@ -5,7 +5,7 @@
     
     <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@dataset.new_record? %>
   </p>
-  <p><%= ds.label :catalog_ids, 'Catalogs' %><br/><%= ds.select :catalog_ids, catalog_collection, {}, {:multiple=>true} %></p>				
+  <p><%= ds.label :catalog_id, 'Catalog' %><br/><%= ds.select :catalog_id, catalog_collection %></p>				
   <%= ds.fields_for :metadata, @dataset.metadata do |m| %>
   <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
   <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3 %></p>

@@ -50,7 +50,7 @@ describe Admin::DatasetsController do
   
   describe 'posting new datasets' do
     before(:each) do
-      @dataset_params = { :title=>'New Dataset', :catalog_ids=>[@catalog.id], :unique_id_property=>'B',
+      @dataset_params = { :title=>'New Dataset', :catalog_id=>@catalog.id, :unique_id_property=>'B',
                           :skip_lines=>'1', :column_separator=>',',
                           :dataset_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
                                                 {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},

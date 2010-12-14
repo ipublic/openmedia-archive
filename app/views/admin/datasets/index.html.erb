@@ -14,7 +14,7 @@
       <table>
 	<thead>
 	  <tr>
-	    <th>Catalogs</th>
+	    <th>Catalog</th>
 	    <th>Title</th>
 	    <th>Description</th>
 	    <th>Records</th>
@@ -24,7 +24,7 @@
 	</thead>
 	<% @datasets.each do |ds| %>
 	<tr>
-	  <td><%= ds.catalogs.collect{|c| c.title}.join(', ') %></td>
+	  <td><%= ds.catalog.title %></td>
 	  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
 	  <td><%= ds.metadata.description unless ds.metadata.nil? %></td>
 	  <td><%= ds.model.count %></td>

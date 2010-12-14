@@ -28,14 +28,14 @@ describe OpenMedia::Catalog do
   it 'should be able to fetch its datasets' do
     @catalog.save
     ds1 = OpenMedia::Dataset.new(:title=>"DS1")
-    ds1.catalog_ids = [@catalog.id]
+    ds1.catalog_id = @catalog.id
     ds1.save!
     ds2 = OpenMedia::Dataset.new(:title=>"DS2")
-    ds2.catalog_ids = [@catalog.id]
+    ds2.catalog_id = @catalog.id
     ds2.save!
-    @catalog.datasets = [ds1, ds2]
+
     @catalog = OpenMedia::Catalog.first
-    @catalog.dataset_ids.should == [ds1.id, ds2.id]    
+    @catalog.datasets.collect{|ds| ds.title}.should == %w(DS1 DS2)
   end
 
 end

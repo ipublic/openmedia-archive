@@ -19,5 +19,6 @@ class OpenMedia::Property < Hash
   property :is_key
   property :example_value
   property :comment
+  property :source_name
 end
 

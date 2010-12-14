@@ -39,6 +39,7 @@ $(function() {
 						     'Cancel': function() { $(this).dialog('close'); }
 						 }
 						});
+	    $('#seed-column-separator').val($('#dataset_source_column_separator').val());
 
 	    $('#seed-properties-form').iframePostForm({
 		complete: function(response) {

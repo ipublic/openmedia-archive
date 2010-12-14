@@ -34,12 +34,25 @@ describe Admin::DatasetsController do
     response.should render_template('new')    
   end
 
-  it 'should have action for uploading sample data and getting back properties html' do
+  it 'should extract properties from csv file and give back properties html' do
     post :extract_seed_properties, :column_separator=>',', :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
     assigns[:properties].size.should == 4
     response.should be_success
     response.should render_template('extract_seed')
   end
+
+  it 'should extract properties from tab-delimited file and give back properties html' do
+    File.open('/tmp/test.tsv', 'w') do |f|
+      f.puts("A\tB\tC\tD")
+      f.puts("1\t2\t3\t4")
+      f.puts("5\t6\t7\t8")            
+    end
+    # \t gets converted to \\t
+    post :extract_seed_properties, :column_separator=>"\\t", :data_file=>fixture_file_upload('/tmp/test.tsv', 'text/plain')
+    assigns[:properties].size.should == 4
+    response.should be_success
+    response.should render_template('extract_seed')
+  end  
 
   it 'should allow datasets to be deleted' do
     @dataset = OpenMedia::Dataset.first

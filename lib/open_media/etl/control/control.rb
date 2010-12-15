@@ -277,7 +277,11 @@ module OpenMedia::ETL #:nodoc:
           control_file = control_file.path if control_file.instance_of?(File)
           control = OpenMedia::ETL::Control::Control.new(control_file)
           # TODO: better handling of parser errors. Return the line in the control file where the error occurs.
-          eval(IO.readlines(control_file).join("\n"), Context.create(control), control_file)
+          if control_file.is_a? String            
+            eval(IO.readlines(control_file).join("\n"), Context.create(control), control_file)
+          elsif control_file.is_a? StringIO
+            eval(control_file.read, Context.create(control))            
+          end
           control.validate
           control
         end
@@ -300,6 +304,8 @@ module OpenMedia::ETL #:nodoc:
           case control
           when String
             OpenMedia::ETL::Control::Control.parse(File.new(control))
+          when StringIO
+            OpenMedia::ETL::Control::Control.parse(control)
           when File
             OpenMedia::ETL::Control::Control.parse(control)
           when OpenMedia::ETL::Control::Control

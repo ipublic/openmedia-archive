@@ -28,7 +28,7 @@ source :in, {
   :D
 ]
 eos
-    File.open('/tmp/test.ctl', 'w') {|f| f.write(@test_ctl)}
+    # File.open('/tmp/test.ctl', 'w') {|f| f.write(@test_ctl)}
   end
 
   after :all do
@@ -40,13 +40,23 @@ eos
   end
 
   it 'should be able to run ctl' do
-    OpenMedia::ETL::Engine.process('/tmp/test.ctl')
+    OpenMedia::ETL::Engine.process_string(@test_ctl)
     OpenMedia::ETL::Execution::Job.count.should == 1
   end
 
   it 'should store ctl in job#control_file' do
-    OpenMedia::ETL::Engine.process('/tmp/test.ctl')
+    OpenMedia::ETL::Engine.process_string(@test_ctl)
     OpenMedia::ETL::Execution::Job.first.control_file.should == @test_ctl
+  end
+
+  it 'should store etl processing output in job#output' do
+    OpenMedia::ETL::Engine.process_string(@test_ctl)
+    OpenMedia::ETL::Execution::Job.first.output.should match(/Process/)
+  end
+
+  it 'should store source csv data as attachment to Job' do
+    OpenMedia::ETL::Engine.process_string(@test_ctl)        
+    OpenMedia::ETL::Execution::Job.first.attachments.size.should == 1
   end
   
 end

@@ -18,7 +18,6 @@ module OpenMedia::ETL #:nodoc:
       # * <tt>:rails_root</tt>: Set to the rails root to boot rails
       def init(options={})
         unless @initialized
-          puts "initializing ETL engine\n\n"
           @limit = options[:limit]
           @offset = options[:offset]
           @log_write_mode = 'w' if options[:newlog]
@@ -29,7 +28,7 @@ module OpenMedia::ETL #:nodoc:
       end
       
       # Process the specified file. Acceptable values for file are:
-      # * Path to a file
+      # * String containing ctl
       # * File object
       # * OpenMedia::ETL::Control::Control instance
       # * OpenMedia::ETL::Batch::Batch instance
@@ -39,6 +38,11 @@ module OpenMedia::ETL #:nodoc:
       def process(file)
         new().process(file)
       end
+
+      def process_string(str)
+        new().process(StringIO.new(str))
+      end
+
       
       attr_accessor :timestamped_log
       
@@ -56,7 +60,7 @@ module OpenMedia::ETL #:nodoc:
           if timestamped_log
             @logger = Logger.new("etl_#{timestamp}.log")
           else
-            @logger = Logger.new(File.open('etl.log', log_write_mode))
+            @logger = Logger.new(File.open(File.join(Rails.root, 'log', 'etl.log'), log_write_mode))
           end
           @logger.level = Logger::WARN
           @logger.formatter = Logger::Formatter.new
@@ -199,8 +203,9 @@ module OpenMedia::ETL #:nodoc:
     # Say the specified message without a newline
     def say_without_newline(message)
       if OpenMedia::ETL::Engine.realtime_activity
-        $stdout.print message
-        $stdout.flush
+        #$stdout.print message
+        #$stdout.flush
+        @output.print message
       end
     end
     
@@ -233,13 +238,16 @@ module OpenMedia::ETL #:nodoc:
     # Process a file, control object or batch object. Acceptable values for 
     # file are:
     # * Path to a file
+    # * StringIO object
     # * File object
     # * OpenMedia::ETL::Control::Control instance
     # * OpenMedia::ETL::Batch::Batch instance
     def process(file)
       case file
       when String
-        process(File.new(file))
+        process_control(file)
+      when StringIO
+        process_control(file)        
       when File
         process_control(file) if file.path =~ /.ctl$/
         process_batch(file) if file.path =~ /.ebf$/
@@ -273,11 +281,12 @@ module OpenMedia::ETL #:nodoc:
     
     # Process the specified control file
     def process_control(control)
+      @output = StringIO.new
       control = OpenMedia::ETL::Control::Control.resolve(control)
       say_on_own_line "Processing control #{control.file}"
       
       OpenMedia::ETL::Engine.job = OpenMedia::ETL::Execution::Job.create!(
-        :control_file => File.open(control.file) {|f| f.read}, 
+        :control_file => control.file.is_a?(String) ? (File.open(control.file) {|f| f.read}) : (control.file.rewind; control.file.read),
         :status => 'executing',
         :batch_id => OpenMedia::ETL::Engine.batch ? OpenMedia::ETL::Engine.batch.id : nil
       )
@@ -287,6 +296,10 @@ module OpenMedia::ETL #:nodoc:
       start_time = Time.now
       pre_process(control)
       sources = control.sources
+
+      # Change sources local_base to Dir.tmpdir because we're going to
+      # later store those files as attachments to the Job
+      sources.each {|s| s.local_base = File.join(Dir.tmpdir, 'etl_source_data') }
       destinations = control.destinations
       
       say "Skipping bulk import" if Engine.skip_bulk_import
@@ -460,9 +473,18 @@ module OpenMedia::ETL #:nodoc:
       # OpenMedia::ETL::Transform::Transform.benchmarks.each do |klass, t|
 #         say "Avg #{klass}: #{Engine.rows_read/t} rows/sec"
 #       end
-      
+
       OpenMedia::ETL::Engine.job.completed_at = Time.now
       OpenMedia::ETL::Engine.job.status = (errors.length > 0 ? 'completed with errors' : 'completed')
+      @output.rewind
+      OpenMedia::ETL::Engine.job.output = @output.read
+      sources.each do |source|
+        File.open(source.last_local_file) do |source_csv|
+          OpenMedia::ETL::Engine.job.create_attachment(:name=>File.basename(source_csv.path), :content_type=>'text/csv', :file=>source_csv)
+        end
+      end
+
+
       OpenMedia::ETL::Engine.job.save!
     end
     

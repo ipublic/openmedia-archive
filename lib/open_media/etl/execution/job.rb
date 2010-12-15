@@ -7,7 +7,8 @@ module OpenMedia::ETL #:nodoc:
       property :control_file
       property :created_at, Time
       property :completed_at, Time
-      property :status      
+      property :status
+      property :output
     end
   end
 end

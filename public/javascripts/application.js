@@ -9,7 +9,7 @@ $(function() {
     $('p.date input').datepicker();
 
     $('a.delete-property').live('click', function() {
-	$(this).closest('div.property').fadeOut(500, function() { $(this).remove(); });
+	$(this).closest('div.property').fadeOut(500, function() { $(this).remove(); syncSourceProperties(); });
 	return false;
     });
 
@@ -20,6 +20,8 @@ $(function() {
 	});
 	return false;
     });
+
+    $('#source input.property-name').live('blur', syncSourceProperties);
 
     $('a.seed-properties').click(function() {
 	var link = this;
@@ -37,11 +39,13 @@ $(function() {
 						     'Cancel': function() { $(this).dialog('close'); }
 						 }
 						});
+	    $('#seed-column-separator').val($('#dataset_source_column_separator').val());
 
 	    $('#seed-properties-form').iframePostForm({
 		complete: function(response) {
 		    $(response).insertAfter($(link).parent());		    
 		    $('#seed-properties-dialog').dialog('close');
+		    syncSourceProperties();
 		}
 	    });
 
@@ -50,3 +54,19 @@ $(function() {
     });
 });
 
+function syncSourceProperties() {
+    var sourceNames = $('#source input.property-name').map(function(idx, inputElm) { 
+	return $(inputElm).val(); 
+    });
+
+    $('#property-set select.source-select').each(function(idx, selectElm) {
+	var currentVal = $(selectElm).val();
+	$(selectElm).html('<option/>');
+	sourceNames.each(function(idx, sourceName) {
+	    $('<option/>').attr('value', sourceName).
+		attr('selected', (sourceName==currentVal)).
+		html(sourceName).
+		appendTo(selectElm);
+	});
+    });
+}

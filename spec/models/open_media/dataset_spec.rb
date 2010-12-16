@@ -6,7 +6,7 @@ describe OpenMedia::Dataset do
     reset_test_db!
     @catalog = create_test_catalog
     @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')
-    @dataset.catalogs = [@catalog]
+    @dataset.catalog = @catalog
   end
   
   it 'should be a couchdb design document' do
@@ -18,22 +18,27 @@ describe OpenMedia::Dataset do
   end
   
   it 'should require at least one catalog' do
-    @dataset.catalog_ids = []
+    @dataset.catalog = nil
     @dataset.should_not be_valid
-    @dataset.errors[:catalog_ids].should_not be_nil
+    @dataset.errors[:catalog_id].should_not be_nil
+  end
+
+  it 'should know how to get its catalog' do
+    @dataset.save
+    @dataset = OpenMedia::Dataset.find(@dataset.id)
+    @dataset.catalog.title.should == @catalog.title
   end
   
   it 'should save and generate id as _design/ModelClassName' do
     @dataset.save
     @dataset.persisted?.should be_true
-    @dataset.catalogs.size.should == 1
     @dataset.id.should == "_design/#{@dataset.model_name}"
   end
   
   it 'should allow access to all datasets' do
     @dataset.save
     ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
-    ds2.catalogs = [@catalog]
+    ds2.catalog = @catalog
     ds2.save
     
     dd = CouchRest::Design.new
@@ -47,7 +52,7 @@ describe OpenMedia::Dataset do
   it 'should provide count of datasets' do
     @dataset.save
     ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
-    ds2.catalogs = [@catalog]
+    ds2.catalog = @catalog
     ds2.save
     OpenMedia::Dataset.count.should == 2
     dd = CouchRest::Design.new
@@ -78,40 +83,11 @@ describe OpenMedia::Dataset do
     @dataset.save
     STAGING_DATABASE.documents(:startkey => '_design', :endkey => '_design0')['rows'].size.should == num_design_docs + 1
   end
-  
-  it 'should know which catalogs it belongs to' do
-    @dataset.save!    
-    c1 = create_test_catalog(:title=>'C1')
-    c2 = create_test_catalog(:title=>'C2')
-    c1.datasets << @dataset; c1.save
-    c2.datasets << @dataset; c2.save
-    @dataset = OpenMedia::Dataset.get(@dataset.id)  # reload from db
-    @dataset.catalogs.size.should == 3
-    @dataset.catalogs[0].title.should == 'C1'
-    @dataset.catalogs[1].title.should == 'C2'
-    @dataset = OpenMedia::Dataset.first
-    @dataset.catalog_ids.should == [c1.id, c2.id, @catalog.id]
-  end
-  
-  it 'should allow catalogs to be set' do
-    c1 = create_test_catalog(:title=>'C1')
-    c2 = create_test_catalog(:title=>'C2')
-    @dataset.catalog_ids = [c1.id, c2.id]
-    @dataset.save!
-    
-    c1 = OpenMedia::Catalog.get(c1.id)
-    c2 = OpenMedia::Catalog.get(c2.id)
-    @dataset = OpenMedia::Dataset.get(@dataset.id)
-    c1.dataset_ids.should == [@dataset.id]
-    c2.dataset_ids.should == [@dataset.id]
-    @dataset.catalogs.size.should == 2
-    @dataset.catalogs.should == [c1, c2]
-  end
-  
+      
   it 'should be searchable by title' do
     %w(Apples Applications Bananas).each do |t|
       ds = OpenMedia::Dataset.new(:title=>t)
-      ds.catalogs = [@catalog]
+      ds.catalog = @catalog
       ds.save!
     end
   

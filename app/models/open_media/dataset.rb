@@ -8,7 +8,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   before_create :generate_id, :generate_views
   after_create :update_model_views
-  after_save :update_catalogs
+  after_save :update_catalog
   before_destroy {|ds| ds.model.all.each{|m| m.destroy}}
 
   property :title
@@ -20,6 +20,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   timestamps!
   
   validates :title, :presence=>true
+  validates :catalog, :presence=>true  
   validate :dataset_validation
 
   def self.get(id, db = database)
@@ -44,20 +45,20 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.all.size
   end
 
-  def catalogs
-    @catalogs ||= OpenMedia::Catalog.by_dataset_id(:key=>self.id)
+  def catalog
+    @catalog ||= OpenMedia::Catalog.by_dataset_id(:key=>self.id).first
   end
 
-  def catalog_ids
-    self.catalogs.collect{|c| c.id}
+  def catalog_id
+    self.catalog ? self.catalog.id : nil
   end
 
-  def catalogs=(catalogs)
-    @catalogs = catalogs
+  def catalog=(catalog)
+    @catalog = catalog
   end
 
-  def catalog_ids=(cat_ids)
-    self.catalogs = cat_ids.collect{|cid| OpenMedia::Catalog.get(cid)}
+  def catalog_id=(cat_id)
+    self.catalog = OpenMedia::Catalog.get(cat_id)
   end
 
   # dataset property convenience methods
@@ -119,10 +120,6 @@ private
     if self.class.all.detect{|ds| (ds.id != self.id && ds.title==self.title) }
       self.errors.add(:title, TITLE_TAKEN_MSG)
     end
-
-    if self.catalogs.size == 0
-      errors.add(:base, 'Must belong to at least one catalog')
-    end
   end
 
   def generate_id
@@ -134,13 +131,11 @@ private
   end
 
 
-  def update_catalogs
-    if @catalogs
-      @catalogs.each do |c|
-        unless c.dataset_ids.include?(self.id)
-          c.datasets << self
-          c.save!
-        end
+  def update_catalog
+    if @catalog
+      unless @catalog.dataset_ids.include?(self.id)
+        @catalog.datasets << self
+        @catalog.save!
       end
     end
   end

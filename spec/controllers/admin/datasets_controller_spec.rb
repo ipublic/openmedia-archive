@@ -34,14 +34,25 @@ describe Admin::DatasetsController do
     response.should render_template('new')    
   end
 
-  it 'should have action for uploading sample data and getting back properties and upto 10 rows of sample data' do
-    post :upload, :has_header_row=>'1', :delimiter_character=>',', :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
+  it 'should extract properties from csv file and give back properties html' do
+    post :extract_seed_properties, :column_separator=>',', :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
+    assigns[:properties].size.should == 4
     response.should be_success
-    response.content_type.should == 'application/json'
-    response_json = JSON.parse(response.body)
-    response_json['properties'].should == %w(A B C D)
-    response_json['rows'].should == [['1','2','3','4'], ['5','6','7','8']]
+    response.should render_template('extract_seed')
   end
+
+  it 'should extract properties from tab-delimited file and give back properties html' do
+    File.open('/tmp/test.tsv', 'w') do |f|
+      f.puts("A\tB\tC\tD")
+      f.puts("1\t2\t3\t4")
+      f.puts("5\t6\t7\t8")            
+    end
+    # \t gets converted to \\t
+    post :extract_seed_properties, :column_separator=>"\\t", :data_file=>fixture_file_upload('/tmp/test.tsv', 'text/plain')
+    assigns[:properties].size.should == 4
+    response.should be_success
+    response.should render_template('extract_seed')
+  end  
 
   it 'should allow datasets to be deleted' do
     @dataset = OpenMedia::Dataset.first
@@ -52,12 +63,22 @@ describe Admin::DatasetsController do
   
   describe 'posting new datasets' do
     before(:each) do
-      @dataset_params = { :title=>'New Dataset', :catalog_ids=>[@catalog.id], :unique_id_property=>'B',
-        :has_header_row=>'1', :delimiter_character=>',',
-        :dataset_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
-                              {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
-                              {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}],
-        :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv') }
+      @dataset_params = { :title=>'New Dataset', :catalog_id=>@catalog.id, :unique_id_property=>'B',
+                          :skip_lines=>'1', :column_separator=>',',
+                          :dataset_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}],
+                          :source => { :source_type => OpenMedia::Source::FILE_TYPE,
+                                       :parser => OpenMedia::Source::DELIMITED_PARSER,
+                                       :column_separator => ',',
+                                       :skip_lines => '1',
+                                       :source_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'C', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}]
+                          }
+      }
+ 
     end
     
     it 'should allow new datasets to be uploaded' do
@@ -67,7 +88,8 @@ describe Admin::DatasetsController do
       }.should change(OpenMedia::Dataset, :count).by(1)
       assigns[:dataset].dataset_properties.size.should == 3
       assigns[:dataset].dataset_properties.collect{|p| p.name}.should == %w(A B D)
-      assigns[:dataset].model.count.should == 2
+      assigns[:dataset].source.source_properties.size.should == 4
+      assigns[:dataset].source.source_properties.collect{|p| p.name}.should == %w(A B C D)      
       response.should redirect_to(admin_datasets_path)          
     end
 

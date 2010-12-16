@@ -19,18 +19,10 @@ class Admin::DatasetsController < ApplicationController
   end
   
   def create
-    dataset_properties = params[:dataset].delete(:dataset_properties)
     data_file = params[:dataset].delete(:data_file)
-    has_header_row = params[:dataset].delete(:has_header_row)
-    delimiter_character = params[:dataset].delete(:delimiter_character)
     
     @dataset = OpenMedia::Dataset.new(params[:dataset])
-    if dataset_properties
-      dataset_properties.each do |dsp|
-        @dataset.dataset_properties << OpenMedia::Property.new(:name=>dsp[:name], :data_type=>dsp[:data_type])
-      end     
-    end
-
+    
     if @dataset.save
       if data_file
         data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
@@ -114,8 +106,15 @@ class Admin::DatasetsController < ApplicationController
       
     data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
                              params[:data_file]
+    column_separator = params[:column_separator]
+    if column_separator =~ /^\\/
+      begin
+        column_separator = eval('"' + params[:column_separator] + '"')
+      rescue; end
+    end
+
     rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
-                                        :csv_options => { :col_sep => ',' })
+                                        :csv_options => { :col_sep => column_separator })
     @properties = rtable[0].attributes.collect{|name| OpenMedia::Property.new(:name=>name)}
     render :layout => nil
   end

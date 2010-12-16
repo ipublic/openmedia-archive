@@ -19,7 +19,7 @@ module OpenMedia::ETL #:nodoc:
       
       # Initialize the database destination
       # 
-      # * <tt>control</tt>: The ETL::Control::Control instance
+      # * <tt>control</tt>: The OpenMedia::ETL::Control::Control instance
       # * <tt>configuration</tt>: The configuration Hash
       # * <tt>mapping</tt>: The mapping
       #
@@ -65,7 +65,7 @@ module OpenMedia::ETL #:nodoc:
               values << conn.quote(row[name])
             end
             q = "INSERT INTO #{conn.quote_table_name(table_name)} (#{names.join(',')}) VALUES (#{values.join(',')})"
-            ETL::Engine.logger.debug("Executing insert: #{q}")
+            OpenMedia::ETL::Engine.logger.debug("Executing insert: #{q}")
             conn.insert(q, "Insert row #{current_row}")
             @current_row += 1
           end
@@ -82,14 +82,14 @@ module OpenMedia::ETL #:nodoc:
       private
       def conn
         @conn ||= begin
-          conn = ETL::Engine.connection(target)
+          conn = OpenMedia::ETL::Engine.connection(target)
           conn.truncate(table_name) if truncate
           conn
         end
       end
       
       def table_name
-        ETL::Engine.table(table, ETL::Engine.connection(target))
+        OpenMedia::ETL::Engine.table(table, OpenMedia::ETL::Engine.connection(target))
       end
       
     end

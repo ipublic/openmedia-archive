@@ -64,7 +64,7 @@ require 'etl/processor'
 require 'etl/generator'
 require 'etl/screen'
 
-module ETL #:nodoc:
+module OpenMedia::ETL #:nodoc:
   class ETLError < StandardError #:nodoc:
   end
   class ControlError < ETLError #:nodoc:

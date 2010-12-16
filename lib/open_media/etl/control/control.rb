@@ -403,7 +403,7 @@ module OpenMedia::ETL #:nodoc:
       end
       
       def destination_types
-        [:file, :database]
+        [:file, :database, :dataset]
       end
       
     end

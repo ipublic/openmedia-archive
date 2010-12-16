@@ -2,7 +2,7 @@ module OpenMedia::ETL #:nodoc:
   module Control #:nodoc:
     # Base class for destinations.
     class Destination
-      # Read-only accessor for the ETL::Control::Control instance
+      # Read-only accessor for the OpenMedia::ETL::Control::Control instance
       attr_reader :control
       
       # Read-only accessor for the configuration Hash
@@ -29,14 +29,14 @@ module OpenMedia::ETL #:nodoc:
         # For example if name is :database or 'database' then the 
         # DatabaseDestination class is returned
         def class_for_name(name)
-          ETL::Control.const_get("#{name.to_s.camelize}Destination")
+          OpenMedia::ETL::Control.const_get("#{name.to_s.camelize}Destination")
         end
       end
       
       # Initialize the destination
       #
       # Arguments:
-      # * <tt>control</tt>: The ETL::Control::Control instance
+      # * <tt>control</tt>: The OpenMedia::ETL::Control::Control instance
       # * <tt>configuration</tt>: The configuration Hash
       # * <tt>mapping</tt>: The mapping Hash
       #
@@ -129,7 +129,7 @@ module OpenMedia::ETL #:nodoc:
       # missing, uses all of the row's fields.
       def scd_fields(row)
         @scd_fields ||= configuration[:scd_fields] || row.keys
-        ETL::Engine.logger.debug "@scd_fields is: #{@scd_fields.inspect}"
+        OpenMedia::ETL::Engine.logger.debug "@scd_fields is: #{@scd_fields.inspect}"
         @scd_fields
       end
 
@@ -144,7 +144,7 @@ module OpenMedia::ETL #:nodoc:
       
       def non_scd_fields(row)
         @non_scd_fields ||= row.keys - natural_key - scd_fields(row) - [primary_key] - scd_required_fields
-        ETL::Engine.logger.debug "@non_scd_fields is: #{@non_scd_fields.inspect}"
+        OpenMedia::ETL::Engine.logger.debug "@non_scd_fields is: #{@non_scd_fields.inspect}"
         @non_scd_fields
       end
       
@@ -186,7 +186,7 @@ module OpenMedia::ETL #:nodoc:
       # Get the dimension table if specified
       def dimension_table
         @dimension_table ||= if scd?
-          ETL::Engine.table(configuration[:scd][:dimension_table], dimension_target) or raise ConfigurationError, "dimension_table setting required" 
+          OpenMedia::ETL::Engine.table(configuration[:scd][:dimension_table], dimension_target) or raise ConfigurationError, "dimension_table setting required" 
         end
       end
       
@@ -199,11 +199,11 @@ module OpenMedia::ETL #:nodoc:
       
       # Process a row to determine the change type
       def process_change(row)
-        ETL::Engine.logger.debug "Processing row: #{row.inspect}"
+        OpenMedia::ETL::Engine.logger.debug "Processing row: #{row.inspect}"
         return unless row
         
         # Change processing can only occur if the natural key exists in the row 
-        ETL::Engine.logger.debug "Checking for natural key existence"
+        OpenMedia::ETL::Engine.logger.debug "Checking for natural key existence"
         unless has_natural_key?(row)
           buffer << row
           return
@@ -216,7 +216,7 @@ module OpenMedia::ETL #:nodoc:
         # warehouse. If they match then throw away this row (no need
         # to process). If they do not match then the record is an
         # 'update'. If the record doesn't exist then it is an 'insert'
-        ETL::Engine.logger.debug "Checking record for SCD change"
+        OpenMedia::ETL::Engine.logger.debug "Checking record for SCD change"
         if @existing_row = preexisting_row(row)
           if has_scd_field_changes?(row)
             process_scd_change(row)
@@ -247,12 +247,12 @@ module OpenMedia::ETL #:nodoc:
               generator = generators[key] ||= value.new
               row[key] = generator.next
             when Symbol
-              generator = generators[key] ||= ETL::Generator::Generator.class_for_name(value).new(options)
+              generator = generators[key] ||= OpenMedia::ETL::Generator::Generator.class_for_name(value).new(options)
               row[key] = generator.next
             when Proc
               row[key] = value.call(row)
             else
-              if value.is_a?(ETL::Generator::Generator)
+              if value.is_a?(OpenMedia::ETL::Generator::Generator)
                 row[key] = value.next
               else
                 row[key] = value
@@ -275,8 +275,8 @@ module OpenMedia::ETL #:nodoc:
       # key.
       # 
       # TODO: This should be factored out into
-      # ETL::Row#has_all_fields?(field_array) But that's not possible
-      # until *all* sources cast to ETL::Row, instead of sometimes
+      # OpenMedia::ETL::Row#has_all_fields?(field_array) But that's not possible
+      # until *all* sources cast to OpenMedia::ETL::Row, instead of sometimes
       # using Hash
       def has_natural_key?(row)
         natural_key.any? && natural_key.all? { |key| row.has_key?(key) }
@@ -299,11 +299,11 @@ module OpenMedia::ETL #:nodoc:
       # Do all the steps required when a SCD *has* changed.  Exact steps
       # depend on what type of SCD we're handling.
       def process_scd_change(row)
-        ETL::Engine.logger.debug "SCD fields do not match"
+        OpenMedia::ETL::Engine.logger.debug "SCD fields do not match"
         
         if scd_type == 2
           # SCD Type 2: new row should be added and old row should be updated
-          ETL::Engine.logger.debug "type 2 SCD"
+          OpenMedia::ETL::Engine.logger.debug "type 2 SCD"
           
           # To update the old row, we delete the version in the database
           # and insert a new expired version
@@ -311,7 +311,7 @@ module OpenMedia::ETL #:nodoc:
           # If there is no truncate then the row will exist twice in the database
           delete_outdated_record
           
-          ETL::Engine.logger.debug "expiring original record"
+          OpenMedia::ETL::Engine.logger.debug "expiring original record"
           @existing_row[scd_end_date_field] = @timestamp
           @existing_row[scd_latest_version_field] = false
           
@@ -319,7 +319,7 @@ module OpenMedia::ETL #:nodoc:
 
         elsif scd_type == 1
           # SCD Type 1: only the new row should be added
-          ETL::Engine.logger.debug "type 1 SCD"
+          OpenMedia::ETL::Engine.logger.debug "type 1 SCD"
 
           # Copy primary key, and other non-evolving fields over from
           # original version of record
@@ -331,7 +331,7 @@ module OpenMedia::ETL #:nodoc:
           delete_outdated_record
         else
           # SCD Type 3: not supported
-          ETL::Engine.logger.debug "SCD type #{scd_type} not supported"
+          OpenMedia::ETL::Engine.logger.debug "SCD type #{scd_type} not supported"
         end
         
         # In all cases, the latest, greatest version of the record
@@ -342,10 +342,10 @@ module OpenMedia::ETL #:nodoc:
       # Do all the steps required when a SCD has *not* changed.  Exact
       # steps depend on what type of SCD we're handling.
       def process_scd_match(row)
-        ETL::Engine.logger.debug "SCD fields match"
+        OpenMedia::ETL::Engine.logger.debug "SCD fields match"
         
         if scd_type == 2 && has_non_scd_field_changes?(row)
-          ETL::Engine.logger.debug "Non-SCD field changes"
+          OpenMedia::ETL::Engine.logger.debug "Non-SCD field changes"
           # Copy important data over from original version of record
           row[primary_key]              = @existing_row[primary_key]
           row[scd_end_date_field]       = @existing_row[scd_end_date_field]
@@ -366,23 +366,23 @@ module OpenMedia::ETL #:nodoc:
         q = "SELECT * FROM #{dimension_table} WHERE #{natural_key_equality_for_row(row)}"
         q << " AND #{scd_latest_version_field}" if scd_type == 2
         
-        ETL::Engine.logger.debug "looking for original record"
+        OpenMedia::ETL::Engine.logger.debug "looking for original record"
         result = connection.select_one(q)
         
-        ETL::Engine.logger.debug "Result: #{result.inspect}"
+        OpenMedia::ETL::Engine.logger.debug "Result: #{result.inspect}"
         
-        result ? ETL::Row[result.symbolize_keys!] : nil
+        result ? OpenMedia::ETL::Row[result.symbolize_keys!] : nil
       end
       
       # Check whether non-scd fields have changed since the last
       # load of this record.
       def has_scd_field_changes?(row)
         scd_fields(row).any? { |csd_field| 
-          ETL::Engine.logger.debug "Row: #{row.inspect}"
-          ETL::Engine.logger.debug "Existing Row: #{@existing_row.inspect}"
-          ETL::Engine.logger.debug "comparing: #{row[csd_field].to_s} != #{@existing_row[csd_field].to_s}"
+          OpenMedia::ETL::Engine.logger.debug "Row: #{row.inspect}"
+          OpenMedia::ETL::Engine.logger.debug "Existing Row: #{@existing_row.inspect}"
+          OpenMedia::ETL::Engine.logger.debug "comparing: #{row[csd_field].to_s} != #{@existing_row[csd_field].to_s}"
           x=row[csd_field].to_s != @existing_row[csd_field].to_s 
-          ETL::Engine.logger.debug x
+          OpenMedia::ETL::Engine.logger.debug x
           x
         }
       end
@@ -396,7 +396,7 @@ module OpenMedia::ETL #:nodoc:
       # Grab, or re-use, a database connection for running queries directly
       # during the destination processing.
       def connection
-        @conn ||= ETL::Engine.connection(dimension_target)
+        @conn ||= OpenMedia::ETL::Engine.connection(dimension_target)
       end
       
       # Utility for removing a row that has outdated information.  Note
@@ -404,7 +404,7 @@ module OpenMedia::ETL #:nodoc:
       # destination.  It needs to do this because you can't do deletes in a 
       # bulk load.
       def delete_outdated_record
-        ETL::Engine.logger.debug "deleting old row"
+        OpenMedia::ETL::Engine.logger.debug "deleting old row"
         
         q = "DELETE FROM #{dimension_table} WHERE #{primary_key} = #{@existing_row[primary_key]}"
         connection.delete(q)
@@ -413,7 +413,7 @@ module OpenMedia::ETL #:nodoc:
       # Schedule the latest, greatest version of the row for insertion
       # into the database
       def schedule_new_record(row)
-        ETL::Engine.logger.debug "writing new record"
+        OpenMedia::ETL::Engine.logger.debug "writing new record"
         if scd_type == 2
           row[scd_effective_date_field] = @timestamp
           row[scd_end_date_field] = '9999-12-31 00:00:00'
@@ -429,7 +429,7 @@ module OpenMedia::ETL #:nodoc:
         return @primary_key if @primary_key
         @primary_key = dimension_table.to_s.camelize.constantize.primary_key.to_sym
       rescue NameError => e
-        ETL::Engine.logger.debug "couldn't get primary_key from dimension model class, using default :id"
+        OpenMedia::ETL::Engine.logger.debug "couldn't get primary_key from dimension model class, using default :id"
         @primary_key = :id
       end
 

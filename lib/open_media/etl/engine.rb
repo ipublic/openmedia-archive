@@ -301,7 +301,6 @@ module OpenMedia::ETL #:nodoc:
       # later store those files as attachments to the Job
       sources.each {|s| s.local_base = File.join(Dir.tmpdir, 'etl_source_data') }
       destinations = control.destinations
-      
       say "Skipping bulk import" if Engine.skip_bulk_import
       
       sources.each do |source|

@@ -93,20 +93,32 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     end
   end
 
-  def import_data_file!(source, opts={})
-    opts = {:has_header_row=>true, :delimiter_character=>','}.merge(opts)
-    attachment_name = "import-#{Time.now.to_i}-#{rand(10000)}"
-    rtable = Ruport::Data::Table.parse(source, :has_names=>opts[:has_header_row],
-                                       :csv_options => { :col_sep => opts[:delimiter_character] })
-    rtable.each do |record|
-      property_names = self.dataset_properties.collect{|p| p.name}
-      d = self.model.create!(record.data.slice(*property_names).merge(:import_id=>attachment_name))
+  def import!(opts={})
+    if source && source.source_type==OpenMedia::Source::FILE_TYPE
+      raise OpenMedia::ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
     end
-    source.rewind
-    attachment_attrs = {:file=>source, :name=>attachment_name}
-    attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
-    self.create_attachment(attachment_attrs)                              
-    self.save!    
+
+    # generate ctl from dataset and source definition
+    ctl = "source :in, {:file=>'#{opts[:file]}', :parser=>'#{source.parser}', :skip_lines=>#{source.skip_lines}},["+
+      self.source.source_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]\n"
+    ctl << "destination :out, {:dataset=>'#{self.identifier}'}, {:order=>[" +
+      self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
+    OpenMedia::ETL::Engine.init
+    OpenMedia::ETL::Engine.process_string(ctl)
+
+
+    #attachment_name = "import-#{Time.now.to_i}-#{rand(10000)}"
+    #rtable = Ruport::Data::Table.parse(source, :has_names=>opts[:has_header_row],
+    #                                   :csv_options => { :col_sep => opts[:delimiter_character] })
+    #rtable.each do |record|
+    #  property_names = self.dataset_properties.collect{|p| p.name}
+    #  d = self.model.create!(record.data.slice(*property_names).merge(:import_id=>attachment_name))
+    #end
+    #source.rewind
+    #attachment_attrs = {:file=>source, :name=>attachment_name}
+    #attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
+    #self.create_attachment(attachment_attrs)                              
+    #self.save!    
   end
 
   # this is basically to make fields_for happy

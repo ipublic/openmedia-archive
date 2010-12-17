@@ -94,6 +94,11 @@ describe OpenMedia::Dataset do
     OpenMedia::Dataset.search('App').size.should == 2
     OpenMedia::Dataset.search('Ban').size.should == 1
   end
+
+  it 'should generate a CouchRest::Model class for manipulating the data' do
+    @dataset.model_name.should == 'OpenMedia::Dataset::CrimeTest3'
+    @dataset.model.should == OpenMedia::Dataset::CrimeTest3
+  end  
   
   describe 'validation' do
     it 'should require a title' do
@@ -139,8 +144,7 @@ describe OpenMedia::Dataset do
       @dataset.dataset_properties.clear
       @dataset.dataset_properties <<  @prop0
       @dataset.get_dataset_property(@prop1.name).should == nil
-    end
-    
+    end    
     
     it "should remove a property by name" do
       @dataset.dataset_properties <<  @prop0
@@ -189,39 +193,52 @@ describe OpenMedia::Dataset do
   
   end
   
-  #describe 'importing' do
-  #  before(:each) do
-  #    reset_test_db!
-  #    @csv_data = StringIO.new("A,B,C\n1,2,3\n4,5,6")
-  #    @dataset.set_properties([{:name=>'A'},{:name=>'B'}, {:name=>'C'}])
-  #    @dataset.import_data_file!(@csv_data, :has_header_row=>true, :delimiter_character=>',')            
-  #  end
-  #
-  #  it 'should allow dataset properties to be initialized' do
-  #    @dataset.dataset_properties.size.should == 3
-  #    @dataset.dataset_properties.collect{|p| p.name}.should == %w(A B C)
-  #    @dataset.dataset_properties.collect{|p| p.data_type}.should == %w(string string string)
-  #    @dataset.attachments.size.should == 1
-  #  end
-  #  
-  #  it 'should generate a CouchRest::Model class for manipulating the data' do
-  #    @dataset.model_name.should == 'OpenMedia::Dataset::CrimeTest3'
-  #    @dataset.model.should == OpenMedia::Dataset::CrimeTest3
-  #  end
-  #  
-  #  it 'should import data from files' do
-  #    @dataset.model.count.should == 2
-  #  end
-  #
-  #  it 'should delete imported data when dataset is deleted' do
-  #    @dataset = OpenMedia::Dataset.find(@dataset.id)
-  #    num_docs = STAGING_DATABASE.documents['rows'].size
-  #    @dataset.destroy
-  #    STAGING_DATABASE.documents['rows'].size.should == (num_docs - 3)
-  #  end
-  #
-  #end
+  describe 'importing' do
+    before(:each) do
+      reset_test_db!
+      create_test_csv
+      @dataset.set_properties([{:name=>'A', :date_type=>OpenMedia::Property::STRING_TYPE},
+                               {:name=>'B', :date_type=>OpenMedia::Property::STRING_TYPE},
+                               {:name=>'D', :date_type=>OpenMedia::Property::STRING_TYPE}])
+      @dataset.source = OpenMedia::Source.new(:source_type=>OpenMedia::Source::FILE_TYPE,
+                                              :parser=>OpenMedia::Source::DELIMITED_PARSER,
+                                              :column_separator=>',',
+                                              :skip_lines=>1,
+                                              :source_properties=>[{:name=>'A', :date_type=>OpenMedia::Property::STRING_TYPE},
+                                                                   {:name=>'B', :date_type=>OpenMedia::Property::STRING_TYPE},
+                                                                   {:name=>'C', :date_type=>OpenMedia::Property::STRING_TYPE},
+                                                                   {:name=>'D', :date_type=>OpenMedia::Property::STRING_TYPE}
+                                                                  ])
+      @dataset.save!
+    end
 
-  it 'should allow importing (placeholder)'
+    after(:each) do
+      delete_test_csv
+    end
+
+    it 'should require a file to be passed in options for impor from a file source' do
+      lambda { @dataset.import! }.should raise_error(OpenMedia::ETL::ControlError)
+      lambda { @dataset.import!(:file=>'/tmp/test.csv') }.should_not raise_error(OpenMedia::ETL::ControlError)      
+    end
+
+        
+    it 'should import data from files using OpenMedia::ETL::Engine' do
+      @dataset.import!({:file=>'/tmp/test.csv'})                  
+      OpenMedia::ETL::Engine.job.should_not be_nil
+      @dataset.model.count.should == 2
+    end
+
+    it 'should map source properties to dataset properties properly'
+
+    it 'should do type transformations based on property types'
+
+    it 'should delete imported data when dataset is deleted' do
+      @dataset = OpenMedia::Dataset.find(@dataset.id)
+      num_docs = STAGING_DATABASE.documents['rows'].size
+      @dataset.destroy
+      STAGING_DATABASE.documents['rows'].size.should == (num_docs - 3)
+    end
+
+  end 
   
 end

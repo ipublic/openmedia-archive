@@ -5,12 +5,12 @@
 	<p><%= m.label :creator_id, 'Creator agency' %> <%= m.select :creator_id, organization_collection, {:prompt => 'Select organization'}  %></p>
 	<p><%= m.label :maintainer_id, 'Maintainer agency' %> <%= m.select :maintainer_id, organization_collection, {:prompt => 'Select organization'}  %></p>
 	<p><%= m.label :publisher_id, 'Publisher agency' %> <%= m.select :publisher_id, organization_collection, {:prompt => 'Select organization'} %></p>
-	<p><%= m.label :beginning_date %> <%= m.text_field :beginning_date %></p>
-	<p><%= m.label :ending_date %> <%= m.text_field :ending_date %></p>
+	<p class="date"><%= m.label :beginning_date %> <%= m.text_field :beginning_date %></p>
+	<p class="date"><%= m.label :ending_date %> <%= m.text_field :ending_date %></p>
 	<p><%= m.label :geographic_coverage %> <%= m.text_field :geographic_coverage %></p>
 	<p><%= m.label :type %> <%= m.text_field :type %></p>
 	<p><%= m.label :language %> <%= m.text_field :language %></p>
-	<p><%= m.label :created_date %> <%= m.text_field :created_date %></p>
-	<p><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
+	<p class="date"><%= m.label :created_date %> <%= m.text_field :created_date %></p>
+	<p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
 	<p><%= m.label :rights %><br/> <%= m.text_area :rights, :rows => 3 %></p>
 <% end %>

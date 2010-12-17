@@ -39,7 +39,7 @@ module OpenMedia::ETL #:nodoc:
       
       # Flush the currently buffered data
       def flush
-        buffer.flatten.each do |row|
+        docs = buffer.flatten.collect do |row|
           # check to see if this row's compound key constraint already exists
           # note that the compound key constraint may not utilize virtual fields
           next unless row_allowed?(row)
@@ -47,10 +47,13 @@ module OpenMedia::ETL #:nodoc:
           # add any virtual fields
           add_virtuals!(row)
 
-          # TODO - create data documents and post to /_bulk_docs          
-
-          buffer.clear
+          doc = @dataset.model.new(row.merge(:job_id=>OpenMedia::ETL::Engine.job.id))
+          doc['created_at'] = Time.new
+          doc['updated_at'] = Time.new
+          doc
         end
+        @dataset.model.database.bulk_save(docs)
+        buffer.clear        
       end
       
       # Close the connection

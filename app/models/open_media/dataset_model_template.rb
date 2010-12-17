@@ -4,11 +4,11 @@ class OpenMedia::DatasetModelTemplate < CouchRest::Model::Base
   
   use_database STAGING_DATABASE
   
-  property :import_id
+  belongs_to :job, :class_name=>'OpenMedia::ETL::Execution::Job'
   
   timestamps!
 
-  validates_presence_of :import_id
+  validates_presence_of :job_id
 
   view_by :import_id
 

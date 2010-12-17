@@ -5,15 +5,11 @@ describe Admin::DatasetsController do
   render_views
 
   before(:all) do
-    File.open('/tmp/test.csv', 'w') do |f|
-      f.puts('A,B,C,D')
-      f.puts('1,2,3,4')
-      f.puts('5,6,7,8')            
-    end
+    create_test_csv
   end
 
   after(:all) do
-    File.delete('/tmp/test.csv')
+    delete_test_csv
   end
 
   before(:each) do

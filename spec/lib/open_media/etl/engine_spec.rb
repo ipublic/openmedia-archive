@@ -10,12 +10,8 @@ describe OpenMedia::ETL::Engine do
   end
 
   before :all do
-    File.open('/tmp/test.csv', 'w') do |f|
-      f.puts('A,B,C,D')
-      f.puts('1,2,3,4')
-      f.puts('5,6,7,8')            
-    end
-
+    create_test_csv
+    
     @test_ctl = <<eos
 source :in, {
   :file => "/tmp/test.csv",
@@ -39,7 +35,7 @@ eos
   end
 
   after :all do
-    File.delete('/tmp/test.csv')    
+    delete_test_csv
   end
   
   it 'initialize and store execution data in SITE_DATABASE' do
@@ -72,7 +68,7 @@ eos
 
     it 'should import data into Dataset destination' do
       @dataset.model.count.should == 2
-    end    
+    end
     
   end
   

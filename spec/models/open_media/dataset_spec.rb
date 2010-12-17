@@ -233,6 +233,7 @@ describe OpenMedia::Dataset do
     it 'should do type transformations based on property types'
 
     it 'should delete imported data when dataset is deleted' do
+      @dataset.import!({:file=>'/tmp/test.csv'})                        
       @dataset = OpenMedia::Dataset.find(@dataset.id)
       num_docs = STAGING_DATABASE.documents['rows'].size
       @dataset.destroy

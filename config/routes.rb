@@ -57,20 +57,26 @@ Openmedia::Application.routes.draw do
 
   namespace :admin do
     resource :site
+    resource :community
     resource :dashboard
+    resource :schema
+    
     resources :datasets do
       collection do
         get :new_property
+        get :new_upload
         get :seed_properties
         post :extract_seed_properties
         post :upload
       end
     end
     resources :catalogs
-    resource :community
-    resource :site    
+    resources :contacts
     resources :settings
+    resources :reports
     resources :organizations    
+    resources :schedules
+    resources :data_types
   end
 
   resource :account, :to=>"users"

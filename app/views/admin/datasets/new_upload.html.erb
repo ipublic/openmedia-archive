@@ -1,0 +1,55 @@
+<% title "Import Data" %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%#= link_to 'Refine Content', refine_admin_dataset_path(@dataset.identifier) %> 
+		<%#= link_to 'Describe Dataset', describe_admin_dataset_path(@dataset.identifier) %>
+
+		<%#= link_to 'List all', admin_datasets_path %> | 
+		<%#= link_to "Edit", edit_admin_dataset_path(@dataset.identifier) %> |
+		<%#= link_to 'Delete', admin_dataset_path(@dataset.identifier), :confirm => 'Are you sure?', :method => :delete %>
+		</p>
+	<hr/>
+</div>
+
+<div class="grid_8">
+	<div class="box">
+		<h2>Sources</h2>
+		<p>Catalog: Combobox</p>
+		<form>
+			Dataset:<br/>
+			<div class="radio">
+				<input type="radio" id="radio1" name="radio" checked="checked" /><label for="radio1">New Dataset</label>
+				<input type="radio" id="radio2" name="radio" /><label for="radio2">Existing Dataset</label>
+			</div>
+		</form>
+		<p>Existing Dataset List: Combobox</p>
+		<p>New Dataset Title: Input</p>
+		<div id="accordion">
+	    <h3><a href="#">File Source</a></h3>
+	    <div>
+				File type:<br/>
+				<div class="radio">
+					<%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
+					<%= radio_button_tag('file_type', 'Shapefile') %> <%= label_tag 'file_type_Shapefile', 'Shapefile' %>
+					<%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
+					<%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
+				</div>
+				<ul>
+					<li>Parser</li>
+					<li>Column separator</li>
+					<li>File browse and upload button</li>
+				</ul>
+			</div>
+	    <h3><a href="#">Database Source</a></h3>
+	    <div><p>Database connection properties</div>
+		</div>
+	</div>
+</div>
+<div class="grid_4">
+		<div class="box">
+			<h2>About Datasets</h2>
+			<div class="block">
+			<p></p>
+			</div>
+		</div>
+</div>

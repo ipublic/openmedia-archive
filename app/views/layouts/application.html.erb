@@ -43,19 +43,23 @@
 				<div class="grid_12">
 					<ul class="nav main">
 						<li><%= link_to 'Home', admin_path, :title => "" %>
-						<li><%= link_to 'Data content', admin_catalogs_path, :title => "" %>
+						<li><%= link_to 'Data', admin_catalogs_path, :title => "" %>
 							<ul>
 								<li><%= link_to 'Catalogs', admin_catalogs_path, :title => "" %>
 								<li><%= link_to 'Datasets', admin_datasets_path, :title => "" %>
-								<li><%= link_to 'New Dataset', new_admin_dataset_path, :title => "" %>
+								<li><%= link_to 'Import data', new_upload_admin_datasets_path, :title => "" %>
+								<li><%= link_to 'Curate', new_admin_dataset_path, :title => "" %>
+								<li><%= link_to 'New Dataset (deprecated)', new_admin_dataset_path, :title => "" %>
 							</ul>
+						<li><%= link_to 'Schema', admin_schema_path, :title => "" %>
 						<li><%= link_to 'Maps', admin_path, :title => "" %>
-						<li><%= link_to 'Dashboard', admin_dashboard_path, :title => "" %>
-						<li><%= link_to 'Community', admin_path, :title => "" %>
+						<li><%= link_to 'Reports', admin_reports_path, :title => "" %>
 						<li><%= link_to 'Site', admin_site_path, :title => "" %>
 							<ul>
 								<li><%= link_to 'Settings', admin_site_path, :title => "" %>
 								<li><%= link_to 'Organizations', admin_organizations_path, :title => "" %>
+								<li><%= link_to 'Job Schedule', admin_schedules_path, :title => "" %>
+								<li><%= link_to 'Community', admin_path, :title => "" %>	
 							</ul>
 						<li class="secondary">
 							<%= link_to 'About', '/about', :title => "" %>

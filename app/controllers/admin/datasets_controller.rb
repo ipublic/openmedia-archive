@@ -12,6 +12,12 @@ class Admin::DatasetsController < ApplicationController
     @dataset = OpenMedia::Dataset.get(params[:id])
   end
   
+  def new_upload
+    @dataset = OpenMedia::Dataset.new
+    @dataset.metadata = OpenMedia::Metadata.new
+    @dataset.source = OpenMedia::Source.new(:column_separator=>',', :skip_lines=>0)
+  end
+  
   def new
     @dataset = OpenMedia::Dataset.new
     @dataset.metadata = OpenMedia::Metadata.new

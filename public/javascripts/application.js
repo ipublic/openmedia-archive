@@ -1,12 +1,27 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
-    $.datepicker.setDefaults({
-	dateFormat: 'mm/dd/yy',
-	changeMonth: true,
-	changeYear: true
-    })
-    $('p.date input').datepicker();
+
+	$.datepicker.setDefaults({
+		dateFormat: 'mm/dd/yy',
+		changeMonth: true,
+		changeYear: true
+	})
+
+	$('p.date input').datepicker();
+
+	$( "#accordion" ).accordion({ autoHeight: false });
+	$('.accordion .head').click(function() {
+		$(this).next().toggle('slow');
+		return false;
+		}).next().hide();
+
+	$(".radio").buttonset();
+	$(".radio input").click(function(evt) {
+		$.get($("#radio").attr("action"), $("#radio").serialize(), null, "script");
+		evt.stopImmediatePropagation(); 
+		return false;
+	});
 
     $('a.delete-property').live('click', function() {
 	$(this).closest('div.property').fadeOut(500, function() { $(this).remove(); syncSourceProperties(); });

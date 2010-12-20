@@ -103,8 +103,8 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
       self.source.source_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:dataset=>'#{self.identifier}'}, {:order=>[" +
       self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
-    OpenMedia::ETL::Engine.init
-    OpenMedia::ETL::Engine.process_string(ctl)
+    OpenMedia::ETL::Engine.init(:dataset=>self)
+    OpenMedia::ETL::Engine.process_string(self, ctl)
 
 
     #attachment_name = "import-#{Time.now.to_i}-#{rand(10000)}"

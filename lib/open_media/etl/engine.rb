@@ -7,7 +7,7 @@ module OpenMedia::ETL #:nodoc:
     include OpenMedia::ETL::Util
     
     class << self
-      # Initialization that is run when a job is executed.
+      # Initialization that is run when a import is executed.
       # 
       # Options:
       # * <tt>:limit</tt>: Limit the number of records returned from sources
@@ -18,6 +18,7 @@ module OpenMedia::ETL #:nodoc:
       # * <tt>:rails_root</tt>: Set to the rails root to boot rails
       def init(options={})
         unless @initialized
+          @dataset = options[:dataset]
           @limit = options[:limit]
           @offset = options[:offset]
           @log_write_mode = 'w' if options[:newlog]
@@ -39,8 +40,8 @@ module OpenMedia::ETL #:nodoc:
         new().process(file)
       end
 
-      def process_string(str)
-        new().process(StringIO.new(str))
+      def process_string(dataset, str)
+        new(dataset).process(StringIO.new(str))
       end
 
       
@@ -98,11 +99,11 @@ module OpenMedia::ETL #:nodoc:
         @rows_written ||= 0
       end
       
-      # Access the current OpenMedia::ETL::Execution::Job instance
-      attr_accessor :job
+      # Access the current OpenMedia::Import instance
+      attr_accessor :import
       
       # Access the current OpenMedia::ETL::Execution::Batch instance
-      attr_accessor :batch
+      # attr_accessor :batch
       
       # The limit on rows to load from the source, useful for testing the ETL
       # process prior to executing the entire batch. Default value is nil and 
@@ -263,34 +264,33 @@ module OpenMedia::ETL #:nodoc:
     
     protected
     # Process the specified batch file
-    def process_batch(batch)
-      batch = OpenMedia::ETL::Batch::Batch.resolve(batch, self)
-      say "Processing batch #{batch.file}"
-    
-      OpenMedia::ETL::Engine.batch = OpenMedia::ETL::Execution::Batch.create!(
-        :batch_file => batch.file,
-        :status => 'executing'
-      )
-      
-      batch.execute
-      
-      OpenMedia::ETL::Engine.batch.completed_at = Time.now
-      OpenMedia::ETL::Engine.batch.status = (errors.length > 0 ? 'completed with errors' : 'completed')
-      OpenMedia::ETL::Engine.batch.save!
-    end
+    # def process_batch(batch)
+    #   batch = OpenMedia::ETL::Batch::Batch.resolve(batch, self)
+    #   say "Processing batch #{batch.file}"
+    # 
+    #   OpenMedia::ETL::Engine.batch = OpenMedia::ETL::Execution::Batch.create!(
+    #     :batch_file => batch.file,
+    #     :status => 'executing'
+    #   )
+    #   
+    #   batch.execute
+    #   
+    #   OpenMedia::ETL::Engine.batch.completed_at = Time.now
+    #   OpenMedia::ETL::Engine.batch.status = (errors.length > 0 ? 'completed with errors' : 'completed')
+    #   OpenMedia::ETL::Engine.batch.save!
+    # end
     
     # Process the specified control file
     def process_control(control)
       @output = StringIO.new
       control = OpenMedia::ETL::Control::Control.resolve(control)
       say_on_own_line "Processing control #{control.file}"
-      
-      OpenMedia::ETL::Engine.job = OpenMedia::ETL::Execution::Job.create!(
+      OpenMedia::ETL::Engine.import = OpenMedia::Import.create!(
+        :dataset => @dataset,                                                                
         :control_file => control.file.is_a?(String) ? (File.open(control.file) {|f| f.read}) : (control.file.rewind; control.file.read),
-        :status => 'executing',
-        :batch_id => OpenMedia::ETL::Engine.batch ? OpenMedia::ETL::Engine.batch.id : nil
+        :status => 'executing' #,
+        # :batch_id => OpenMedia::ETL::Engine.batch ? OpenMedia::ETL::Engine.batch.id : nil
       )
-      
       execute_dependencies(control)
       
       start_time = Time.now
@@ -298,7 +298,7 @@ module OpenMedia::ETL #:nodoc:
       sources = control.sources
 
       # Change sources local_base to Dir.tmpdir because we're going to
-      # later store those files as attachments to the Job
+      # later store those files as attachments to the Import
       sources.each {|s| s.local_base = File.join(Dir.tmpdir, 'etl_source_data') }
       destinations = control.destinations
       say "Skipping bulk import" if Engine.skip_bulk_import
@@ -428,10 +428,10 @@ module OpenMedia::ETL #:nodoc:
       begin
         execute_screens(control)
       rescue FatalScreenError => e
-        say "Fatal screen error during job execution: #{e.message}"
+        say "Fatal screen error during import execution: #{e.message}"
         exit
       rescue ScreenError => e
-        say "Screen error during job execution: #{e.message}"
+        say "Screen error during import execution: #{e.message}"
         return
       else
         say "Screens passed"
@@ -450,10 +450,10 @@ module OpenMedia::ETL #:nodoc:
       begin
         execute_screens(control, :after_post_process)
       rescue FatalScreenError => e
-        say "Fatal screen error during job execution: #{e.message}"
+        say "Fatal screen error during import execution: #{e.message}"
         exit
       rescue ScreenError => e
-        say "Screen error during job execution: #{e.message}"
+        say "Screen error during import execution: #{e.message}"
         return
       else
         say "Screens passed"
@@ -473,18 +473,22 @@ module OpenMedia::ETL #:nodoc:
 #         say "Avg #{klass}: #{Engine.rows_read/t} rows/sec"
 #       end
 
-      OpenMedia::ETL::Engine.job.completed_at = Time.now
-      OpenMedia::ETL::Engine.job.status = (errors.length > 0 ? 'completed with errors' : 'completed')
+      OpenMedia::ETL::Engine.import.completed_at = Time.now
+      OpenMedia::ETL::Engine.import.status = (errors.length > 0 ? 'completed with errors' : 'completed')
       @output.rewind
-      OpenMedia::ETL::Engine.job.output = @output.read
+      OpenMedia::ETL::Engine.import.output = @output.read
       sources.each do |source|
         File.open(source.last_local_file) do |source_csv|
-          OpenMedia::ETL::Engine.job.create_attachment(:name=>File.basename(source_csv.path), :content_type=>'text/csv', :file=>source_csv)
+          OpenMedia::ETL::Engine.import.create_attachment(:name=>File.basename(source_csv.path), :content_type=>'text/csv', :file=>source_csv)
         end
       end
 
 
-      OpenMedia::ETL::Engine.job.save!
+      OpenMedia::ETL::Engine.import.save!
+    end
+
+    def initialize(dataset=nil)
+      @dataset=dataset
     end
     
     private

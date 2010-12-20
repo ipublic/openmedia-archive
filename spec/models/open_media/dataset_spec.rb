@@ -224,7 +224,7 @@ describe OpenMedia::Dataset do
         
     it 'should import data from files using OpenMedia::ETL::Engine' do
       @dataset.import!({:file=>'/tmp/test.csv'})                  
-      OpenMedia::ETL::Engine.job.should_not be_nil
+      OpenMedia::ETL::Engine.import.should_not be_nil
       @dataset.model.count.should == 2
     end
 

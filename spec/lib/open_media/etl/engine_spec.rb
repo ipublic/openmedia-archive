@@ -4,9 +4,10 @@ describe OpenMedia::ETL::Engine do
 
   before :each do
     reset_test_db!
+    @dataset = create_test_dataset(:title=>'Test')
     OpenMedia::ETL::Engine.init
     OpenMedia::ETL::Engine.realtime_activity=true
-    @dataset = create_test_dataset(:title=>'Test')    
+    
   end
 
   before :all do
@@ -39,31 +40,31 @@ eos
   end
   
   it 'initialize and store execution data in SITE_DATABASE' do
-    OpenMedia::ETL::Execution::Job.count.should == 0
+    OpenMedia::Import.count.should == 0
   end
 
   describe 'running etl from control string' do
 
     before :each do
-      OpenMedia::ETL::Engine.process_string(@test_ctl)
+      OpenMedia::ETL::Engine.process_string(@dataset, @test_ctl)
     end
     
     it 'should create a Job in couchdb on each run' do
-      OpenMedia::ETL::Execution::Job.count.should == 1
+      OpenMedia::Import.count.should == 1
     end
 
     it 'should store ctl in job#control_file' do
-      OpenMedia::ETL::Execution::Job.first.control_file.should == @test_ctl
+      OpenMedia::Import.first.control_file.should == @test_ctl
     end
 
     it 'should store etl processing output in job#output' do
-      OpenMedia::ETL::Execution::Job.first.output.should match(/Process/)
+      OpenMedia::Import.first.output.should match(/Process/)
     end
 
     it 'should store errors in job#output or job#errors (not sure which yet)'
 
     it 'should store source csv data as attachment to Job' do
-      OpenMedia::ETL::Execution::Job.first.attachments.size.should == 1
+      OpenMedia::Import.first.attachments.size.should == 1
     end
 
     it 'should import data into Dataset destination' do

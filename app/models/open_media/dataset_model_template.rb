@@ -4,7 +4,7 @@ class OpenMedia::DatasetModelTemplate < CouchRest::Model::Base
   
   use_database STAGING_DATABASE
   
-  belongs_to :job, :class_name=>'OpenMedia::ETL::Execution::Job'
+  belongs_to :import, :class_name=>'OpenMedia::Import'
   
   timestamps!
 

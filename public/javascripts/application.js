@@ -10,6 +10,15 @@ $(function() {
 
 	$('p.date input').datepicker();
 
+        $('#upload-dataset-tabs').tabs({
+	    select: function(event, ui) {
+		$('#upload-dataset-tabs').find('input, select, textarea').each(function(idx, elm) { elm.disabled=true; });
+		$('#' + ui.panel.id).find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
+	    }
+        });
+    
+        $('#file-type-tabs').tabs();
+
 	$( "#accordion" ).accordion({ autoHeight: false });
 	$('.accordion .head').click(function() {
 		$(this).next().toggle('slow');
@@ -38,35 +47,6 @@ $(function() {
 
     $('#source input.property-name').live('blur', syncSourceProperties);
 
-    $('a.seed-properties').click(function() {
-	var link = this;
-	$('<div/>').attr('id', 'seed-properties-dialog').appendTo(document.body);
-	$('#seed-properties-dialog').load('/admin/datasets/seed_properties', function() {
-	    $('#seed-properties-dialog').dialog({width: 400,
-						 height: 200,
-						 title: 'Seed Source Properties',
-						 close: function() {
-						     $(this).dialog('destroy');
-						     $('#seed-properties-dialog').remove();
-						 },
-						 buttons: {
-						     'Submit': function() { $('#seed-properties-form').submit(); },
-						     'Cancel': function() { $(this).dialog('close'); }
-						 }
-						});
-	    $('#seed-column-separator').val($('#dataset_source_column_separator').val());
-
-	    $('#seed-properties-form').iframePostForm({
-		complete: function(response) {
-		    $(response).insertAfter($(link).parent());		    
-		    $('#seed-properties-dialog').dialog('close');
-		    syncSourceProperties();
-		}
-	    });
-
-	});					  
-	return false;
-    });
 });
 
 function syncSourceProperties() {

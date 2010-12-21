@@ -24,37 +24,66 @@ describe Admin::DatasetsController do
     response.should render_template('index')
   end
   
-  it 'should have form for new datasets' do
-    get :new
-    response.should be_success
-    response.should render_template('new')    
-  end
-
-  it 'should extract properties from csv file and give back properties html' do
-    post :extract_seed_properties, :column_separator=>',', :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
-    assigns[:properties].size.should == 4
-    response.should be_success
-    response.should render_template('extract_seed')
-  end
-
-  it 'should extract properties from tab-delimited file and give back properties html' do
-    File.open('/tmp/test.tsv', 'w') do |f|
-      f.puts("A\tB\tC\tD")
-      f.puts("1\t2\t3\t4")
-      f.puts("5\t6\t7\t8")            
-    end
-    # \t gets converted to \\t
-    post :extract_seed_properties, :column_separator=>"\\t", :data_file=>fixture_file_upload('/tmp/test.tsv', 'text/plain')
-    assigns[:properties].size.should == 4
-    response.should be_success
-    response.should render_template('extract_seed')
-  end  
-
   it 'should allow datasets to be deleted' do
     @dataset = OpenMedia::Dataset.first
     delete :destroy, :id=>@dataset.identifier
     response.should redirect_to(admin_datasets_path)
     OpenMedia::Dataset.find(@dataset.identifier).should be_nil
+  end
+
+  describe 'uploading data' do
+    describe 'into a new dataset' do
+      before(:each) do
+        @dataset_params = {:title=>'New Dataset', :catalog_id=>@catalog.identifier,
+                      :source=> { :source_type=>OpenMedia::Source::FILE_TYPE,
+                                  :parser=>OpenMedia::Source::DELIMITED_PARSER,
+                                  :column_separator=>','}}
+      end
+      
+      it 'should save data file in seed_data attachment' do
+        post :upload, :dataset=>@dataset_params,
+                      :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
+                      :has_header_row=>true
+        
+        assigns[:dataset].should_not be_new_record
+        assigns[:dataset].has_attachment?('seed_data').should be_true
+        
+      end
+
+      it 'should redirect to dataset edit page to setup mapping' do
+        post :upload, :dataset=>@dataset_params,
+                      :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
+                      :has_header_row=>true
+        
+        response.should redirect_to(edit_admin_dataset_path(assigns[:dataset].identifier))
+      end
+      
+      it 'should set source and dataset properties from source with all types as string' do
+        post :upload, :dataset=>@dataset_params,
+                      :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
+                      :has_header_row=>true
+        
+        assigns[:dataset].dataset_properties.collect{|p| p.name}.should == %w(A B C D)
+        assigns[:dataset].dataset_properties.each{|p| p.data_type.should == OpenMedia::Property::STRING_TYPE}
+        assigns[:dataset].dataset_properties.collect{|p| p.source_name}.should == %w(A B C D)                
+        assigns[:dataset].source.source_properties.collect{|p| p.name}.should == %w(A B C D)
+        assigns[:dataset].source.source_properties.each{|p| p.data_type.should == OpenMedia::Property::STRING_TYPE}        
+      end
+
+      it 'should generate properties names when no header row is in file' do
+        post :upload, :dataset=>@dataset_params,
+                      :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
+                      :has_header_row=>false
+        assigns[:dataset].dataset_properties.collect{|p| p.name}.should == %w(Column1 Column2 Column3 Column4)
+        assigns[:dataset].source.source_properties.collect{|p| p.name}.should == %w(Column1 Column2 Column3 Column4)
+      end
+    end
+    
+    describe 'into existing dataset' do
+      
+      it 'should create a new Import' do
+      end
+    end
   end
   
   describe 'posting new datasets' do
@@ -75,6 +104,12 @@ describe Admin::DatasetsController do
                           }
       }
  
+    end
+
+    it 'should have form for new datasets' do
+      get :new
+      response.should be_success
+      response.should render_template('new')    
     end
     
     it 'should allow new datasets to be uploaded' do

@@ -1,5 +1,3 @@
-require 'ruport'
-
 class Admin::DatasetsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
@@ -16,6 +14,7 @@ class Admin::DatasetsController < ApplicationController
     @dataset = OpenMedia::Dataset.new
     @dataset.metadata = OpenMedia::Metadata.new
     @dataset.source = OpenMedia::Source.new(:column_separator=>',', :skip_lines=>0)
+    @datasets = OpenMedia::Dataset.all
   end
   
   def new
@@ -23,6 +22,46 @@ class Admin::DatasetsController < ApplicationController
     @dataset.metadata = OpenMedia::Metadata.new
     @dataset.source = OpenMedia::Source.new(:column_separator=>',', :skip_lines=>0)
   end
+
+  def upload
+    # either create new dataset and save seed data or do import on existing dataset
+    data_file = params.delete(:data_file)      
+    #if data_file
+    #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
+    #  raise data_file.content_type      
+    #end
+    
+    if params[:dataset_id]
+      @dataset = OpenMedia::Dataset.find(params[:dataset_id])
+      @dataset.import!(:file=>data_file.path)
+      redirect_to admin_datasets_path
+    elsif params[:dataset]
+      @dataset = OpenMedia::Dataset.new(params[:dataset])
+      if data_file
+        # parse first line of file and setup properties
+        has_header_row = params.delete(:has_header_row)
+        data = FasterCSV.parse(data_file.read, {:col_sep=>@dataset.source.column_separator})
+        property_names = []
+        if has_header_row
+          @dataset.source.skip_lines = 1
+          property_names = data[0]
+        else
+          1.upto(data[0].size) {|i| property_names << "Column#{i}"}
+        end
+        property_names.each do |name|
+          @dataset.dataset_properties << OpenMedia::Property.new(:name=>name, :data_type=>OpenMedia::Property::STRING_TYPE, :source_name=>name)
+          @dataset.source.source_properties << OpenMedia::Property.new(:name=>name, :data_type=>OpenMedia::Property::STRING_TYPE)          
+        end
+        data_file.rewind
+        @dataset.create_attachment(:file=>data_file, :name=>'seed_data', :content_type=>data_file.content_type)        
+      end
+      @dataset.save!
+      redirect_to edit_admin_dataset_path(@dataset.identifier)
+    else
+      raise 'dataset_id or dataset parameters are required'
+    end
+
+  end  
   
   def create
     data_file = params[:dataset].delete(:data_file)
@@ -30,10 +69,11 @@ class Admin::DatasetsController < ApplicationController
     @dataset = OpenMedia::Dataset.new(params[:dataset])
     
     if @dataset.save
-      if data_file
-        data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
-        @dataset.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
-      end
+      # this was here for Refine, commenting out for dataset workflow changes
+      #if data_file
+      #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
+      #  @dataset.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
+      #end
 
       respond_to do |format|
         format.html do
@@ -108,21 +148,21 @@ class Admin::DatasetsController < ApplicationController
     render :layout => nil
   end
 
-  def extract_seed_properties
-      
-    data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
-                             params[:data_file]
-    column_separator = params[:column_separator]
-    if column_separator =~ /^\\/
-      begin
-        column_separator = eval('"' + params[:column_separator] + '"')
-      rescue; end
-    end
-
-    rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
-                                        :csv_options => { :col_sep => column_separator })
-    @properties = rtable[0].attributes.collect{|name| OpenMedia::Property.new(:name=>name)}
-    render :layout => nil
-  end
+  # def extract_seed_properties
+  #     
+  #   data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
+  #                            params[:data_file]
+  #   column_separator = params[:column_separator]
+  #   if column_separator =~ /^\\/
+  #     begin
+  #       column_separator = eval('"' + params[:column_separator] + '"')
+  #     rescue; end
+  #   end
+  # 
+  #   rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
+  #                                       :csv_options => { :col_sep => column_separator })
+  #   @properties = rtable[0].attributes.collect{|name| OpenMedia::Property.new(:name=>name)}
+  #   render :layout => nil
+  # end
   
 end

@@ -47,7 +47,6 @@ class OpenMedia::Metadata < Hash
     write_attribute('keywords', (keywords.is_a?(Array) ? keywords : keywords.split(',').collect{|w| w.strip}))
   end
 
-
   ## Validations
 #  validates_presence_of :creator_organization_id
 

@@ -1,5 +1,3 @@
-require 'ruport'
-
 class OpenMedia::Dataset < OpenMedia::DesignModel
 
   TITLE_TAKEN_MSG = "must be unique"
@@ -105,20 +103,6 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
       self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
     OpenMedia::ETL::Engine.init(:dataset=>self)
     OpenMedia::ETL::Engine.process_string(self, ctl)
-
-
-    #attachment_name = "import-#{Time.now.to_i}-#{rand(10000)}"
-    #rtable = Ruport::Data::Table.parse(source, :has_names=>opts[:has_header_row],
-    #                                   :csv_options => { :col_sep => opts[:delimiter_character] })
-    #rtable.each do |record|
-    #  property_names = self.dataset_properties.collect{|p| p.name}
-    #  d = self.model.create!(record.data.slice(*property_names).merge(:import_id=>attachment_name))
-    #end
-    #source.rewind
-    #attachment_attrs = {:file=>source, :name=>attachment_name}
-    #attachment_attrs[:content_type] = source.content_type if source.respond_to?(:content_type)
-    #self.create_attachment(attachment_attrs)                              
-    #self.save!    
   end
 
   # this is basically to make fields_for happy

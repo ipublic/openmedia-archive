@@ -727,3 +727,6 @@ margin-left: 95px;
 #kwick .four {
 	background: #999;
 }
+#upload-dataset-tabs {
+    height: 400px;
+}

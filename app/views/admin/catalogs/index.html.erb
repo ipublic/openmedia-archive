@@ -14,6 +14,7 @@
 				<tr>
 					<th>Title</th>
 					<th>No. Datasets</th>
+					<th>Description</th>
 					<th>Updated</th>
 				</tr>
 				</thead>
@@ -22,8 +23,8 @@
 					  <tr>
 							<td><%= link_to catalog.title, admin_catalog_path(catalog) %></td>
 							<td><%= catalog.datasets.count %></td>
-<!-->							<td><%= catalog.metadata['description'] if catalog.metadata %></td>
--->
+							<td><%= catalog.metadata['description'] if catalog.metadata %></td>
+
 							<td><%= catalog.updated_at.to_s(:full) %></td>
 					  </tr>
 					<% end %>

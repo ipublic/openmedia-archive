@@ -64,7 +64,7 @@
 						<li class="secondary">
 							<%= link_to 'About', '/about', :title => "" %>
 						</li>
-					</ul>
+					</ul>					
 				</div><!--#grid_12-->
 			</div><!--#container_12-->
 		</div><!--#header-->
@@ -79,9 +79,9 @@
 				<div class="clear"></div>
 	      <% if content_for?(:title) %>
 		    	<div class="grid_12">
-	          <h2 id="page-heading"><%= h yield(:title) %></h2>
-					</div>
-					<div class="clear"></div>
+			  <h2 id="page-heading"><%= h yield(:title) %></h2> 			  
+			</div>
+			<div class="clear"></div>
 	      <% end %>
 	      <%= yield :layout %>
 				<div class="clear"></div>

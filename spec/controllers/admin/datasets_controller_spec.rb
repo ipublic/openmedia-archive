@@ -39,6 +39,15 @@ describe Admin::DatasetsController do
                                   :parser=>OpenMedia::Source::DELIMITED_PARSER,
                                   :column_separator=>','}}
       end
+
+      it 'should validate dataset' do
+        @dataset_params[:title] = nil
+        post :upload, :dataset=>@dataset_params,
+                      :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
+                      :has_header_row=>true
+        response.should be_success
+        response.should render_template('new_upload')
+      end
       
       it 'should save data file in seed_data attachment' do
         post :upload, :dataset=>@dataset_params,
@@ -67,7 +76,7 @@ describe Admin::DatasetsController do
         assigns[:dataset].dataset_properties.each{|p| p.data_type.should == OpenMedia::Property::STRING_TYPE}
         assigns[:dataset].dataset_properties.collect{|p| p.source_name}.should == %w(A B C D)                
         assigns[:dataset].source.source_properties.collect{|p| p.name}.should == %w(A B C D)
-        assigns[:dataset].source.source_properties.each{|p| p.data_type.should == OpenMedia::Property::STRING_TYPE}        
+        assigns[:dataset].source.source_properties.each{|p| p.data_type.should == OpenMedia::Property::STRING_TYPE}       
       end
 
       it 'should generate properties names when no header row is in file' do
@@ -80,8 +89,45 @@ describe Admin::DatasetsController do
     end
     
     describe 'into existing dataset' do
+      before(:each) do
+        @dataset = OpenMedia::Dataset.first
+        @dataset.dataset_properties=[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}]
+        @dataset.source={ :source_type => OpenMedia::Source::FILE_TYPE,
+                                       :parser => OpenMedia::Source::DELIMITED_PARSER,
+                                       :column_separator => ',',
+                                       :skip_lines => '1',
+                                       :source_properties=>[{:name=>'A', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'B', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'C', :data_type=>OpenMedia::Property::STRING_TYPE},
+                                                            {:name=>'D', :data_type=>OpenMedia::Property::STRING_TYPE}]
+                          }
+        File.open('/tmp/test.csv') {|f| @dataset.create_attachment(:file=>f, :name=>'seed_data', :content_type=>'text/csv') }
+
+        @dataset.save!
+
+      end
       
-      it 'should create a new Import' do
+      it 'should handle uploads via the Import Data page' do
+        lambda {
+          post :upload, :dataset_id=>@dataset.identifier,
+               :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv')
+        }.should change(OpenMedia::Import, :count).by(1)
+        response.should redirect_to(admin_datasets_path)
+        flash[:notice].should == "Imported 2 records into dataset #{@dataset.title}"
+        @dataset.model.count.should == 2
+      end
+      
+      it 'should allow importing seed data' do
+        lambda {
+          get :import_seed_data, :id=>@dataset.identifier
+        }.should change(OpenMedia::Import, :count).by(1)
+        @dataset.model.count.should == 2
+        @dataset = OpenMedia::Dataset.get(@dataset.id)
+        @dataset.has_attachment?('seed_data').should be_false        
+        flash[:notice].should == "Imported 2 records into dataset #{@dataset.title}"
+        response.should redirect_to(admin_dataset_path(@dataset.identifier))
       end
     end
   end

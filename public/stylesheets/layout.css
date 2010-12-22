@@ -728,5 +728,8 @@ margin-left: 95px;
 	background: #999;
 }
 #upload-dataset-tabs {
-    height: 400px;
+    height: 150px;
+}
+div#flash_notice {
+    color: green;
 }

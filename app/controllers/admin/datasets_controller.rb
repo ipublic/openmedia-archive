@@ -23,17 +23,24 @@ class Admin::DatasetsController < ApplicationController
     @dataset.source = OpenMedia::Source.new(:column_separator=>',', :skip_lines=>0)
   end
 
+  def import_seed_data
+    @dataset = OpenMedia::Dataset.get(params[:id])
+    import_file = "/tmp/#{@dataset.identifier}-seed-data.csv"
+    File.open(import_file, 'w') {|f| f.write(@dataset.read_attachment('seed_data'))}
+    count = @dataset.import!(:file=>import_file)
+    @dataset.delete_attachment('seed_data')
+    @dataset.save!
+    flash[:notice] = "Imported #{count} records into dataset #{@dataset.title}"
+    redirect_to admin_dataset_path(@dataset.identifier)
+  end
+
   def upload
     # either create new dataset and save seed data or do import on existing dataset
-    data_file = params.delete(:data_file)      
-    #if data_file
-    #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
-    #  raise data_file.content_type      
-    #end
-    
+    data_file = params.delete(:data_file)
     if params[:dataset_id]
-      @dataset = OpenMedia::Dataset.find(params[:dataset_id])
-      @dataset.import!(:file=>data_file.path)
+      @dataset = OpenMedia::Dataset.get(params[:dataset_id])
+      count = @dataset.import!(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile.path : data_file.path))
+      flash[:notice] = "Imported #{count} records into dataset #{@dataset.title}"      
       redirect_to admin_datasets_path
     elsif params[:dataset]
       @dataset = OpenMedia::Dataset.new(params[:dataset])
@@ -55,8 +62,12 @@ class Admin::DatasetsController < ApplicationController
         data_file.rewind
         @dataset.create_attachment(:file=>data_file, :name=>'seed_data', :content_type=>data_file.content_type)        
       end
-      @dataset.save!
-      redirect_to edit_admin_dataset_path(@dataset.identifier)
+      if @dataset.save
+        redirect_to edit_admin_dataset_path(@dataset.identifier)
+      else
+        @datasets = OpenMedia::Dataset.all        
+        render :action=>'new_upload'
+      end
     else
       raise 'dataset_id or dataset parameters are required'
     end
@@ -95,8 +106,6 @@ class Admin::DatasetsController < ApplicationController
           render :text=>@dataset.errors.full_messages*"\n", :status=>400
         end
       end
-
-
     end
   end
      

@@ -223,8 +223,11 @@ describe OpenMedia::Dataset do
 
         
     it 'should import data from files using OpenMedia::ETL::Engine' do
-      @dataset.import!({:file=>'/tmp/test.csv'})                  
-      OpenMedia::ETL::Engine.import.should_not be_nil
+      count = @dataset.import!({:file=>'/tmp/test.csv'})
+      count.should == 2
+      OpenMedia::Import.count.should == 1
+      OpenMedia::Import.first.created_at.should_not be_nil
+      OpenMedia::Import.first.status.should == OpenMedia::Import::STATUS_COMPLETED
       @dataset.model.count.should == 2
     end
 

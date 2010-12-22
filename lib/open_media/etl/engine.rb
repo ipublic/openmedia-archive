@@ -17,15 +17,15 @@ module OpenMedia::ETL #:nodoc:
       # * <tt>:read_locally</tt>: Set to true to read from the local cache
       # * <tt>:rails_root</tt>: Set to the rails root to boot rails
       def init(options={})
-        unless @initialized
-          @dataset = options[:dataset]
-          @limit = options[:limit]
-          @offset = options[:offset]
-          @log_write_mode = 'w' if options[:newlog]
-          @skip_bulk_import = options[:skip_bulk_import]
-          @read_locally = options[:read_locally]
-          @initialized = true
-        end
+        @dataset = options[:dataset]
+        @limit = options[:limit]
+        @offset = options[:offset]
+        @log_write_mode = 'w' if options[:newlog]
+        @skip_bulk_import = options[:skip_bulk_import]
+        @read_locally = options[:read_locally]
+        @initialized = true
+        @rows_written = 0
+        @rows_read = 0             
       end
       
       # Process the specified file. Acceptable values for file are:
@@ -288,7 +288,7 @@ module OpenMedia::ETL #:nodoc:
       OpenMedia::ETL::Engine.import = OpenMedia::Import.create!(
         :dataset => @dataset,                                                                
         :control_file => control.file.is_a?(String) ? (File.open(control.file) {|f| f.read}) : (control.file.rewind; control.file.read),
-        :status => 'executing' #,
+        :status => OpenMedia::Import::STATUS_EXECUTING #,
         # :batch_id => OpenMedia::ETL::Engine.batch ? OpenMedia::ETL::Engine.batch.id : nil
       )
       execute_dependencies(control)
@@ -474,7 +474,7 @@ module OpenMedia::ETL #:nodoc:
 #       end
 
       OpenMedia::ETL::Engine.import.completed_at = Time.now
-      OpenMedia::ETL::Engine.import.status = (errors.length > 0 ? 'completed with errors' : 'completed')
+      OpenMedia::ETL::Engine.import.status = (errors.length > 0 ? OpenMedia::Import::STATUS_COMPLETED_WITH_ERRORS : OpenMedia::Import::STATUS_COMPLETED)
       @output.rewind
       OpenMedia::ETL::Engine.import.output = @output.read
       sources.each do |source|

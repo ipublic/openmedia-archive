@@ -1,6 +1,8 @@
+require 'open_media/etl'
+
 class OpenMedia::Dataset < OpenMedia::DesignModel
 
-  TITLE_TAKEN_MSG = "must be unique"
+  TITLE_TAKEN_MSG = "already taken"
   
   use_database STAGING_DATABASE  
 
@@ -103,6 +105,8 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
       self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
     OpenMedia::ETL::Engine.init(:dataset=>self)
     OpenMedia::ETL::Engine.process_string(self, ctl)
+    OpenMedia::ETL::Engine.import = nil
+    OpenMedia::ETL::Engine.rows_written
   end
 
   # this is basically to make fields_for happy

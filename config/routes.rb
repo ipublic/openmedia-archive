@@ -67,6 +67,10 @@ Openmedia::Application.routes.draw do
         get :new_upload
         post :upload
       end
+
+      member do
+        get :import_seed_data
+      end
     end
     resources :catalogs
     resources :contacts

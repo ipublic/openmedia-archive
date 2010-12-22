@@ -37,6 +37,7 @@ class Admin::DatasetsController < ApplicationController
   def upload
     # either create new dataset and save seed data or do import on existing dataset
     data_file = params.delete(:data_file)
+    seed_data_attachment = nil
     if params[:dataset_id]
       @dataset = OpenMedia::Dataset.get(params[:dataset_id])
       count = @dataset.import!(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile.path : data_file.path))
@@ -60,7 +61,12 @@ class Admin::DatasetsController < ApplicationController
           @dataset.source.source_properties << OpenMedia::Property.new(:name=>name, :data_type=>OpenMedia::Property::STRING_TYPE)          
         end
         data_file.rewind
-        @dataset.create_attachment(:file=>data_file, :name=>'seed_data', :content_type=>data_file.content_type)        
+
+        # this is a hack, but basically, save dataset once so that the Dataset#update_model_views callback runs before attachment is in there
+        # otherwise, it gets base64 encoded twice
+        @dataset.save
+        @dataset.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
+                                   :content_type=>data_file.content_type)
       end
       if @dataset.save
         redirect_to edit_admin_dataset_path(@dataset.identifier)

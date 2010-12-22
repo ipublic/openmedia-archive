@@ -46,10 +46,10 @@ module ETL #:nodoc:
 
           # add any virtual fields
           add_virtuals!(row)
-
-          doc = @dataset.model.new(row.merge(:import_id=>ETL::Engine.import.id))
-          doc['created_at'] = Time.new
-          doc['updated_at'] = Time.new
+          doc = { 'couchrest-type' => @dataset.model_name,
+                  'import_id' => ETL::Engine.import.id,
+                  'created_at' => Time.new,
+                  'updated_at' => Time.new }.merge(row)
           doc
         end
         @dataset.model.database.bulk_save(docs)

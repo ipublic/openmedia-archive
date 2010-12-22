@@ -120,6 +120,7 @@ describe Admin::DatasetsController do
       end
       
       it 'should allow importing seed data' do
+        @dataset.model.count.should == 0        
         lambda {
           get :import_seed_data, :id=>@dataset.identifier
         }.should change(OpenMedia::Import, :count).by(1)

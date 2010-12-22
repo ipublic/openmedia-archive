@@ -217,8 +217,8 @@ describe OpenMedia::Dataset do
     end
 
     it 'should require a file to be passed in options for impor from a file source' do
-      lambda { @dataset.import! }.should raise_error(OpenMedia::ETL::ControlError)
-      lambda { @dataset.import!(:file=>'/tmp/test.csv') }.should_not raise_error(OpenMedia::ETL::ControlError)      
+      lambda { @dataset.import! }.should raise_error(ETL::ControlError)
+      lambda { @dataset.import!(:file=>'/tmp/test.csv') }.should_not raise_error(ETL::ControlError)      
     end
 
         

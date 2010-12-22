@@ -1,98 +1,81 @@
 <% title "Import Data" %>
 
 <div class="grid_8 upload">
-<%= form_for :dataset, :url=>upload_admin_datasets_path, :html=>{:multipart=>true} do |ds| %>
-	<div class="box">
-		<h2>Import</h2>
+  <%= form_for :dataset, :url=>upload_admin_datasets_path, :html=>{:multipart=>true} do |ds| %>
+  <div class="box">
+    <h2>Import</h2>
 
-		<%= ds.error_messages %>
+    <%= ds.error_messages %>
 
-		<!--<div class="radio">
-		  <input type="radio" id="radio1" name="radio" checked="checked" /><label for="radio1">New Dataset</label>
-		  <input type="radio" id="radio2" name="radio" /><label for="radio2">Existing Dataset</label>
-		</div>-->
-		<br/>
-		<h4>Dataset:</h4>
-		<div id="upload-dataset-tabs">
-		  <ul>
-		    <li><a href="#new-dataset-tab">New Dataset</a></li>
-		    <li><a href="#existing-dataset-tab">Existing Dataset</a></li>
-		  </ul>
-		  
-		  <div id="new-dataset-tab">
-		    <p><%= ds.label :title %><br/><%= ds.text_field :title %></p>
-		    <p><%= ds.label :catalog_id, 'Catalog' %>  <%= ds.select :catalog_id, catalog_collection %></p>				
-		  </div>
+    <br/>
+    <h4>Dataset:</h4>
+    <div class="radio">
+      <input type="radio" id="new-ds-btn" name="radio" checked="checked" /><label for="new-ds-btn">New Dataset</label>
+      <input type="radio" id="existing-ds-btn" name="radio" /><label for="existing-ds-btn">Existing Dataset</label>
+    </div>
+    
+    <div id="new-ds-fields" class="import-ds-fields">
+      <p><%= ds.label :title %><br/><%= ds.text_field :title %></p>
+      <p><%= ds.label :catalog_id, 'Catalog' %>  <%= ds.select :catalog_id, catalog_collection %></p>				
+    </div>
 
-		  <div id="existing-dataset-tab">
-		      <label>Dataset</label>  <%= select_tag :dataset_id, options_from_collection_for_select(@datasets, :identifier, :title), :disabled=>'disabled' %>
-		  </div>
-		</div>
-		<br/>
-		<h4>Source:</h4>
-		<div id="accordion">
-		  <%= ds.fields_for :source, @dataset.source do |s| %>
-		  <h3><a href="#">File Source</a></h3>
-		  <div>
-		    <!--<div class="radio">
-		      <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
-		      <%= radio_button_tag('file_type', 'Shapefile') %> <%= label_tag 'file_type_Shapefile', 'Shapefile' %>
-		      <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
-		      <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
-		    </div>
-		    <ul>
-		      <li>Parser</li>
-		      <li>Column separator</li>
-		      <li>File browse and upload button</li>
-		    </ul>-->
-		    <%= s.hidden_field :source_type, :value=>OpenMedia::Source::FILE_TYPE %>
-		    <p><label>File</label>  <%= file_field_tag :data_file %></p>
+    <div id="existing-ds-fields" style="display: none" class="import-ds-fields">
+      <label>Dataset</label>  <%= select_tag :dataset_id, options_from_collection_for_select(@datasets, :identifier, :title), :disabled=>'disabled' %>
+    </div>
+  </div>
+  <br/>
+  <h4>Source:</h4>
+  <div id="accordion">
+    <%= ds.fields_for :source, @dataset.source do |s| %>
+    <h3><a href="#">File Source</a></h3>
+    <div>
+      <%= s.hidden_field :source_type, :value=>OpenMedia::Source::FILE_TYPE %>
+      <p><label>File</label>  <%= file_field_tag :data_file %></p>
 
-		    <div id="file-type-tabs">
-		      <ul>
-			<li><a href="#csv-tab">CSV</a></li>
-			<li><a href="#shapefile-tab">Shapefile</a></li>
-			<li><a href="#xml-tab">XML</a></li>
-			<li><a href="#fixed-tab">Fixed Width</a></li>
-		      </ul>
+      <div class="radio">
+	<%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
+	<%= radio_button_tag('file_type', 'Shapefile') %> <%= label_tag 'file_type_Shapefile', 'Shapefile' %>
+	<%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
+	<%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
+      </div>
 
-		      <div id="csv-tab">
+      <div id="csv-fields" class="import-ds-fields">
+	<%= s.hidden_field :parser, :value=>OpenMedia::Source::DELIMITED_PARSER %>
+	<p><%= s.label :column_separator %> <%= s.text_field :column_separator %></p>
+	<p><%= check_box_tag :has_header_row %> Has Header Row 
+      </div>
 
-			<%= s.hidden_field :parser, :value=>OpenMedia::Source::DELIMITED_PARSER %>
-			<p><%= s.label :column_separator %> <%= s.text_field :column_separator %></p>
-			<p><%= check_box_tag :has_header_row %> Has Header Row
-		      </div>
+      <div id="shapefile-fields" class="import-ds-fields" style="display: none">
+	Shapefile fields
+      </div>
 
-		      <div id="shapefile-tab">
-			
-		      </div>
+      <div id="xml-fields" class="import-ds-fields" style="display: none">
+	XML fields
+      </div>
 
-		      <div id="xml-tab">
-			
-		      </div>
-
-		      <div id="fixed-tab">
-
-		      </div>
-		    </div>
-		  </div>
-		  <h3><a href="#">Database Source</a></h3>
-		  <div><p>Database connection properties</div>
-		  <% end %>
-		</div>
-	</div>
-        <p>
-	  <%= link_to 'Back',  :back %>
-	  <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-	</p>
-
+      <div id="fixed-fields" class="import-ds-fields" style="display: none">
+	Fixed fields
+      </div>
+    </div>
+    <h3><a href="#">Database Source</a></h3>
+    <div><p>Database connection properties</div>
+    <% end %>
+  </div>
+  <br/>
+  <p>
+    <%= link_to 'Back',  :back %>
+    <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+  </p>
 <% end %>
 </div>
+
+
+
 <div class="grid_4">
-		<div class="box">
-			<h2>About Datasets</h2>
-			<div class="block">
-			<p></p>
-			</div>
-		</div>
+  <div class="box">
+    <h2>About Datasets</h2>
+    <div class="block">
+      <p></p>
+    </div>
+  </div>
 </div>

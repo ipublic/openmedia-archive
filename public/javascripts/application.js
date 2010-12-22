@@ -10,15 +10,6 @@ $(function() {
 
 	$('p.date input').datepicker();
 
-        $('#upload-dataset-tabs').tabs({
-	    select: function(event, ui) {
-		$('#upload-dataset-tabs').find('input, select, textarea').each(function(idx, elm) { elm.disabled=true; });
-		$('#' + ui.panel.id).find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
-	    }
-        });
-    
-        $('#file-type-tabs').tabs();
-
 	$( "#accordion" ).accordion({ autoHeight: false });
 	$('.accordion .head').click(function() {
 		$(this).next().toggle('slow');
@@ -26,11 +17,27 @@ $(function() {
 		}).next().hide();
 
 	$(".radio").buttonset();
-	$(".radio input").click(function(evt) {
-		$.get($("#radio").attr("action"), $("#radio").serialize(), null, "script");
-		evt.stopImmediatePropagation(); 
-		return false;
+
+        $('#new-ds-btn').click(function() {
+	    $('#existing-ds-fields').hide();
+	    $('#existing-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=true; });
+	    $('#new-ds-fields').show();
+	    $('#new-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
 	});
+
+
+        $('#existing-ds-btn').click(function() {
+	    $('#existing-ds-fields').show();
+	    $('#existing-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
+	    $('#new-ds-fields').hide();
+	    $('#new-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=true; });
+	});
+
+	//$(".radio input").click(function(evt) {
+	//	$.get($("#radio").attr("action"), $("#radio").serialize(), null, "script");
+	//	evt.stopImmediatePropagation(); 
+	//	return false;
+	//});
 
     $('a.delete-property').live('click', function() {
 	$(this).closest('div.property').fadeOut(500, function() { $(this).remove(); syncSourceProperties(); });

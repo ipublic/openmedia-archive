@@ -727,8 +727,9 @@ margin-left: 95px;
 #kwick .four {
 	background: #999;
 }
-#upload-dataset-tabs {
-    height: 150px;
+.import-ds-fields {
+    height: 75px;
+    padding: 10px;
 }
 div#flash_notice {
     color: green;

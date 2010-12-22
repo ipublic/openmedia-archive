@@ -1,4 +1,4 @@
-require 'open_media/etl'
+require 'etl'
 
 class OpenMedia::Dataset < OpenMedia::DesignModel
 
@@ -95,7 +95,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   def import!(opts={})
     if source && source.source_type==OpenMedia::Source::FILE_TYPE
-      raise OpenMedia::ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
+      raise ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
     end
 
     # generate ctl from dataset and source definition
@@ -103,10 +103,10 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
       self.source.source_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:dataset=>'#{self.identifier}'}, {:order=>[" +
       self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
-    OpenMedia::ETL::Engine.init(:dataset=>self)
-    OpenMedia::ETL::Engine.process_string(self, ctl)
-    OpenMedia::ETL::Engine.import = nil
-    OpenMedia::ETL::Engine.rows_written
+    ETL::Engine.init(:dataset=>self)
+    ETL::Engine.process_string(self, ctl)
+    ETL::Engine.import = nil
+    ETL::Engine.rows_written
   end
 
   # this is basically to make fields_for happy

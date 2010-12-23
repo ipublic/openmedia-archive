@@ -5,11 +5,11 @@
 			<th>Value</th>
 		</tr>
 	</thead>
-	<% @record.attributes.each do |attrib_name| %>
+	<% doc.each do |pv_pair| %>
 		<tr>
-			<td><%= attrib_name %></td>
-			<td><%= @record.get(attrib_name) %></td>
+			<td><%= pv_pair[0] %></td>
+			<td><%= pv_pair[1] %></td>
 		</tr>
 	<% end %>
 </table>
-< Previous | Next >
+<p >< Previous | Next ></p>

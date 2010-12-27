@@ -9,12 +9,14 @@ namespace :openmedia do
   task :create_dbs => :environment do
     SITE_DATABASE.create!
     STAGING_DATABASE.create!
+    TYPES_DATABASE.create!
   end 
 
   desc "drop the couchdb databases for the current environment"
   task :drop_dbs => :environment do
     SITE_DATABASE.delete!
     STAGING_DATABASE.delete!    
+    TYPES_DATABASE.delete!    
   end
 
   desc "create couchdb databases and load seeds"

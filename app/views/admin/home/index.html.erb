@@ -1,25 +1,19 @@
 <% title "A Publishing System for Open Government Data" %>
-<div class="grid_3">
+<div class="grid_4">
 		<div class="spotlight" id="frontpage_load_data">
-			<h2><%= link_to 'Import Data', new_admin_dataset_path, :title => "" %></h2>
+			<h2><%= link_to '1. Import Data', new_admin_dataset_path, :title => "" %></h2>
 			<p>Upload your organization's data content</p>
 		</div>
 </div>
-<div class="grid_3">
+<div class="grid_4">
 	<div class="spotlight">
-		<h2><%= link_to 'Refine Content', admin_catalogs_path, :title => "" %></h2>
-		<p>Edit, filter and extend dataset values prior to publishing</p>
+		<h2><%= link_to '2. Edit Content', admin_catalogs_path, :title => "" %></h2>
+		<p>Define terms, edit, filter and extend dataset values</p>
 	</div>
 </div>
-<div class="grid_3">
+<div class="grid_4">
 	<div class="spotlight">
-		<h2><%= link_to 'Describe Dataset', admin_community_path, :title => "" %></h2>
-		<p>Explain dataset content and define terms</p>
-	</div>
-</div>
-<div class="grid_3">
-	<div class="spotlight">
-		<h2><%= link_to 'Publish', admin_settings_path, :title => "" %></h2>
+		<h2><%= link_to '3. Publish', admin_settings_path, :title => "" %></h2>
 		<p>Make datasets accessible to others</p>
 	</div>
 </div>

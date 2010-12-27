@@ -2,6 +2,16 @@
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
 
+	$('td button').button({
+	  icons: {
+	    primary: "ui-icon-triangle-1-s"
+	  },
+	  text: false
+  })
+	.click(function() {
+		alert( "Display Edit Properties menu: Rename, Remove, New Property based on this Property..." )})
+							
+
 	$.datepicker.setDefaults({
 		dateFormat: 'mm/dd/yy',
 		changeMonth: true,

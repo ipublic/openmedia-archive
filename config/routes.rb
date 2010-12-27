@@ -54,6 +54,7 @@ Openmedia::Application.routes.draw do
 
   match '/admin' => 'admin/home#index', :as => :admin
   match '/about' => 'admin/home#about', :as => :about
+  match '/support' => 'admin/home#support', :as => :support
 
   namespace :admin do
     resource :site

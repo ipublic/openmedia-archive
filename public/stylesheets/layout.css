@@ -409,6 +409,30 @@ td.currency {
 	text-align:right;
 }
 
+.propertyTable {
+	border: none;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.propertyTable th, td {
+	background: transparent;
+	color: #000;
+	border: none;
+}
+
+.propertyTable th {
+	padding:.2em 0 .2em 0;
+	text-align: right;
+	width: 40%;
+}
+
+.propertyTable td {
+	padding:.2em .5em;
+	text-align: left;
+	background: transparent;
+	border: none;
+}
 
 /* forms
 ----------------------------------------------- */

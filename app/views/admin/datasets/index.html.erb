@@ -1,38 +1,48 @@
 <% title "Datasets" %>
-<div class="grid_12" >
-  <p style="float:right;">
-    <%= link_to 'New Dataset', new_admin_dataset_path %> |
+<div class="grid_8">
+	<p>
+    <%= link_to 'New', new_admin_dataset_path %> |
+    <%= link_to 'Import', new_upload_admin_datasets_path %> |
     <%= link_to 'Publish', new_admin_dataset_path %>
   </p>
-  <hr/>
-</div>
-<div class="grid_12">
-  <p>Something here about role of Datasets in system</p>
   <div class="box">
-    <h2>Datasets List</h2>
+    <h2>Browse</h2>
     <div class="block" id="tables">
       <table>
-	<thead>
-	  <tr>
-	    <th>Catalog</th>
-	    <th>Title</th>
-	    <th>Description</th>
-	    <th>Records</th>
-	    <th>Updated</th>
-	    <th></th>
-	  </tr>
-	</thead>
-	<% @datasets.each do |ds| %>
-	<tr>
-	  <td><%= ds.catalog.title %></td>
-	  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
-	  <td><%= ds.metadata.description unless ds.metadata.nil? %></td>
-	  <td><%= ds.model.count %></td>
-	  <td><%= ds.updated_at.to_s(:full) %></td>
-	  <td><%= link_to 'edit', edit_admin_dataset_path(ds.identifier) %></td>
-	</tr>
-	<% end %>
+				<thead>
+				  <tr>
+				    <th>Title</th>
+				    <th>No. Records</th>
+				    <th>Catalog</th>
+				    <th>Updated</th>
+				    <th></th>
+				  </tr>
+				</thead>
+				<% @datasets.each do |ds| %>
+				<tr>
+				  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
+				  <td><%= ds.model.count %></td>
+				  <td><%= ds.catalog.title %></td>
+				  <td><%= ds.updated_at.to_s(:full) %></td>
+				  <td><%= link_to 'edit', edit_admin_dataset_path(ds.identifier) %></td>
+				</tr>
+				<% end %>
       </table>
     </div>
   </div>
+</div>
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3>
+					<a href="#">Article Heading</a>
+				</h3>
+				<h4>Subheading</h4>
+				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
+				<p>Something here about role of Datasets in system</p>
+			</div>
+			
+	</div>
+	</div>
 </div>

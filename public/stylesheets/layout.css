@@ -221,6 +221,7 @@ text-transform:uppercase;
 }
 .block {
 	padding-top:10px;
+	overflow: auto;
 }
 div.menu {
 	padding:0;
@@ -386,12 +387,11 @@ tbody td {
 	border-bottom:1px solid #bbb;
 	border-top:1px solid #D9E8F5;
 	border-bottom:1px solid #D9E8F5;
-	background:#eee;
 	background:#fff;	
 }
 tbody tr.odd th,
 tbody tr.odd td {
-	background:#fff;
+	background:#eee;
 }
 tfoot th,
 tfoot td {

@@ -8,8 +8,9 @@ class Admin::DatasetsController < ApplicationController
   
   def show
     @dataset = OpenMedia::Dataset.get(params[:id])
-#    @docs = @dataset.model.all
-    @docs = @dataset.model.first
+#    @documents = @dataset.model.all
+    @documents = []
+    @documents << @dataset.model.first
   end
   
   def new_upload

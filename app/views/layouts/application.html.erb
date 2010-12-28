@@ -48,7 +48,7 @@
 								<li><%= link_to 'Catalogs', admin_catalogs_path, :title => "" %>
 								<li><%= link_to 'Datasets', admin_datasets_path, :title => "" %>
 								<li><%= link_to 'Import data', new_upload_admin_datasets_path, :title => "" %>
-								<li><%= link_to 'Curate', new_admin_dataset_path, :title => "" %>
+								<li><%= link_to 'Publish', new_admin_dataset_path, :title => "" %>
 								<li><%= link_to 'New Dataset (deprecated)', new_admin_dataset_path, :title => "" %>
 							</ul>
 						<li><%= link_to 'Schema', admin_schema_path, :title => "" %>
@@ -61,8 +61,14 @@
 								<li><%= link_to 'Job Schedule', admin_schedules_path, :title => "" %>
 								<li><%= link_to 'Community', admin_path, :title => "" %>	
 							</ul>
+						<li><%= link_to 'Help', '/about', :title => "" %>
+							<ul>
+								<li><%= link_to 'FAQs', '/about', :title => "" %></li>
+								<li><%= link_to 'Wiki', '/about', :title => "" %></li>
+							</ul>
+						</li>
 						<li class="secondary">
-							<%= link_to 'About', '/about', :title => "" %>
+							<%= link_to 'Support', '/support', :title => "" %>
 						</li>
 					</ul>					
 				</div><!--#grid_12-->

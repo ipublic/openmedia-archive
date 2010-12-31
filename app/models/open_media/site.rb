@@ -1,6 +1,6 @@
 class OpenMedia::Site < CouchRest::Model::Base
 
-  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMUNITY_DATABASE.name]
+  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, BASE_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMUNITY_DATABASE.name]
 
   use_database SITE_DATABASE
   unique_id :identifier

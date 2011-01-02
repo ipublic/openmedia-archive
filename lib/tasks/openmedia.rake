@@ -15,10 +15,10 @@ namespace :openmedia do
 
   desc "drop the couchdb databases for the current environment"
   task :drop_dbs => :environment do
-    SITE_DATABASE.delete!
-    STAGING_DATABASE.delete!    
-    TYPES_DATABASE.delete!    
-    BASE_DATABASE.delete!    
+    SITE_DATABASE.delete! rescue nil
+    STAGING_DATABASE.delete! rescue nil
+    TYPES_DATABASE.delete! rescue nil
+    BASE_DATABASE.delete! rescue nil
   end
 
   desc "create couchdb databases and load seeds"

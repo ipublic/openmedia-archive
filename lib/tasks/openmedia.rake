@@ -10,7 +10,7 @@ namespace :openmedia do
     SITE_DATABASE.create!
     STAGING_DATABASE.create!
     TYPES_DATABASE.create!
-    BASE_DATABASE.create!
+    COMMONS_DATABASE.create!
   end 
 
   desc "drop the couchdb databases for the current environment"
@@ -18,7 +18,7 @@ namespace :openmedia do
     SITE_DATABASE.delete! rescue nil
     STAGING_DATABASE.delete! rescue nil
     TYPES_DATABASE.delete! rescue nil
-    BASE_DATABASE.delete! rescue nil
+    COMMONS_DATABASE.delete! rescue nil
   end
 
   desc "create couchdb databases and load seeds"

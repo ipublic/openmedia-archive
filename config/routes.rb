@@ -1,4 +1,5 @@
 Openmedia::Application.routes.draw do
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -73,13 +74,21 @@ Openmedia::Application.routes.draw do
         get :import_seed_data
       end
     end
+    
     resources :catalogs
-    resources :contacts
+    resources :properties
     resources :settings
     resources :reports
     resources :organizations    
+    resources :contacts
     resources :schedules
     resources :data_types
+  end
+
+  namespace :schema do
+    resources :domains
+    resources :types
+    resources :properties
   end
 
   resource :account, :to=>"users"

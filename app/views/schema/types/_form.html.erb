@@ -1,0 +1,22 @@
+<div id="forms">
+  <%= form_for :type, :url => schema_types_path do |f| %>
+  <div class="grid_12">
+    <div class="box">
+      <h2><%= @type.new_record? ? "New Type" : "Existing type" %></h2>
+      <div class="block">
+				<%= f.error_messages %>
+				<%= f.hidden_field :rev, :value => @type['_rev'] if @type['_rev'] %>
+				<fieldset>
+				  <p><%= f.label :name %> <%= f.text_field :name %></p>
+				  <p><%= f.label :key %> <%= f.text_field :key %></p>
+				  <p><%= f.label :description %> <%= f.text_field :description %></p>
+				</fieldset>
+      </div>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+  </div>
+  <% end %>	
+</div>

@@ -1,0 +1,21 @@
+<div id="forms">
+  <%= form_for :domain, :url => schema_domains_path do |f| %>
+  <div class="grid_12">
+    <div class="box">
+      <h2><%= @domain.new_record? ? "New Domain" : @domain.name %></h2>
+      <div class="block">
+				<%= f.error_messages %>
+				<%= f.hidden_field :rev, :value => @domain['_rev'] if @domain['_rev'] %>
+				<fieldset>
+				  <p><%= f.label :name %> <%= f.text_field :name %></p>
+				  <p><%= f.label :web_address %> <%= f.text_field :web_address %></p>
+				</fieldset>
+      </div>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+  </div>
+  <% end %>	
+</div>

@@ -1,0 +1,49 @@
+<% title "Schema > Domain: " + @domain.name  %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%= link_to "List all", schema_domains_path %> | 
+		<%= link_to "Edit", edit_schema_domain_path(@domain) %> |
+		<%= link_to 'Delete', schema_domain_path(@domain), 
+					:confirm => "Are you sure you want to delete this domain: #{@domain.name}?", 
+					:method => :delete %>
+		</p>
+	<hr />
+</div>
+<div class="grid_12">
+	<div class="box">
+		<h2><%= @domain.name%> Commons Domain</h2>
+		<div class="block">
+			<%= show_fields(@domain, [[:name, :web_address]]).html_safe %>
+		</div>
+	</div>
+</div>
+
+<div class="grid_12">
+	<div class="box" id="tables">
+		<h2>Types</h2>
+		<div class="block">
+			<p><%= link_to "New", new_schema_type_path(:domain => @domain.web_address) %><p>
+			<table>
+				<thead>
+				  <tr>
+				    <th>Type</th>
+				    <th>ID</th>
+				    <th>No. Properties</th>
+				    <th>No. Instances</th>
+				    <th>Description</th>
+				  </tr>
+				</thead>
+				<% @types.each do |t| %>
+				<tr>
+					<td><%= link_to t['name'], schema_type_path(t.key) %></td>
+				  <td><%= t.key %></td>
+				  <td><%= t.property_count %></td>
+				  <td>fix me</td>
+				  <td>fix me</td>
+				</tr>
+				<% end %>
+      </table>
+      
+		</div>
+	</div>
+</div>

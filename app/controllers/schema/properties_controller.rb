@@ -1,2 +1,2 @@
-class Admin::Schema::PropertiesController < ApplicationController
+class Schema::PropertiesController < ApplicationController
 end

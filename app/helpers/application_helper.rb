@@ -51,8 +51,6 @@ module ApplicationHelper
       "<th>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
     elsif value.is_a?(Time)
       "<th>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
-    elsif value.is_a?(ActiveRecord::Base)
-      "<th>#{field_label}:</th> <td>#{link_to h(value), value}</td>"
     else
       "<th>#{field_label}:</th> <td>#{h(value)}</td>"
     end

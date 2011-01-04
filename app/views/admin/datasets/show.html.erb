@@ -10,6 +10,14 @@
 	</p>
 	<hr/>
 	<div class="box">
+		<h2>Facts</h2>
+		<div class="block">
+			<p><%= @dataset.metadata.description %></p>
+			<p><b>URI:</b> <%= @dataset.uri%> 
+			
+		</div>
+	</div>
+	<div class="box">
 		<h2><%=h @dataset.model.count.to_s + " Records" %></h2>
 		<div class="block">
 			<p>Show: 5 10 25 50 rows          < Previous | Next ></p>

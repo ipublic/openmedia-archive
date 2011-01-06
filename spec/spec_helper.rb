@@ -29,6 +29,7 @@ end
 def reset_test_db!
   SITE_DATABASE.recreate!
   STAGING_DATABASE.recreate!
+  TYPES_DATABASE.recreate!
 end
 
 def create_test_catalog(data={})

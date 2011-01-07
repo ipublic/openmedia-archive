@@ -18,7 +18,7 @@
 				<% @domains.each do |d| %>
 				<tr>
 					<td><%= link_to d.name, schema_domain_path(d) %></td>
-				  <td><%= d.web_address %></td>
+				  <td><%= d.identifier %></td>
 				  <td><%= d.type_count %></td>
 				  <td>fix me</td>
 				</tr>

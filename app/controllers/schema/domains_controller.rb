@@ -11,7 +11,7 @@ class Schema::DomainsController < ApplicationController
   
   def show
     @domain = OpenMedia::Schema::Domain.get(params[:id])
-    @types = OpenMedia::Schema::Type.find_by_domain_id(@domain.web_address)
+    @types = OpenMedia::Schema::Type.find_by_domain_id(@domain.identifier)
     @types ||= []
     
     respond_to do |format|

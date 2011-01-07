@@ -13,7 +13,11 @@
 	<div class="box">
 		<h2><%= @domain.name%> Commons Domain</h2>
 		<div class="block">
-			<%= show_fields(@domain, [[:name, :web_address]]).html_safe %>
+			<%= show_fields(@domain, [
+				:name, 
+				:namespace,
+				[:identifier, 'ID'],
+				:hidden]).html_safe %>
 		</div>
 	</div>
 </div>
@@ -22,7 +26,7 @@
 	<div class="box" id="tables">
 		<h2>Types</h2>
 		<div class="block">
-			<p><%= link_to "New", new_schema_type_path(:domain => @domain.web_address) %><p>
+			<p><%= link_to "New", new_schema_type_path(:domain => @domain.identifier) %><p>
 			<table>
 				<thead>
 				  <tr>

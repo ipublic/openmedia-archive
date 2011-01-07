@@ -7,8 +7,10 @@
 				<%= f.error_messages %>
 				<%= f.hidden_field :rev, :value => @domain['_rev'] if @domain['_rev'] %>
 				<fieldset>
+				  <p><%= f.label :namespace %> <%= f.text_field :namespace %></p>
 				  <p><%= f.label :name %> <%= f.text_field :name %></p>
-				  <p><%= f.label :web_address %> <%= f.text_field :web_address %></p>
+				  <p><%= f.label :identifier, 'ID' %> <%= f.text_field :identifier %></p>
+				  <p><%= f.label :hidden %> <%= f.text_field :hidden %></p>
 				</fieldset>
       </div>
     </div>

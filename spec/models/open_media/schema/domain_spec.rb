@@ -21,8 +21,8 @@ describe OpenMedia::Schema::Domain do
     d2.errors[:name].should_not be_nil
   end
 
-  it 'given a namespace and name, should generate an ID' do
-    @domain.identifier.should_not be_nil
+  it 'given a namespace and name, should generate an ID in correct format' do
+    @domain.identifier.should == "publicsafety"
   end
 
   it 'should require IDs to be unique' do
@@ -33,9 +33,9 @@ describe OpenMedia::Schema::Domain do
     d2.errors[:name].should_not be_nil
   end
 
-  it 'should create a CouchDB database named after ID' do
+  it 'should create a CouchDB database named namespace_identifier' do
     @domain.save
-    COUCHDB_SERVER.available_database?(@domain.identifier).should be_true
+    COUCHDB_SERVER.available_database?("#{@domain.namespace}_#{@domain.identifier}").should be_true
   end
 
 end

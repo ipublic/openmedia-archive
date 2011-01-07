@@ -1,7 +1,6 @@
 class OpenMedia::Schema::Domain < CouchRest::Model::Base
   
   use_database TYPES_DATABASE
-  unique_id :identifier
   
   property :namespace
   property :name
@@ -24,11 +23,6 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   ## Callbacks
   before_save :create_database
   
-  def namespace=(namespace)
-    self['namespace'] = namespace
-    generate_identifier
-  end
-  
   def name=(name)
     self['name'] = name
     generate_identifier
@@ -42,17 +36,16 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
 private
 
   def generate_identifier
-    return if self.namespace.nil? || self.namespace.empty?
     return if self.name.nil? || self.name.empty?
 
     # ID is form <namespace>_<name> where name is only lower case alpha & numeric characters
-    self.identifier = self.namespace + "_" + self.name.downcase.gsub(/[^a-z0-9]/,'').gsub(/^\-|\-$/,'')
+    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'').gsub(/^\-|\-$/,'')
     create_database
   end
   
   def create_database
-#    COUCHDB_SERVER.database().create! 
-    COUCHDB_SERVER.define_available_database(self.identifier.to_sym, self.identifier) 
+#    COUCHDB_SERVER.database().create!
+    COUCHDB_SERVER.define_available_database("#{self.namespace}_#{self.identifier}".to_sym, "#{self.namespace}_#{self.identifier}") 
   end
 
   

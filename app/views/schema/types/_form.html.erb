@@ -8,8 +8,8 @@
 				<%= f.hidden_field :rev, :value => @type['_rev'] if @type['_rev'] %>
 				<fieldset>
 				  <p><%= f.label :name %> <%= f.text_field :name %></p>
-				  <p><%= f.label :key %> <%= f.text_field :key %></p>
-				  <p><%= f.label :description %> <%= f.text_field :description %></p>
+				  <p><%= f.label :identifier %> <%= f.text_field :identifier %></p>
+				  <p><%= f.label :description %><br/> <%= f.text_area :description, :rows => 3  %></p>
 				</fieldset>
       </div>
     </div>

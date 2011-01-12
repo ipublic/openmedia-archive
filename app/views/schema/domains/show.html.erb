@@ -39,11 +39,11 @@
 				</thead>
 				<% @types.each do |t| %>
 				<tr>
-					<td><%= link_to t['name'], schema_type_path(t.key) %></td>
-				  <td><%= t.key %></td>
-				  <td><%= t.property_count %></td>
+					<td><%= link_to t.name, schema_domain_type_path(@domain.id, t.id) %></td>
+				  <td><%= t.identifier %></td>
+				  <td><%= t.type_properties.size %></td>
 				  <td>fix me</td>
-				  <td>fix me</td>
+				  <td><%= t.description %></td>
 				</tr>
 				<% end %>
       </table>

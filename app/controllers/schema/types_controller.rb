@@ -1,18 +1,19 @@
 class Schema::TypesController < ApplicationController
 
   def new
-    @domain = OpenMedia::Schema::Domain.get(params[:domain])
+    @domain = OpenMedia::Schema::Domain.get(params[:domain_id])
     @type = OpenMedia::Schema::Type.new
   end
 
   def create
-    @domain = OpenMedia::Schema::Domain.get(params[:domain])
+    @domain = OpenMedia::Schema::Domain.get(params[:domain_id])
+    
     @type = OpenMedia::Schema::Type.new(params[:type])
-    @type.domain_id = @domain
+    @type.domain = @domain
 
     if @type.save
       flash[:notice] = 'Type successfully created.'
-      redirect_to(schema_domains_path @domain)
+      redirect_to(schema_domain_path @domain)
     else
       flash.now[:error] = 'Unable to create Type.'
       render :action => "new"

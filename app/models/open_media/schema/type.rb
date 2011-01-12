@@ -7,19 +7,17 @@ class OpenMedia::Schema::Type < CouchRest::Model::Base
   property :name
   property :identifier
   property :description
-  
-#  collection_of :property_list, :class_name => 'OpenMedia::Schema::Property'
-#  property :included_types, ['OpenMedia::Schema::Type']
-  
+  property :type_properties, [OpenMedia::Schema::Property]
+    
   property :creator
   property :permission
   
   timestamps!
   
   validates_presence_of :identifier
-  validates_uniqueness_of :identifer, :view => 'all'
+  validates_uniqueness_of :identifier, :view => 'all'
   validates :name, :presence => true
-  validates :domain_id, :presence => true # property auto-geneated by belongs_to association
+  validates :domain, :presence => true # property auto-geneated by belongs_to association
   
   ## Views
   view_by :creator
@@ -31,11 +29,6 @@ class OpenMedia::Schema::Type < CouchRest::Model::Base
     generate_identifier
   end
   
-  def property_count
-    type_properties = OpenMedia::Schema::Property.by_type_id(:key => self.key)
-    count = type_properties.nil? ? 0 : type_properties.count
-  end
-
 private
   def generate_identifier
     return if self.name.nil? || self.name.empty?

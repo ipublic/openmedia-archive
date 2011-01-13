@@ -437,7 +437,7 @@ td.currency {
 /* forms
 ----------------------------------------------- */
 
-form {
+/*form {
 	overflow:hidden;
 }
 
@@ -462,7 +462,7 @@ form p.notice {
 	font-weight:bold;
 }
 
-/* ------ */
+*//* ------ */
 /*form, form ul, form li, fieldset, textarea {
 	margin: 0;
 	padding: 0;

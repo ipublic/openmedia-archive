@@ -1,5 +1,7 @@
 <div id="forms">
-  <%= form_for :domain, :url => schema_domains_path do |f| %>
+	<%= form_for :domain, 
+	      :url => @domain.new_record? ? schema_domains_path : schema_domain_path(@domain.id),
+	      :html => {:method=>@domain.new_record? ? :post : :put } do |f| %>
   <div class="grid_12">
     <div class="box">
       <h2><%= @domain.new_record? ? "New Domain" : @domain.name %></h2>
@@ -7,17 +9,29 @@
 				<%= f.error_messages %>
 				<%= f.hidden_field :rev, :value => @domain['_rev'] if @domain['_rev'] %>
 				<fieldset>
-				  <p><%= f.label :namespace %> <%= f.text_field :namespace %></p>
-				  <p><%= f.label :name %> <%= f.text_field :name %></p>
-				  <p><%= f.label :identifier, 'ID' %> <%= f.text_field :identifier %></p>
-				  <p><%= f.label :hidden %> <%= f.text_field :hidden %></p>
+					<legend>Domain Properties</legend>
+					<ol>
+					  <li><%= f.label :namespace %> <%= f.text_field :namespace %></li>
+					  <li><%= f.label :name %> <%= f.text_field :name %></li>
+						<li><%= f.label :identifier, 'ID' %> <%= f.text_field :identifier %></li>
+					  <li>
+							<fieldset>
+								<ol>
+									<legend>Hidden?</legend>
+								  <li><%= f.label :hidden %> <%= f.check_box :hidden %></li>
+								</ol>
+							</fieldset>
+						</li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit">
+					<ol>
+						<li><%= link_to 'Back',  :back %></li>
+						<li><%= f.submit "Submit", :class => "submit"%></li> 
+					</ol>
 				</fieldset>
       </div>
     </div>
-    <p>
-      <%= link_to 'Back',  :back %>
-      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-    </p>
   </div>
   <% end %>	
 </div>

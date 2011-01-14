@@ -79,10 +79,13 @@ $(function() {
 	return false;
     });
 
+    $('a.add-type-property').button({icons: {primary: "ui-icon-squaresmall-plus"}});
+
     $('a.delete-type-property').live('click', function() {
 	$(this).closest('li').remove();
 	return false;
     });
+    $('a.delete-type-property').button({icons: {primary: "ui-icon-circle-close"}});
 
     $('.property-type-qualified-name').autocomplete(typeAutoCompleteOpts);
 

@@ -5,6 +5,17 @@ class Schema::TypesController < ApplicationController
     @type = OpenMedia::Schema::Type.new
   end
 
+  def new_property
+    @property = OpenMedia::Schema::Property.new
+    render :partial=>'property', :locals=>{:base_name=>'type[type_properties][]', :property=>@property}, :layout=>nil
+  end
+
+  def autocomplete
+    startkey = params[:term].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
+    @types = OpenMedia::Schema::Type.by_identifier(:startkey=>startkey, :endkey=>"#{startkey}\uffff")
+    render :json=>@types.collect{|t| {:id=>t.id, :label=>"#{t.name} (#{t.qualified_name})", :value=>t.qualified_name} }
+  end
+
   def create
     @domain = OpenMedia::Schema::Domain.get(params[:domain_id])
     
@@ -20,33 +31,22 @@ class Schema::TypesController < ApplicationController
     end
   end
 
+  def show
+    @type = OpenMedia::Schema::Type.get(params[:id])
+  end
+
   def edit
     @type = OpenMedia::Schema::Type.get(params[:id])
   end
 
   def update
     @type = OpenMedia::Schema::Type.get(params[:id])
-    @updated_type = OpenMedia::Schema::Type.new(params[:type])
-
-    @revs = @type['_rev'] + ' ' + @updated_type['rev']
-
-    if @type['_rev'].eql?(@updated_type.delete("rev"))
-      @updated_type.delete("couchrest-type")
-
-      respond_to do |format|
-        if @type.update_attributes(@updated_type)
-          flash[:notice] = 'Successfully updated Type.'
-          format.html { redirect_to(schema_domains_path) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @type.errors, :status => :unprocessable_entity }
-        end
-      end
-    else
-      # Document revision is out of sync
-      flash[:notice] = 'Update conflict. Type has been updated elsewhere, reload Type page, then update again. ' + @revs
-      respond_to do |format|
+    respond_to do |format|
+      if @type.update_attributes(params[:type])
+        flash[:notice] = 'Successfully updated Type.'
+        format.html { redirect_to(schema_domain_type_path) }
+        format.xml  { head :ok }
+      else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @type.errors, :status => :unprocessable_entity }
       end
@@ -64,4 +64,5 @@ class Schema::TypesController < ApplicationController
       redirect_to(schema_domains_path)
     end
   end
+
 end

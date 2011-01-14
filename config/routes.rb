@@ -89,7 +89,12 @@ Openmedia::Application.routes.draw do
     resources :domains do
       resources :types
     end
-    resources :properties
+    resources :types do
+      collection do
+        get :new_property
+        get :autocomplete
+      end
+    end
   end
 
   resource :account, :to=>"users"

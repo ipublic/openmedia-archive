@@ -16,19 +16,17 @@ describe OpenMedia::Schema::Type do
     type.errors[:domain_id].should_not be_nil        
   end
 
-  it 'saves when all required fields are present' do
-    type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test')
-    type.valid?
+  it 'should save when required fields are present and generate identifier off of name' do
+    type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test Type')
+    type.send(:generate_identifier)
     type.save.should be_true
-    type.should be_valid
-    type.errors.size.should == 0
+    type.identifier.should == 'test_type'
   end
 
   it 'has an array of nested OpenMedia::Schema::Property' do
-    type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test')
-    type.type_properties.size.should == 0
-
-    type.type_properties << OpenMedia::Schema::Property.new(:name=>'aTest', :type=>type)
+    seed_test_db!
+    integer_type = OpenMedia::Schema::Type.find_by_identifier('integer')
+    type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test', :type_properties=>[{:name=>'aTest', :expected_type=>integer_type}])
     type.type_properties.size.should == 1
   end
   

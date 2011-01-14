@@ -32,6 +32,11 @@ def reset_test_db!
   TYPES_DATABASE.recreate!
 end
 
+def seed_test_db!
+  load File.join(Rails.root, 'db', 'seeds.rb')
+end
+
+
 def create_test_catalog(data={})
   OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
 end

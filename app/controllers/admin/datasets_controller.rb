@@ -10,7 +10,7 @@ class Admin::DatasetsController < ApplicationController
     @dataset = OpenMedia::Dataset.get(params[:id])
 #    @documents = @dataset.model.all
     @documents = []
-    @documents << @dataset.model.first
+    @documents << @dataset.model.first if @dataset.model.first
   end
   
   def new_upload

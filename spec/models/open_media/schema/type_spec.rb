@@ -4,7 +4,7 @@ describe OpenMedia::Schema::Type do
 
   before(:each) do
     reset_test_db!
-    @domain = OpenMedia::Schema::Domain.new(:namespace => "om", :name => "Public Safety")
+    @domain = OpenMedia::Schema::Domain.new(:name_space => "om", :name => "Public Safety")
   end
   
   it 'requires name, identifier, and domain_id to save' do

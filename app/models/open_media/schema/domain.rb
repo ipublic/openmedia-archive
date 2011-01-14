@@ -2,7 +2,7 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   
   use_database TYPES_DATABASE
   
-  property :namespace
+  property :name_space
   property :name
   property :identifier
   property :hidden, :default => false
@@ -16,7 +16,7 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   validates :identifier, :presence => true, :uniqueness => true
 
   ## Views
-  view_by :namespace
+  view_by :name_space
   view_by :name  
   
   ## Callbacks
@@ -33,7 +33,7 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   end
 
   def qualified_name
-    self.namespace.blank? ? self.identifier : [self.namespace, self.identifier].join('/')
+    self.name_space.blank? ? self.identifier : [self.name_space, self.identifier].join('/')
   end
 
 
@@ -42,14 +42,14 @@ private
   def generate_identifier
     return if self.name.nil? || self.name.empty?
 
-    # ID is form <namespace>_<name> where name is only lower case alpha & numeric characters
-    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'').gsub(/^\-|\-$/,'')
+    # ID is form <name_space>_<name> where name is only lower case alpha & numeric characters
+    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
     create_database
   end
   
   def create_database
 #    COUCHDB_SERVER.database().create!
-    COUCHDB_SERVER.define_available_database("#{self.namespace}_#{self.identifier}".to_sym, "#{self.namespace}_#{self.identifier}") 
+    COUCHDB_SERVER.define_available_database("#{self.name_space}_#{self.identifier}".to_sym, "#{self.name_space}_#{self.identifier}") 
   end
 
   

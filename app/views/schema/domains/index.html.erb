@@ -18,7 +18,7 @@
 				</thead>
 				<% @domains.each do |d| %>
 				<tr>
-				  <td><%= d.namespace %></td>
+				  <td><%= d.name_space %></td>
 				  <td><%= link_to d.name, schema_domain_path(d) %></td>
 				  <td><%= d.identifier %></td>
 				  <td><%= d.type_count %></td>

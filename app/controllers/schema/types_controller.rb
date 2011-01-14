@@ -13,7 +13,7 @@ class Schema::TypesController < ApplicationController
   def autocomplete
     startkey = params[:term].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
     @types = OpenMedia::Schema::Type.by_identifier(:startkey=>startkey, :endkey=>"#{startkey}\uffff")
-    render :json=>@types.collect{|t| {:id=>t.id, :label=>"#{t.name} (#{t.qualified_name})", :value=>t.qualified_name} }
+    render :json=>@types.collect{|t| {:id=>t.id, :label=>"#{t.name} (#{t.qualified_name})", :value=>t.name} }
   end
 
   def create
@@ -41,6 +41,7 @@ class Schema::TypesController < ApplicationController
 
   def update
     @type = OpenMedia::Schema::Type.get(params[:id])
+    @type.type_properties.clear
     respond_to do |format|
       if @type.update_attributes(params[:type])
         flash[:notice] = 'Successfully updated Type.'

@@ -1,7 +1,7 @@
 class Schema::DomainsController < ApplicationController
   
   def index
-    @domains = OpenMedia::Schema::Domain.by_namespace
+    @domains = OpenMedia::Schema::Domain.by_name_space
     
     respond_to do |format|
       format.html

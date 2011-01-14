@@ -62,6 +62,25 @@ $(function() {
 	return false;
     });
 
+    var typeAutoCompleteOpts = {delay: 300,
+				mustMatch: true,
+				source: "/schema/types/autocomplete",
+				select: function(event, ui) {
+				    $(event.target).next('input').val(ui.item.id);
+				}};
+
+    $('a.add-type-property').live('click', function() {
+	var link = this;
+	$.get('/schema/types/new_property', function(html) {
+	    $(link).prev('ol').append(html);
+	    $(link).prev('ol').find('.property-type-qualified-name:last').autocomplete(typeAutoCompleteOpts);
+	    
+	});
+	return false;
+    });
+
+    $('.property-type-qualified-name').autocomplete(typeAutoCompleteOpts);
+
     $('#source input.property-name').live('blur', syncSourceProperties);
 
 });

@@ -1,0 +1,48 @@
+<% title "Schema > Type > #{@type.qualified_name}" %>
+
+<div class="grid_12" >
+  <p style="float:right;">
+    <%= link_to "List all", schema_domain_type_path(params[:domain_id], @type.id) %> | 
+    <%= link_to "Edit", edit_schema_domain_type_path(params[:domain_id], @type.id) %> |
+    <%= link_to 'Delete', schema_domain_type_path(params[:domain_id], @type.id), 
+	:confirm => "Are you sure you want to delete this type: #{@type.qualified_name}?", 
+    :method => :delete %>
+  </p>
+  <hr />
+</div>
+
+<div class="grid_12" >
+  <div class="box">
+    <h2><%= @type.qualified_name %></h2>
+    <div class="block">
+      <%= show_fields(@type, [:name, :identifier, :description]).html_safe %>
+    </div>
+  </div>
+</div>
+
+<div class="grid_12">
+  <div class="box" id="tables">
+    <h2>Properties</h2>
+    <div class="block">
+      <p><a href="#">New</a></p>
+      <table>
+	<thead>
+	  <tr>
+	    <th>Name</th>
+	    <th>Identifier</th>
+	    <th>Type</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @type.type_properties.each do |property| %>
+	  <tr>
+	    <td><%= property.name %></td>
+	    <td><%= property.identifier %></td>
+	    <td><%= property.expected_type.name %> (<%= property.expected_type.qualified_name %>)</td>
+	  </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+  </div>
+</div>

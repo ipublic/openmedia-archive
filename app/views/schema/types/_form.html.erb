@@ -1,16 +1,28 @@
 <div id="forms">
-  <%= form_for :type, :url => schema_domain_types_path  do |f| %>
+  <%= form_for :type, :url => @type.new_record? ? schema_domain_types_path : schema_domain_type_path(@type),
+  :html => {:method=>@type.new_record? ? :post : :put } do |f| %>
   <div class="grid_12">
     <div class="box">
       <h2><%= @type.new_record? ? "New Type" : "Existing type" %></h2>
       <div class="block">
-				<%= f.error_messages %>
-				<%= f.hidden_field :rev, :value => @type['_rev'] if @type['_rev'] %>
-				<fieldset>
-				  <p><%= f.label :name %> <%= f.text_field :name %></p>
-				  <p><%= f.label :identifier %> <%= f.text_field :identifier %></p>
-				  <p><%= f.label :description %><br/> <%= f.text_area :description, :rows => 3  %></p>
-				</fieldset>
+	<%= f.error_messages %>
+	<fieldset>
+	  <legend>Type Settings</legend>
+	  <ol>
+	    <li><%= f.label :name %> <%= f.text_field :name %></li>
+	    <li><%= f.label :description %><br/> <%= f.text_area :description, :rows => 3  %></li>
+	  </ol>
+	</fieldset>
+
+	<fieldset>
+	  <legend>Properties</legend>
+	  <ol>
+	    <% for property in @type.type_properties %>
+	    <%= render :partial=>'property', :locals=>{:base_name=>'type[type_properties][]', :property=>property} %>
+	    <% end %>
+	  </ol>
+	  <a href="#" class="add-type-property">add property</a>
+	</fieldset>
       </div>
     </div>
     <p>

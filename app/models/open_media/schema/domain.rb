@@ -12,13 +12,12 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   
   timestamps!
 
-  validates_presence_of :namespace
   validates :name, :presence => true, :uniqueness => true
   validates :identifier, :presence => true, :uniqueness => true
 
   ## Views
   view_by :namespace
-  view_by :name
+  view_by :name  
   
   ## Callbacks
   before_save :create_database
@@ -29,9 +28,14 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
   end
 
   def type_count
-    domain_types = OpenMedia::Schema::Type.by_domain_id(:key => self.identifier)
-    count = domain_types.nil? ? 0 : domain_types.count
+    domain_types = OpenMedia::Schema::Type.by_domain_id(:key => self.id, :raw=>true)
+    count = domain_types['rows'].length
   end
+
+  def qualified_name
+    self.namespace.blank? ? self.identifier : [self.namespace, self.identifier].join('/')
+  end
+
 
 private
 

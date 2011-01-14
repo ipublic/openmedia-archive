@@ -8,7 +8,7 @@ class OpenMedia::DatasetModelTemplate < CouchRest::Model::Base
   
   timestamps!
 
-  validates_presence_of :job_id
+  validates_presence_of :import_id
 
   view_by :import_id
 

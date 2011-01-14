@@ -37,6 +37,7 @@
 				    <th>Description</th>
 				  </tr>
 				</thead>
+				<tbody>
 				<% @types.each do |t| %>
 				<tr>
 					<td><%= link_to t.name, schema_domain_type_path(@domain.id, t.id) %></td>
@@ -46,7 +47,8 @@
 				  <td><%= t.description %></td>
 				</tr>
 				<% end %>
-      </table>
+				</tbody>
+			</table>
       
 		</div>
 	</div>

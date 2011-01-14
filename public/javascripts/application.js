@@ -74,18 +74,17 @@ $(function() {
 	$.get('/schema/types/new_property', function(html) {
 	    $(link).prev('ol').append(html);
 	    $(link).prev('ol').find('.property-type-qualified-name:last').autocomplete(typeAutoCompleteOpts);
-	    
+	    $(link).prev('ol').find('a.delete-type-property:last').button({icons: {primary: "ui-icon-circle-close"}});    
 	});
 	return false;
     });
 
-    $('a.add-type-property').button({icons: {primary: "ui-icon-squaresmall-plus"}});
+    $('a.add-type-property').button({icons: {primary: "ui-icon-circle-plus"}});
 
     $('a.delete-type-property').live('click', function() {
 	$(this).closest('li').remove();
 	return false;
     });
-    $('a.delete-type-property').button({icons: {primary: "ui-icon-circle-close"}});
 
     $('.property-type-qualified-name').autocomplete(typeAutoCompleteOpts);
 

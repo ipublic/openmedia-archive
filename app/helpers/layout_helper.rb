@@ -35,7 +35,7 @@ module LayoutHelper
   end
 
   def contact_collection
-    OpenMedia::Contact.by_name_and_email.collect {|o| [ o.name, o.email ] }
+    OpenMedia::Contact.by_full_name_and_email.collect {|o| [ o.full_name, o.email ] }
   end
 
   def state_collection

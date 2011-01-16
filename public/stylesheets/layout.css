@@ -409,31 +409,6 @@ td.currency {
 	text-align:right;
 }
 
-.propertyTable {
-	border: none;
-	border-collapse: collapse;
-	width: 100%;
-}
-
-.propertyTable th, td {
-	background: transparent;
-	color: #000;
-	border: none;
-}
-
-.propertyTable th {
-	padding:.2em 0 .2em 0;
-	text-align: right;
-	width: 40%;
-}
-
-.propertyTable td {
-	padding:.2em .5em;
-	text-align: left;
-	background: transparent;
-	border: none;
-}
-
 /* forms
 ----------------------------------------------- */
 
@@ -531,7 +506,7 @@ fieldset input {
 */
 /* ------ */
 
-fieldset p label {
+/*fieldset p label {
 	width:98%;
 }
 fieldset p input {
@@ -540,6 +515,8 @@ fieldset p input {
 fieldset p select {
 	width:99%;
 }
+*/
+
 fieldset.login p {
 	margin-bottom:1em;
 	margin-top:0pt;

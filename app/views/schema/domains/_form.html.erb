@@ -2,22 +2,24 @@
 	<%= form_for :domain, 
 	      :url => @domain.new_record? ? schema_domains_path : schema_domain_path(@domain.id),
 	      :html => {:method=>@domain.new_record? ? :post : :put } do |f| %>
-  <div class="grid_12">
+  <div class="grid_8">
     <div class="box">
       <h2><%= @domain.new_record? ? "New Domain" : @domain.name %></h2>
       <div class="block">
 				<%= f.error_messages %>
 				<%= f.hidden_field :rev, :value => @domain['_rev'] if @domain['_rev'] %>
-				<fieldset>
+				<fieldset class="omega">
 					<legend>Domain Properties</legend>
 					<ol>
 					  <li><%= f.label :name_space, 'Namespace' %> <%= f.text_field :name_space %></li>
-					  <li><%= f.label :name %> <%= f.text_field :name %></li>
-					  <li>
+					  <li><%= f.label :name, 'Name this database'%> <%= f.text_field :name %></li>
+						<li><%= f.label :identifier, 'Web address' %>
+							 	<%= f.text_field :identifier %><%= @domain.name_space.nil? ? ".openmedia.org" : "." + @domain.name_space %></li>
+						<li>
 							<fieldset>
+							  <legend>Options</legend>
 								<ol>
-								  <legend>Hidden?</legend>
-								  <li><%= f.label :hidden %> <%= f.check_box :hidden %></li>
+								  <li><%= f.check_box :hidden, {:class => 'checkbox'} %> <%= f.label :hidden, 'Hidden?' %></li>
 								</ol>
 							</fieldset>
 						</li>
@@ -25,8 +27,7 @@
 				</fieldset>
 				<fieldset class="submit">
 					<ol>
-						<li><%= link_to 'Back',  :back %></li>
-						<li><%= f.submit "Submit", :class => "submit"%></li> 
+						<li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back',  :back %></li> 
 					</ol>
 				</fieldset>
       </div>

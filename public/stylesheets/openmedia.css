@@ -1,29 +1,42 @@
-fieldset {  
-	margin: 1.5em 0 0 0;  
-	padding: 0;  
-	position: relative;    
+h4 {
+	font-size: 16px;
+	margin: 0;
+	padding:4px;
+	line-height:1.2em;
 }
 
-fieldset {    
-float: left;    
-clear: both;    
-width: 100%;    
-margin: 0 0 1.5em 0;    
-padding: 0;    
-border: 1px solid #BFBAB0;    
-background-color: #F2EFE9;    
+
+/* forms
+----------------------------------------------- */
+input, select, textarea {
+	width:60%;
 }
 
-legend {    
-position: relative;    
-left: -7px;    
-top: -0.75em;    
-}    
+input.submit {
+	width: 5em;
+}
 
 legend {  
 	margin-left: 1em;  
 	color: #000000;  
 	font-weight: bold;  
+	font-size: 1.6em;
+}
+
+fieldset {  
+	margin: 1.5em 0 0 0;  
+	padding: 0;  
+	position: relative;    
+	float: left;    
+	clear: both;    
+	width: 100%;    
+	margin: 0 0 1.5em 0;    
+	padding: 0;    
+	border-bottom: 1px dotted #BFBAB0;    
+}
+
+fieldset.omega {  
+	border: none;
 }
 
 fieldset ol {  
@@ -31,20 +44,16 @@ fieldset ol {
 	list-style: none;  
 }
   
-fieldset ol {    
-padding-top: 0.25em;    
-}
-
 fieldset li {  
 	padding-bottom: 1em;  
 }
   
 fieldset.submit {    
-float: none;    
-width: auto;    
-border-style: none;    
-padding-left: 12em;    
-background-color: transparent;    
+	float: none;    
+	width: auto;    
+	border-style: none;    
+	padding-left: 12em;    
+	background-color: transparent;    
 }
 
 label {    
@@ -53,27 +62,70 @@ label {
 	width: 10em;    
 	margin-right: 1em;    
 	text-align: right;  
+	color: #F26101;
+	font-size: 1.2em;
+	font-weight: bold;  
 }
 
 fieldset fieldset {      
-margin-bottom: -2.5em;      
-border-style: none;      
-background-color: transparent;      
-background-image: none;      
-}      
-fieldset fieldset legend {      
-margin-left: 0;      
-font-weight: normal;      
-}      
-fieldset fieldset ol {      
-position: relative;      
-top: -1.5em;      
-margin: 0 0 0 11em;      
-padding: 0;      
-}      
-fieldset fieldset label {      
-float: none;      
-width: auto;      
-margin-right: auto;      
+	margin-bottom: -2.5em;      
+	border-style: none;      
+	background-color: transparent;      
+	background-image: none;      
 }
 
+fieldset fieldset legend {      
+	margin-left: 0;      
+	font-weight: normal;      
+}      
+
+fieldset fieldset ol {      
+	position: relative;      
+	top: -1.5em;      
+	margin: 0 0 0 11em;      
+	padding: 0;      
+}      
+
+fieldset fieldset label {      
+	float: none;      
+	width: auto;      
+	margin-right: auto;      
+}
+
+/* tables
+----------------------------------------------- */
+.property-table {
+	border: none;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.property-table thead th { 
+	font-size:.1.2em;
+	font-style:italic;
+	border-bottom:2px solid #888;
+	border-bottom:2px solid #304269;
+	background:#ddd;
+	padding:.4em 1em .2em;
+}
+
+.property-table th, td {
+	font-size: 1.2em;
+	background: transparent;
+	border: none;
+}
+
+.property-table th {
+	color: #F26101;
+	padding:.2em 0 .2em 0;
+	text-align: right;
+	width: 40%;
+}
+
+.property-table td {
+	padding:.2em .5em;
+	text-align: left;
+	background: transparent;
+	border: none;
+	word-break: break-all;
+}

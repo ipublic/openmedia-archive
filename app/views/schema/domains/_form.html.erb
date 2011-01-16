@@ -13,8 +13,7 @@
 					<ol>
 					  <li><%= f.label :name_space, 'Namespace' %> <%= f.text_field :name_space %></li>
 					  <li><%= f.label :name, 'Name this database'%> <%= f.text_field :name %></li>
-						<li><%= f.label :identifier, 'Web address' %>
-							 	<%= f.text_field :identifier %><%= @domain.name_space.nil? ? ".openmedia.org" : "." + @domain.name_space %></li>
+						<li><%= f.label :identifier, 'Web address' %> <%= f.text_field :identifier %></li>
 						<li>
 							<fieldset>
 							  <legend>Options</legend>

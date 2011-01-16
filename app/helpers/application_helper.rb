@@ -31,7 +31,7 @@ module ApplicationHelper
   end
 
   def show_fields(object, field_list)
-    res = field_list.inject("<table class='propertyTable'>") do |html, a_field|
+    res = field_list.inject("<table class='property-table'>") do |html, a_field|
       if a_field.is_a?(String)
         html+="<tr>" + show_field(object, a_field) + "</tr>"
       else
@@ -44,15 +44,15 @@ module ApplicationHelper
   def show_field (object, field_name, field_label=field_name.to_s.humanize)
     value = object.fetch(field_name.to_s,'')
     if value.is_a?(Integer)
-      "<th>#{field_label}:</th> <td>#{number_with_delimiter(value)}</td>"
+      "<th class='property-table'>#{field_label}:</th> <td>#{number_with_delimiter(value)}</td>"
     elsif value.is_a?(Bignum)
-      "<th>#{field_label}:</th> <td>#{number_with_delimiter(value)}</td>"
+      "<th class='property-table'>#{field_label}:</th> <td>#{number_with_delimiter(value)}</td>"
     elsif value.is_a?(Date)
-      "<th>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
+      "<th class='property-table'>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
     elsif value.is_a?(Time)
-      "<th>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
+      "<th class='property-table'>#{field_label}:</th> <td>#{value.to_s(:full_date_only)}</td>"
     else
-      "<th>#{field_label}:</th> <td>#{h(value)}</td>"
+      "<th class='property-table'>#{field_label}:</th> <td>#{h(value)}</td>"
     end
   end
   

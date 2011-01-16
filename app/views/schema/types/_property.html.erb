@@ -1,17 +1,10 @@
-<li class="property">    
-  <p style="float: right; padding-left: 20px"><br/>
-    <a href="#" class="delete-type-property" alt="Delete">Delete Property</a>
-  </p>
-
-  <p style="width: 45%; float: right">
-    <label>Expected Type</label>
-    <input class="property-type-qualified-name" name="qualified_name" size="30" type="text" value="<%= property.expected_type.name if property.expected_type %>"/>
-    <input type="hidden" name="<%=base_name %>[expected_type_id]" value="<%= property.expected_type_id %>"/>
-  </p>
-
-  <p style="width: 35%">
-    <label>Name</label>
-    <input name="<%=base_name %>[name]" size="30" type="text" value="<%= property.name %>"/>
-  </p>
-
+<li class="two-column-left">
+<label>Name</label>
+	<input name="<%=base_name %>[name]" type="text" value="<%= property.name %>"/>
+</li>
+<li class="two-column-right">
+   <label>Expected Type</label>
+   <input class="property-type-qualified-name" name="qualified_name" type="text" value="<%= property.expected_type.name if property.expected_type %>"/>
+   <input type="hidden" name="<%=base_name %>[expected_type_id]" value="<%= property.expected_type_id %>"/>
+   <a href="#" class="delete-type-property" alt="Delete">Delete Property</a>
 </li>

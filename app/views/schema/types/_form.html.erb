@@ -5,30 +5,35 @@
     <div class="box">
       <h2><%= @type.new_record? ? "New Type" : "Existing type" %></h2>
       <div class="block">
-	<%= f.error_messages %>
-	<fieldset>
-	  <legend>Type Settings</legend>
-	  <ol>
-	    <li><%= f.label :name %> <%= f.text_field :name %></li>
-	    <li><%= f.label :description %><br/> <%= f.text_area :description, :rows => 3  %></li>
-	  </ol>
-	</fieldset>
+				<%= f.error_messages %>
+				<fieldset>
+				  <legend>Type Settings</legend>
+				  <ol>
+				    <li><%= f.label :name %> <%= f.text_field :name %></li>
+				    <li><%= f.label :description %> <%= f.text_area :description, :rows => 3  %></li>
+				  </ol>
+				</fieldset>
 
-	<fieldset>
-	  <legend>Properties</legend>
-	  <ol>
-	    <% for property in @type.type_properties %>
-	    <%= render :partial=>'property', :locals=>{:base_name=>'type[type_properties][]', :property=>property} %>
-	    <% end %>
-	  </ol>
-	  <a href="#" class="add-type-property">add property</a>
-	</fieldset>
-      </div>
-    </div>
-    <p>
-      <%= link_to 'Back',  :back %>
-      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-    </p>
+				<fieldset class="omega">
+				  <legend>Properties</legend>
+				  <ol>
+				    <% for property in @type.type_properties %>
+				    <%= render :partial=>'property', :locals=>{:base_name=>'type[type_properties][]', :property=>property} %>
+				    <% end %>
+				  </ol>
+				</fieldset>
+				<fieldset class="submit">
+					<ol>
+				  	<a href="#" class="add-type-property add-element">Add Property</a>
+					</ol>
+				</fieldset>
+				<fieldset class="submit">
+					<ol>
+						<li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+					</ol>
+				</fieldset>
+			</div>
+		</div>
   </div>
   <% end %>	
 </div>

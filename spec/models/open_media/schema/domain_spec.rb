@@ -18,6 +18,18 @@ describe OpenMedia::Schema::Domain do
     @domain.identifier.should == "public_safety"
   end
 
+  it 'should have convenience methods for finding core types domain' do
+    seed_test_db!
+    OpenMedia::Schema::Domain.default_types.name_space.should == ''    
+    OpenMedia::Schema::Domain.default_types.name.should == 'Types'
+  end
+
+  #    .string_type.qualified_name.should == 'types/string'
+  #  OpenMedia::Schema::Type.integer_type.qualified_name.should == 'types/integer'
+  #  OpenMedia::Schema::Type.date_type.qualified_name.should == 'types/date'
+  #  OpenMedia::Schema::Type.datetime_type.qualified_name.should == 'types/datetime'            
+  #end
+  
   it 'should require IDs to be unique' do
     @domain.save.should be_true
     d2 = OpenMedia::Schema::Domain.new(:name => "Public Safety")

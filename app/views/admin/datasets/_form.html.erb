@@ -5,7 +5,11 @@
     
     <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@dataset.new_record? %>
   </p>
-  <p><%= ds.label :catalog_id, 'Catalog' %><br/><%= ds.select :catalog_id, catalog_collection %></p>				
+  <p>
+    <%= ds.label :data_type_id, 'Data Type' %><br/>
+    <input class="property-type-qualified-name" name="qualified_name" size="30" type="text" value="<%= @dataset.data_type.name if @dataset.data_type %>"/>
+    <%= ds.hidden_field :data_type_id %>
+  </p>				
   <%= ds.fields_for :metadata, @dataset.metadata do |m| %>
   <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
   <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3, 
@@ -13,15 +17,6 @@
   <p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
   <% end %>				
 </fieldset>	 	
-
-<fieldset id="property-set">
-  <legend><b>Properties</b></legend>
-  <% for property in @dataset.dataset_properties %>
-  <%= render :partial=>'property', :locals=>{ :base_name=>'dataset[dataset_properties][]', :property=>property } %>
-  <% end %>
-  <a href="#" class="add-property" rel="dataset[dataset_properties][]">add property</a>
-</fieldset>	 	
-
 
 <fieldset id="source">
   <legend><b>Source</b></legend>
@@ -47,7 +42,7 @@
   </p>
 
   <% for property in @dataset.source.source_properties %>
-  <%= render :partial=>'property', :locals=>{ :base_name=>'dataset[source][source_properties][]', :property=>property } %>
+  <%= render :partial=>'schema/type/property', :locals=>{ :base_name=>'dataset[source][source_properties][]', :property=>property } %>
   <% end %>
   <a href="#" class="add-property" rel="dataset[source][source_properties][]">add property</a>
   <% end %>

@@ -17,15 +17,25 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
 
   ## Views
   view_by :name_space
+  view_by :name_space, :identifier  
   view_by :name  
   
   ## Callbacks
   before_save :create_database
-  
+
+  def self.default_types
+    self.find_by_name_space_and_identifier(['','types'])
+  end
+
   def name=(name)
     self['name'] = name
     generate_identifier
   end
+
+  def find_type(type_identifier)
+    OpenMedia::Schema::Type.find_by_domain_id_and_identifier(:key=>[self.id,type_identifier])
+  end
+
 
   def type_count
     domain_types = OpenMedia::Schema::Type.by_domain_id(:key => self.id, :raw=>true)

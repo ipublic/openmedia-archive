@@ -18,5 +18,5 @@ class OpenMedia::Source < Hash
   property :parser  
   property :column_separator    # separator for delimited parser
   property :skip_lines, Integer # lines to skip (i.e. header rows) for delimited parser
-  property :source_properties, [OpenMedia::Property]
+  property :source_properties, [OpenMedia::Schema::Property]
 end

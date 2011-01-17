@@ -42,11 +42,9 @@ def create_test_catalog(data={})
 end
 
 def create_test_dataset(data={})
-  c = data.delete(:catalog)
-  ds = OpenMedia::Dataset.new({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
-  ds.catalog_id = c ? c.id : create_test_catalog.id
-  ds.save!
-  return ds
+  data[:catalog] = create_test_catalog unless data[:catalog]
+  data[:data_type] = create_test_type unless data[:data_type]
+  OpenMedia::Dataset.create!({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
 end
 
 def create_test_csv
@@ -59,5 +57,14 @@ end
 
 def delete_test_csv
   File.delete('/tmp/test.csv')      
+end
+
+def create_test_domain(data={})
+  OpenMedia::Schema::Domain.create!({:name_space=>'test', :name=>"Test Domain - #{OpenMedia::Schema::Domain.count+1}"}.merge(data))
+end
+
+def create_test_type(data={})
+  data[:domain] = create_test_domain unless data[:domain]
+  OpenMedia::Schema::Type.create!({:name=>"Test Type - #{OpenMedia::Schema::Type.count+1}"}.merge(data))
 end
 

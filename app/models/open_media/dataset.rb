@@ -8,19 +8,19 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
 
   before_create :generate_id, :generate_views
   after_create :update_model_views
-  after_save :update_catalog
   before_destroy {|ds| ds.model.all.each{|m| m.destroy}}
 
   property :title
-  property :dataset_properties, [Property]
   property :metadata, OpenMedia::Metadata
   property :unique_id_property
   property :source, OpenMedia::Source
+  belongs_to :data_type, :class_name=>'OpenMedia::Schema::Type'
 
   timestamps!
   
   validates :title, :presence=>true
-  validates :catalog, :presence=>true  
+  validates :catalog, :presence=>true
+  validates :data_type_id, :presence=>true
   validate :dataset_validation
 
   def self.get(id, db = database)
@@ -45,31 +45,6 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.all.size
   end
 
-  def catalog
-    @catalog ||= OpenMedia::Catalog.by_dataset_id(:key=>self.id).first
-  end
-
-  def catalog_id
-    self.catalog ? self.catalog.id : nil
-  end
-
-  def catalog=(catalog)
-    @catalog = catalog
-  end
-
-  def catalog_id=(cat_id)
-    self.catalog = OpenMedia::Catalog.get(cat_id)
-  end
-
-  # dataset property convenience methods
-  def get_dataset_property(name)
-    self.dataset_properties.detect{|ds| ds.name==name}
-  end
-
-  def delete_dataset_property(name)
-    self.dataset_properties.delete(self.dataset_properties.detect{|ds| ds.name==name})
-  end
-
   def identifier    
     self.title.gsub(/^(\d+)(.*)/,'\2').titleize.gsub(/[^\w\d]/,'')
   end
@@ -87,12 +62,6 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     self.class.const_get(self.identifier)    
   end
   
-  def set_properties(property_info)
-    property_info.each do |pi|
-      self.dataset_properties << OpenMedia::Property.new(:name=>pi[:name], :data_type=>pi[:data_type] || OpenMedia::Property::STRING_TYPE)
-    end
-  end
-
   def import!(opts={})
     if source && source.source_type==OpenMedia::Source::FILE_TYPE
       raise ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
@@ -102,7 +71,7 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
     ctl = "source :in, {:file=>'#{opts[:file]}', :parser=>'#{source.parser}', :skip_lines=>#{source.skip_lines}},["+
       self.source.source_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:dataset=>'#{self.identifier}'}, {:order=>[" +
-      self.dataset_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
+      self.data_type.type_properties.collect{|p| p.name}.collect{|p| ":#{p}"}.join(',') + "]}\n"
     ETL::Engine.init(:dataset=>self)
     ETL::Engine.process_string(self, ctl)
     ETL::Engine.import = nil

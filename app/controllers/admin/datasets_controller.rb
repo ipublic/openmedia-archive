@@ -52,17 +52,24 @@ class Admin::DatasetsController < ApplicationController
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
         data = FasterCSV.parse(data_file.read, {:col_sep=>@dataset.source.column_separator})
-        property_names = []
-        if has_header_row
-          @dataset.source.skip_lines = 1
-          property_names = data[0]
-        else
-          1.upto(data[0].size) {|i| property_names << "Column#{i}"}
+
+        if !@dataset.data_type
+          @domain = OpenMedia::Schema::Domain.first #TODO - figure out what to do about domain
+          @type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>"#{@dataset.title} Type")
+          property_names = []
+          if has_header_row
+            @dataset.source.skip_lines = 1
+            property_names = data[0]
+          else
+            1.upto(data[0].size) {|i| property_names << "Column#{i}"}
+          end
+          property_names.each do |name|
+            @type.type_properties << OpenMedia::Schema::Property.new(:name=>name, :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('string'))
+            @dataset.source.source_properties << OpenMedia::Schema::Property.new(:name=>name, :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('string'))
+          end
+          @dataset.data_type = @type
         end
-        property_names.each do |name|
-          @dataset.dataset_properties << OpenMedia::Property.new(:name=>name, :data_type=>OpenMedia::Property::STRING_TYPE, :source_name=>name)
-          @dataset.source.source_properties << OpenMedia::Property.new(:name=>name, :data_type=>OpenMedia::Property::STRING_TYPE)          
-        end
+        
         data_file.rewind
 
         # this is a hack, but basically, save dataset once so that the Dataset#update_model_views callback runs before attachment is in there

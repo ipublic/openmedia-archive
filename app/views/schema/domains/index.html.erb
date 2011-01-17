@@ -1,11 +1,11 @@
 <% title "Schema > Domains" %>
 <div class="grid_8">
-	<p>
-    <%= link_to 'New', new_schema_domain_path %>
-  </p>
   <div class="box">
     <h2>Browse</h2>
     <div class="block" id="tables">
+			<p>
+		    <%= link_to 'Add Domain', new_schema_domain_path, {:class => 'add-element'} %>
+		  </p>
       <table>
 				<thead>
 				  <tr>

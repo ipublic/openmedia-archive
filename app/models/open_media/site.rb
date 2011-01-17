@@ -1,5 +1,5 @@
 class OpenMedia::Site < CouchRest::Model::Base
-
+  
   DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
@@ -21,7 +21,7 @@ class OpenMedia::Site < CouchRest::Model::Base
   # Location properties
   property :gnis, OpenMedia::Gnis # e.g.; 584282 for Ellicott City, MD
   
-  property :site_domain_name
+  property :site_domain_name, :default => "example.gov"
   property :site_proxy_prefix
   property :site_canonical_url, :default => "http://localhost"
   property :site_organization_id
@@ -42,6 +42,11 @@ class OpenMedia::Site < CouchRest::Model::Base
   
   ## CouchDB Views
   # singleton class - no views
+  
+  def self.instance
+    @instance ||= self.first
+    @instance
+  end
 
 private
   def generate_identifier

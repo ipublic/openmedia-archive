@@ -1,5 +1,7 @@
-<p><b>Feature ID:</b> <br/><%=h gnis.feature_id %></p>
-<p><b>Feature name:</b> <br/><%=h gnis.feature_name %></p>
-<p><b>Feature class:</b> <br/><%=h gnis.feature_class %></p>
-<p><b>Citation:</b> <br/><%=h gnis.citation %></p>
-<p><b>Lat / Lon / Elevation</b> <br/><%=h gnis.latitude %> / <%=h gnis.longitude %> / <%=h gnis.elevation %></p>
+<%= show_fields(gnis, [
+		:feature_id,
+		:feature_name,
+		:feature_class,
+		:citation
+		]).html_safe %>
+<p><b>Lon, Lat, Elevation</b> <br/><%=h gnis.longitude %>, <%=h gnis.latitude %>, <%=h gnis.elevation %></p>

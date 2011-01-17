@@ -1,9 +1,11 @@
 <%= fields_for(gnis) do |g| %>
-   <p><%= g.label :feature_id, 'Feature ID' %> <%= g.text_field :feature_id %></p>
-   <p><%= g.label :feature_name %> <%= g.text_field :feature_name %></p>
-   <p><%= g.label :feature_class %> <%= g.text_field :feature_class %></p>
-   <p><%= g.label :citation %><br/> <%= g.text_area :citation, :rows => 3 %></p>
-   <p><%= g.label :latitude %> <%= g.text_field :latitude %></p>
-   <p><%= g.label :longitude %> <%= g.text_field :longitude %></p>
-   <p><%= g.label :elevation %> <%= g.text_field :elevation %></p>
+		<ol>
+			<li><%= g.label :feature_id, 'Feature ID' %> <%= g.text_field :feature_id %></li>
+			<li><%= g.label :feature_name %> <%= g.text_field :feature_name %></li>
+			<li><%= g.label :feature_class %> <%= g.text_field :feature_class %></li>
+			<li><%= g.label :citation %> <%= g.text_area :citation, :rows => 3 %></li>
+			<li><%= g.label :latitude %> <%= g.text_field :latitude %></li>
+			<li><%= g.label :longitude %> <%= g.text_field :longitude %></li>
+			<li><%= g.label :elevation %> <%= g.text_field :elevation %></li>
+		</ol>
 <% end %>

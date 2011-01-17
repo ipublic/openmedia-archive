@@ -1,42 +1,50 @@
 <div id="forms">
 	<%= form_for :site, :url => admin_site_path do |f| %>
-		<div class="grid_6">
+		<div class="grid_8">
 			<div class="box">
 				<h2><%= @site.openmedia_name || "Setup Site" %></h2>
 				<div class="block">
 				  <%= f.error_messages %>
 					<%= f.hidden_field :rev, :value => @site['_rev'] if @site['_rev'] %>
-					<legend>General</legend>
 					<fieldset>
-					  <p><%= f.label :url, 'Domain URL' %> <%= f.text_field :url %></p>
-					  <p><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name %></p>
+						<legend>General</legend>
+						<ol>
+						  <li><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name %></li>
+						  <li><%= f.label :url, 'Domain URL' %> <%= f.text_field :url %></li>
 
-					  <p><%= f.label :adminstrator_contact_id, 'Administrator Contact' %> 
-							 <%= f.select :adminstrator_contact_id, contact_collection, {:prompt => 'Select contact'}  %></p>
-					  <p><%= f.label :business_contact_id, 'Business Contact' %> 
-							 <%= f.select :business_contact_id, contact_collection, {:prompt => 'Select contact'}  %></p>
+						  <li><%= f.label :adminstrator_contact_id, 'Sys Admin Contact' %> 
+								 <%= f.select :adminstrator_contact_id, contact_collection, {:prompt => 'Select contact'}  %></li>
+						  <li><%= f.label :business_contact_id, 'Business Contact' %> 
+								 <%= f.select :business_contact_id, contact_collection, {:prompt => 'Select contact'}  %></li>
+							</ol>
 					</fieldset>
 					
-					<legend>Systems</legend>
 					<fieldset>
-					  <p><%= f.label :internal_couchdb_server_uri, 'Internal CouchDB server URI' %> <%= f.text_field :internal_couchdb_server_uri %></p>
-					  <p><%= f.label :public_couchdb_server_uri, 'Public CouchDB server URI' %> <%= f.text_field :public_couchdb_server_uri %></p>
+						<legend>OpenMedia Servers</legend>
+						<ol>
+						  <li><%= f.label :internal_couchdb_server_uri, 'Internal server URI' %> <%= f.text_field :internal_couchdb_server_uri %></li>
+						  <li><%= f.label :public_couchdb_server_uri, 'Public server URI' %> <%= f.text_field :public_couchdb_server_uri %></li>
+						</ol>
 					</fieldset>
 
-					<legend>GNIS</legend>
 					<fieldset>
+						<legend>GNIS</legend>
 						<%= render :partial => 'admin/gnis/form', :locals => {:gnis => @site.gnis }  %>
 					</fieldset>
 					
-					<legend>Services</legend>
-					<fieldset>
-					  <p><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key %></p>
+					<fieldset class="omega">
+						<legend>Services</legend>
+						<ol>
+					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key %></li>
+						</ol>
+					</fieldset>
+					<fieldset class="submit">
+						<ol>
+							<li><%= f.submit "Save", {:class => "submit"} %> <%= link_to 'Back',  :back %></li> 
+						</ol>
 					</fieldset>
 				</div>
 			</div>
-			<p>
-				<%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-			</p>
 		</div>
 	<% end %>	
 </div>

@@ -22,6 +22,7 @@ class OpenMedia::Schema::Type < CouchRest::Model::Base
   ## Views
   view_by :creator
   view_by :domain_id
+  view_by :identifier
   view_by :domain_id, :identifier
 
   def name=(name)

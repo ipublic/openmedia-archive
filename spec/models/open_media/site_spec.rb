@@ -13,7 +13,14 @@ describe OpenMedia::Site do
     @site.identifier.should == 'somesitecom'
   end
 
-  describe 'instance singelton method' do
+  it 'should assume http:// if protocol not specified in url' do
+    @site.url = 'somesite.com'
+    @site.save!
+    @site.url.should == 'http://somesite.com'    
+    @site.identifier.should == 'somesitecom'
+  end
+
+  describe 'instance singleton method' do
     it 'should return first instance in couchdb' do
       @site.save!
       OpenMedia::Site.instance.id.should == @site.id

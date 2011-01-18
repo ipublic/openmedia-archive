@@ -1,9 +1,10 @@
+require 'open_media/no_site_defined'
+
 class OpenMedia::Site < CouchRest::Model::Base
   
   DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
-  unique_id :identifier
   
   ## Property Definitions
   # General properties
@@ -35,23 +36,34 @@ class OpenMedia::Site < CouchRest::Model::Base
   timestamps!
 
   ## Validations
-  validates_presence_of :url
+  validates_presence_of :url, :identifier
 
-  ## Callbacks
-  before_save :generate_identifier
-  
   ## CouchDB Views
   # singleton class - no views
   
   def self.instance
     @instance ||= self.first
-    @instance
+    if @instance.nil?
+      raise OpenMedia::NoSiteDefined.new
+    else
+      @instance
+    end
+  end
+
+  def url=(url)
+    self['url'] = url
+    generate_identifier
+  end
+
+  def domains
+    OpenMedia::Schema::Domain.by_site_id(:startkey=>self.id, :endkey=>"#{self.id}\u9999")
   end
 
 private
   def generate_identifier
     if !url.blank?
-      self['identifier'] = url.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+      self.url =~ /^https?:\/\/(.*)$/
+      self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
     end
   end
   

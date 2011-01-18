@@ -42,7 +42,7 @@
   </p>
 
   <% for property in @dataset.source.source_properties %>
-  <%= render :partial=>'schema/type/property', :locals=>{ :base_name=>'dataset[source][source_properties][]', :property=>property } %>
+  <%= render :partial=>'schema/types/property', :locals=>{ :base_name=>'dataset[source][source_properties][]', :property=>property } %>
   <% end %>
   <a href="#" class="add-property" rel="dataset[source][source_properties][]">add property</a>
   <% end %>

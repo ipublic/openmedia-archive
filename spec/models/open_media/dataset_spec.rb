@@ -4,10 +4,8 @@ describe OpenMedia::Dataset do
 
   before(:each) do
     reset_test_db!
-    @catalog = create_test_catalog
     @type = create_test_type
     @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3', :data_type=>@type)
-    @dataset.catalog = @catalog
   end
   
   it 'should be a couchdb design document' do
@@ -18,25 +16,12 @@ describe OpenMedia::Dataset do
     @dataset.identifier.should == 'CrimeTest3'
   end
   
-  it 'should require at least one catalog' do
-    @dataset.catalog = nil
-    @dataset.should_not be_valid
-    @dataset.errors[:catalog_id].should_not be_nil
-  end
-
   it 'should require a type' do
     @dataset.data_type = nil
     @dataset.should_not be_valid
     @dataset.errors[:data_type_id].should_not be_nil
   end
-  
-
-  it 'should know how to get its catalog' do
-    @dataset.save
-    @dataset = OpenMedia::Dataset.find(@dataset.id)
-    @dataset.catalog.title.should == @catalog.title
-  end
-  
+    
   it 'should save and generate id as _design/ModelClassName' do
     @dataset.save
     @dataset.persisted?.should be_true
@@ -45,9 +30,7 @@ describe OpenMedia::Dataset do
   
   it 'should allow access to all datasets' do
     @dataset.save
-    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2', :data_type=>@type)
-    ds2.catalog = @catalog
-    ds2.save!
+    ds2 = OpenMedia::Dataset.create!(:title=>'dataset 2', :data_type=>@type)
     
     dd = CouchRest::Design.new
     dd.name='another design doc'
@@ -60,7 +43,6 @@ describe OpenMedia::Dataset do
   it 'should provide count of datasets' do
     @dataset.save
     ds2 = OpenMedia::Dataset.new(:title=>'dataset 2', :data_type=>@type)
-    ds2.catalog = @catalog
     ds2.save
     OpenMedia::Dataset.count.should == 2
     dd = CouchRest::Design.new
@@ -94,9 +76,7 @@ describe OpenMedia::Dataset do
       
   it 'should be searchable by title' do
     %w(Apples Applications Bananas).each do |t|
-      ds = OpenMedia::Dataset.new(:title=>t, :data_type=>@type)
-      ds.catalog = @catalog
-      ds.save!
+      ds = OpenMedia::Dataset.create!(:title=>t, :data_type=>@type)
     end
   
     OpenMedia::Dataset.search('App').size.should == 2

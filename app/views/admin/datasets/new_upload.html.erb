@@ -43,7 +43,14 @@
       <input type="radio" id="existing-ds-btn" name="radio" /><label for="existing-ds-btn">Existing Dataset</label>
     </div>
     <div id="new-ds-fields" class="import-ds-fields">
-      <p><%= ds.label :catalog_id, 'Catalog' %>  <%= ds.select :catalog_id, catalog_collection %></p>				
+      <p><%= ds.label :data_type_id, 'Data Type' %>  <input type="text"/>
+	<br/>OR Create New Type in Domain:
+	<select name="domain_id">
+	  <%= options_for_select current_site.domains.collect {|d| [d.name, d.id]} %>
+	</select>
+      </p>				
+      
+      <p><%= ds.label :data_type_id, 'Data Type' %>  <input type="text"/></p>				
       <p><%= ds.label :title %><br/><%= ds.text_field :title %></p>
     </div>
     <div id="existing-ds-fields" style="display: none" class="import-ds-fields">

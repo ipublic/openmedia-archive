@@ -19,7 +19,6 @@ class OpenMedia::Dataset < OpenMedia::DesignModel
   timestamps!
   
   validates :title, :presence=>true
-  validates :catalog, :presence=>true
   validates :data_type_id, :presence=>true
   validate :dataset_validation
 
@@ -97,16 +96,6 @@ private
 
   def generate_views
     self['views'] = { } # we have to put views here so that couchrest-model can add its views here later
-  end
-
-
-  def update_catalog
-    if @catalog
-      unless @catalog.dataset_ids.include?(self.id)
-        @catalog.datasets << self
-        @catalog.save!
-      end
-    end
   end
 
   def update_model_views

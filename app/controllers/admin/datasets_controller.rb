@@ -48,13 +48,14 @@ class Admin::DatasetsController < ApplicationController
       redirect_to admin_datasets_path
     elsif params[:dataset]
       @dataset = OpenMedia::Dataset.new(params[:dataset])
+
       if data_file
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
         data = FasterCSV.parse(data_file.read, {:col_sep=>@dataset.source.column_separator})
 
         if !@dataset.data_type
-          @domain = OpenMedia::Schema::Domain.first #TODO - figure out what to do about domain
+          @domain = OpenMedia::Schema::Domain.find(params[:domain_id])
           @type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>"#{@dataset.title} Type")
           property_names = []
           if has_header_row
@@ -74,7 +75,7 @@ class Admin::DatasetsController < ApplicationController
 
         # this is a hack, but basically, save dataset once so that the Dataset#update_model_views callback runs before attachment is in there
         # otherwise, it gets base64 encoded twice
-        @dataset.save
+        @dataset.save        
         @dataset.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
                                    :content_type=>data_file.content_type)
       end

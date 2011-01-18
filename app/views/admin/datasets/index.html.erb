@@ -13,7 +13,7 @@
 				  <tr>
 				    <th>Title</th>
 				    <th>No. Records</th>
-				    <th>Catalog</th>
+				    <th>Type</th>
 				    <th>Updated</th>
 				    <th></th>
 				  </tr>
@@ -22,7 +22,7 @@
 				<tr>
 				  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
 				  <td><%= ds.model.count %></td>
-				  <td><%= ds.catalog.title %></td>
+				  <td><%= ds.data_type.qualified_name %></td>
 				  <td><%= ds.updated_at.to_s(:full) %></td>
 				  <td><%= link_to 'edit', edit_admin_dataset_path(ds.identifier) %></td>
 				</tr>

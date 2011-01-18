@@ -2,7 +2,7 @@
 <div class="grid_12" >
 	<p style="float:right;">
 		<%= link_to "Browse", schema_domains_path %> | 
-		<%= link_to "Edit", edit_schema_domain_path(@domain) %> <% unless @domain.name_space=='' %>|
+		<%= link_to "Edit", edit_schema_domain_path(@domain) %> <% unless @domain.site.nil? %>|
 		<%= link_to 'Delete', schema_domain_path(@domain), 
 					:confirm => "Are you sure you want to delete this domain: #{@domain.name}?", 
 					:method => :delete %><% end %>
@@ -15,8 +15,8 @@
 		<div class="block">
 			<%= show_fields(@domain, [
 				:name, 
-				:name_space,
-				[:identifier, 'ID'],
+				:site,
+				:identifier,
 				:hidden]).html_safe %>
 		</div>
 	</div>
@@ -31,7 +31,7 @@
 				<thead>
 				  <tr>
 				    <th>Type</th>
-				    <th>ID</th>
+				    <th>Identifier</th>
 				    <th>No. Properties</th>
 				    <th>No. Instances</th>
 				    <th>Description</th>

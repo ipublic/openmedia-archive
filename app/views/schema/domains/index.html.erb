@@ -9,16 +9,16 @@
       <table>
 				<thead>
 				  <tr>
-				    <th>Namespace</th>
+				    <th>Site</th>
 				    <th>Domain Name</th>
-				    <th>ID</th>
+				    <th>Identifier</th>
 				    <th>No. Types</th>
 				    <th>No. Instances</th>
 				  </tr>
 				</thead>
 				<% @domains.each do |d| %>
 				<tr>
-				  <td><%= d.name_space %></td>
+				  <td><%= d.site ? d.site.url : '' %></td>
 				  <td><%= link_to d.name, schema_domain_path(d) %></td>
 				  <td><%= d.identifier %></td>
 				  <td><%= d.type_count %></td>

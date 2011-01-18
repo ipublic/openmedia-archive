@@ -62,8 +62,12 @@ class OpenMedia::Site < CouchRest::Model::Base
 private
   def generate_identifier
     if !url.blank?
-      self.url =~ /^https?:\/\/(.*)$/
-      self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
+      if self.url =~ /^https?:\/\/(.*)$/
+        self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
+      else
+        self['idenfitier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
+        self.url = "http://#{self.url}"
+      end
     end
   end
   

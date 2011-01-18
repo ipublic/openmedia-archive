@@ -25,17 +25,4 @@ describe OpenMedia::Catalog do
     @catalog.id.should == 'catalog_catalog_4'
   end
 
-  it 'should be able to fetch its datasets' do
-    @catalog.save
-    ds1 = OpenMedia::Dataset.new(:title=>"DS1")
-    ds1.catalog_id = @catalog.id
-    ds1.save!
-    ds2 = OpenMedia::Dataset.new(:title=>"DS2")
-    ds2.catalog_id = @catalog.id
-    ds2.save!
-
-    @catalog = OpenMedia::Catalog.first
-    @catalog.datasets.collect{|ds| ds.title}.should == %w(DS1 DS2)
-  end
-
 end

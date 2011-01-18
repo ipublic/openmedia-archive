@@ -1,7 +1,7 @@
 class Schema::DomainsController < ApplicationController
   
   def index
-    @domains = OpenMedia::Schema::Domain.by_name_space
+    @domains = OpenMedia::Schema::Domain.all
     
     respond_to do |format|
       format.html
@@ -26,7 +26,7 @@ class Schema::DomainsController < ApplicationController
   
   def create
     @domain = OpenMedia::Schema::Domain.new(params[:domain])
-
+    @domain.site = OpenMedia::Site.instance # TODO -skip this if superuser (dan) is creating types in commons domains
     if @domain.save
       flash[:notice] = 'Domain successfully created.'
       redirect_to(schema_domains_path)

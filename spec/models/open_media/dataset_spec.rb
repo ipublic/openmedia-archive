@@ -4,9 +4,8 @@ describe OpenMedia::Dataset do
 
   before(:each) do
     reset_test_db!
-    @catalog = create_test_catalog
-    @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3')
-    @dataset.catalog = @catalog
+    @type = create_test_type
+    @dataset = OpenMedia::Dataset.new(:title=>'4. Crime Test 3', :data_type=>@type)
   end
   
   it 'should be a couchdb design document' do
@@ -17,18 +16,12 @@ describe OpenMedia::Dataset do
     @dataset.identifier.should == 'CrimeTest3'
   end
   
-  it 'should require at least one catalog' do
-    @dataset.catalog = nil
+  it 'should require a type' do
+    @dataset.data_type = nil
     @dataset.should_not be_valid
-    @dataset.errors[:catalog_id].should_not be_nil
+    @dataset.errors[:data_type_id].should_not be_nil
   end
-
-  it 'should know how to get its catalog' do
-    @dataset.save
-    @dataset = OpenMedia::Dataset.find(@dataset.id)
-    @dataset.catalog.title.should == @catalog.title
-  end
-  
+    
   it 'should save and generate id as _design/ModelClassName' do
     @dataset.save
     @dataset.persisted?.should be_true
@@ -37,22 +30,19 @@ describe OpenMedia::Dataset do
   
   it 'should allow access to all datasets' do
     @dataset.save
-    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
-    ds2.catalog = @catalog
-    ds2.save
+    ds2 = OpenMedia::Dataset.create!(:title=>'dataset 2', :data_type=>@type)
     
     dd = CouchRest::Design.new
     dd.name='another design doc'
-    dd.database = STAGING_DATABASE
-    dd.save    
+    dd.database = STAGING_DATABASE    
+    dd.save
     OpenMedia::Dataset.all.size.should == 2
     OpenMedia::Dataset.all.each {|ds| ds.should be_instance_of OpenMedia::Dataset }
   end
   
   it 'should provide count of datasets' do
     @dataset.save
-    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2')
-    ds2.catalog = @catalog
+    ds2 = OpenMedia::Dataset.new(:title=>'dataset 2', :data_type=>@type)
     ds2.save
     OpenMedia::Dataset.count.should == 2
     dd = CouchRest::Design.new
@@ -86,9 +76,7 @@ describe OpenMedia::Dataset do
       
   it 'should be searchable by title' do
     %w(Apples Applications Bananas).each do |t|
-      ds = OpenMedia::Dataset.new(:title=>t)
-      ds.catalog = @catalog
-      ds.save!
+      ds = OpenMedia::Dataset.create!(:title=>t, :data_type=>@type)
     end
   
     OpenMedia::Dataset.search('App').size.should == 2
@@ -118,44 +106,7 @@ describe OpenMedia::Dataset do
       @dataset.metadata = { :description => 'Test test' }
       lambda { @dataset.save! }.should_not raise_error
     end
-  end
-  
-  describe "managing properties" do
-    before(:each) do
-      @prop0 = OpenMedia::Property.new(:name=>"Title", :type => "string", :is_key => true)
-      @prop1 = OpenMedia::Property.new(:name=>"Category", :type => "string", :is_key => false, :example_value => "Science Fiction")
-      @prop2 = OpenMedia::Property.new(:name=>"Rating", :type => "string", :example_value => "R")
-    end
-    
-    it "should clear all properties" do
-      @dataset.dataset_properties << @prop0
-      @dataset.dataset_properties.size.should == 1
-      @dataset.dataset_properties.clear
-      @dataset.dataset_properties.should be_empty
-    end
-  
-    it "should add and return a property by name" do
-      @dataset.dataset_properties <<  @prop0
-      rtn_prop = @dataset.get_dataset_property(@prop0.name)
-      rtn_prop.name.should == @prop0.name
-    end
-    
-    it "should return nil for a property that doesn't exist" do
-      @dataset.dataset_properties.clear
-      @dataset.dataset_properties <<  @prop0
-      @dataset.get_dataset_property(@prop1.name).should == nil
-    end    
-    
-    it "should remove a property by name" do
-      @dataset.dataset_properties <<  @prop0
-      rtn_prop = @dataset.get_dataset_property(@prop0.name)
-      rtn_prop.name.should == @prop0.name
-      
-      @dataset.delete_dataset_property(@prop0.name)
-      @dataset.get_dataset_property(@prop0.name).should == nil
-    end
-  
-  end
+  end  
   
   describe 'metadata' do
     it 'should save' do
@@ -196,19 +147,24 @@ describe OpenMedia::Dataset do
   describe 'importing' do
     before(:each) do
       reset_test_db!
+      seed_test_db!
       create_test_csv
-      @dataset.set_properties([{:name=>'A', :date_type=>OpenMedia::Property::STRING_TYPE},
-                               {:name=>'B', :date_type=>OpenMedia::Property::STRING_TYPE},
-                               {:name=>'D', :date_type=>OpenMedia::Property::STRING_TYPE}])
+      string_type = OpenMedia::Schema::Domain.default_types.find_type('string')
+      @domain = OpenMedia::Schema::Domain.create!(:namespace=>'metropolis', :name=>'Silly Stuff')
+      @dataset_type = OpenMedia::Schema::Type.create!(:name=>@dataset.title+ ' Type', :domain=>@domain,
+                                                      :type_properties=>[{:name=>'A', :expected_type=>string_type},
+                                                                         {:name=>'B', :expected_type=>string_type},
+                                                                         {:name=>'C', :expected_type=>string_type},
+                                                                         {:name=>'D', :expected_type=>string_type}])
+      @dataset.data_type = @dataset_type
       @dataset.source = OpenMedia::Source.new(:source_type=>OpenMedia::Source::FILE_TYPE,
                                               :parser=>OpenMedia::Source::DELIMITED_PARSER,
                                               :column_separator=>',',
                                               :skip_lines=>1,
-                                              :source_properties=>[{:name=>'A', :date_type=>OpenMedia::Property::STRING_TYPE},
-                                                                   {:name=>'B', :date_type=>OpenMedia::Property::STRING_TYPE},
-                                                                   {:name=>'C', :date_type=>OpenMedia::Property::STRING_TYPE},
-                                                                   {:name=>'D', :date_type=>OpenMedia::Property::STRING_TYPE}
-                                                                  ])
+                                              :source_properties=>[{:name=>'A', :expected_type=>string_type},
+                                                                         {:name=>'B', :expected_type=>string_type},
+                                                                         {:name=>'C', :expected_type=>string_type},
+                                                                         {:name=>'D', :expected_type=>string_type}])
       @dataset.save!
     end
 
@@ -216,7 +172,7 @@ describe OpenMedia::Dataset do
       delete_test_csv
     end
 
-    it 'should require a file to be passed in options for impor from a file source' do
+    it 'should require a file to be passed in options for import from a file source' do
       lambda { @dataset.import! }.should raise_error(ETL::ControlError)
       lambda { @dataset.import!(:file=>'/tmp/test.csv') }.should_not raise_error(ETL::ControlError)      
     end

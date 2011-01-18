@@ -4,7 +4,7 @@ describe OpenMedia::Schema::Type do
 
   before(:each) do
     reset_test_db!
-    @domain = OpenMedia::Schema::Domain.new(:name_space => "om", :name => "Public Safety")
+    @domain = create_test_domain
   end
   
   it 'requires name, identifier, and domain_id to save' do
@@ -25,7 +25,7 @@ describe OpenMedia::Schema::Type do
 
   it 'has an array of nested OpenMedia::Schema::Property' do
     seed_test_db!
-    integer_type = OpenMedia::Schema::Type.find_by_identifier('integer')
+    integer_type = OpenMedia::Schema::Domain.default_types.find_type('integer')
     type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test', :type_properties=>[{:name=>'aTest', :expected_type=>integer_type}])
     type.type_properties.size.should == 1
   end

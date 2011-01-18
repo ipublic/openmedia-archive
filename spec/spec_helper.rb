@@ -28,6 +28,7 @@ end
 
 def reset_test_db!
   SITE_DATABASE.recreate!
+  OpenMedia::Site.instance_variable_set(:@instance, nil)
   STAGING_DATABASE.recreate!
   TYPES_DATABASE.recreate!
 end
@@ -36,17 +37,18 @@ def seed_test_db!
   load File.join(Rails.root, 'db', 'seeds.rb')
 end
 
+def create_test_site(data={})
+  @test_site ||= OpenMedia::Site.create!(:url=>'http://test.gov')
+  @test_site
+end
 
 def create_test_catalog(data={})
   OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
 end
 
 def create_test_dataset(data={})
-  c = data.delete(:catalog)
-  ds = OpenMedia::Dataset.new({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
-  ds.catalog_id = c ? c.id : create_test_catalog.id
-  ds.save!
-  return ds
+  data[:data_type] = create_test_type unless data[:data_type]
+  OpenMedia::Dataset.create!({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
 end
 
 def create_test_csv
@@ -59,5 +61,15 @@ end
 
 def delete_test_csv
   File.delete('/tmp/test.csv')      
+end
+
+def create_test_domain(data={})
+  data[:site] = create_test_site unless data[:domain]
+  OpenMedia::Schema::Domain.create!({:site=>data[:site], :name=>"Test Domain - #{OpenMedia::Schema::Domain.count+1}"}.merge(data))
+end
+
+def create_test_type(data={})
+  data[:domain] = create_test_domain unless data[:domain]
+  OpenMedia::Schema::Type.create!({:name=>"Test Type - #{OpenMedia::Schema::Type.count+1}"}.merge(data))
 end
 

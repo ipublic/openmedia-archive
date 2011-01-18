@@ -6,9 +6,9 @@ describe Schema::TypesController do
   before(:each) do
     reset_test_db!
     seed_test_db!
-    @domain = OpenMedia::Schema::Domain.create!(:namespace=>'foo', :name=>'Bar')
-    integer_type = OpenMedia::Schema::Type.find_by_identifier('integer')
-    string_type = OpenMedia::Schema::Type.find_by_identifier('string')    
+    @domain = create_test_domain
+    integer_type = OpenMedia::Schema::Domain.default_types.find_type('integer')
+    string_type = OpenMedia::Schema::Domain.default_types.find_type('string')    
     @type = OpenMedia::Schema::Type.create!(:domain=>@domain, :name=>'MyTestType',
                                             :type_properties=>[{:name=>'Size', :expected_type=>integer_type},
                                                                {:name=>'Name', :expected_type=>string_type}])

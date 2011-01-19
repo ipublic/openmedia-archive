@@ -48,7 +48,7 @@ end
 
 def create_test_dataset(data={})
   data[:data_type] = create_test_type unless data[:data_type]
-  OpenMedia::Dataset.create!({:title=>'Test Dataset', :metadata=>{ }, :source=>{ }}.merge(data))  
+  OpenMedia::Dataset.create!({:title=>'Test Dataset'}.merge(data))  
 end
 
 def create_test_csv

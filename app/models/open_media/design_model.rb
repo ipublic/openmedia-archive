@@ -2,18 +2,18 @@ module OpenMedia
 
   class DesignModel <  CouchRest::Design
     extend ActiveModel::Naming
-
+    
+    include CouchRest::Model::Configuration
     include CouchRest::Model::Persistence
     include CouchRest::Model::Callbacks
     include CouchRest::Model::ExtendedAttachments
     include CouchRest::Model::ClassProxy
     include CouchRest::Model::Collection
     include CouchRest::Model::DocumentQueries    
-    include CouchRest::Model::AttributeProtection
-    include CouchRest::Model::Attributes
+    include CouchRest::Model::PropertyProtection    
     include CouchRest::Model::Associations
     include CouchRest::Model::Validations
-    include CouchRest::Model::Dirty
+    
 
     def self.subclasses
       @subclasses ||= []
@@ -44,10 +44,10 @@ module OpenMedia
     # * :directly_set_attributes: true when data comes directly from database
     #
     def initialize(doc = {}, options = {})
-      prepare_all_attributes(doc, options)
+      doc = prepare_all_attributes(doc, options)
       super(doc)
       unless self['_id'] && self['_rev']
-        self['couchrest-type'] = self.class.to_s
+        self[self.model_type_key] = self.class.to_s
       end
       after_initialize if respond_to?(:after_initialize)
     end

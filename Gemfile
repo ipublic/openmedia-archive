@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.3'
-gem 'couchrest_model', :git => 'git://github.com/couchrest/couchrest_model.git', :ref=>'cc2b18394617'
+gem 'couchrest_model', :git => 'git://github.com/couchrest/couchrest_model.git', :ref=>'83b70ec0808d'
 gem 'dynamic_form'
 gem 'fastercsv'
 

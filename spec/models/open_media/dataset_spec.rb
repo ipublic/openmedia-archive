@@ -112,6 +112,7 @@ describe OpenMedia::Dataset do
     it 'should save' do
       @dataset.metadata = OpenMedia::Metadata.new(:title=>'Meta Title')
       @dataset.save
+      ds = OpenMedia::Dataset.get(@dataset.id)
       OpenMedia::Dataset.get(@dataset.id).metadata.title.should == 'Meta Title'
     end
   

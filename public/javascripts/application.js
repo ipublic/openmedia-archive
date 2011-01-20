@@ -79,9 +79,10 @@ $(function() {
 	$('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
 
 	$('a.delete-type-property').live('click', function() {
-		$(this).closest('li').remove();
-		return false;
-		});
+	    $(this).closest('li').prev('li').remove();
+	    $(this).closest('li').remove();
+	    return false;
+	});
 
 	$('.property-type-qualified-name').autocomplete(typeAutoCompleteOpts);
 	$('#source input.property-name').live('blur', syncSourceProperties);

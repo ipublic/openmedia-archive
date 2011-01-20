@@ -16,7 +16,7 @@
 
 				<fieldset class="omega">
 				  <legend>Properties</legend>
-				  <ol>
+				  <ol class="two-column">
 				    <% for property in @type.type_properties %>
 				    <%= render :partial=>'property', :locals=>{:base_name=>'type[type_properties][]', :property=>property} %>
 				    <% end %>

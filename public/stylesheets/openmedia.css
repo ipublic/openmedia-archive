@@ -77,27 +77,20 @@ fieldset li {
   margin: 0;
 }
 
-.two-column-left label {
-  float: none;
-  display: block;
-  color: blue;
-  text-align: left;
+.two-column li {
+  display: inline-block;
 }
 
-.two-column-right label {
-  float: none;
-  display: block;
-  color: blue;
-  text-align: left;
+.two-column li label {
+  width: 10em;
+  margin-right: 1em;
 }
 
-.two-column-left input {
-  display: block;
+.two-column li input {
+  width: 20em;
+  margin-right: 1em;
 }
 
-.two-column-right input {
-  display: block;
-}
 
 fieldset fieldset {
   border: none;

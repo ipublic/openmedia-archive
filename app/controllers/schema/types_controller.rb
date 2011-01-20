@@ -1,4 +1,5 @@
 class Schema::TypesController < ApplicationController
+  before_filter :filter_empty_properties, :only=>[:create, :update]
 
   def new
     @domain = OpenMedia::Schema::Domain.get(params[:domain_id])
@@ -65,5 +66,13 @@ class Schema::TypesController < ApplicationController
       redirect_to(schema_domains_path)
     end
   end
+
+private
+  # remove properties which are totally blank  
+  def filter_empty_properties
+    if params[:type] && params[:type][:type_properties]
+      params[:type][:type_properties] = params[:type][:type_properties].reject{|p| p.values.all?{|v| v.blank?}}
+    end
+  end    
 
 end

@@ -37,7 +37,7 @@ class OpenMedia::Schema::Type < CouchRest::Model::Base
 private
   def generate_identifier
     return if self.name.nil? || self.name.empty?
-    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
+    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
   end
   
 end

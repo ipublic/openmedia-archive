@@ -77,7 +77,7 @@ private
     return if self.name.nil? || self.name.empty?
 
     # ID is form <name_space>_<name> where name is only lower case alpha & numeric characters
-    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
+    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
     create_database
   end
   

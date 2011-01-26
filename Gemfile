@@ -4,6 +4,7 @@ gem 'rails', '3.0.3'
 gem 'couchrest_model', :git => 'git://github.com/couchrest/couchrest_model.git', :ref=>'83b70ec0808d'
 gem 'dynamic_form'
 gem 'fastercsv'
+gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 
 group :test, :development do
   gem "rspec-rails", '2.1.0'

@@ -23,6 +23,14 @@ describe OpenMedia::Schema::Type do
     type.identifier.should == 'test_type'
   end
 
+  it 'should know its path and uri' do
+    type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>'Test Type')
+    type.send(:generate_identifier)
+    type.save.should be_true
+    type.path.should == "/#{@domain.site.identifier}/#{@domain.identifier}/#{type.identifier}"        
+    type.uri.should == "http://openmedia.org/#{@domain.site.identifier}/#{@domain.identifier}/#{type.identifier}"    
+  end
+
   it 'has an array of nested OpenMedia::Schema::Property' do
     seed_test_db!
     integer_type = OpenMedia::Schema::Domain.default_types.find_type('integer')

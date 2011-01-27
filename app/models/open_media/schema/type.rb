@@ -30,10 +30,16 @@ class OpenMedia::Schema::Type < CouchRest::Model::Base
     generate_identifier
   end
   
-  def qualified_name
-    [self.domain.qualified_name, self.identifier].join('/')
+
+  def path
+    [self.domain.path, self.identifier].join('/')    
+  end
+
+  def uri
+    "http://openmedia.org#{path}"
   end
   
+
 private
   def generate_identifier
     return if self.name.nil? || self.name.empty?

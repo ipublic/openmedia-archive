@@ -25,6 +25,19 @@ class OpenMedia::Schema::Property < Hash
     generate_identifier
   end
 
+  def path
+    if self.casted_by.instance_of?(OpenMedia::Schema::Type)
+      [self.casted_by.path, self.identifier].join('#')
+    end
+  end
+
+  def uri
+    if self.casted_by.instance_of?(OpenMedia::Schema::Type)
+      "http://openmedia.org#{path}"
+    end
+  end
+
+
 private
 
   def generate_identifier

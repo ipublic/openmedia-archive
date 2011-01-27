@@ -44,4 +44,15 @@ describe OpenMedia::Schema::Domain do
     COUCHDB_SERVER.available_database?("#{@site.identifier}_#{@domain.identifier}").should be_true
   end
 
+  it 'should provide an RDF::CouchDB::Repository for storing rdf' do
+    @domain.save
+    @domain.rdf_repository.should be_instance_of(RDF::CouchDB::Repository)
+  end
+
+  it 'should know its path and uri' do
+    @domain.save
+    @domain.path.should == "/#{@site.identifier}/#{@domain.identifier}"
+    @domain.uri.should == "http://openmedia.org/#{@site.identifier}/#{@domain.identifier}"
+  end
+
 end

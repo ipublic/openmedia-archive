@@ -11,16 +11,16 @@
 				  <tr>
 				    <th>Site</th>
 				    <th>Domain Name</th>
-				    <th>Identifier</th>
+				    <th>Path</th>
 				    <th>No. Types</th>
 				    <th>No. Instances</th>
 				  </tr>
 				</thead>
 				<% @domains.each do |d| %>
 				<tr>
-				  <td><%= d.site ? d.site.url : '' %></td>
+				  <td><%= d.site ? d.site.url : 'http://openmedia.org' %></td>
 				  <td><%= link_to d.name, schema_domain_path(d) %></td>
-				  <td><%= d.identifier %></td>
+				  <td><%= d.path %></td>
 				  <td><%= d.type_count %></td>
 				  <td>fix me</td>
 				</tr>

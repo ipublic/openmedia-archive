@@ -1,3 +1,5 @@
+require 'rdf/couchdb'
+
 class OpenMedia::Schema::Domain < CouchRest::Model::Base
   
   use_database TYPES_DATABASE
@@ -65,9 +67,16 @@ class OpenMedia::Schema::Domain < CouchRest::Model::Base
     OpenMedia::Schema::Type.by_domain_id(:key => self.id)
   end
 
+  def path
+    '/'+[self.site ? self.site.identifier : nil, self.identifier].compact.join('/')    
+  end
 
-  def qualified_name
-    [self.site ? self.site.identifier : nil, self.identifier].compact.join('/')
+  def uri
+    "http://openmedia.org#{path}"
+  end
+
+  def rdf_repository
+    RDF::CouchDB::Repository.new(:database=>COUCHDB_SERVER.database(db_name))
   end
 
 
@@ -80,9 +89,13 @@ private
     self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
     create_database
   end
+
+  def db_name
+    self.site ? "#{self.site.identifier}_#{self.identifier}" : self.identifier    
+  end
+
   
   def create_database
-    db_name = self.site ? "#{self.site.identifier}_#{self.identifier}" : self.identifier
     COUCHDB_SERVER.define_available_database(db_name.to_sym, db_name) 
   end  
 end

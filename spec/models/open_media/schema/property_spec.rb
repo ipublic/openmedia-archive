@@ -17,4 +17,12 @@ describe OpenMedia::Schema::Property do
     p = OpenMedia::Schema::Property.new(:name=>'Actual Size', :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('integer'))
     p.identifier.should == 'actual_size'
   end
+
+  it 'should know its path and uri when embedded in a type' do
+    @type = create_test_type
+    @property = OpenMedia::Schema::Property.new(:name=>'Actual Size', :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('integer'))
+    @type.type_properties << @property
+    @property.path.should == "/#{@type.domain.site.identifier}/#{@type.domain.identifier}/#{@type.identifier}##{@property.identifier}"    
+    @property.uri.should == "http://openmedia.org/#{@type.domain.site.identifier}/#{@type.domain.identifier}/#{@type.identifier}##{@property.identifier}"
+  end
 end

@@ -31,6 +31,8 @@ def reset_test_db!
   OpenMedia::Site.instance_variable_set(:@instance, nil)
   STAGING_DATABASE.recreate!
   TYPES_DATABASE.recreate!
+  TYPES_RDF_REPOSITORY.refresh_design_doc
+
 end
 
 def seed_test_db!

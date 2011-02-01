@@ -55,8 +55,13 @@ class OpenMedia::Site < CouchRest::Model::Base
     generate_identifier
   end
 
-  def domains
-    OpenMedia::Schema::Domain.by_site_id(:startkey=>self.id, :endkey=>"#{self.id}\u9999")
+  def skos_collection
+    collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")
+    unless collection.exists?
+      collection.label = "SKOS Concept Collection for #{self.url} OpenMedia site"
+      collection.save!
+    end
+    collection
   end
 
 private

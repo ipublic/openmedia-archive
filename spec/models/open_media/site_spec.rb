@@ -20,6 +20,13 @@ describe OpenMedia::Site do
     @site.identifier.should == 'somesitecom'
   end
 
+  it 'should create skos collection if it does not yet exist' do
+    @site.save!
+    lambda { @site.skos_collection }.should change(OpenMedia::Schema::SKOS::Collection, :count).by(1)
+    @site.skos_collection.should be_instance_of(OpenMedia::Schema::SKOS::Collection)
+    @site.skos_collection.uri.should === RDF::URI.new('http://data.openmedia.org/somesitecom/concepts')
+  end
+
   describe 'instance singleton method' do
     it 'should return first instance in couchdb' do
       @site.save!

@@ -75,3 +75,12 @@ def create_test_type(data={})
   OpenMedia::Schema::Type.create!({:name=>"Test Type - #{OpenMedia::Schema::Type.count+1}"}.merge(data))
 end
 
+def rdf_id(resource)
+  if resource.respond_to?(:uri)
+    rdf_id(resource.uri)
+  elsif resource.instance_of?(RDF::URI)
+    CGI.escape(resource.path[1..-1])
+  else
+    raise "Could not convert #{resource.inspect} to an RDF::URI"
+  end
+end

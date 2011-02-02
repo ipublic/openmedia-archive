@@ -19,7 +19,7 @@ describe Schema::DomainsController do
     get :show, :id=>@types_domain.id
     response.should be_success
     response.should render_template('show')
-    assigns(:types).size.should == @types_domain.type_count
+    assigns(:types).size.should == @types_domain.type_count    
   end
 
   it 'should have form to create a new domain' do

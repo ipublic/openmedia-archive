@@ -1,0 +1,33 @@
+<div id="forms">
+	<%= form_for :collection, 
+	      :url => @collection.exists? ? schema_collection_path(rdf_id(@collection)) : schema_collections_path, 
+	      :html => {:method=>@collection.exists? ? :put : :post } do |f| %>
+  <div class="grid_8">
+    <div class="box">
+      <h2><%= @collection.exists? ? @collection.label : "New Collection" %></h2>
+      <div class="block">
+				<%= f.error_messages %>
+				<fieldset class="omega">
+					<legend>Collection Properties</legend>
+					<ol>
+					  <li><%= f.label :label, 'Label' %> <%= f.text_field :label %></li>
+					  <li>
+					    <fieldset>
+					      <legend>Options</legend>
+					      <ol>
+						<li><%= f.check_box :hidden, {:class => 'checkbox'} %> <%= f.label :hidden, 'Hidden?' %></li>
+					      </ol>
+					    </fieldset>
+					  </li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit">
+					<ol>
+						<li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back',  :back %></li> 
+					</ol>
+				</fieldset>
+      </div>
+    </div>
+  </div>
+  <% end %>	
+</div>

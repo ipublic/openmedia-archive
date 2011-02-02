@@ -21,10 +21,10 @@ OpenMedia::Organization.create!({
 )
 
 # create built-in schema domains/types
-types_domain = OpenMedia::Schema::Domain.create!(:name_space=>'', :name=>'Types')
-
-OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'String')
-OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Integer')
-OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Date')
-OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'DateTime')
+# types_domain = OpenMedia::Schema::Domain.create!(:name_space=>'', :name=>'Types')
+# 
+# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'String')
+# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Integer')
+# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Date')
+# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'DateTime')
 

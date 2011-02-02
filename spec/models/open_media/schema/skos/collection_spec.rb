@@ -41,7 +41,6 @@ describe OpenMedia::Schema::SKOS::Collection do
     
     @collection.reload
     @collection.concepts.size.should == 2
-    @collection.concepts.collect{|c| c.label}.sort.should == %w(Crime Transportation)
     @collection.concepts.each {|m| m.should be_instance_of(OpenMedia::Schema::SKOS::Concept)}
   end
 
@@ -50,6 +49,20 @@ describe OpenMedia::Schema::SKOS::Collection do
     sub_collection.reload
     sub_collection.uri.should == @collection.uri/'public_safety'
     sub_collection.label.should == 'Public Safety'
+    @collection.reload
+    @collection.sub_collections.size.should == 3
+  end
+
+  it 'should have convenience method to remove a member and save' do
+    original_size = @collection.members.size
+    member_uri = RDF::URI.new('http://foo.bar')
+    @collection.members << member_uri
+    @collection.save!
+    @collection.reload
+    @collection.members.size.should == original_size + 1
+    @collection.delete_member!(member_uri)
+    @collection.reload
+    @collection.members.size.should == original_size
   end
   
 end

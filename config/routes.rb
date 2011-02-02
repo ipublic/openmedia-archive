@@ -86,8 +86,8 @@ Openmedia::Application.routes.draw do
   end
 
   namespace :schema do
-    resources :domains do
-      resources :types
+    resources :collections do
+      resources :classes
     end
     resources :types do
       collection do

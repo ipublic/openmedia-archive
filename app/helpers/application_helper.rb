@@ -42,7 +42,20 @@ module ApplicationHelper
   end
 
   def show_field (object, field_name, field_label=field_name.to_s.humanize)
-    value = object.fetch(field_name.to_s,'')
+    value = nil
+    if object.respond_to?(:fetch)
+      value = object.fetch(field_name.to_s,'')
+    else
+      value = object.attributes.fetch(field_name.to_sym,'')
+    end
+
+    # if value still empty, try an accessor method with field_name
+    if value.blank?
+      begin
+        value = object.send(field_name.to_sym)
+      rescue; end
+    end
+
     if value.is_a?(Integer)
       "<th class='property-table'>#{field_label}:</th> <td>#{number_with_delimiter(value)}</td>"
     elsif value.is_a?(Bignum)
@@ -55,6 +68,17 @@ module ApplicationHelper
       "<th class='property-table'>#{field_label}:</th> <td>#{h(value)}</td>"
     end
   end
+
+  def rdf_id(resource)
+    if resource.respond_to?(:uri)
+      rdf_id(resource.uri)
+    elsif resource.instance_of?(RDF::URI)
+      CGI.escape(resource.path[1..-1])
+    else
+      raise "Could not convert #{resource.inspect} to an RDF::URI"
+    end
+  end
+
   
 
 end

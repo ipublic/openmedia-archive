@@ -4,9 +4,9 @@ module ETL #:nodoc:
     # a small amount of data. For larger amounts of data you should probably use the bulk
     # loader if it is supported with your target database as it will use a much faster load
     # method.
-    class DatasetDestination < Destination
+    class SchemaTypeDestination < Destination
 
-      attr_reader :dataset_identifier
+      attr_reader :type_id
       
       # Specify the order from the source
       attr_reader :order
@@ -26,19 +26,20 @@ module ETL #:nodoc:
       # * <tt>:order</tt>: The order of fields to write (REQUIRED)
       def initialize(control, configuration, mapping={})
         super
-        @dataset_identifier = configuration[:dataset]
+        @type_id = configuration[:schema_type]
         @unique = configuration[:unique] ? configuration[:unique] + [scd_effective_date_field] : configuration[:unique]
         @unique.uniq! unless @unique.nil?
         @order = mapping[:order] ? mapping[:order] + scd_required_fields : order_from_source
         @order.uniq! unless @order.nil?
         raise ControlError, "Order required in mapping" unless @order
-        raise ControlError, "Dataset required" unless @dataset_identifier
-        @dataset = OpenMedia::Dataset.get(@dataset_identifier)
-        raise ControlError, "Dataset #{@dataset_identifier} not found in staging database" unless @dataset
+        raise ControlError, "Type required" unless @type_id
+        @type = OpenMedia::Schema::Type.get(@type_id)
+        raise ControlError, "Type #{@type_id} not found in staging database" unless @type
       end
       
       # Flush the currently buffered data
       def flush
+        raise NotImplementedError.new
         docs = buffer.flatten.collect do |row|
           # check to see if this row's compound key constraint already exists
           # note that the compound key constraint may not utilize virtual fields

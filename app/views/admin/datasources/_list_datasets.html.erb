@@ -8,9 +8,9 @@
 	<th>Updated</th>
       </tr>
     </thead>
-    <% datasets.each do |ds| %>
+    <% datasources.each do |ds| %>
     <tr>
-      <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
+      <td><%= link_to ds.title, admin_datasource_path(ds.identifier) %></td>
       <td><%= ds.model.count %></td>
       <td><%= ds.metadata.description unless ds.metadata.nil? %></td>
       <td><%= ds.updated_at.to_s(:full) %></td>

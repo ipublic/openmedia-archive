@@ -12,8 +12,6 @@ class OpenMedia::Catalog < CouchRest::Model::Base
   property :identifier
   property :metadata, OpenMedia::Metadata
 
-  collection_of :datasets, :class_name=>'OpenMedia::Dataset'
-  
   validates :title, :presence=>true, :uniqueness => true
   validates_presence_of :metadata
   

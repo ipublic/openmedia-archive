@@ -22,7 +22,7 @@
 					<% @catalogs.each do |catalog| %>
 					  <tr>
 							<td><%= link_to catalog.title, admin_catalog_path(catalog) %></td>
-							<td><%= catalog.datasets.count %></td>
+							<td>FIX</td>
 							<td><%= catalog.metadata['description'] if catalog.metadata %></td>
 
 							<td><%= catalog.updated_at.to_s(:full) %></td>

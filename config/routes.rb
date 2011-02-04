@@ -63,7 +63,7 @@ Openmedia::Application.routes.draw do
     resource :dashboard
     resource :schema
     
-    resources :datasets do
+    resources :datasources do
       collection do
         get :new_property
         get :new_upload
@@ -89,7 +89,7 @@ Openmedia::Application.routes.draw do
     resources :collections do
       resources :classes
     end
-    resources :types do
+    resources :classes do
       collection do
         get :new_property
         get :autocomplete

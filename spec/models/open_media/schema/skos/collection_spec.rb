@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::SKOS::Collection do
   before(:all) do
@@ -71,4 +70,3 @@ describe OpenMedia::Schema::SKOS::Collection do
   end  
   
 end
-

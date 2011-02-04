@@ -2,7 +2,7 @@
 <div class="grid_8">
   <div class="box">
     <h2>New Dataset</h2>
-    <%= form_for :dataset, :url=>admin_datasets_path do |ds| %>
+    <%= form_for :datasource, :url=>admin_datasources_path do |ds| %>
     <div class="box">
       <%= render :partial=>'form', :locals=>{:ds=>ds} %>
     </div>

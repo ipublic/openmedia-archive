@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::RDF::Property do
   before(:all) do

@@ -1,14 +1,14 @@
 <% title "Datasets" %>
 <div class="grid_8">
-  <% if @dataset.has_attachment?('seed_data') %>
+  <% if @datasource.has_attachment?('seed_data') %>
   <div class="box">
-    This dataset has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_dataset_path(@dataset.identifier) %>
+    This datasource has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource.identifier) %>
     to import this data.
   </div>
   <% end %>
   <div class="box">
-    <h2><%= @dataset.title %></h2>
-    <%= form_for :dataset, :url=>admin_dataset_path(:id=>@dataset.identifier), :html=>{:method=>:put} do |ds| %>
+    <h2><%= @datasource.title %></h2>
+    <%= form_for :datasource, :url=>admin_datasource_path(:id=>@datasource.identifier), :html=>{:method=>:put} do |ds| %>
     <div class="box">
       <%= render :partial=>'form', :locals=>{:ds=>ds} %>
     </div>

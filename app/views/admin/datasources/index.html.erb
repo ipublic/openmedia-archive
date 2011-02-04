@@ -1,9 +1,9 @@
 <% title "Datasets" %>
 <div class="grid_8">
 	<p>
-    <%= link_to 'New', new_admin_dataset_path %> |
-    <%= link_to 'Import', new_upload_admin_datasets_path %> |
-    <%= link_to 'Publish', new_admin_dataset_path %>
+    <%= link_to 'New', new_admin_datasource_path %> |
+    <%= link_to 'Import', new_upload_admin_datasources_path %> |
+    <%= link_to 'Publish', new_admin_datasource_path %>
   </p>
   <div class="box">
     <h2>Browse</h2>
@@ -18,13 +18,13 @@
 				    <th></th>
 				  </tr>
 				</thead>
-				<% @datasets.each do |ds| %>
+				<% @datasources.each do |ds| %>
 				<tr>
-				  <td><%= link_to ds.title, admin_dataset_path(ds.identifier) %></td>
+				  <td><%= link_to ds.title, admin_datasource_path(ds.identifier) %></td>
 				  <td><%= ds.model.count %></td>
 				  <td><%= ds.data_type.qualified_name %></td>
 				  <td><%= ds.updated_at.to_s(:full) %></td>
-				  <td><%= link_to 'edit', edit_admin_dataset_path(ds.identifier) %></td>
+				  <td><%= link_to 'edit', edit_admin_datasource_path(ds.identifier) %></td>
 				</tr>
 				<% end %>
       </table>
@@ -40,7 +40,7 @@
 				</h3>
 				<h4>Subheading</h4>
 				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
-				<p>Something here about role of Datasets in system</p>
+				<p>Something here about role of Datasources in system</p>
 			</div>
 			
 	</div>

@@ -1,16 +1,16 @@
 <% title "Import Data" %>
 
 <div class="grid_8 upload">
-  <%= form_for :dataset, :url=>upload_admin_datasets_path, :html=>{:multipart=>true} do |ds| %>
+  <%= form_for :datasource, :url=>upload_admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
   <div class="box">
 	  <h2>Source and Destination</h2>
 		<div class="block">
 	    <%= ds.error_messages %>
 	  <div id="accordion">
-	    <%= ds.fields_for :source, @dataset.source do |s| %>
+	    <%= ds.fields_for :source, @datasource.source do |s| %>
 	    <h3><a href="#">File Source</a></h3>
 	    <div>
-	      <%= s.hidden_field :source_type, :value=>OpenMedia::Source::FILE_TYPE %>
+	      <%= s.hidden_field :source_type, :value=>OpenMedia::Datasource::FILE_TYPE %>
 	      <p><label>File</label>  <%= file_field_tag :data_file %></p>
 	      <div class="radio">
 					<%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
@@ -19,7 +19,7 @@
 					<%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
 	      </div>
 	      <div id="csv-fields" class="import-ds-fields">
-					<%= s.hidden_field :parser, :value=>OpenMedia::Source::DELIMITED_PARSER %>
+					<%= s.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
 					<p><%= s.label :column_separator %> <%= s.text_field :column_separator %></p>
 					<p><%= check_box_tag :has_header_row %> Has Header Row?
 	      </div>
@@ -39,8 +39,8 @@
 		<br/><hr/>
 		<h4>Destination</h4>
     <div class="radio">
-      <input type="radio" id="new-ds-btn" name="radio" checked="checked" /><label for="new-ds-btn">New Dataset</label>
-      <input type="radio" id="existing-ds-btn" name="radio" /><label for="existing-ds-btn">Existing Dataset</label>
+      <input type="radio" id="new-ds-btn" name="radio" checked="checked" /><label for="new-ds-btn">New Datasource</label>
+      <input type="radio" id="existing-ds-btn" name="radio" /><label for="existing-ds-btn">Existing Datasource</label>
     </div>
     <div id="new-ds-fields" class="import-ds-fields">
       <p><%= ds.label :data_type_id, 'Data Type' %>  <input type="text"/>
@@ -54,7 +54,7 @@
       <p><%= ds.label :title %><br/><%= ds.text_field :title %></p>
     </div>
     <div id="existing-ds-fields" style="display: none" class="import-ds-fields">
-      <label>Dataset</label><br/>  <%= select_tag :dataset_id, options_from_collection_for_select(@datasets, :identifier, :title), :disabled=>'disabled' %>
+      <label>Datasource</label><br/>  <%= select_tag :datasource_id, options_from_collection_for_select(@datasources, :identifier, :title), :disabled=>'disabled' %>
     </div>
     <% end %>
   </div>
@@ -69,7 +69,7 @@
 
 <div class="grid_4 omega">
   <div class="box">
-    <h2>About Datasets</h2>
+    <h2>About Datasources</h2>
     <div class="block">
       <p></p>
     </div>

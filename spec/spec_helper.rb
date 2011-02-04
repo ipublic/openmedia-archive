@@ -32,7 +32,6 @@ def reset_test_db!
   STAGING_DATABASE.recreate!
   TYPES_DATABASE.recreate!
   TYPES_RDF_REPOSITORY.refresh_design_doc
-
 end
 
 def seed_test_db!
@@ -48,9 +47,9 @@ def create_test_catalog(data={})
   OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
 end
 
-def create_test_dataset(data={})
+def create_test_datasource(data={})
   data[:data_type] = create_test_type unless data[:data_type]
-  OpenMedia::Dataset.create!({:title=>'Test Dataset'}.merge(data))  
+  OpenMedia::Datasource.create!({:title=>'Test Dataset'}.merge(data))  
 end
 
 def create_test_csv
@@ -65,16 +64,6 @@ def delete_test_csv
   File.delete('/tmp/test.csv')      
 end
 
-def create_test_domain(data={})
-  data[:site] = create_test_site unless data[:domain]
-  OpenMedia::Schema::Domain.create!({:site=>data[:site], :name=>"Test Domain - #{OpenMedia::Schema::Domain.count+1}"}.merge(data))
-end
-
-def create_test_type(data={})
-  data[:domain] = create_test_domain unless data[:domain]
-  OpenMedia::Schema::Type.create!({:name=>"Test Type - #{OpenMedia::Schema::Type.count+1}"}.merge(data))
-end
-
 def rdf_id(resource)
   if resource.respond_to?(:uri)
     rdf_id(resource.uri)
@@ -84,3 +73,5 @@ def rdf_id(resource)
     raise "Could not convert #{resource.inspect} to an RDF::URI"
   end
 end
+
+require 'open_media/schema/base_spec'

@@ -1,7 +1,7 @@
 class OpenMedia::Import < CouchRest::Model::Base
   use_database STAGING_DATABASE
 
-  belongs_to :dataset, :class_name=>'OpenMedia::Dataset'
+  belongs_to :datasource, :class_name=>'OpenMedia::Datasource'
 
   STATUS_EXECUTING = 'executing'
   STATUS_COMPLETED = 'completed'

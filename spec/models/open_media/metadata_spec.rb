@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe OpenMedia::Dataset do
+describe OpenMedia::Metadata do
 
   before(:each) do
     @metadata = OpenMedia::Metadata.new(:keywords=>'one,two,three')

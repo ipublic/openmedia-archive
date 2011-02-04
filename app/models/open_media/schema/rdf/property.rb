@@ -1,5 +1,4 @@
-class OpenMedia::Schema::RDF::Property
-  include Spira::Resource
+class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
   
   default_source :types
   base_uri "http://data.openmedia.org/"

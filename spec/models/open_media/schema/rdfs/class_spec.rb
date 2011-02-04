@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::RDFS::Class do
 
@@ -38,5 +39,9 @@ describe OpenMedia::Schema::RDFS::Class do
     @rdfs_class.properties.size.should == 2
     @rdfs_class.properties.each{|p| p.should be_instance_of(OpenMedia::Schema::RDF::Property)}
   end
+
+  it_should_behave_like OpenMedia::Schema::Base do
+    let(:base) { @rdfs_class }
+  end  
 
 end

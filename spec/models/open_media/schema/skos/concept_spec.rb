@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::SKOS::Concept do
   before(:each) do
@@ -10,7 +11,7 @@ describe OpenMedia::Schema::SKOS::Concept do
   describe 'for an rdfs class' do
     before(:each) do
       @rdfs_class = OpenMedia::Schema::RDFS::Class.create_in_site!(@site, :label=>'Reported Crimes', :comment=>'crime reports, etc')
-      @concept = OpenMedia::Schema::SKOS::Concept.for(@rdfs_class.subject)
+      @concept = OpenMedia::Schema::SKOS::Concept.for(@rdfs_class.subject).save!
     end
     
     it 'should be able to retrieve its corresponding rdfs class' do
@@ -25,8 +26,9 @@ describe OpenMedia::Schema::SKOS::Concept do
       @collection.concepts.first.uri == @concept.uri
       @collection.concepts.first.rdfs_class.label.should == 'Reported Crimes'
     end
+
+    it_should_behave_like OpenMedia::Schema::Base do
+      let(:base) { @concept }
+    end
   end
-
-
-  
 end

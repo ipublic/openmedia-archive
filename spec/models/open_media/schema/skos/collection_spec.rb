@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::SKOS::Collection do
   before(:all) do
@@ -64,6 +65,10 @@ describe OpenMedia::Schema::SKOS::Collection do
     @collection.reload
     @collection.members.size.should == original_size
   end
+
+  it_should_behave_like OpenMedia::Schema::Base do
+    let(:base) { @collection }
+  end  
   
 end
 

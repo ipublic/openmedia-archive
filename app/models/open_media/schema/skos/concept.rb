@@ -1,5 +1,4 @@
-class OpenMedia::Schema::SKOS::Concept
-  include Spira::Resource
+class OpenMedia::Schema::SKOS::Concept < OpenMedia::Schema::Base
   
   default_source :types
   base_uri "http://data.openmedia.org/"
@@ -8,7 +7,6 @@ class OpenMedia::Schema::SKOS::Concept
   def rdfs_class
     OpenMedia::Schema::RDFS::Class.for(self.uri)
   end
-
 
 end
 

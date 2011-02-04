@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'models/open_media/schema/base_spec'
 
 describe OpenMedia::Schema::RDF::Property do
   before(:all) do
@@ -23,7 +24,7 @@ describe OpenMedia::Schema::RDF::Property do
 
   describe 'with all required properties' do
     before(:all) do
-      @property = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Offense Code', :range=>RDF::XSD.string)      
+      @property = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Offense Code', :range=>RDF::XSD.string)
     end
 
     it 'should get saved to rdf repo' do
@@ -33,10 +34,10 @@ describe OpenMedia::Schema::RDF::Property do
     it 'should get created with proper uri' do
       @property.uri.should == "#{@rdfs_class.uri}#offense_code"
     end
-  end
 
-    
-
-  
+    it_should_behave_like OpenMedia::Schema::Base do
+      let(:base) { @property }
+    end
+  end  
 
 end

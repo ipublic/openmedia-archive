@@ -1,5 +1,4 @@
-class OpenMedia::Schema::SKOS::Collection
-  include Spira::Resource
+class OpenMedia::Schema::SKOS::Collection < OpenMedia::Schema::Base
   
   default_source :types
   base_uri "http://data.openmedia.org/"

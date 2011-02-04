@@ -20,11 +20,17 @@ OpenMedia::Organization.create!({
   }
 )
 
-# create built-in schema domains/types
-# types_domain = OpenMedia::Schema::Domain.create!(:name_space=>'', :name=>'Types')
-# 
-# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'String')
-# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Integer')
-# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'Date')
-# OpenMedia::Schema::Type.create!(:domain=>types_domain, :name=>'DateTime')
-
+# Create RDF Statements defining core XSD types OpenMedia will use
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.base64Binary).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.boolean).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.byte).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.date).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.dateTime).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.double).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.duration).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.float).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.integer).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.long).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.short).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.string).save!
+OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!

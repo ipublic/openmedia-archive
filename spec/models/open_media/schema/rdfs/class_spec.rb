@@ -43,4 +43,8 @@ describe OpenMedia::Schema::RDFS::Class do
     let(:base) { @rdfs_class }
   end  
 
+  it 'should have class method for searching classes and datatypes' do
+    OpenMedia::Schema::RDFS::Class.prefix_search('report').size.should == 1
+    OpenMedia::Schema::RDFS::Class.prefix_search('report').first.should be_instance_of(RDF::URI)
+  end
 end

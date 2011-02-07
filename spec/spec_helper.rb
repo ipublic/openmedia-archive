@@ -32,6 +32,7 @@ def reset_test_db!
   STAGING_DATABASE.recreate!
   TYPES_DATABASE.recreate!
   TYPES_RDF_REPOSITORY.refresh_design_doc
+  OpenMedia::Schema::RDFS::Class.refresh_design_doc
 end
 
 def seed_test_db!

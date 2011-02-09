@@ -44,14 +44,23 @@ describe OpenMedia::Schema::SKOS::Collection do
     @collection.concepts.each {|m| m.should be_instance_of(OpenMedia::Schema::SKOS::Concept)}
   end
 
-  it 'should have method that creates collection in a collection with label' do
-    sub_collection = OpenMedia::Schema::SKOS::Collection.create_in_collection!(@collection, :label=>'Public Safety')    
-    sub_collection.reload
-    sub_collection.uri.should == @collection.uri/'public_safety'
-    sub_collection.label.should == 'Public Safety'
-    @collection.reload
-    @collection.sub_collections.size.should == 3
+  describe 'create_in_collection' do
+    
+    it 'should creates collection in a collection with label' do
+      sub_collection = OpenMedia::Schema::SKOS::Collection.create_in_collection!(@collection, :label=>'Public Safety')      
+      sub_collection.reload
+      sub_collection.uri.should == @collection.uri/'public_safety'
+      sub_collection.label.should == 'Public Safety'
+      @collection.reload
+      @collection.sub_collections.size.should == 3
+    end
+
+    it 'should not allow multiple collections to be created with same label' do
+      lambda { OpenMedia::Schema::SKOS::Collection.create_in_collection!(@collection, :label=>'Public Safety') }.should raise_error
+    end
+    
   end
+
 
   it 'should have convenience method to remove a member and save' do
     original_size = @collection.members.size

@@ -8,7 +8,7 @@ module OpenMedia::Schema::Types
     end
 
     def self.serialize(value)
-      RDF::Literal::DateTime.new(value)
+      RDF::Literal::DateTime.new(value) if value
     end
     
     register_alias XSD.dateTime

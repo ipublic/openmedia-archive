@@ -1,3 +1,5 @@
+OpenMedia::Schema::RDF::Property   # this is here to make Rails autoloading and Spira play nice together
+
 class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
   
   default_source :types
@@ -36,13 +38,14 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
   def self.create_in_site!(site, data)
     identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
     c = self.for("#{site.identifier}/classes/#{identifier}", data)
+    raise Exception.new("Class #{identifier} already exists") if c.exists?    
     c.save!
     self.repository_or_fail.insert(RDF::Statement.new(c.subject, RDF.type, RDF::SKOS.Concept))
     c    
   end
 
   def self.prefix_search(startkey)
-    design_doc.view('by_name', :startkey=>startkey, :endkey=>"#{startkey}\uffff")['rows'].collect {|r| RDF::URI.new(r['value'])}.uniq
+    design_doc.view('by_name', :startkey=>startkey, :endkey=>"#{startkey}\uffff")['rows'].collect {|r| RDF::URI.new(r['value'][1..-2])}.uniq
   end
 
   def self.refresh_design_doc(force = false)

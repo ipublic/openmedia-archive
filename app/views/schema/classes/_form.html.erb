@@ -1,0 +1,36 @@
+<div id="forms">
+  <%= form_for :class, 
+               :url => @class.exists? ? schema_collection_class_path(rdf_id(@collection), rdf_id(@class)) : schema_collection_classes_path(rdf_id(@collection)),
+               :html => {:method=>@class.exists? ? :put : :post } do |f| %>
+  <div class="grid_12">
+    <div class="box">
+      <h2><%= @class.exists? ? "Existing class" : "New Class" %></h2>
+      <div class="block">
+				<%= f.error_messages %>
+				<fieldset>
+				  <legend>Class Settings</legend>
+				  <ol>
+				    <li><%= f.label :label %> <%= f.text_field :label %></li>
+				    <li><%= f.label :comment %> <%= f.text_area :comment, :rows => 3  %></li>
+				  </ol>
+				</fieldset>
+
+				<fieldset class="omega">
+				  <legend>Properties</legend>
+				  <ol class="two-column">
+				    <% for property in @class.properties.sort {|p1,p2| p1.label <=> p2.label} %>
+				    <%= render :partial=>'property', :locals=>{:base_name=>'class[properties][]', :property=>property} %>
+				    <% end %>
+				  </ol>
+			  	<a href="#" class="add-class-property add-element">Add Property</a>
+				</fieldset>
+				<fieldset class="submit">
+					<ol>
+						<li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+					</ol>
+				</fieldset>
+			</div>
+		</div>
+  </div>
+  <% end %>	
+</div>

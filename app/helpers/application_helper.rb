@@ -67,18 +67,6 @@ module ApplicationHelper
     else
       "<th class='property-table'>#{field_label}:</th> <td>#{h(value)}</td>"
     end
-  end
-
-  def rdf_id(resource)
-    if resource.respond_to?(:uri)
-      rdf_id(resource.uri)
-    elsif resource.instance_of?(RDF::URI)
-      CGI.escape(resource.path[1..-1])
-    else
-      raise "Could not convert #{resource.inspect} to an RDF::URI"
-    end
-  end
-
-  
+  end  
 
 end

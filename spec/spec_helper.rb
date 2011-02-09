@@ -65,11 +65,11 @@ def delete_test_csv
   File.delete('/tmp/test.csv')      
 end
 
-def rdf_id(resource)
+def spec_rdf_id(resource, cgi_escape = false)
   if resource.respond_to?(:uri)
-    rdf_id(resource.uri)
+    spec_rdf_id(resource.uri, cgi_escape)
   elsif resource.instance_of?(RDF::URI)
-    CGI.escape(resource.path[1..-1])
+    cgi_escape ? CGI.escape(resource.path[1..-1]) : resource.path[1..-1]
   else
     raise "Could not convert #{resource.inspect} to an RDF::URI"
   end

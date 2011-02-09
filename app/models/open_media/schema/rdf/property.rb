@@ -19,9 +19,9 @@ class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
   end
 
   def check_required_fields
-    assert_set(:label)
-    assert_set(:range)
-    assert_set(:domain)    
+    assert(!self.label.blank?, :label, 'Label cannot be blank')
+    assert(!self.range.blank?, :range, 'Range cannot be blank')
+    assert(!self.domain.blank?, :domain, 'Domain cannot be blank')    
   end
 
 

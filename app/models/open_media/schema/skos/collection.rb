@@ -38,6 +38,8 @@ class OpenMedia::Schema::SKOS::Collection < OpenMedia::Schema::Base
         c = self.for(collection.uri/identifier, data)
       end
 
+      raise Exception.new("Collection #{identifier} already exists") if c.exists?
+
       c.save!
       collection.members << c.uri
       collection.save!

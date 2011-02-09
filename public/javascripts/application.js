@@ -61,30 +61,36 @@ $(function() {
 
 	var typeAutoCompleteOpts = {delay: 300,
 		mustMatch: true,
-		source: "/schema/types/autocomplete",
+		source: "/schema/classes/autocomplete",
 		select: function(event, ui) {
 		    $(event.target).next('input').val(ui.item.id);
 		}};
 
-	$('a.add-type-property').live('click', function() {
+	$('a.add-class-property').live('click', function() {
 		var link = this;
-		$.get('/schema/types/new_property', function(html) {
+		$.get('/schema/classes/new_property', function(html) {
 			$(link).prev('ol').append(html);
-			$(link).prev('ol').find('.property-type-qualified-name:last').autocomplete(typeAutoCompleteOpts);
-			$(link).prev('ol').find('a.delete-type-property:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+			$(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
+			$(link).prev('ol').find('a.delete-class-property:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
 			});
 		return false;
-		});
-
-	$('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
-
-	$('a.delete-type-property').live('click', function() {
-	    $(this).closest('li').prev('li').remove();
-	    $(this).closest('li').remove();
-	    return false;
 	});
+    
+    $('a.delete-class-property').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
 
-	$('.property-type-qualified-name').autocomplete(typeAutoCompleteOpts);
+    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+
+    $('a.delete-class-property').live('click', function() {
+	var deletedPropertyURI = $(this).closest('li').find('.class-property-uri').val();
+	if (deletedPropertyURI) {
+	    $(this).closest('form').prepend($('<input type="hidden"/>').attr('name','deleted_property_uris[]').attr('value',deletedPropertyURI));
+	}
+	$(this).closest('li').prev('li').remove();
+	$(this).closest('li').remove();
+	return false;
+    });
+
+	$('.property-type-uri').autocomplete(typeAutoCompleteOpts);
 	$('#source input.property-name').live('blur', syncSourceProperties);
 });
 

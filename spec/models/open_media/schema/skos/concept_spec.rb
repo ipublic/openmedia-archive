@@ -25,9 +25,5 @@ describe OpenMedia::Schema::SKOS::Concept do
       @collection.concepts.first.uri == @concept.uri
       @collection.concepts.first.rdfs_class.label.should == 'Reported Crimes'
     end
-
-    it_should_behave_like OpenMedia::Schema::Base do
-      let(:base) { @concept }
-    end
   end
 end

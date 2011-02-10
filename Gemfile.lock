@@ -18,6 +18,15 @@ GIT
       couchrest (>= 1.0.1)
       rdf (>= 0.3.1)
 
+GIT
+  remote: git://github.com/ipublic/spira.git
+  revision: c373208e38a653792556213142ab5ff20ea62a89
+  specs:
+    spira (0.0.11)
+      promise (>= 0.3.0)
+      rdf (>= 0.2.3)
+      rdf-isomorphic (>= 0.3.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -133,10 +142,6 @@ GEM
     rspec-mocks (2.1.0)
     rspec-rails (2.1.0)
       rspec (~> 2.1.0)
-    spira (0.0.11)
-      promise (>= 0.3.0)
-      rdf (>= 0.2.3)
-      rdf-isomorphic (>= 0.3.0)
     thor (0.14.6)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
@@ -155,4 +160,4 @@ DEPENDENCIES
   rails (= 3.0.3)
   rdf-couchdb!
   rspec-rails (= 2.1.0)
-  spira
+  spira!

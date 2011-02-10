@@ -6,7 +6,7 @@ gem 'dynamic_form'
 gem 'fastercsv'
 gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 gem 'linkeddata'
-gem 'spira'
+gem 'spira', :git => 'git://github.com/ipublic/spira.git'
 
 group :test, :development do
   gem "rspec-rails", '2.1.0'

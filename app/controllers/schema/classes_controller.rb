@@ -26,12 +26,13 @@ class Schema::ClassesController < ApplicationController
       @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, params[:class])
       @collection.members << @class.uri
       @collection.save!
-      properties_params.each do |pp|
-        pp[:range] = RDF::URI.new(pp[:range]) unless pp[:range].blank?
-        @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, pp)
+      if properties_params
+        properties_params.each do |pp|
+          pp[:range] = RDF::URI.new(pp[:range]) unless pp[:range].blank?
+          @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, pp)
+        end
       end
       @class.save!
-
       redirect_to schema_collection_path(rdf_id(@collection))
     rescue Exception => e
       flash[:error] = e.to_s

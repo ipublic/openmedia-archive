@@ -1,14 +1,22 @@
-<li class="two-column-left">
-<label>Label</label>
-	<input name="<%=base_name %>[label]" type="text" value="<%= property.label %>"/>
-</li>
-<li class="two-column-right">
-   <%= label_tag "#{base_name}#{property.label}_range_name", 'Type' %>
-   <%= text_field_tag "#{base_name}#{property.label}_range_name", property.range ? (property.range.fragment || property.uri.split('/').last) : nil,
-       :class=>'property-type-uri' %>
-   <input type="hidden" name="<%=base_name %>[range]" value="<%= property.range.to_s %>"/>
-   <% if property.exists? %>
-   <input class="class-property-uri" type="hidden" name="<%=base_name %>[uri]" value="<%= property.uri %>"/>
-   <% end %>
-   <a href="#" class="delete-class-property" alt="Delete">Delete Property</a>
+<li class="class-property">
+  <ol>
+    <li class="two-column-left">
+      <label>Label</label>
+      <input name="<%=base_name %>[label]" type="text" value="<%= property.label %>"/>
+    </li>
+    <li class="two-column-right">
+      <%= label_tag "#{base_name}#{property.label}_range_name", 'Type' %>
+      <%= text_field_tag "#{base_name}#{property.label}_range_name", property.range ? (property.range.fragment || property.uri.split('/').last) : nil,
+	  :class=>'property-type-uri' %>
+      <input type="hidden" name="<%=base_name %>[range]" value="<%= property.range.to_s %>"/>
+      <% if property.exists? %>
+      <input class="class-property-uri" type="hidden" name="<%=base_name %>[uri]" value="<%= property.uri %>"/>
+      <% end %>  
+    </li>
+    <li>
+      <%= label_tag "#{base_name}#{property.label}_comment", 'Comment' %>
+      <textarea name="<%=base_name%>[comment]" rows="2" cols="20"><%= property.comment %></textarea>
+      <a href="#" class="delete-class-property" alt="Delete">Delete Property</a>
+    </li>
+  </ol>
 </li>

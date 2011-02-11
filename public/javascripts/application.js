@@ -81,12 +81,11 @@ $(function() {
     $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
 
     $('a.delete-class-property').live('click', function() {
-	var deletedPropertyURI = $(this).closest('li').find('.class-property-uri').val();
+	var deletedPropertyURI = $(this).closest('li.class-property').find('.class-property-uri').val();
 	if (deletedPropertyURI) {
 	    $(this).closest('form').prepend($('<input type="hidden"/>').attr('name','deleted_property_uris[]').attr('value',deletedPropertyURI));
 	}
-	$(this).closest('li').prev('li').remove();
-	$(this).closest('li').remove();
+	$(this).closest('li.class-property').remove();
 	return false;
     });
 

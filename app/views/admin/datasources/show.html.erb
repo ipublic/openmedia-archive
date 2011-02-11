@@ -1,28 +1,28 @@
 <% title "Dataset: " + @datasource.title %>
 <div class="grid_12">
 	<p style="float:right;">
-		<%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource.identifier) %> 
-		<%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource.identifier) %>
+		<%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
+		<%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource) %>
 
 		<%= link_to 'List all', admin_datasources_path %> | 
-		<%= link_to "Edit", edit_admin_datasource_path(@datasource.identifier) %> |
-		<%= link_to 'Delete', admin_datasource_path(@datasource.identifier), :confirm => 'Are you sure?', :method => :delete %>
+		<%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
+		<%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
 	</p>
 	<hr/>
 	<div class="box">
 		<h2>Facts</h2>
 		<div class="block">
-			<p><%= @datasource.metadata.description %></p>
+			<p><%= @datasource.metadata.description if @datasource.metadata%></p>
 			<p><b>URI:</b> <%= @datasource.uri%> 
 			
 		</div>
 	</div>
 	<div class="box">
-		<h2><%=h @datasource.model.count.to_s + " Records" %></h2>
+		<h2><%=h @datasource.rdfs_class.spira_resource.count.to_s + " Records" %></h2>
 		<div class="block">
 			<p>Show: 5 10 25 50 rows          < Previous | Next ></p>
 			<%= render :partial => 'list_properties_by_column', 
-								 :locals => {:properties => @datasource.datasource_properties, :documents => @documents } %>
+								 :locals => {:properties => @datasource.source_properties, :documents => @documents } %>
 			<p>Show: 5 10 25 50 rows          < Previous | Next ></p>
 		</div>
 	</div>

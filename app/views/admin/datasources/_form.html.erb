@@ -6,9 +6,9 @@
     <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@datasource.new_record? %>
   </p>
   <p>
-    <%= ds.label :data_type_id, 'Data Type' %><br/>
-    <input class="property-type-qualified-name" name="qualified_name" size="30" type="text" value="<%= @datasource.data_type.name if @datasource.data_type %>"/>
-    <%= ds.hidden_field :data_type_id %>
+    <%= ds.label :rdfs_class_uri, 'Class' %><br/>
+    <input class="datasource-class-uri" name="rdfs-class-identifier" size="30" type="text" value="<%= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
+    <%= ds.hidden_field :rdfs_class_uri %>
   </p>				
   <%= ds.fields_for :metadata, @datasource.metadata do |m| %>
   <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
@@ -20,30 +20,28 @@
 
 <fieldset id="source">
   <legend><b>Source</b></legend>
-  <%= ds.fields_for :source, @datasource.source do |s| %>
   <p>
-    <%= s.label :source_type %>
-    <%= s.select :source_type, OpenMedia::Datasource::TYPES.collect {|t| [t.titleize, t]} %>
+    <%= ds.label :source_type %>
+    <%= ds.select :source_type, OpenMedia::Datasource::TYPES.collect {|t| [t.titleize, t]} %>
   </p>
 
   <p id="parser">
-    <%= s.label :parser %>
-    <%= s.select :parser, OpenMedia::Datasource::PARSERS.collect {|p| [p.titleize, p]} %>
+    <%= ds.label :parser %>
+    <%= ds.select :parser, OpenMedia::Datasource::PARSERS.collect {|p| [p.titleize, p]} %>
   </p>
 
   <p>
-    <%= s.label :column_separator %>
-    <%= s.text_field :column_separator %>
+    <%= ds.label :column_separator %>
+    <%= ds.text_field :column_separator %>
   </p>
 
   <p>
-    <%= s.label :skip_lines %>
-    <%= s.text_field :skip_lines %>
+    <%= ds.label :skip_lines %>
+    <%= ds.text_field :skip_lines %>
   </p>
 
-  <% for property in @datasource.source.source_properties %>
-  <%= render :partial=>'schema/types/property', :locals=>{ :base_name=>'datasource[source][source_properties][]', :property=>property } %>
+  <% for property in @datasource.source_properties %>
+  <%= render :partial=>'datasource_property', :locals=>{ :base_name=>'datasource[source_properties][]', :property=>property } %>
   <% end %>
   <a href="#" class="add-property" rel="datasource[source][source_properties][]">add property</a>
-  <% end %>
 </fieldset>	 	

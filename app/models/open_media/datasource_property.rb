@@ -17,6 +17,11 @@ class OpenMedia::DatasourceProperty < Hash
     generate_identifier
   end
 
+  def range
+    RDF::URI.new(self.range_uri) if self.range_uri
+  end
+
+
 private
 
   def generate_identifier

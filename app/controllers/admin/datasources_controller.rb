@@ -3,111 +3,110 @@ class Admin::DatasourcesController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => [:create]
 
   def index
-    @datasets = OpenMedia::Datasource.search(params[:search])
+    @datasources = OpenMedia::Datasource.search(params[:search])
   end
   
   def show
-    @dataset = OpenMedia::Datasource.get(params[:id])
-#    @documents = @dataset.model.all
+    @datasource = OpenMedia::Datasource.get(params[:id])
     @documents = []
-    @documents << @dataset.model.first if @dataset.model.first
+    @documents << @datasource.rdfs_class.spira_resource.each.first if @datasource.rdfs_class
   end
   
   def new_upload
-    @dataset = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
-    @dataset.metadata = OpenMedia::Metadata.new
-    @datasets = OpenMedia::Datasource.all
+    @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
+    @datasource.metadata = OpenMedia::Metadata.new
+    @datasources = OpenMedia::Datasource.all
   end
   
   def new
-    @dataset = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
-    @dataset.metadata = OpenMedia::Metadata.new
+    @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
+    @datasource.metadata = OpenMedia::Metadata.new
   end
 
   def import_seed_data
-    @dataset = OpenMedia::Datasource.get(params[:id])
-    import_file = "/tmp/#{@dataset.identifier}-seed-data.csv"
-    File.open(import_file, 'w') {|f| f.write(@dataset.read_attachment('seed_data'))}
-    count = @dataset.import!(:file=>import_file)
-    @dataset.delete_attachment('seed_data')
-    @dataset.save!
-    flash[:notice] = "Imported #{count} records into dataset #{@dataset.title}"
-    redirect_to admin_dataset_path(@dataset.identifier)
+    @datasource = OpenMedia::Datasource.get(params[:id])
+    import_file = "/tmp/#{@datasource.id}-seed-data.csv"
+    File.open(import_file, 'w') {|f| f.write(@datasource.read_attachment('seed_data'))}
+    count = @datasource.import!(:file=>import_file)
+    @datasource.delete_attachment('seed_data')
+    @datasource.save!
+    flash[:notice] = "Imported #{count} records into datasource #{@datasource.title}"
+    redirect_to admin_datasource_path(@datasource)
   end
 
   def upload
-    # either create new dataset and save seed data or do import on existing dataset
+    # either create new datasource and save seed data or do import on existing datasource
     data_file = params.delete(:data_file)
     seed_data_attachment = nil
-    if params[:dataset_id]
-      @dataset = OpenMedia::Datasource.get(params[:dataset_id])
-      count = @dataset.import!(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile.path : data_file.path))
-      flash[:notice] = "Imported #{count} records into dataset #{@dataset.title}"      
-      redirect_to admin_datasets_path
-    elsif params[:dataset]
-      @dataset = OpenMedia::Datasource.new(params[:dataset])
+    if params[:datasource_id]
+      @datasource = OpenMedia::Datasource.get(params[:datasource_id])
+      count = @datasource.import!(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile.path : data_file.path))
+      flash[:notice] = "Imported #{count} records into datasource #{@datasource.title}"      
+      redirect_to admin_datasources_path
+    elsif params[:datasource]
+      @datasource = OpenMedia::Datasource.new(params[:datasource])
 
       if data_file
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
-        data = FasterCSV.parse(data_file.read, {:col_sep=>@dataset.source.column_separator})
+        data = FasterCSV.parse(data_file.read, {:col_sep=>@datasource.column_separator})
 
-        if !@dataset.data_type
-          @domain = OpenMedia::Schema::Domain.find(params[:domain_id])
-          @type = OpenMedia::Schema::Type.new(:domain=>@domain, :name=>"#{@dataset.title} Type")
+        if @datasource.rdfs_class_uri.blank?
+          @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
+          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
+          @collection.members << @class.uri
+          @collection.save!
           property_names = []
           if has_header_row
-            @dataset.source.skip_lines = 1
+            @datasource.source.skip_lines = 1
             property_names = data[0]
           else
             1.upto(data[0].size) {|i| property_names << "Column#{i}"}
           end
           property_names.each do |name|
-            @type.type_properties << OpenMedia::Schema::Property.new(:name=>name, :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('string'))
-            @dataset.source.source_properties << OpenMedia::Schema::Property.new(:name=>name, :expected_type=>OpenMedia::Schema::Domain.default_types.find_type('string'))
+            @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>name, :range=>RDF::XSD.string)
+            @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>name, :range_uri=>RDF::XSD.string.to_s)
           end
-          @dataset.data_type = @type
+          @class.save!                  
+          @datasource.rdfs_class_uri = @class.uri.to_s
         end
         
-        data_file.rewind
-
-        # this is a hack, but basically, save dataset once so that the Datasource#update_model_views callback runs before attachment is in there
-        # otherwise, it gets base64 encoded twice
-        @dataset.save        
-        @dataset.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
+        data_file.rewind        
+        @datasource.save        
+        @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
                                    :content_type=>data_file.content_type)
       end
-      if @dataset.save
-        redirect_to edit_admin_dataset_path(@dataset.identifier)
+      if @datasource.save
+        redirect_to edit_admin_datasource_path(@datasource)
       else
-        @datasets = OpenMedia::Datasource.all        
+        @datasources = OpenMedia::Datasource.all        
         render :action=>'new_upload'
       end
     else
-      raise 'dataset_id or dataset parameters are required'
+      raise 'datasource_id or datasource parameters are required'
     end
 
   end  
   
   def create
-    data_file = params[:dataset].delete(:data_file)
+    data_file = params[:datasource].delete(:data_file)
     
-    @dataset = OpenMedia::Datasource.new(params[:dataset])
+    @datasource = OpenMedia::Datasource.new(params[:datasource])
     
-    if @dataset.save
-      # this was here for Refine, commenting out for dataset workflow changes
+    if @datasource.save
+      # this was here for Refine, commenting out for datasource workflow changes
       #if data_file
       #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
-      #  @dataset.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
+      #  @datasource.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
       #end
 
       respond_to do |format|
         format.html do
           flash[:notice] = 'Datasource successfully created.'
-          redirect_to admin_datasets_path
+          redirect_to admin_datasources_path
         end
 
-        format.json { render :json=>{id=>@dataset.identifier}, :status=>:created }
+        format.json { render :json=>{id=>@datasource.identifier}, :status=>:created }
       end
 
     else
@@ -118,33 +117,33 @@ class Admin::DatasourcesController < ApplicationController
         end
 
         format.json do
-          render :text=>@dataset.errors.full_messages*"\n", :status=>400
+          render :text=>@datasource.errors.full_messages*"\n", :status=>400
         end
       end
     end
   end
      
   def edit
-    @dataset = OpenMedia::Datasource.get(params[:id])    
-    if @dataset.nil?
+    @datasource = OpenMedia::Datasource.get(params[:id])    
+    if @datasource.nil?
       flash[:error] = 'Datasource not found.'
-      redirect_to(admin_datasets_url)
+      redirect_to(admin_datasources_url)
     end
   end
   
   def update
-    @dataset = OpenMedia::Datasource.get(params[:id])
-    @dataset.update_attributes_without_saving(params[:dataset])
-    # @dataset.metadata.update_attributes_without_saving(params[:dataset])
+    @datasource = OpenMedia::Datasource.get(params[:id])
+    @datasource.update_attributes_without_saving(params[:datasource])
+    # @datasource.metadata.update_attributes_without_saving(params[:datasource])
 
     respond_to do |format|    
-      if @dataset.save!
+      if @datasource.save!
         flash[:notice] = 'Successfully updated Datasource.'
-        format.html { redirect_to(admin_datasets_path) }
+        format.html { redirect_to(admin_datasources_path) }
         format.xml  { head :ok }    
       else
         format.html { render :action => "edit" }
-        format.xml  { render :xml => @dataset.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @datasource.errors, :status => :unprocessable_entity }
       end
     end      
   end
@@ -156,14 +155,14 @@ class Admin::DatasourcesController < ApplicationController
 
 
   def destroy
-    @dataset = OpenMedia::Datasource.get(params[:id])
+    @datasource = OpenMedia::Datasource.get(params[:id])
     
-    unless @dataset.nil?
-      @dataset.destroy
-      redirect_to(admin_datasets_path)
+    unless @datasource.nil?
+      @datasource.destroy
+      redirect_to(admin_datasources_path)
     else
       flash[:error] = "The Datasource could not be found, refresh the catalog list and try again."
-      redirect_to(admin_datasets_path)
+      redirect_to(admin_datasources_path)
     end
   end
   

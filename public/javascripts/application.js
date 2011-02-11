@@ -89,8 +89,9 @@ $(function() {
 	return false;
     });
 
-	$('.property-type-uri').autocomplete(typeAutoCompleteOpts);
-	$('#source input.property-name').live('blur', syncSourceProperties);
+    $('.property-type-uri').autocomplete(typeAutoCompleteOpts);
+    $('.datasource-class').autocomplete(typeAutoCompleteOpts);
+    $('#source input.property-name').live('blur', syncSourceProperties);
 });
 
 function syncSourceProperties() {

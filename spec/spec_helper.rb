@@ -41,11 +41,10 @@ end
 
 def create_test_site(data={})
   @test_site ||= OpenMedia::Site.create!(:url=>'http://test.gov')
-  @test_site
 end
 
-def create_test_collection
-  OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
+def create_test_collection(data={})
+  @test_collection ||= OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
 end
 
 
@@ -69,8 +68,12 @@ def create_test_catalog(data={})
 end
 
 def create_test_datasource(data={})
-  data[:data_type] = create_test_type unless data[:data_type]
-  OpenMedia::Datasource.create!({:title=>'Test Dataset'}.merge(data))  
+  data[:rdfs_class_uri] = create_test_rdfs_class.uri unless data[:rdfs_class_uri]
+  ds = OpenMedia::Datasource.create!({:title=>'Test Dataset',
+                                       :source_type=>OpenMedia::Datasource::FILE_TYPE,
+                                       :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
+                                       :skip_lines=>1}.merge(data))
+
 end
 
 def create_test_csv

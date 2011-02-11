@@ -3,7 +3,7 @@ OpenMedia::Schema::RDF::Property   # this is here to make Rails autoloading and 
 class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
   
   default_source :types
-  base_uri "http://data.openmedia.org/"
+  base_uri "http://data.civicopenmedia.org/"
   type RDFS.Class
 
   property :label, :predicate=>RDFS.label, :type=>XSD.string
@@ -34,7 +34,27 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
     }
   }
 
-  
+  def skos_concept
+    @skos_concept ||= OpenMedia::Schema::SKOS::Concept.for(self.uri)
+  end
+
+
+  # define a new Spira resource, subclassed from OpenMedia::Schema::Base
+  def spira_resource
+    cls_name = self.uri.path.split('/').collect{|p| p.classify}.join
+    if !self.class.const_defined?(cls_name)
+      cls = Class.new(OpenMedia::Schema::Base)
+      repo = self.skos_concept.collection.repository
+      cls.default_source(repo)
+      cls.type(self.uri)
+      self.properties.each do |p|
+        cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>p.range)
+      end
+      self.class.const_set(cls_name, cls)
+    end
+    self.class.const_get(cls_name)
+  end
+
   def self.create_in_site!(site, data)
     identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
     c = self.for("#{site.identifier}/classes/#{identifier}", data)

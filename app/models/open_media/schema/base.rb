@@ -4,7 +4,7 @@ class OpenMedia::Schema::Base
   include Spira::Resource
 
   property :created, :predicate=>DC.created, :type=>XSD.dateTime
-  property :modified, :predicate=>DC.created, :type=>XSD.dateTime
+  property :modified, :predicate=>DC.modified, :type=>XSD.dateTime
 
   def before_create
     self.created=Time.now

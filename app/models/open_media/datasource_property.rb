@@ -2,26 +2,26 @@ class OpenMedia::DatasourceProperty < Hash
 
   include CouchRest::Model::CastedModel
 
-  property :name
+  property :label
   property :identifier
-  property :description
-  property :rdfs_type_uri
+  property :comment
+  property :range_uri
 
   timestamps!
 
   validates :label, :presence => true
-  validates :rdfs_type_uri, :presence => true
+  validates :range_uri, :presence => true
 
-  def name=(name)
-    self['name'] = name
+  def label=(label)
+    self['label'] = label
     generate_identifier
   end
 
 private
 
   def generate_identifier
-    return if self.name.nil? || self.name.empty?
-    self.identifier = self.name.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
+    return if self.label.nil? || self.label.empty?
+    self.identifier = self.label.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
   end
     
 end

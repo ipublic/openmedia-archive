@@ -17,7 +17,7 @@ module ETL #:nodoc:
       # * <tt>:read_locally</tt>: Set to true to read from the local cache
       # * <tt>:rails_root</tt>: Set to the rails root to boot rails
       def init(options={})
-        @dataset = options[:dataset]
+        @datasource = options[:datasource]
         @limit = options[:limit]
         @offset = options[:offset]
         @log_write_mode = 'w' if options[:newlog]
@@ -40,8 +40,8 @@ module ETL #:nodoc:
         new().process(file)
       end
 
-      def process_string(dataset, str)
-        new(dataset).process(StringIO.new(str))
+      def process_string(datasource, str)
+        new(datasource).process(StringIO.new(str))
       end
 
       
@@ -286,7 +286,7 @@ module ETL #:nodoc:
       control = ETL::Control::Control.resolve(control)
       say_on_own_line "Processing control #{control.file}"
       ETL::Engine.import = OpenMedia::Import.create!(
-        :dataset => @dataset,                                                                
+        :datasource => @datasource,                                                                
         :control_file => control.file.is_a?(String) ? (File.open(control.file) {|f| f.read}) : (control.file.rewind; control.file.read),
         :status => OpenMedia::Import::STATUS_EXECUTING #,
         # :batch_id => ETL::Engine.batch ? ETL::Engine.batch.id : nil
@@ -487,8 +487,8 @@ module ETL #:nodoc:
       ETL::Engine.import.save!
     end
 
-    def initialize(dataset=nil)
-      @dataset=dataset
+    def initialize(datasource=nil)
+      @datasource=datasource
     end
     
     private

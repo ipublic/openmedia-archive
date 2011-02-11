@@ -74,6 +74,22 @@ describe OpenMedia::Schema::SKOS::Collection do
     @collection.members.size.should == original_size
   end
 
+  describe 'sub-collections' do
+    before(:each) do
+      @sub_collection = OpenMedia::Schema::SKOS::Collection.for(@collection.uri/'crime', :label=>'Crime')
+      @sub_collection.save!
+    end
+
+    it 'should be able to generate an identifier based on label' do
+      @sub_collection.identifier.should == @sub_collection.uri.path.split('/').last
+    end
+    
+    it "should register the RDF::CouchDB::Repository for the collection's classes with spira" do
+      @sub_collection.repository.should == :"#{@site.identifier}_#{@sub_collection.identifier}"
+      Spira.repository(@sub_collection.repository).instance_variable_get("@database").name.should == "#{@site.identifier}_#{@sub_collection.identifier}"
+    end
+  end
+
   it_should_behave_like OpenMedia::Schema::Base do
     let(:base) { @collection }
   end  

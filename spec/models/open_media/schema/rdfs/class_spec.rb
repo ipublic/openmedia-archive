@@ -5,7 +5,7 @@ describe OpenMedia::Schema::RDFS::Class do
   before(:all) do
     reset_test_db!
     @site = create_test_site
-    @rdfs_class = OpenMedia::Schema::RDFS::Class.create_in_site!(@site, :label=>'Reported Crimes', :comment=>'crime reports, etc')
+    @rdfs_class = create_test_rdfs_class(:label=>'Test Class')
   end
   
   it 'should have label, comment, rdf:type' do
@@ -15,7 +15,7 @@ describe OpenMedia::Schema::RDFS::Class do
 
   it 'should create class in site and also create skos concept' do    
     @rdfs_class.reload
-    @rdfs_class.uri.should == "http://data.openmedia.org/#{@site.identifier}/classes/reported_crimes"
+    @rdfs_class.uri.should == "http://data.civicopenmedia.org/#{@site.identifier}/classes/test_class"
     TYPES_RDF_REPOSITORY.query(:subject=>@rdfs_class.uri, :predicate=>RDF.type, :object=>RDF::SKOS.Concept).size.should == 1
   end
 
@@ -29,22 +29,30 @@ describe OpenMedia::Schema::RDFS::Class do
     @rdfs_class.properties.each{|p| p.should be_instance_of(OpenMedia::Schema::RDF::Property)}
   end
 
-  it 'should have list of properties' do
-    prop1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>RDF::XSD.string)
-    prop2 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 2', :range=>RDF::XSD.string)
-    @rdfs_class.properties = [prop1, prop2]
-    @rdfs_class.save!
-    @rdfs_class.reload
-    @rdfs_class.properties.size.should == 2
-    @rdfs_class.properties.each{|p| p.should be_instance_of(OpenMedia::Schema::RDF::Property)}
+  it 'should be able to build a spira resource to manage instances of the class' do
+    @rdfs_class.spira_resource.properties.keys.collect{|k| k.to_s}.sort.should == %w(created modified property_1 property_2)    
+    @rdfs_class.spira_resource.should == OpenMedia::Schema::RDFS::Class.const_get('TestgovClassTestClas')
+    @rdfs_class.spira_resource.should_not be_nil
+    @rdfs_class.spira_resource.repository.should be_instance_of(RDF::CouchDB::Repository)
   end
 
-  it_should_behave_like OpenMedia::Schema::Base do
-    let(:base) { @rdfs_class }
-  end  
+  it 'should be able to retrieve its skos concept' do
+    @rdfs_class.skos_concept.should be_instance_of(OpenMedia::Schema::SKOS::Concept)
+    @rdfs_class.skos_concept.uri.should == @rdfs_class.uri
+  end
+
+  # it_should_behave_like OpenMedia::Schema::Base do
+  #   let(:base) { @rdfs_class }
+  # end  
 
   it 'should have class method for searching classes and datatypes' do
-    OpenMedia::Schema::RDFS::Class.prefix_search('report').size.should == 1
-    OpenMedia::Schema::RDFS::Class.prefix_search('report').first.should be_instance_of(RDF::URI)
+    OpenMedia::Schema::RDFS::Class.prefix_search('test').size.should == 1
+    OpenMedia::Schema::RDFS::Class.prefix_search('test').first.should be_instance_of(RDF::URI)
   end
+
+  it 'should delete imported data when datasource is deleted' do
+    num_records = @rdfs_class.spira_resource.count
+    lambda { @rdfs_class.destroy! }.should change(@rdfs_class.spira_resource, :count).by(-num_records)
+  end
+  
 end

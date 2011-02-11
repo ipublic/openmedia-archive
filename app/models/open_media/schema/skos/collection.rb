@@ -1,11 +1,11 @@
 class OpenMedia::Schema::SKOS::Collection < OpenMedia::Schema::Base
   
   default_source :types
-  base_uri "http://data.openmedia.org/"
+  base_uri "http://data.civicopenmedia.org/"
   type SKOS.Collection  
 
   property :label, :predicate=>SKOS.prefLabel, :type=>XSD.string
-  property :hidden, :predicate=>URI.new('http://data.openmedia.org#hidden'), :type=>XSD.boolean
+  property :hidden, :predicate=>URI.new('http://data.civicopenmedia.org#hidden'), :type=>XSD.boolean
   has_many :members, :predicate=>SKOS.member
 
   validate :label_set
@@ -27,7 +27,20 @@ class OpenMedia::Schema::SKOS::Collection < OpenMedia::Schema::Base
     self.save!
   end
 
+  def identifier
+    self.uri.path.split('/').last
+  end
 
+  def repository
+    db_name = "#{OpenMedia::Site.instance.identifier}_#{self.identifier}"
+    unless Spira.repository(db_name.to_sym)
+      db = COUCHDB_SERVER.database!("#{db_name}")
+      Spira.add_repository! db_name.to_sym, RDF::CouchDB::Repository.new(:database=>db)
+    end
+    db_name.to_sym
+  end
+
+  
   def self.create_in_collection!(collection, data)
     c = nil
     begin

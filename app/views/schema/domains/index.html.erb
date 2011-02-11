@@ -18,7 +18,7 @@
 				</thead>
 				<% @domains.each do |d| %>
 				<tr>
-				  <td><%= d.site ? d.site.url : 'http://openmedia.org' %></td>
+				  <td><%= d.site ? d.site.url : 'http://civic.openmedia.org' %></td>
 				  <td><%= link_to d.name, schema_domain_path(d) %></td>
 				  <td><%= d.path %></td>
 				  <td><%= d.type_count %></td>

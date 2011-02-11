@@ -44,6 +44,26 @@ def create_test_site(data={})
   @test_site
 end
 
+def create_test_collection
+  OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
+end
+
+
+def create_test_rdfs_class(data={})
+  properties = data.delete(:properties)
+  collection = create_test_collection
+  c = OpenMedia::Schema::RDFS::Class.create_in_site!(create_test_site, {:label=>'Reported Crimes', :comment=>'crime reports, etc'}.merge(data))
+  if properties
+    for p in properties
+      c.properties << OpenMedia::Schema::RDF::Property.create_in_class!(c, p.merge(:domain=>c))
+    end
+    c.save!
+  end
+  collection.members << c.uri
+  collection.save!
+  c
+end
+
 def create_test_catalog(data={})
   OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
 end

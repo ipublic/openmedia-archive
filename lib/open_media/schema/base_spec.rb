@@ -7,7 +7,7 @@ shared_examples_for OpenMedia::Schema::Base do
     base.reload
     base.created.should be_instance_of(DateTime)
     base.modified.should be_instance_of(DateTime)
-    base.created.should == base.modified
+    base.created.to_i.should be_within(10).of(base.modified.to_i)
   end
 
   it 'should update modified on subsequent saves' do

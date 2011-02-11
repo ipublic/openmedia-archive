@@ -24,7 +24,7 @@ describe OpenMedia::Site do
     @site.save!
     lambda { @site.skos_collection }.should change(OpenMedia::Schema::SKOS::Collection, :count).by(1)
     @site.skos_collection.should be_instance_of(OpenMedia::Schema::SKOS::Collection)
-    @site.skos_collection.uri.should === RDF::URI.new('http://data.openmedia.org/somesitecom/concepts')
+    @site.skos_collection.uri.should === RDF::URI.new('http://data.civicopenmedia.org/somesitecom/concepts')
   end
 
   describe 'instance singleton method' do

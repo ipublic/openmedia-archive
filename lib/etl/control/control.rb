@@ -403,7 +403,7 @@ module ETL #:nodoc:
       end
       
       def destination_types
-        [:file, :database, :dataset]
+        [:file, :database, :rdfs_class]
       end
       
     end

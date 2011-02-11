@@ -1,7 +1,7 @@
 class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
   
   default_source :types
-  base_uri "http://data.openmedia.org/"
+  base_uri "http://data.civicopenmedia.org/"
   type RDF.Property
 
   property :label, :predicate=>RDFS.label, :type=>XSD.string
@@ -17,6 +17,11 @@ class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
     p.save!
     p
   end
+
+  def identifier
+    self.uri.fragment if self.uri
+  end
+
 
   def check_required_fields
     assert(!self.label.blank?, :label, 'Label cannot be blank')

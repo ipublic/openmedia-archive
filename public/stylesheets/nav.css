@@ -94,7 +94,10 @@ ul.nav li.current:hover ul li a:active {color:#666; background:#fff;}
 /* navigation (vertical subnavigation)
 ----------------------------------------------- */
 ul.nav {
+	position:relative;
+	top:0;
   background:#26537c;
+	border-top: 2px solid #d0d0d0;
 }
 ul.main li {
   position:relative;
@@ -220,9 +223,10 @@ ul.nav-service li {
 }
 
 ul.nav-service a {
-	border-right:1px solid #bfc0c0;
+	border-right:1px solid #d0d0d0;
 	display:block;
-	font-size:10px;
+	color: white;
+	font-size:1.2em;
 	line-height:100%;
 	margin:0;padding:0 6px;
 	text-decoration:none;
@@ -246,7 +250,7 @@ ul.nav-service a {
 }
 
 ul.nav-service a:hover{
-	color:#333;
+	color:#ffc773;
 	text-decoration:underline;
 	background: transparent;
 }

@@ -1,5 +1,5 @@
 body {
-	background: #ededed; /* light grey */
+	background: #e0e0e0; /* light grey */
 }
 
 h4 {
@@ -7,8 +7,14 @@ h4 {
 	margin: 0;
 	padding:4px;
 	line-height:1.2em;
+	color: #408dd2;
 }
 
+/* search
+----------------------------------------------- */
+#search {
+	padding: 15px 10px 0px 10px;
+}
 
 /* forms
 ----------------------------------------------- */
@@ -37,6 +43,7 @@ legend {
 	font-size: 1.6em;
   padding: 0 2px;
   font-weight: bold;
+	color: #408dd2;
 /*
 margin-left: 1em;  
 */
@@ -50,7 +57,7 @@ label {
 	width: 10em;    
 	margin-right: 1em;    
 	text-align: right;  
-	color: #F26101;
+	color: #043a6b;
 	font-size: 1.2em;
 	font-weight: bold;  
 /*
@@ -165,7 +172,7 @@ em {
 }
 
 .property-table th {
-	color: #F26101;
+	color: #043a6b;
 	padding:.2em 0 .2em 0;
 	text-align: right;
 	width: 40%;

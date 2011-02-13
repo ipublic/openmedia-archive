@@ -13,7 +13,24 @@ h4 {
 /* search
 ----------------------------------------------- */
 #search {
-	padding: 15px 10px 0px 10px;
+	margin-top: -2px;
+}
+
+#search ol {
+	list-style: none;  
+}
+
+#search li {
+	padding: 1em 1em 0 1em;
+  margin: 0;
+	display: inline-block;
+}
+#search li input {
+width: 15em;
+}
+
+#search li input.submit {
+width: 7em;
 }
 
 /* forms

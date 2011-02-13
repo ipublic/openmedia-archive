@@ -62,17 +62,24 @@ h1 a {
 	background: #679fd2;
 }
 
-/*
 h1#branding {
 	font-weight:normal;
-	font-size:2.5em;
+	font-size:3em;
 	text-align:left;
-	padding:.7em 1em;
-	margin-bottom:0;
-	background:#aaa;
-	background:#91bed4;
+	margin-bottom: .25em;
+	background: #679fd2;
 }
-*/
+
+h1#branding a {
+	color:#04376c;
+	text-decoration: none;
+	font-weight:bold;
+}
+
+h1#branding a:hover {
+	background: transparent;
+}
+
 #frontpage .spotlight {
 float: left;
 width: 235px;
@@ -142,13 +149,9 @@ h2#page-heading {
 	color: #043a6b;
 	font-size:2em;
 	font-weight:normal;
-	padding:.5em;
+	padding:0 0 .5em .5em;
 	margin:0 0 10px 0;
-	border-bottom:1px solid #ccc;
-}
-
-#search {
-	padding: 15px 10px 0px 10px;
+	border-bottom:1px solid #d0d0d0;
 }
 
 

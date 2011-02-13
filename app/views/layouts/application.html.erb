@@ -34,11 +34,15 @@
 					  <li><%= link_to current_user.email, account_path %></li>
 					<% end %>	
 				</ul>
-				<%= image_tag "openmedia_logo.png", {:alt => "Civic OpenMedia"} %>
-	  		<%= render :partial => 'admin/search_form' %>
-				<!-- >
-				<h1 id="branding"><%= link_to 'Civic OpenMedia', admin_path %></h1>
-				<--> 
+				<div class="clear"></div>
+				<div class="grid_7">
+					<!-- <%= image_tag "openmedia_logo.png", {:alt => "Civic OpenMedia"} %> -->
+					<h1 id="branding"><%= link_to 'Civic OpenMedia', admin_path %></h1>
+				</div>
+				<div class="grid_4 omega">
+		  		<%= render :partial => 'admin/search_form' %>
+				</div>
+				<div class="clear"></div>
 				<ul class="nav main">
 					<li><%= link_to 'Home', admin_path, :title => "" %>
 					<li><%= link_to 'Data', admin_catalogs_path, :title => "" %>

@@ -12,9 +12,9 @@ GIT
 
 GIT
   remote: git://github.com/ipublic/rdf-couchdb.git
-  revision: fb15cb9ff2099ee153635d5d73af38a83e078c2c
+  revision: 46dcddc4bb18262f80dbea9bf5c2cd04b37b74f4
   specs:
-    rdf-couchdb (0.0.4)
+    rdf-couchdb (0.0.5)
       couchrest (>= 1.0.1)
       rdf (>= 0.3.1)
 

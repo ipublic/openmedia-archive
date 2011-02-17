@@ -50,9 +50,13 @@ describe OpenMedia::Schema::RDFS::Class do
     OpenMedia::Schema::RDFS::Class.prefix_search('test').first.should be_instance_of(RDF::URI)
   end
 
+  it 'should have method to efficiently get count of instances' do
+    @rdfs_class.instance_count.should == @rdfs_class.spira_resource.count
+  end
+
   it 'should delete imported data when datasource is deleted' do
     num_records = @rdfs_class.spira_resource.count
     lambda { @rdfs_class.destroy! }.should change(@rdfs_class.spira_resource, :count).by(-num_records)
   end
-  
+
 end

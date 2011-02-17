@@ -38,7 +38,6 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
     @skos_concept ||= OpenMedia::Schema::SKOS::Concept.for(self.uri)
   end
 
-
   # define a new Spira resource, subclassed from OpenMedia::Schema::Base
   def spira_resource
     cls_name = self.uri.path.split('/').collect{|p| p.classify}.join
@@ -54,6 +53,12 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
     end
     self.class.const_get(cls_name)
   end
+
+  def instance_count
+    repo = Spira.repository(self.skos_concept.collection.repository)
+    repo.query(:predicate=>RDF.type, :object=>self.uri).count    
+  end
+
 
   def self.create_in_site!(site, data)
     identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')

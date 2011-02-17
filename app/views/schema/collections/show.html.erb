@@ -44,7 +44,7 @@
 				  <td><%= link_to cls.label, schema_collection_class_path(rdf_id(@collection), rdf_id(cls)) %></td>
 				  <td><%= cls.uri %></td>
 				  <td><%= cls.properties.size %></td>
-				  <td>fix me</td>
+				  <td><%= cls.instance_count %></td>
 				  <td><%= cls.comment %></td>
 				</tr>
 				<% end %>

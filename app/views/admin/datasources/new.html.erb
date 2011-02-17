@@ -3,13 +3,9 @@
   <div class="box">
     <h2>New Dataset</h2>
     <%= form_for :datasource, :url=>admin_datasources_path do |ds| %>
-    <div class="box">
-      <%= render :partial=>'form', :locals=>{:ds=>ds} %>
-    </div>
-    <p>
-      <%= link_to 'Back',  :back %>
-      <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-    </p>
+
+    <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+
     <% end %>
   </div>
 </div>

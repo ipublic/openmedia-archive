@@ -51,35 +51,34 @@ $(function() {
 		return false;
     });
 
-	$('a.add-property').live('click', function() {
-		var link = this;
-		$.get('/admin/datasets/new_property?base_name='+link.rel, function(html) {
-			$(html).insertBefore(link);
-			});
-			return false;
-		});
-
-	var typeAutoCompleteOpts = {delay: 300,
-		mustMatch: true,
-		source: "/schema/classes/autocomplete",
-		select: function(event, ui) {
-		    $(event.target).next('input').val(ui.item.id);
-		}};
-
-	$('a.add-class-property').live('click', function() {
-		var link = this;
-		$.get('/schema/classes/new_property', function(html) {
-			$(link).prev('ol').append(html);
-			$(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
-			$(link).prev('ol').find('a.delete-class-property:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
-			});
-		return false;
+    $('a.add-property').live('click', function() {
+	var link = this;
+	$.get('/admin/datasets/new_property?base_name='+link.rel, function(html) {
+	    $(html).insertBefore(link);
 	});
+	return false;
+    });
+
+    var typeAutoCompleteOpts = {delay: 300,
+				mustMatch: true,
+				source: "/schema/classes/autocomplete",
+				select: function(event, ui) {
+				    console.log($(event.target));
+				    console.log($(event.target).next('input'));
+
+				    $(event.target).next('input').val(ui.item.id);
+				}};
+
+    $('a.add-class-property').live('click', function() {
+	var link = this;
+	$.get('/schema/classes/new_property', function(html) {
+	    $(link).prev('ol').append(html);
+	    $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
+	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	});
+	return false;
+    });
     
-    $('a.delete-class-property').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
-
-    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
-
     $('a.delete-class-property').live('click', function() {
 	var deletedPropertyURI = $(this).closest('li.class-property').find('.class-property-uri').val();
 	if (deletedPropertyURI) {
@@ -89,7 +88,29 @@ $(function() {
 	return false;
     });
 
+    $('a.add-datasource-property').live('click', function() {
+	var link = this;
+	$.get('/admin/datasources/new_property', function(html) {
+	    console.debug($(link).prev('ol'));
+	    $(link).prev('ol').append(html);
+	    $(link).prev('ol').find('.property-range-uri:last').autocomplete(typeAutoCompleteOpts);
+	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	});
+	return false;
+    });
+
+    $('a.delete-datasource-property').live('click', function() {
+	$(this).closest('li.datasource-property').remove();
+	return false;
+    });
+
+    // basic button styling
+    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+    $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+
     $('.property-type-uri').autocomplete(typeAutoCompleteOpts);
+    $('.property-range-uri').autocomplete(typeAutoCompleteOpts);
+    $('.datasource-class-uri').autocomplete(typeAutoCompleteOpts);
     $('.datasource-class').autocomplete(typeAutoCompleteOpts);
     $('#source input.property-name').live('blur', syncSourceProperties);
 });

@@ -13,7 +13,7 @@
   <%= ds.fields_for :metadata, @datasource.metadata do |m| %>
   <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
   <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3, 
-                  :value=>@datasource.metadata ? @datasource.metadata.keywords.join(', ') : '' %></p>
+    :value=>@datasource.metadata ? @datasource.metadata.keywords.join(', ') : '' %></p>
   <p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
   <% end %>				
 </fieldset>	 	
@@ -39,9 +39,20 @@
     <%= ds.label :skip_lines %>
     <%= ds.text_field :skip_lines %>
   </p>
-
-  <% for property in @datasource.source_properties %>
-  <%= render :partial=>'datasource_property', :locals=>{ :base_name=>'datasource[source_properties][]', :property=>property } %>
-  <% end %>
-  <a href="#" class="add-property" rel="datasource[source][source_properties][]">add property</a>
 </fieldset>	 	
+
+<fieldset>
+  <legend><b>Source Properties</b></legend>
+  <ol class="two-column">
+    <% for property in @datasource.source_properties %>
+    <%= render :partial=>'datasource_property', :locals=>{ :property=>property } %>
+    <% end %>
+  </ol>
+  <a href="#" class="add-datasource-property add-element">add property</a>
+</fieldset>
+
+<fieldset class="submit">
+  <ol>
+    <li><%= ds.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+  </ol>
+</fieldset>

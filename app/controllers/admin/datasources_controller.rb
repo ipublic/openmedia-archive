@@ -45,7 +45,6 @@ class Admin::DatasourcesController < ApplicationController
       redirect_to admin_datasources_path
     elsif params[:datasource]
       @datasource = OpenMedia::Datasource.new(params[:datasource])
-
       if data_file
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
@@ -53,31 +52,35 @@ class Admin::DatasourcesController < ApplicationController
 
         if @datasource.rdfs_class_uri.blank?
           @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
-          raise "Invalid collection_uri:#{params[:collection_uri]}" unless @collection.exists?
-          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
-          @collection.members << @class.uri
-          @collection.save!
-          property_names = []
-          if has_header_row
-            @datasource.skip_lines = 1
-            property_names = data[0]
+          if @collection.exists?
+            @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
+            @collection.members << @class.uri
+            @collection.save!
+            property_names = []
+            if has_header_row
+              @datasource.skip_lines = 1
+              property_names = data[0]
+            else
+              1.upto(data[0].size) {|i| property_names << "Column#{i}"}
+            end
+            property_names.each do |name|
+              @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>name, :range=>RDF::XSD.string)
+              @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>name, :range_uri=>RDF::XSD.string.to_s)
+            end
+            @class.save!          
+            @datasource.rdfs_class_uri = @class.uri.to_s
+            data_file.rewind        
+            @datasource.save        
+            @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
+                                          :content_type=>data_file.content_type)            
           else
-            1.upto(data[0].size) {|i| property_names << "Column#{i}"}
-          end
-          property_names.each do |name|
-            @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>name, :range=>RDF::XSD.string)
-            @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>name, :range_uri=>RDF::XSD.string.to_s)
-          end
-          @class.save!          
-          @datasource.rdfs_class_uri = @class.uri.to_s
+            @datasource.errors.add(:base, "Please choose a Collection for your new Class")
+          end            
         end
-        
-        data_file.rewind        
-        @datasource.save        
-        @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
-                                   :content_type=>data_file.content_type)
+      else
+        @datasource.errors.add(:base, "Please select a file")
       end
-      if @datasource.save
+      if @datasource.errors.size == 0 && @datasource.valid?
         redirect_to edit_admin_datasource_path(@datasource)
       else
         @datasources = OpenMedia::Datasource.all        
@@ -86,7 +89,6 @@ class Admin::DatasourcesController < ApplicationController
     else
       raise 'datasource_id or datasource parameters are required'
     end
-
   end  
   
   def create
@@ -151,7 +153,7 @@ class Admin::DatasourcesController < ApplicationController
 
   def new_property
     @property = OpenMedia::DatasourceProperty.new
-    render :partial=>'datasource_property', :locals=>{:base_name=>'datasource[source_properties][]', :property=>@property}
+    render :partial=>'datasource_property', :locals=>{ :property=>@property }
   end
 
 
@@ -171,22 +173,5 @@ class Admin::DatasourcesController < ApplicationController
   def seed_properties
     render :layout => nil
   end
-
-  # def extract_seed_properties
-  #     
-  #   data_file = params[:data_file].respond_to?(:tempfile) ? params[:data_file].tempfile :
-  #                            params[:data_file]
-  #   column_separator = params[:column_separator]
-  #   if column_separator =~ /^\\/
-  #     begin
-  #       column_separator = eval('"' + params[:column_separator] + '"')
-  #     rescue; end
-  #   end
-  # 
-  #   rtable = Ruport::Data::Table.parse(data_file, :has_names=>true,
-  #                                       :csv_options => { :col_sep => column_separator })
-  #   @properties = rtable[0].attributes.collect{|name| OpenMedia::Property.new(:name=>name)}
-  #   render :layout => nil
-  # end
   
 end

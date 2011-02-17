@@ -1,4 +1,4 @@
-<% title "Datasets" %>
+<% title "Datasources" %>
 <div class="grid_8">
 	<p>
     <%= link_to 'New', new_admin_datasource_path %> |
@@ -13,6 +13,7 @@
 				  <tr>
 				    <th>Title</th>
 				    <th>Class</th>
+				    <th>No. Instances</th>
 				    <th>Updated</th>
 				    <th></th>
 				  </tr>
@@ -20,7 +21,8 @@
 				<% @datasources.each do |ds| %>
 				<tr>
 				  <td><%= link_to ds.title, admin_datasource_path(ds.id) %></td>
-				  <td><%= ds.rdfs_class.label %></td>
+				  <td><%= link_to ds.rdfs_class.label, schema_collection_class_path(rdf_id(ds.rdfs_class.skos_concept.collection), rdf_id(ds.rdfs_class)) %></td>
+				  <td><%= ds.rdfs_class.instance_count %></td>
 				  <td><%= ds.updated_at.to_s(:full) %></td>
 				  <td><%= link_to 'edit', edit_admin_datasource_path(ds.id) %></td>
 				</tr>

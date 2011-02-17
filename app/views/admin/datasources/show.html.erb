@@ -1,4 +1,4 @@
-<% title "Dataset: " + @datasource.title %>
+<% title "Datasource: " + @datasource.title %>
 <div class="grid_12">
 	<p style="float:right;">
 		<%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
@@ -10,10 +10,10 @@
 	</p>
 	<hr/>
 	<div class="box">
-		<h2>Facts</h2>
+		<h2><%= @datasource.title %></h2>
 		<div class="block">
-			<p><%= @datasource.metadata.description if @datasource.metadata%></p>
-			<p><b>URI:</b> <%= @datasource.uri%> 
+			<%= show_fields(@datasource, [:uri, :source_type, :parser, :column_separator, 
+			                              :skip_lines, [:rdfs_class_uri, 'RDFS Class']]).html_safe %>
 			
 		</div>
 	</div>
@@ -29,10 +29,19 @@
 </div>
 <div class="grid_8">
 	<div class="box">
-		<h2>Properties</h2>
+		<h2>Source Properties</h2>
 		<div class="block">
-			<%# doc = filter_internal_properties(@documents).sort %> 
-			<%#= render :partial => 'record', :locals => {:doc => doc } %>
+		   <table>
+		     <thead>
+		       <tr><th>Name</th><th>Type</th></tr>
+		     </thead>
+		     <% @datasource.source_properties.each do |sp| %>
+		     <tr>
+		       <th><%= sp.label %></th>
+		       <td><%= sp.range_uri %></td>
+		     </tr>
+		     <% end %>
+		   </table>
 		</div>
 	</div>
 </div>

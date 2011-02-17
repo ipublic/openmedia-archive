@@ -74,7 +74,7 @@ class Admin::DatasourcesController < ApplicationController
             @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
                                           :content_type=>data_file.content_type)            
           else
-            @datasource.errors.add(:base, "Please choose a Collection for your new Class")
+            @datasource.errors.add(:base, "Please select an existing Class or choose a Collection to create new Class in")
           end            
         end
       else

@@ -53,12 +53,13 @@ class Admin::DatasourcesController < ApplicationController
 
         if @datasource.rdfs_class_uri.blank?
           @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
+          raise "Invalid collection_uri:#{params[:collection_uri]}" unless @collection.exists?
           @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
           @collection.members << @class.uri
           @collection.save!
           property_names = []
           if has_header_row
-            @datasource.source.skip_lines = 1
+            @datasource.skip_lines = 1
             property_names = data[0]
           else
             1.upto(data[0].size) {|i| property_names << "Column#{i}"}
@@ -67,7 +68,7 @@ class Admin::DatasourcesController < ApplicationController
             @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>name, :range=>RDF::XSD.string)
             @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>name, :range_uri=>RDF::XSD.string.to_s)
           end
-          @class.save!                  
+          @class.save!          
           @datasource.rdfs_class_uri = @class.uri.to_s
         end
         
@@ -149,8 +150,8 @@ class Admin::DatasourcesController < ApplicationController
   end
 
   def new_property
-    @property = OpenMedia::Property.new
-    render :partial=>'property', :locals=>{:base_name=>params[:base_name], :property=>@property}, :layout=>nil
+    @property = OpenMedia::DatasourceProperty.new
+    render :partial=>'datasource_property', :locals=>{:base_name=>'datasource[source_properties][]', :property=>@property}
   end
 
 

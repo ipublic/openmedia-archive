@@ -44,7 +44,11 @@ def create_test_site(data={})
 end
 
 def create_test_collection(data={})
-  @test_collection ||= OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
+  unless @test_collection
+    @test_collection = OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
+    @test_collection.save!
+  end
+  @test_collection
 end
 
 

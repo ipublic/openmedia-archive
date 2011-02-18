@@ -26,7 +26,7 @@ describe Admin::DatasourcesController do
       @site = create_test_site
       @collection = create_test_collection(:site=>@site)
       @class = create_test_rdfs_class
-      1.upto(3) {|i| ds = create_test_datasource(:title=>"Datasource #{i}", :rdfs_class_uri=>@class.uri,
+      1.upto(3) {|i| ds = create_test_datasource(:title=>"Datasource #{i}", :rdfs_class_uri=>@class.uri.to_s,
                                                  :source_properties=>[{:label=>'A', :range_uri=>RDF::XSD.string},
                                                                       {:label=>'B', :range_uri=>RDF::XSD.string},
                                                                       {:label=>'C', :range_uri=>RDF::XSD.string},

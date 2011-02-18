@@ -5,7 +5,7 @@ set :repository,  "git@github.com:ipublic/openmedia.git"
 set :scm, :git
 set :ssh_options, {:forward_agent => true, :keys=>[File.join(ENV["HOME"], ".ssh", "id_dsa")]}
 set :deploy_via, :remote_cache
-set :branch, 'rtf'
+set :branch, 'master'
 set :use_sudo, false
 set :user, 'ipublic'
 set :password, 'I5EvBkW5'

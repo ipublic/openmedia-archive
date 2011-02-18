@@ -49,7 +49,6 @@ class Schema::ClassesController < ApplicationController
           if p
             @class.properties.delete(p)
             p.destroy!
-            puts "deleted #{dp}"
           end
         end
       end

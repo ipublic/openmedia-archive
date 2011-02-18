@@ -1,0 +1,48 @@
+<% title "Datasources" %>
+<div class="grid_8">
+	<p>
+    <%= link_to 'New', new_admin_datasource_path %> |
+    <%= link_to 'Import', new_upload_admin_datasources_path %> |
+    <%= link_to 'Publish', new_admin_datasource_path %>
+  </p>
+  <div class="box">
+    <h2>Browse</h2>
+    <div class="block" id="tables">
+      <table>
+				<thead>
+				  <tr>
+				    <th>Title</th>
+				    <th>Source Type</th>
+				    <th>Parser</th>
+				    <th>Class</th>
+				    <th>Updated</th>
+				  </tr>
+				</thead>
+				<% @datasources.each do |ds| %>
+				<tr>
+				  <td><%= link_to ds.title, admin_datasource_path(ds.id) %></td>
+				  <td><%= ds.source_type.titleize %></td>
+				  <td><%= ds.parser.titleize %></td>
+				  <td><%= link_to ds.rdfs_class.label, schema_collection_class_path(rdf_id(ds.rdfs_class.skos_concept.collection), rdf_id(ds.rdfs_class)) %></td>
+				  <td><%= ds.updated_at.to_s(:full) %></td>
+				</tr>
+				<% end %>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3>
+					<a href="#">Article Heading</a>
+				</h3>
+				<h4>Subheading</h4>
+				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
+				<p>Something here about role of Datasources in system</p>
+			</div>
+			
+	</div>
+	</div>
+</div>

@@ -5,10 +5,9 @@
 	</p>
 	<hr/>
 </div>
-<div class="grid_12">
-	<p>Catalogs provide a way to group published datasets for search and browse</p>
+<div class="grid_8">
 	<div class="box">
-		<h2>Catalogs List</h2>
+		<h2>Browse</h2>
 		<div class="block" id="tables">
 			<table>
 				<thead>
@@ -23,13 +22,22 @@
 					<% @catalogs.each do |catalog| %>
 					  <tr>
 							<td><%= link_to catalog.title, admin_catalog_path(catalog) %></td>
-							<td><%= catalog.datasets.count %></td>
+							<td>FIX</td>
 							<td><%= catalog.metadata['description'] if catalog.metadata %></td>
+
 							<td><%= catalog.updated_at.to_s(:full) %></td>
 					  </tr>
 					<% end %>
 				<% end %>
 			</table>
+		</div>
+	</div>
+</div>
+<div class="grid_4">
+	<div class="box">
+		<h2>What are Catalogs?</h2>
+		<div class="block">
+			<p>Catalogs provide a way to group published datasets for search and browse</p>
 		</div>
 	</div>
 </div>

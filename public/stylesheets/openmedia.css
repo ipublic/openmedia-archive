@@ -1,0 +1,204 @@
+body {
+	background: #e0e0e0; /* light grey */
+}
+
+h4 {
+	font-size: 16px;
+	margin: 0;
+	padding:4px;
+	line-height:1.2em;
+	color: #408dd2;
+}
+
+/* search
+----------------------------------------------- */
+#search {
+	margin-top: -2px;
+}
+
+#search ol {
+	list-style: none;  
+}
+
+#search li {
+	padding: 1em 1em 0 1em;
+  margin: 0;
+	display: inline-block;
+}
+#search li input {
+width: 15em;
+}
+
+#search li input.submit {
+width: 7em;
+}
+
+/* forms
+----------------------------------------------- */
+input, select, textarea {
+	width:60%;
+}
+
+input.submit {
+	width: 5em;
+}
+
+fieldset {
+	position: relative;    
+	border-bottom: 1px dotted #BFBAB0;    
+	margin: 0 0 1.5em 0; 
+/*
+border: 1px solid red;
+*/
+}
+
+fieldset.omega {  
+	border: none;
+}
+
+legend {
+	font-size: 1.6em;
+  padding: 0 2px;
+  font-weight: bold;
+	color: #408dd2;
+/*
+margin-left: 1em;  
+*/
+}
+
+label {
+  display: inline-block;
+  line-height: 1.8;
+  vertical-align: top;
+	float: left;    
+	width: 10em;    
+	margin-right: 1em;    
+	text-align: right;  
+	color: #043a6b;
+	font-size: 1.2em;
+	font-weight: bold;  
+/*
+display: block;  
+*/
+}
+
+fieldset.submit {    
+	float: none;    
+	width: auto;    
+	border-style: none;    
+	margin-left: 13em;
+	background-color: transparent;    
+}
+
+fieldset ol {
+  margin: 0;
+	padding: 1em 1em 0 1em;
+	list-style: none;  
+}
+
+fieldset li {
+	padding-bottom: 1em;  
+  margin: 0;
+}
+
+.two-column li {
+  display: inline-block;
+}
+
+.two-column li label {
+  width: 10em;
+  margin-right: 1em;
+}
+
+.two-column li input {
+  width: 20em;
+  margin-right: 1em;
+}
+
+
+fieldset fieldset {
+  border: none;
+  margin: 3px 0 0 130px;
+	padding: 0;
+	border-style: none;
+	background-color: transparent;      
+	background-image: none;      
+	margin-bottom: -2.5em;      
+/*
+	border: 1px solid green;
+*/
+}
+
+fieldset fieldset legend {
+	margin: 0 0 10px 0;
+  padding: 0 0 5px;
+  font-weight: normal;
+}
+
+fieldset fieldset label {
+  width: auto;
+	float: none;
+}
+
+fieldset fieldset input {
+	margin-left: 0;
+	width: auto;
+	float: none;
+}
+
+fieldset fieldset ol {      
+	position: relative;      
+	top: -1em;
+	margin: 0;
+	padding: 0;
+}
+
+fieldset fieldset li {
+	padding-bottom: .5em;  
+  margin: 0;
+}
+
+em {
+  font-weight: bold;
+  font-style: normal;
+  color: #f00;
+}
+
+
+/* tables
+----------------------------------------------- */
+.property-table {
+	border: none;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.property-table thead th { 
+	font-size:.1.2em;
+	font-style:italic;
+	border-bottom:2px solid #888;
+	border-bottom:2px solid #304269;
+	background:#ddd;
+	padding:.4em 1em .2em;
+}
+
+.property-table th, td {
+	font-size: 1.2em;
+	background: transparent;
+	border: none;
+}
+
+.property-table th {
+	color: #043a6b;
+	padding:.2em 0 .2em 0;
+	text-align: right;
+	width: 40%;
+}
+
+.property-table td {
+	padding:.2em .5em;
+	text-align: left;
+	background: transparent;
+	border: none;
+	word-break: break-all;
+}

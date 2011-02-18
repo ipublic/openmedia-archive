@@ -1,0 +1,21 @@
+<% title "Datasources" %>
+<div class="grid_8">
+  <% if @datasource.has_attachment?('seed_data') %>
+  <div class="box">
+    This datasource has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
+    to import this data.
+  </div>
+  <% end %>
+
+  <h2><%= @datasource.title %></h2>
+  <%= form_for :datasource, :url=>admin_datasource_path(:id=>@datasource.id), :html=>{:method=>:put} do |ds| %>
+  <div class="box">
+    <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+  </div>
+  <p>
+    <%= link_to 'Back',  :back %>
+    <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
+  </p>
+  <% end %>
+
+</div>

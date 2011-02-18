@@ -11,63 +11,70 @@
 		<%= stylesheet_link_tag "960.css", :media => "screen" %>
 		<%= stylesheet_link_tag "layout.css", :media => "screen" %>
 		<%= stylesheet_link_tag "nav.css", :media => "screen" %>
-		<%= stylesheet_link_tag "jquery-ui-1.8.4.custom.css", :media => "screen" %>
+		<%= stylesheet_link_tag "openmedia.css", :media => "screen" %>
+		<%= stylesheet_link_tag "jquery-ui-1.8.9.custom.css", :media => "screen" %>
 
 		<!--[if IE 6]><%= stylesheet_link_tag "css/ie6.css", :media => "screen" %><![endif]-->
 		<!--[if IE 7]><%= stylesheet_link_tag "css/ie.css", :media => "screen" %><![endif]-->
 
-		<%= javascript_include_tag 'jquery-1.4.4.min.js', 'jquery-ui-1.8.4.custom.min.js', 'rails' %>
+		<%= javascript_include_tag 'jquery-1.4.4.min.js', 'jquery-ui-1.8.9.custom.min.js', 'jquery.iframe-post-form.min.js' %>
 		<%= javascript_include_tag :defaults %>		
 		<%= yield(:head) %>
 	</head>
 	<body>
-		<div id="header">
-			<div class="container_12">
-				<div class="grid_12">
-					<ul id="nav-service" class="nav-service">
-						<% if !current_user %>
-						  <li><%= link_to "Register", new_account_path %></li>
-						  <li><%= link_to "Log In", new_user_session_path %></li>
-						<% else %>
-						  <li><%= link_to "Log out", user_session_path, :method => :delete, :confirm => "Are you sure you want to log out?" %></li>
-						  <li><%= link_to current_user.email, account_path %></li>
-						<% end %>	
-					</ul>
-					<%= image_tag "openmedia_logo.png", {:alt => "Civic OpenMedia"} %>
-		  		<%= render :partial => 'admin/search_form' %>
-					<!-- >
-					<h1 id="branding"><%= link_to 'Civic OpenMedia', admin_path %></h1>
-					<--> 
-				</div><!--#grid_12-->
+		<div class="container_12">
+			<div class="grid_12" id="header">
+				<ul id="nav-service" class="nav-service">
+					<% if !current_user %>
+					  <li><%= link_to "Register", new_account_path %></li>
+					  <li><%= link_to "Log In", new_user_session_path %></li>
+					<% else %>
+					  <li><%= link_to "Log out", user_session_path, :method => :delete, 
+								:confirm => "Are you sure you want to log out?" %></li>
+					  <li><%= link_to current_user.email, account_path %></li>
+					<% end %>	
+				</ul>
 				<div class="clear"></div>
-				<div class="grid_12">
-					<ul class="nav main">
-						<li><%= link_to 'Home', admin_path, :title => "" %>
-						<li><%= link_to 'Data content', admin_catalogs_path, :title => "" %>
-							<ul>
-								<li><%= link_to 'Catalogs', admin_catalogs_path, :title => "" %>
-								<li><%= link_to 'Datasets', admin_datasets_path, :title => "" %>
-								<li><%= link_to 'New Dataset', new_admin_dataset_path, :title => "" %>
-							</ul>
-						<li><%= link_to 'Maps', admin_path, :title => "" %>
-						<li><%= link_to 'Dashboard', admin_dashboard_path, :title => "" %>
-						<li><%= link_to 'Community', admin_path, :title => "" %>
-						<li><%= link_to 'Site', admin_site_path, :title => "" %>
-							<ul>
-								<li><%= link_to 'Settings', admin_site_path, :title => "" %>
-								<li><%= link_to 'Organizations', admin_organizations_path, :title => "" %>
-							</ul>
-						<li class="secondary">
-							<%= link_to 'About', '/about', :title => "" %>
-						</li>
-					</ul>
-				</div><!--#grid_12-->
-			</div><!--#container_12-->
-		</div><!--#header-->
-		<div class="clear"></div>
-		<div id="content">
-			<div class="container_12">
-		    <div class="grid_12">
+				<div class="grid_7">
+					<!-- <%= image_tag "openmedia_logo.png", {:alt => "Civic OpenMedia"} %> -->
+					<h1 id="branding"><%= link_to 'Civic OpenMedia', admin_path %></h1>
+				</div>
+				<div class="grid_4 omega">
+		  		<%= render :partial => 'admin/search_form' %>
+				</div>
+				<div class="clear"></div>
+				<ul class="nav main">
+					<li><%= link_to 'Home', admin_path, :title => "" %>
+					<li><%= link_to 'Data', admin_catalogs_path, :title => "" %>
+						<ul>
+							<li><%= link_to 'Catalogs', admin_catalogs_path, :title => "" %>
+							<li><%= link_to 'Datasources', admin_datasources_path, :title => "" %>
+							<li><%= link_to 'Import data', new_upload_admin_datasources_path, :title => "" %>
+							<li><%= link_to 'Publish', new_admin_datasource_path, :title => "" %>
+							<li><%= link_to 'New Datasource (deprecated)', new_admin_datasource_path, :title => "" %>
+						</ul>
+					<li><%= link_to 'Schema', schema_collections_path, :title => "" %>
+					<li><%= link_to 'Maps', admin_path, :title => "" %>
+					<li><%= link_to 'Reports', admin_reports_path, :title => "" %>
+					<li><%= link_to 'Site', admin_site_path, :title => "" %>
+						<ul>
+							<li><%= link_to 'Settings', admin_site_path, :title => "" %>
+							<li><%= link_to 'Organizations', admin_organizations_path, :title => "" %>
+							<li><%= link_to 'Job Schedule', admin_schedules_path, :title => "" %>
+							<li><%= link_to 'Community', admin_path, :title => "" %>	
+						</ul>
+					<li><%= link_to 'Help', '/about', :title => "" %>
+						<ul>
+							<li><%= link_to 'FAQs', '/about', :title => "" %></li>
+							<li><%= link_to 'Wiki', '/about', :title => "" %></li>
+						</ul>
+					</li>
+					<li class="secondary">
+						<%= link_to 'Support', '/support', :title => "" %>
+					</li>
+				</ul>					
+			</div><!--grid_12#header-->
+			<div class="grid_12"id="content">
 		      <% flash.each do |name, msg| %>
 		          <%= content_tag :div, msg, :id => "flash_#{name}" %>
 		      <% end %>
@@ -75,12 +82,11 @@
 				<div class="clear"></div>
 	      <% if content_for?(:title) %>
 		    	<div class="grid_12">
-	          <h2 id="page-heading"><%= h yield(:title) %></h2>
+			  		<h2 id="page-heading"><%= h yield(:title) %></h2> 			  
 					</div>
 					<div class="clear"></div>
 	      <% end %>
 	      <%= yield :layout %>
-				<div class="clear"></div>
 				<div class="grid_12" id="site_info">
 					<div class="box">
 						<p>Data Feed System by <a href="http://www.civicopenmedia.org/">Civic OpenMedia</a>
@@ -89,7 +95,7 @@
 					</div>
 				</div><!--site_info #grid_12-->
 				<div class="clear"></div>
-			</div><!--#container_12-->
-		</div><!--#content-->
+			</div><!--#content-->
+		</div><!--#container_12-->
 	</body>
 </html>

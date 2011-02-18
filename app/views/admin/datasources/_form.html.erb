@@ -1,0 +1,58 @@
+<%= ds.error_messages %>
+<fieldset>
+  <legend><b>Basic Info</b></legend>
+  <p>
+    
+    <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@datasource.new_record? %>
+  </p>
+  <p>
+    <%= ds.label :rdfs_class_uri, 'Class' %><br/>
+    <input class="datasource-class-uri" name="rdfs-class-identifier" size="30" type="text" value="<%= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
+    <%= ds.hidden_field :rdfs_class_uri %>
+  </p>				
+  <%= ds.fields_for :metadata, @datasource.metadata do |m| %>
+  <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
+  <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3, 
+    :value=>@datasource.metadata ? @datasource.metadata.keywords.join(', ') : '' %></p>
+  <p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
+  <% end %>				
+</fieldset>	 	
+
+<fieldset id="source">
+  <legend><b>Source</b></legend>
+  <p>
+    <%= ds.label :source_type %>
+    <%= ds.select :source_type, OpenMedia::Datasource::TYPES.collect {|t| [t.titleize, t]} %>
+  </p>
+
+  <p id="parser">
+    <%= ds.label :parser %>
+    <%= ds.select :parser, OpenMedia::Datasource::PARSERS.collect {|p| [p.titleize, p]} %>
+  </p>
+
+  <p>
+    <%= ds.label :column_separator %>
+    <%= ds.text_field :column_separator %>
+  </p>
+
+  <p>
+    <%= ds.label :skip_lines %>
+    <%= ds.text_field :skip_lines %>
+  </p>
+</fieldset>	 	
+
+<fieldset>
+  <legend><b>Source Properties</b></legend>
+  <ol class="two-column">
+    <% for property in @datasource.source_properties %>
+    <%= render :partial=>'datasource_property', :locals=>{ :property=>property } %>
+    <% end %>
+  </ol>
+  <a href="#" class="add-datasource-property add-element">add property</a>
+</fieldset>
+
+<fieldset class="submit">
+  <ol>
+    <li><%= ds.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+  </ol>
+</fieldset>

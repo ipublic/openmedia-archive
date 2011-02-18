@@ -34,9 +34,9 @@ else
 
   COUCHDB_SERVER = CouchRest.new COUCHDB_CONFIG[:host_path]
 
-  SITE_DATABASE = COUCHDB_SERVER.database("site#{db_suffix}")
-  STAGING_DATABASE = COUCHDB_SERVER.database("staging#{db_suffix}")
-  COMMUNITY_DATABASE = COUCHDB_SERVER.database("community#{db_suffix}")    
-  PUBLIC_DATABASE = COUCHDB_SERVER.database("public#{db_suffix}")
-  
+  SITE_DATABASE = COUCHDB_SERVER.database!("site#{db_suffix}")
+  STAGING_DATABASE = COUCHDB_SERVER.database!("staging#{db_suffix}")
+  TYPES_DATABASE = COUCHDB_SERVER.database!("types#{db_suffix}")
+  COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
+  PUBLIC_DATABASE = COUCHDB_SERVER.database!("public#{db_suffix}")
 end

@@ -1,8 +1,6 @@
-<div class="block" id="search">
-	<%= form_tag admin_datasets_path, :method => 'get' do %>
-	<p>
-		<%= text_field_tag :search, params[:search], :size => 10 %>
-		<%= submit_tag 'Search', :name => nil %>
-	</p>
-	<% end %>
-</div>
+<%= form_tag admin_datasources_path, :method => 'get' do %>
+<ol id="search">
+	<li><%= text_field_tag :search, params[:search] %></li>
+	<li><%= submit_tag 'Search', :name => nil, :class => "submit" %></li>
+</ol>
+<% end %>

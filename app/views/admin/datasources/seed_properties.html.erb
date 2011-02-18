@@ -1,0 +1,10 @@
+<%= form_tag '/admin/datasources/extract_seed_properties', :multipart=>true, :id=>'seed-properties-form' do %>
+  <input type="hidden" name="column_separator" id="seed-column-separator"/>
+  <fieldset>
+  <p>
+    <label>File</label>
+    <input type="file" name="data_file"/>
+  </p>
+  </fieldset>
+
+<% end %>

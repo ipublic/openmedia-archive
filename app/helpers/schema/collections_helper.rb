@@ -1,0 +1,2 @@
+module Schema::CollectionsHelper
+end

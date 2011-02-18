@@ -1,0 +1,33 @@
+<% title "Preview Dataset" %>
+<div class="grid_12" >
+	<p style="float:right;">
+		<%= link_to 'New Dataset', new_admin_datasource_path %>
+	</p>
+	<hr/>
+</div>
+<div class="grid_12">
+	<p>The table below shows the first 10 uploaded records. Click 'Import' if you wish to add the uploaded content to the database.</p>
+	<div class="box">
+		<h2>Uploaded Content</h2>
+		<div class="block" id="tables">
+			<table>
+				<thead>
+				<tr>
+					<% @xtab.column_names.each do |col| %>
+						<th><%= col %></th>
+					<% end %>
+				</tr>
+				</thead>
+				<% unless @xtab.data.nil? %>
+					<% @xtab.data.each do |row| %>
+					  <tr>
+							<% row.attributes.each do |item| %>
+								<td><%= row.get(item) %></td>
+							<% end %>
+					  </tr>
+					<% end %>
+				<% end %>
+			</table>
+		</div>
+	</div>
+</div>

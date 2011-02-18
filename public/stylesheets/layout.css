@@ -5,28 +5,25 @@ Based upon Grey Box Method - Layout CSS
 
 body {
 	background: #eee;
-	background: #D9E8F5;
-	background:#304269;
-	background:#fff;
-	border-top: 5px solid #000;
+	border-top: 3px solid #26537c;
 	color: #333;
-	font-size: 13px;
-	font-size: 12px;
 	padding: 0 0 40px;
+	font-size: 62.5%;
 }
 
 
 /* anchors
 ----------------------------------------------- */
 a {
-	color: #000;
-	color:#304269;
-	font-weight:bold;
+	color:#408dd2;
+/*	
 	text-decoration: none;
+	font-weight:bold;
+*/
 }
 a:hover {
-	color:#333;
-	color:#F26101;
+	color:#a66100;
+	background: #ffb040;
 }
 
 
@@ -60,21 +57,29 @@ h1 a {
   background-repeat: no-repeat;
   background-position: top left;
 	*/
-	margin-top: 15px;
+	margin-top: 10px;
 	margin-bottom: 20px;
+	background: #679fd2;
 }
 
-/*
 h1#branding {
 	font-weight:normal;
-	font-size:2.5em;
+	font-size:3em;
 	text-align:left;
-	padding:.7em 1em;
-	margin-bottom:0;
-	background:#aaa;
-	background:#91bed4;
+	margin-bottom: .25em;
+	background: #679fd2;
 }
-*/
+
+h1#branding a {
+	color:#04376c;
+	text-decoration: none;
+	font-weight:bold;
+}
+
+h1#branding a:hover {
+	background: transparent;
+}
+
 #frontpage .spotlight {
 float: left;
 width: 235px;
@@ -141,17 +146,12 @@ background-position : 0 0;
 /* page heading
 ----------------------------------------------- */
 h2#page-heading {
-	color: #F26101;
-	font-size:1.5em;
+	color: #043a6b;
+	font-size:2em;
 	font-weight:normal;
-	padding:.5em;
+	padding:0 0 .5em .5em;
 	margin:0 0 10px 0;
-	border-bottom:1px solid #ccc;
-}
-
-#search {
-	padding: 15px 10px 0px 10px;
-	float: right;
+	border-bottom:1px solid #d0d0d0;
 }
 
 
@@ -178,8 +178,7 @@ h2#page-heading {
 	font-size:1.2em;
 	font-weight:normal;
 	color:#fff;
-	background:#333;
-	background:#304269;
+	background: #26537c;
 	margin:-10px -10px 0 -10px;
 	padding:6px 12px;
 	
@@ -187,7 +186,6 @@ h2#page-heading {
 	-moz-border-radius-topleft: .5em;
   -webkit-border-top-right-radius: .5em;
   -webkit-border-top-left-radius: .5em;
-  border-radius: 10px;
 /*
 text-transform:uppercase;
 */
@@ -221,6 +219,7 @@ text-transform:uppercase;
 }
 .block {
 	padding-top:10px;
+	overflow: auto;
 }
 div.menu {
 	padding:0;
@@ -354,7 +353,7 @@ ul.section li.current > a.active:hover {
 ----------------------------------------------- */
 table {
 	width:100%;
-	border:1px solid #bbb;
+	border:1px solid #26537c;
 	margin-bottom:10px;
 }
 col.colC {
@@ -367,9 +366,9 @@ th, td {
 thead th { 
 	font-size:.8em;
 	font-style:italic;
-	border-bottom:2px solid #888;
-	border-bottom:2px solid #304269;
-	background:#ddd;
+	border-bottom:2px solid #26537c;
+	background:#bf8430;
+	color: #fff;
 	padding:.4em 1em .2em;
 }
 thead th.table-head {
@@ -383,15 +382,11 @@ thead th.table-head {
 tbody th,
 tbody td {
 	border-top:1px solid #bbb;
-	border-bottom:1px solid #bbb;
-	border-top:1px solid #D9E8F5;
-	border-bottom:1px solid #D9E8F5;
-	background:#eee;
 	background:#fff;	
 }
 tbody tr.odd th,
 tbody tr.odd td {
-	background:#fff;
+	background:#eee;
 }
 tfoot th,
 tfoot td {
@@ -410,11 +405,10 @@ td.currency {
 	text-align:right;
 }
 
-
 /* forms
 ----------------------------------------------- */
 
-form {
+/*form {
 	overflow:hidden;
 }
 
@@ -439,7 +433,7 @@ form p.notice {
 	font-weight:bold;
 }
 
-/* ------ */
+*//* ------ */
 /*form, form ul, form li, fieldset, textarea {
 	margin: 0;
 	padding: 0;
@@ -508,7 +502,7 @@ fieldset input {
 */
 /* ------ */
 
-fieldset p label {
+/*fieldset p label {
 	width:98%;
 }
 fieldset p input {
@@ -517,6 +511,8 @@ fieldset p input {
 fieldset p select {
 	width:99%;
 }
+*/
+
 fieldset.login p {
 	margin-bottom:1em;
 	margin-top:0pt;
@@ -627,8 +623,7 @@ margin-left: 95px;
 ----------------------------------------------- */
 #site_info .box {
 	color:#ccc;
-	background:#666;
-	background:#304269;
+	background:#26537c;
 	margin-bottom:10px;
 }
 #site_info a {
@@ -726,4 +721,11 @@ margin-left: 95px;
 }
 #kwick .four {
 	background: #999;
+}
+.import-ds-fields {
+    height: 75px;
+    padding: 10px;
+}
+div#flash_notice {
+    color: green;
 }

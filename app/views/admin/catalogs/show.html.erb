@@ -1,4 +1,4 @@
-<% title "Catalogs" %>
+<% title "Catalog: " + @catalog.title  %>
 <div class="grid_12" >
 	<p style="float:right;">
 		<%= link_to "List all", admin_catalogs_path %> | 
@@ -9,7 +9,13 @@
 		</p>
 	<hr />
 </div>
-<div class="grid_5">
+<div class="grid_8">
+	<!--<div class="box" id="tables">
+		<h2>Datasets</h2>
+		<div class="block">
+			< render :partial => 'admin/datasets/list_datasets', :locals => {:datasets => @catalog.datasets } >
+		</div>
+	</div>-->
 	<div class="box">
 		<h2><%= @catalog.title %> Data Catalog</h2>
 		<div class="block">
@@ -19,11 +25,11 @@
 	</div>
 </div>
 
-<div class="grid_7">
+<!--<div class="grid_4">
 	<div class="box" id="tables">
 		<h2>Datasets</h2>
 		<div class="block">
-			<%= render :partial => 'admin/datasets/list_datasets', :locals => {:datasets => @catalog.datasets } %>
+			< render :partial => 'admin/datasets/list_datasets', :locals => {:datasets => @catalog.datasets } >
 		</div>
 	</div>
-</div>
+</div>-->

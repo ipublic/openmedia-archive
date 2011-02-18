@@ -1,0 +1,15 @@
+<table>
+	<thead>
+		<tr>
+			<th>Property</th>
+			<th>Value</th>
+		</tr>
+	</thead>
+	<% doc.each do |pv_pair| %>
+		<tr>
+			<td><%= pv_pair[0] %></td>
+			<td><%= pv_pair[1] %></td>
+		</tr>
+	<% end %>
+</table>
+<p >< Previous | Next ></p>

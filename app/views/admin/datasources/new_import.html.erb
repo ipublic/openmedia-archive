@@ -1,0 +1,56 @@
+<% title "New Dataset" %>
+<div class="grid_4">
+	<div class="box">
+		<h2>Steps</h2>
+		<div class="block">
+			<ol>
+				<li>Define Dataset</li>
+				<li>Upload content</li>
+				<b><li>Import content</li></b>
+			</ol>
+		</div>
+	</div>
+	
+	<div class="box">
+		<h2>About</h2>
+		<div class="block">
+			<p>Review uploaded content.</p>  
+			<p>Verify datasource properties and values are correct.  If not, click your web browser's Back button and change upload settings.</p>
+			<ol>
+				<li>Unique ID property: is one of the properties a unique key for this datasource?  If you don't specify a Unique ID, OpenMedia will generate one for you, but future record updates and linking between datasources may be more difficult.</li>
+				<li>Previous|Next: use these links to browse records.</li>
+				<li>Import: click button to create Staging database records for uploaded datasource values.</li>
+			</ol>
+		</div>
+	</div>
+	
+	<div class="box">
+		<h2>Tools</h2>
+		<div class="block">
+			<ul>
+				<li>Add Property</li>
+				<li>Identify Address properties</li>
+				<li>Identify Coordinate properties</li>
+				<li>Import content</li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+<div class="grid_8">
+	<div class="box">
+		<h2>Uploaded Content</h2>
+		<div class="block">
+			<div class="box">
+				<h5>Datasource title: <%= @datasource.title %></h5>
+				<%= form_for :datasource, :url => import_admin_datasource_path(@datasource.identifier), :html=>{:method=>:put} do |f| %>
+				  <p><%= f.label :unique_id_property, "Unique ID property:" %><b/> 
+				    <%= f.select(:unique_id_property, @property_options, {:prompt => '-OpenMedia Generated-'}) %>
+				  </p>
+				  <%= render :partial => 'record', :object=>@record %>
+				  <p><%= submit_tag 'Import' %></p>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-describe OpenMedia::Dataset do
+describe OpenMedia::Metadata do
 
   before(:each) do
-    @metadata = OpenMedia::Metadata.new
+    @metadata = OpenMedia::Metadata.new(:keywords=>'one,two,three')
   end
   
   it 'should accept keywords as a comma-separated string' do
-    @metadata.keywords="one, two, three"
     @metadata.keywords.size.should == 3
   end
 

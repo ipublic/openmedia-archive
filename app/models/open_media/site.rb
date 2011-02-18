@@ -1,9 +1,10 @@
-class OpenMedia::Site < CouchRest::Model::Base
+require 'open_media/no_site_defined'
 
-  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, PUBLIC_DATABASE.name, COMMUNITY_DATABASE.name]
+class OpenMedia::Site < CouchRest::Model::Base
+  
+  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
-  unique_id :identifier
   
   ## Property Definitions
   # General properties
@@ -21,7 +22,7 @@ class OpenMedia::Site < CouchRest::Model::Base
   # Location properties
   property :gnis, OpenMedia::Gnis # e.g.; 584282 for Ellicott City, MD
   
-  property :site_domain_name
+  property :site_domain_name, :default => "example.gov"
   property :site_proxy_prefix
   property :site_canonical_url, :default => "http://localhost"
   property :site_organization_id
@@ -35,18 +36,43 @@ class OpenMedia::Site < CouchRest::Model::Base
   timestamps!
 
   ## Validations
-  validates_presence_of :url
+  validates_presence_of :url, :identifier
 
-  ## Callbacks
-  before_save :generate_identifier
-  
   ## CouchDB Views
   # singleton class - no views
+  
+  def self.instance
+    @instance ||= self.first
+    if @instance.nil?
+      raise OpenMedia::NoSiteDefined.new
+    else
+      @instance
+    end
+  end
+
+  def url=(url)
+    self['url'] = url
+    generate_identifier
+  end
+
+  def skos_collection
+    collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")
+    unless collection.exists?
+      collection.label = "SKOS Concept Collection for #{self.url} OpenMedia site"
+      collection.save!
+    end
+    collection
+  end
 
 private
   def generate_identifier
     if !url.blank?
-      self['identifier'] = url.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+      if self.url =~ /^https?:\/\/(.*)$/
+        self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
+      else
+        self['idenfitier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
+        self.url = "http://#{self.url}"
+      end
     end
   end
   

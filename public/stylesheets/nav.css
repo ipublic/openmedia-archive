@@ -94,8 +94,10 @@ ul.nav li.current:hover ul li a:active {color:#666; background:#fff;}
 /* navigation (vertical subnavigation)
 ----------------------------------------------- */
 ul.nav {
-  background:#666;
-	background:#304269;
+	position:relative;
+	top:0;
+  background:#26537c;
+	border-top: 2px solid #d0d0d0;
 }
 ul.main li {
   position:relative;
@@ -114,8 +116,7 @@ ul.main li a {
 	line-height:2em;
 	border:0;
 	color:#fff;
-	background:#666;
-	background:#304269;
+	background:#26537c;
 /*
 height:2.5em;
 line-height:2.5em;
@@ -131,6 +132,7 @@ ul.main li ul li a {
   color:#fff;
   border-top:1px solid #444;
   background:#444;
+	background: #408dd2;
 /*
 line-height:3em;
 height:3em;
@@ -140,14 +142,19 @@ ul.main li a:focus {color:#fff; background:#666;}
 ul.main li ul li a:hover {
   color:#fff;
   background:#555;
+
 }
 ul.main li:hover a {
   color:#fff;
   background:#555;
-	background:#F26101;
+	background:#0c5daf;
 }
 ul.main li:hover ul li a {color:#fff;}
-ul.main li:hover ul li a:hover {color:#fff; background:#444;}
+ul.main li:hover ul li a:hover {
+	color:#fff; 
+	background:#444;
+	background: #408dd2;
+}
 ul.main li:hover a:active {background:#444;}
 ul.main li:hover ul li a:active {color:#fff; background:#222;}
 
@@ -184,14 +191,13 @@ ul.nav li.secondary span.status span {
 }
 ul.nav li.secondary:hover a {
 	color:#fff;
-	background:#666;
-	background:#304269;
+	background:#0c5daf;
 }
 ul.nav li.secondary:hover a:hover {
 	background:#555;
-	background:#F26101;
+	background:#408dd2;
 }
-ul.nav li.secondary:hover a:active {background:#444;}
+ul.nav li.secondary:hover a:active {background:#408dd2;}
 
 /* services nav
 ----------------------------------------------- */
@@ -217,9 +223,10 @@ ul.nav-service li {
 }
 
 ul.nav-service a {
-	border-right:1px solid #bfc0c0;
+	border-right:1px solid #d0d0d0;
 	display:block;
-	font-size:10px;
+	color: white;
+	font-size:1.2em;
 	line-height:100%;
 	margin:0;padding:0 6px;
 	text-decoration:none;
@@ -237,6 +244,14 @@ ul.nav-service a {
 	text-decoration:underline;
 }
 
-.nav-service a,#footer-wrap a{color:#808080;text-decoration:none;}
-ul.nav-service a:hover{color:#333;text-decoration:underline;}
+.nav-service a,#footer-wrap a{
+	color:#808080;
+	text-decoration:none;
+}
+
+ul.nav-service a:hover{
+	color:#ffc773;
+	text-decoration:underline;
+	background: transparent;
+}
 .nav-service .invite a{color:#006567;}

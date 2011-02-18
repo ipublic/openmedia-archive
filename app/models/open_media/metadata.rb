@@ -44,9 +44,8 @@ class OpenMedia::Metadata < Hash
   property :license, :alias => :rights
 
   def keywords=(keywords)
-    write_attribute('keywords', (keywords.is_a?(Array) ? keywords : keywords.split(',')))
+    write_attribute('keywords', (keywords.is_a?(Array) ? keywords : keywords.split(',').collect{|w| w.strip}))
   end
-
 
   ## Validations
 #  validates_presence_of :creator_organization_id

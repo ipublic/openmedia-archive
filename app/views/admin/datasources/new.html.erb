@@ -1,0 +1,12 @@
+<% title "New Dataset" %>
+<div class="grid_8">
+  <div class="box">
+    <h2>New Dataset</h2>
+    <%= form_for :datasource, :url=>admin_datasources_path do |ds| %>
+
+    <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+
+    <% end %>
+  </div>
+</div>
+

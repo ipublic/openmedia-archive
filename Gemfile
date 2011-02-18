@@ -1,9 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.3'
-gem 'couchrest_model', '1.0.0.beta8', :git => 'git://github.com/couchrest/couchrest_model.git'
+gem 'rails', '3.0.4'
+gem 'couchrest_model', :git => 'git://github.com/couchrest/couchrest_model.git', :ref=>'83b70ec0808d'
 gem 'dynamic_form'
-gem 'ruport'
+gem 'fastercsv'
+gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
+gem 'linkeddata'
+gem 'spira'
 
 group :test, :development do
   gem "rspec-rails", '2.1.0'

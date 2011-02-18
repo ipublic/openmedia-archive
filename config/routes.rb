@@ -1,4 +1,5 @@
 Openmedia::Application.routes.draw do
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -54,20 +55,46 @@ Openmedia::Application.routes.draw do
 
   match '/admin' => 'admin/home#index', :as => :admin
   match '/about' => 'admin/home#about', :as => :about
+  match '/support' => 'admin/home#support', :as => :support
 
   namespace :admin do
     resource :site
+    resource :community
     resource :dashboard
-    resources :datasets do
+    resource :schema
+    
+    resources :datasources do
       collection do
+        get :new_property
+        get :new_upload
         post :upload
       end
+
+      member do
+        get :import_seed_data
+      end
     end
+    
     resources :catalogs
-    resource :community
-    resource :site    
+    resources :properties
     resources :settings
+    resources :reports
     resources :organizations    
+    resources :contacts
+    resources :schedules
+    resources :data_types
+  end
+
+  namespace :schema do
+    resources :collections do
+      resources :classes
+    end
+    resources :classes do
+      collection do
+        get :new_property
+        get :autocomplete
+      end
+    end
   end
 
   resource :account, :to=>"users"

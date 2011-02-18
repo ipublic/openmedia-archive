@@ -12,13 +12,8 @@ class OpenMedia::Catalog < CouchRest::Model::Base
   property :identifier
   property :metadata, OpenMedia::Metadata
 
-  collection_of :datasets, :class_name=>'OpenMedia::Dataset'  
-  
   validates :title, :presence=>true, :uniqueness => true
   validates_presence_of :metadata
-
-
-  
   
   timestamps!
   
@@ -37,22 +32,16 @@ class OpenMedia::Catalog < CouchRest::Model::Base
 	   });        
          }
       }"
+  
 
   def publisher_organization_name
     result = Organization.get(self.metadata['publisher_organization_id']).name
-  end
+  end  
 
 private
-  # Catalog database defaults to 'staging'
-  # def assign_database
-  #   catalog_types = %w(staging public community)
-  #   db_name = catalog_types.include?(self.catalog_type) ? self.catalog_type : 'staging'
-  #   use_database db_name.to_sym
-  # end
   
   def generate_identifier
     self['identifier'] = self.class.name.demodulize.downcase + '_' + title.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
-  end
-  
+  end  
   
 end

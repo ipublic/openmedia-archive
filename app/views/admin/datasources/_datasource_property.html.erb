@@ -1,0 +1,19 @@
+<li class="datasource-property">
+  <ol>
+    <li class="two-column-left">
+      <label>Label</label>
+      <input name="datasource[source_properties][][label]" type="text" value="<%= property.label %>"/>
+    </li>
+    <li class="two-column-right">
+      <%= label_tag "datasource[source_properties][]#{property.label}_range_name", 'Type' %>
+      <%= text_field_tag "datasource[source_properties][]#{property.label}_range_name", property.range_uri ? (property.range.fragment || property.range.path.split('/').last) : nil,
+	  :class=>'property-range-uri' %>
+      <input type="hidden" name="datasource[source_properties][][range_uri]" value="<%= property.range.to_s %>"/>
+    </li>
+    <li>
+      <%= label_tag "datasource[source_properties][]#{property.label}_comment", 'Comment' %>
+      <textarea name="datasource[source_properties][][comment]" rows="2" cols="20"><%= property.comment %></textarea>
+      <a href="#" class="delete-datasource-property delete-element" alt="Delete">Delete Property</a>
+    </li>
+  </ol>
+</li>

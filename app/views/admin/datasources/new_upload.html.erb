@@ -1,0 +1,77 @@
+<% title "Import Data" %>
+
+<div class="grid_8 upload">
+  <%= form_for :datasource, :url=>upload_admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
+  <div class="box">
+    <h2>Source and Destination</h2>
+    <div class="block">
+      <%= ds.error_messages %>
+      <div id="accordion">
+	<h3><a href="#">File Source</a></h3>
+	<div>
+	  <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::FILE_TYPE %>
+	  <p><label>File</label>  <%= file_field_tag :data_file %></p>
+	  <div class="radio">
+	    <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
+	    <%= radio_button_tag('file_type', 'Shapefile') %> <%= label_tag 'file_type_Shapefile', 'Shapefile' %>
+	    <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
+	    <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
+	  </div>
+	  <div id="csv-fields" class="import-ds-fields">
+	    <%= ds.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
+	    <p><%= ds.label :column_separator %> <%= ds.text_field :column_separator %></p>
+	    <p><%= check_box_tag :has_header_row %> Has Header Row?
+	  </div>
+	  <div id="shapefile-fields" class="import-ds-fields" style="display: none">
+	    Shapefile fields
+	  </div>
+	  <div id="xml-fields" class="import-ds-fields" style="display: none">
+	    XML fields
+	  </div>
+	  <div id="fixed-fields" class="import-ds-fields" style="display: none">
+	    Fixed fields
+	  </div>
+	</div>
+	<h3><a href="#">Database Source</a></h3>
+	<div><p>Database connection properties</div>
+      </div>
+      <br/><hr/>
+      <h4>Destination</h4>
+      <div class="radio">
+	<input type="radio" id="new-ds-btn" name="radio" checked="checked" /><label for="new-ds-btn">New Datasource</label>
+	<input type="radio" id="existing-ds-btn" name="radio" /><label for="existing-ds-btn">Existing Datasource</label>
+      </div>
+      <br/><br/>
+      <div id="new-ds-fields" class="import-ds-fields">
+	<p>
+	<p><%= ds.label :title %><br/><%= ds.text_field :title %></p>
+	  <label for="datasource-class">RDFS Class</label><input type="text" name="datasource-class" class="datasource-class"/>
+	  <%= ds.hidden_field :rdfs_class_uri %>
+	  <br/>OR Create New Class in Collection:
+	  <select name="collection_uri">
+	    <%= options_for_select OpenMedia::Site.instance.skos_collection.sub_collections.collect {|c| [c.label, c.uri]} %>
+	  </select>
+
+	</p>				
+      </div>
+      <div id="existing-ds-fields" style="display: none" class="import-ds-fields">
+	<label>Datasource</label><br/>  <%= select_tag :datasource_id, options_from_collection_for_select(@datasources, :id, :title), :disabled=>'disabled' %>
+      </div>
+    </div>
+    <p>
+      <%= link_to 'Back',  :back %>
+      <%= ds.submit "Import", :class => "buttonSubmit", :style => "float: right;"%><br/>
+    </p>
+    <% end %>
+  </div>
+</div>
+
+
+<div class="grid_4 omega">
+  <div class="box">
+    <h2>About Datasources</h2>
+    <div class="block">
+      <p></p>
+    </div>
+  </div>
+</div>

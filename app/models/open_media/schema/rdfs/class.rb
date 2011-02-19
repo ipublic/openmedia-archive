@@ -2,7 +2,7 @@ OpenMedia::Schema::RDF::Property   # this is here to make Rails autoloading and 
 
 class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
   
-  default_source :types
+  default_source 'types'
   base_uri "http://data.civicopenmedia.org/"
   type RDFS.Class
 
@@ -19,7 +19,7 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
       'by_name' => {
         'map' => "function(doc) {
                       if (doc['subject'] && doc['predicate'] && doc['object'] &&
-                          doc['predicate'] == '<#{RDF.type}>' && (doc['object'] == '<#{RDFS.Class}>' || doc['object'] == '<#{RDFS.Datatype}>')) {
+                          doc['predicate'] == '<#{RDF.type}>' && (doc['object'] == '<#{RDFS.Class}>' || doc['object'] == '<#{RDFS.Datatype}>' || doc['object'] == '<#{OWL.Class}>')) {
                           var typeName = doc['subject'].substring(1, doc['subject'].length - 1);
                           if (typeName.indexOf('#') != -1) {
                             typeName = typeName.split('#')[1];
@@ -47,12 +47,31 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
       cls.default_source(repo)
       cls.type(self.uri)
       self.properties.each do |p|
-        cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>p.range)
+        if Spira.types[p.range]
+          ptype = p.range
+        else
+          ptype = class_for_uri(p.range).spira_resource.name.to_sym
+        end
+        cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>ptype)                  
       end
       self.class.const_set(cls_name, cls)
     end
     self.class.const_get(cls_name)
   end
+
+  # this method finds either an OpenMedia::Schema::RDFS::Class or an OpenMedia::Schema::OWL::Class
+  # for the given uri, or raises a TypeError
+  def class_for_uri(uri)
+    statements = self.class.repository.query(:subject=>uri, :predicate=>RDF.type)
+    type_statement = statements.detect {|s| s.object==RDFS.Class || s.object==OWL.Class}
+    if type_statement
+      type_type = type_statement.subject==RDFS.Class ? OpenMedia::Schema::RDFS::Class : OpenMedia::Schema::OWL::Class
+      type_type.for(uri)
+    else
+      raise TypeError, "Cannot find RDFS or OWL class in types repository for #{uri}"
+    end
+  end
+
 
   def instance_count
     repo = Spira.repository(self.skos_concept.collection.repository)

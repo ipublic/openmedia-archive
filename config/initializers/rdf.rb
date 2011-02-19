@@ -2,6 +2,9 @@ require 'linkeddata'
 require 'rdf/couchdb'
 require 'spira'
 
+# Define vocabularies not built-in
+RDF::OM_CORE = RDF::Vocabulary.new('http://data.civicopenmedia.org/core#')
+
 module Spira
  def settings
     $SPIRA_SETTINGS ||= {}
@@ -28,5 +31,5 @@ module Spira
 end
 
 TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
-Spira.add_repository! :types, TYPES_RDF_REPOSITORY
+Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
 OpenMedia::Schema::RDFS::Class.refresh_design_doc

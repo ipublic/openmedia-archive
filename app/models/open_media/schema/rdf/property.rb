@@ -1,6 +1,6 @@
 class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
   
-  default_source :types
+  default_source 'types'
   base_uri "http://data.civicopenmedia.org/"
   type RDF.Property
 

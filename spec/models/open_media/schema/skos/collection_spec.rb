@@ -85,7 +85,7 @@ describe OpenMedia::Schema::SKOS::Collection do
     end
     
     it "should register the RDF::CouchDB::Repository for the collection's classes with spira" do
-      @sub_collection.repository.should == :"#{@site.identifier}_#{@sub_collection.identifier}"
+      @sub_collection.repository.should == "#{@site.identifier}_#{@sub_collection.identifier}"
       Spira.repository(@sub_collection.repository).instance_variable_get("@database").name.should == "#{@site.identifier}_#{@sub_collection.identifier}"
     end
   end

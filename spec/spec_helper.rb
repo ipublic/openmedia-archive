@@ -67,6 +67,20 @@ def create_test_rdfs_class(data={})
   c
 end
 
+def create_test_owl_class(data={})
+  object_properties = data.delete(:object_properties)
+  collection = create_test_collection
+  c = OpenMedia::Schema::OWL::Class.create_in_site!(create_test_site, {:label=>'Reported Crimes', :comment=>'crime reports, etc'}.merge(data))
+  if object_properties
+    for p in object_properties
+      c.object_properties << OpenMedia::Schema::OWL::ObjectProperty.create_in_class!(c, p)
+    end
+    c.save!
+  end
+  c
+end
+
+
 def create_test_catalog(data={})
   OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
 end
@@ -103,3 +117,4 @@ def spec_rdf_id(resource, cgi_escape = false)
 end
 
 require 'open_media/schema/base_spec'
+

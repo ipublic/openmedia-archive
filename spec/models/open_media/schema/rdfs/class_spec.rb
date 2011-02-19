@@ -19,8 +19,9 @@ describe OpenMedia::Schema::RDFS::Class do
     TYPES_RDF_REPOSITORY.query(:subject=>@rdfs_class.uri, :predicate=>RDF.type, :object=>RDF::SKOS.Concept).size.should == 1
   end
 
-  it 'should have list of properties' do
-    prop1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>RDF::XSD.string)
+  it 'should have list of properties, including properties of with type of other classes' do
+    rdfs_class2 = create_test_rdfs_class(:label=>'Test Class 2')
+    prop1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>rdfs_class2.uri)
     prop2 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 2', :range=>RDF::XSD.string)
     @rdfs_class.properties = [prop1, prop2]
     @rdfs_class.save!
@@ -46,7 +47,7 @@ describe OpenMedia::Schema::RDFS::Class do
   # end  
 
   it 'should have class method for searching classes and datatypes' do
-    OpenMedia::Schema::RDFS::Class.prefix_search('test').size.should == 1
+    OpenMedia::Schema::RDFS::Class.prefix_search('test').size.should == 2
     OpenMedia::Schema::RDFS::Class.prefix_search('test').first.should be_instance_of(RDF::URI)
   end
 

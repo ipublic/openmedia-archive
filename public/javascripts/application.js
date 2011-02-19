@@ -2,6 +2,38 @@
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
 
+	$( "#create-class" ).button()
+		.click(function() {
+			$( "#dialog-new-class-form" ).dialog( "open" );
+	});
+	
+	$( "#dialog-new-class-form" ).dialog({
+		autoOpen: false,
+		height: 300,
+		width: 350,
+		modal: true,
+		buttons: {
+			"Save": function() {
+				var bValid = true;
+				allFields.removeClass( "ui-state-error" );
+
+				// bValid = bValid && checkLength( name, "username", 3, 16 );
+				// bValid = bValid && checkLength( email, "email", 6, 80 );
+				// bValid = bValid && checkLength( password, "password", 5, 16 );
+
+				if ( bValid ) {
+					$( this ).dialog( "close" );
+				}
+			},
+			Back: function() {
+				$( this ).dialog( "close" );
+			}
+		},
+		close: function() {
+			allFields.val( "" ).removeClass( "ui-state-error" );
+		}
+	});
+
 	$('th button').button({
 	  icons: {primary: "ui-icon-triangle-1-s"},
 	  text: false
@@ -18,7 +50,7 @@ $(function() {
 
 	$('p.date input').datepicker();
 
-	$("#accordion" ).accordion({ autoHeight: false });
+	$(".accordion" ).accordion({ autoHeight: true });
 	$('.accordion .head').click(function() {
 		$(this).next().toggle('slow');
 		return false;

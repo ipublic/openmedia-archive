@@ -47,7 +47,6 @@ private
 
   def convert_hidden
     params[:collection][:hidden] = (params[:collection][:hidden] && params[:collection][:hidden] == '1') ? true : false
-    puts "after convert, params=#{params.inspect}"    
   end
 
 

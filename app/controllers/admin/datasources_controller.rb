@@ -69,10 +69,7 @@ class Admin::DatasourcesController < ApplicationController
             end
             @class.save!          
             @datasource.rdfs_class_uri = @class.uri.to_s
-            data_file.rewind        
-            @datasource.save        
-            @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
-                                          :content_type=>data_file.content_type)            
+          
           else
             @datasource.errors.add(:base, "Please select an existing Class or choose a Collection to create new Class in")
           end            
@@ -80,12 +77,21 @@ class Admin::DatasourcesController < ApplicationController
       else
         @datasource.errors.add(:base, "Please select a file")
       end
-      if @datasource.errors.size == 0 && @datasource.valid?
-        redirect_to edit_admin_datasource_path(@datasource)
-      else
-        @datasources = OpenMedia::Datasource.all        
-        render :action=>'new_upload'
+
+      if @datasource.errors.size == 0
+        if data_file
+          data_file.rewind        
+          @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
+                                        :content_type=>data_file.content_type)            
+        end
+        if @datasource.save
+          redirect_to edit_admin_datasource_path(@datasource)
+        else
+          @datasources = OpenMedia::Datasource.all        
+          render :action=>'new_upload'
+        end
       end
+      
     else
       raise 'datasource_id or datasource parameters are required'
     end

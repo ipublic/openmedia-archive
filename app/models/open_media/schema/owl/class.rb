@@ -9,58 +9,34 @@ class OpenMedia::Schema::OWL::Class < OpenMedia::Schema::RDFS::Class
     c    
   end
 
-  # def datatype_properties
-  #   unless @datatype_properties
-  #     if self.uri
-  #       query = RDF::Query.new(:property=>{RDF.type => OWL.DatatypeProperty, RDFS.domain => self.uri})
-  #       @datatype_properties = query.execute(self.class.repository).collect do |solution|
-  #         OpenMedia::Schema::OWL::DatatypeProperty.for(solution[:property])
-  #       end
-  #     else
-  #       @datatypeproperty = []
-  #     end
-  #   end
-  #   @datatype_properties
-  # end
-  
   def datatype_properties
-    if self.uri
-      query = RDF::Query.new(:property=>{RDF.type => OWL.DatatypeProperty, RDFS.domain => self.uri})
-      query.execute(self.class.repository).collect do |solution|
-        OpenMedia::Schema::OWL::DatatypeProperty.for(solution[:property])
+    unless @datatype_properties
+      if self.uri
+        query = RDF::Query.new(:property=>{RDF.type => OWL.DatatypeProperty, RDFS.domain => self.uri})
+        @datatype_properties = query.execute(self.class.repository).collect do |solution|
+          OpenMedia::Schema::OWL::DatatypeProperty.for(solution[:property])
+        end
+      else
+        @datatypeproperty = []
       end
-    else
-      []
     end
+    @datatype_properties
   end
-
-
-
-  # def object_properties
-  #   unless @object_properties
-  #     if self.uri
-  #       query = RDF::Query.new(:property=>{RDF.type => OWL.ObjectProperty, RDFS.domain => self.uri})
-  #       @object_properties = query.execute(self.class.repository).collect do |solution|
-  #         OpenMedia::Schema::OWL::ObjectProperty.for(solution[:property])
-  #       end
-  #     else
-  #       @object_properties = []
-  #     end
-  #   end
-  #   @object_properties
-  # end  
 
   def object_properties
-    if self.uri
-      query = RDF::Query.new(:property=>{RDF.type => OWL.ObjectProperty, RDFS.domain => self.uri})
-      query.execute(self.class.repository).collect do |solution|
-        OpenMedia::Schema::OWL::ObjectProperty.for(solution[:property])
+    unless @object_properties
+      if self.uri
+        query = RDF::Query.new(:property=>{RDF.type => OWL.ObjectProperty, RDFS.domain => self.uri})
+        @object_properties = query.execute(self.class.repository).collect do |solution|
+          OpenMedia::Schema::OWL::ObjectProperty.for(solution[:property])
+        end
+      else
+        @object_properties = []
       end
-    else
-      []
     end
-  end
-  
+    @object_properties
+  end  
+ 
   # define a new Spira resource, subclassed from OpenMedia::Schema::Base
   def spira_resource
     cls_name = spira_class_name
@@ -94,7 +70,6 @@ class OpenMedia::Schema::OWL::Class < OpenMedia::Schema::RDFS::Class
     end
     self.class.const_get(cls_name)
   end
-
 end
 
 

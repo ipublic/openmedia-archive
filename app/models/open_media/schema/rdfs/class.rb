@@ -1,7 +1,7 @@
 OpenMedia::Schema::RDF::Property   # this is here to make Rails autoloading and Spira play nice together
 
 class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
-  
+
   default_source 'types'
   base_uri "http://data.civicopenmedia.org/"
   type RDFS.Class
@@ -165,9 +165,15 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
     return false if orig.nil? or repl.nil?
     (orig['map'].to_s.strip == repl['map'].to_s.strip) && (orig['reduce'].to_s.strip == repl['reduce'].to_s.strip)
   end
-  
 
+  # convenience methods for working with spira resource
+  def new(data={})
+    self.spira_resource.new(data)
+  end
 
+  def for(uri, data={})
+    self.spira_resource.for(uri, data)
+  end  
 end
 
 

@@ -39,6 +39,24 @@ input, select, textarea {
 	width:60%;
 }
 
+.accordion ol {
+/*background: green;
+*/}
+
+.accordion ol li label {
+  width: 7em;
+  margin-right: 1em;
+}
+
+.radio {
+	padding: 0em 0 1em 0;
+}
+
+#csv-fields, #new-ds-fields, #existing-ds-fields li {
+  padding-bottom: 1em;  
+  margin-left: -1em;
+}
+
 input.submit {
 	width: 5em;
 }
@@ -154,7 +172,7 @@ fieldset fieldset ol {
 }
 
 fieldset fieldset li {
-	padding-bottom: .5em;  
+	padding-bottom: .5em;
   margin: 0;
 }
 

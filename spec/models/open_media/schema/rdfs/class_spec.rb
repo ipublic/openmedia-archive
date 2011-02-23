@@ -39,6 +39,12 @@ describe OpenMedia::Schema::RDFS::Class do
     @rdfs_class.skos_concept.uri.should == @rdfs_class.uri
   end
 
+  it 'should delegate new and for methods to spira_resource for creating and finding instances' do
+    @rdfs_class.new(:property_2=>['Chief']).should be_instance_of(@rdfs_class.spira_resource)
+    @rdfs_class.for('http://foo.bar', :property_2=>['Yeah']).should be_instance_of(@rdfs_class.spira_resource)      
+  end
+  
+
   # it_should_behave_like OpenMedia::Schema::Base do
   #   let(:base) { @rdfs_class }
   # end  

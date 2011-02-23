@@ -39,7 +39,7 @@ describe OpenMedia::Schema::OWL::Class do
     @owl_class.spira_resource.should == OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgTestgovClassesTest_class
     @owl_class.spira_resource.should_not be_nil
     @owl_class.spira_resource.repository.should be_instance_of(RDF::CouchDB::Repository)
-  end
+  end  
 
   it_should_behave_like OpenMedia::Schema::Base do
     let(:base) { @owl_class }
@@ -80,10 +80,10 @@ describe OpenMedia::Schema::OWL::Class do
     end
 
     it 'should be able to store and retrieve vcards' do
-      dan_name = @name_class.spira_resource.new(:given_name=>['Dan'], :family_name=>['Thomas']).save!
-      dan = @vcard_class.spira_resource.for("http://data.civicopenmedia.org/ipublicorg/dthomas", {:n=>[dan_name]}).save!
+      dan_name = @name_class.new(:given_name=>['Dan'], :family_name=>['Thomas']).save!
+      dan = @vcard_class.for("http://data.civicopenmedia.org/ipublicorg/dthomas", {:n=>[dan_name]}).save!
 
-      dan2 = @vcard_class.spira_resource.for("http://data.civicopenmedia.org/ipublicorg/dthomas")
+      dan2 = @vcard_class.for("http://data.civicopenmedia.org/ipublicorg/dthomas")
       dan2.n.size.should == 1
       dan2.n.first.given_name.first.should == 'Dan'
     end

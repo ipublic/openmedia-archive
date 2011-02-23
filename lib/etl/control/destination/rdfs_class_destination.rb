@@ -53,7 +53,7 @@ module ETL #:nodoc:
           # Use the rdfs class's dynamic spira resource to create the rdf statements, but
           # bulk save them to repository manually
           uri = @rdfs_class.uri/"##{Digest::SHA2.hexdigest(row.to_s)}-#{ts}"
-          r = @rdfs_class.spira_resource.for(uri, row)
+          r = @rdfs_class.for(uri, row)
           r.before_save
           r.before_create          
           r.statements.to_a          

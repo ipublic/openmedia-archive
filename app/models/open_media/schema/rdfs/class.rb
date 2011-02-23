@@ -8,7 +8,6 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
 
   property :label, :predicate=>RDFS.label, :type=>XSD.string
   property :comment, :predicate=>RDFS.comment, :type=>XSD.string
-  has_many :properties, :predicate=>RDF.Property, :type=>:'OpenMedia::Schema::RDF::Property'
 
   RDFS_CLASS_DESIGN_DOC_ID = "_design/rdfs_class"
 
@@ -34,23 +33,56 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
     }
   }
 
+  def properties
+    # unless @properties
+    #   if self.uri
+    #     @properties = self.class.repository.query(:predicate=>RDFS.domain, :object=>self.uri).collect do |stmt|
+    #       OpenMedia::Schema::RDF::Property.for(stmt.subject)
+    #     end
+    #   else
+    #     @properties = []
+    #   end
+    # end
+    # @properties
+
+    self.uri ? self.class.repository.query(:predicate=>RDFS.domain,
+                                           :object=>self.uri).collect {|stmt| OpenMedia::Schema::RDF::Property.for(stmt.subject)} : []
+
+
+  end
+
   def skos_concept
     @skos_concept ||= OpenMedia::Schema::SKOS::Concept.for(self.uri)
   end
 
+  def spira_class_name
+    self.uri.to_s.split(/\W/).collect{|w| w.capitalize}.join
+  end
+
   # define a new Spira resource, subclassed from OpenMedia::Schema::Base
   def spira_resource
-    cls_name = self.uri.path.split('/').collect{|p| p.classify}.join
+    cls_name = spira_class_name
     if !self.class.const_defined?(cls_name)
       cls = Class.new(OpenMedia::Schema::Base)
       repo = self.skos_concept.collection.repository
       cls.default_source(repo)
       cls.type(self.uri)
       self.properties.each do |p|
-        if Spira.types[p.range]
-          ptype = p.range
-        else
-          ptype = class_for_uri(p.range).spira_resource.name.to_sym
+        next if p.range==self.uri        
+        ptype = nil
+        if p.range
+          if Spira.types[p.range]
+            ptype = p.range
+          else
+            pclass = class_for_uri(p.range)
+            if pclass.is_a?(OpenMedia::Schema::RDFS::Datatype)
+              ptype = pclass.uri
+            elsif pclass.is_a?(::Class) && pclass.name =~ /OpenMedia::Schema/
+              ptype = pclass.name.to_sym
+            else
+              ptype = pclass.spira_resource.name.to_sym
+            end            
+          end
         end
         cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>ptype)                  
       end
@@ -62,16 +94,25 @@ class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
   # this method finds either an OpenMedia::Schema::RDFS::Class or an OpenMedia::Schema::OWL::Class
   # for the given uri, or raises a TypeError
   def class_for_uri(uri)
-    statements = self.class.repository.query(:subject=>uri, :predicate=>RDF.type)
-    type_statement = statements.detect {|s| s.object==RDFS.Class || s.object==OWL.Class}
-    if type_statement
-      type_type = type_statement.subject==RDFS.Class ? OpenMedia::Schema::RDFS::Class : OpenMedia::Schema::OWL::Class
-      type_type.for(uri)
+    case uri
+    when RDFS.Class then OpenMedia::Schema::RDFS::Class
+    when RDFS.Datatype then OpenMedia::Schema::RDFS::Datatype
+    when OWL.Class then OpenMedia::Schema::OWL::Class
     else
-      raise TypeError, "Cannot find RDFS or OWL class in types repository for #{uri}"
+      statements = self.class.repository.query(:subject=>uri, :predicate=>RDF.type)
+      type_statement = statements.detect {|s| s.object==RDFS.Class || s.object==OWL.Class || s.object==RDFS.Datatype}
+      if type_statement
+        type_type = case type_statement.object
+                    when RDFS.Class then OpenMedia::Schema::RDFS::Class
+                    when OWL.Class then OpenMedia::Schema::OWL::Class
+                    when RDFS.Datatype then OpenMedia::Schema::RDFS::Datatype
+                    end
+        type_type.for(uri)        
+      else
+        raise TypeError, "Cannot find RDFS or OWL class in types repository for #{uri}"
+      end
     end
   end
-
 
   def instance_count
     repo = Spira.repository(self.skos_concept.collection.repository)

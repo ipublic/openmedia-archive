@@ -11,17 +11,25 @@ class OpenMedia::Schema::RDF::Property < OpenMedia::Schema::Base
 
   validate :check_required_fields
   
-  def self.create_in_class!(rdfs_class, data)
-    identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
-    p = self.for(rdfs_class.uri/"##{identifier}", data.merge(:domain=>rdfs_class))
+  def self.create_in_class!(rdfs_class, data, uri=nil)
+    unless uri
+      identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
+      uri = rdfs_class.uri/"##{identifier}"
+    end
+    p = self.for(uri, data.merge(:domain=>rdfs_class))
     p.save!
     p
   end
 
   def identifier
-    self.uri.fragment if self.uri
+    if self.uri
+      if self.uri.fragment
+        self.uri.fragment.gsub(/[^a-z0-9]/,'_')
+      else
+        self.uri.path.split('/').last.gsub(/[^a-z0-9]/,'_')
+      end
+    end
   end
-
 
   def check_required_fields
     assert(!self.label.blank?, :label, 'Label cannot be blank')

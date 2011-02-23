@@ -23,16 +23,13 @@ describe OpenMedia::Schema::RDFS::Class do
     rdfs_class2 = create_test_rdfs_class(:label=>'Test Class 2')
     prop1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>rdfs_class2.uri)
     prop2 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 2', :range=>RDF::XSD.string)
-    @rdfs_class.properties = [prop1, prop2]
-    @rdfs_class.save!
-    @rdfs_class.reload
     @rdfs_class.properties.size.should == 2
     @rdfs_class.properties.each{|p| p.should be_instance_of(OpenMedia::Schema::RDF::Property)}
   end
 
   it 'should be able to build a spira resource to manage instances of the class' do
     @rdfs_class.spira_resource.properties.keys.collect{|k| k.to_s}.sort.should == %w(created modified property_1 property_2)    
-    @rdfs_class.spira_resource.should == OpenMedia::Schema::RDFS::Class.const_get('TestgovClassTestClas')
+    @rdfs_class.spira_resource.should == OpenMedia::Schema::RDFS::Class::HttpDataCivicopenmediaOrgTestgovClassesTest_class
     @rdfs_class.spira_resource.should_not be_nil
     @rdfs_class.spira_resource.repository.should be_instance_of(RDF::CouchDB::Repository)
   end

@@ -3,9 +3,12 @@ class OpenMedia::Schema::OWL::DatatypeProperty < OpenMedia::Schema::RDF::Propert
 
   property :domain, :predicate=>RDFS.domain, :type=>:'OpenMedia::Schema::OWL::Class'  
 
-  def self.create_in_class!(rdfs_class, data)
-    identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
-    p = self.for(rdfs_class.uri/"##{identifier}", data.merge(:domain=>rdfs_class))
+  def self.create_in_class!(owl_class, data, uri=nil)
+    unless uri
+      identifier = data[:label].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_')
+      uri = owl_class.uri/"##{identifier}"
+    end
+    p = self.for(uri, data.merge(:domain=>owl_class))
     p.save!
     p
   end  

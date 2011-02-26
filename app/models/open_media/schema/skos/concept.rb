@@ -2,7 +2,6 @@ class OpenMedia::Schema::SKOS::Concept
   include Spira::Resource
   
   default_source 'types'
-  base_uri "http://data.civicopenmedia.org/"
   type SKOS.Concept
 
   def rdfs_class

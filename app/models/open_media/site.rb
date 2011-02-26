@@ -64,6 +64,16 @@ class OpenMedia::Site < CouchRest::Model::Base
     collection
   end
 
+  def metadata_repository
+    db_name = "#{self.identifier}_metadata"
+    unless Spira.repository(db_name)
+      db = COUCHDB_SERVER.database!("#{db_name}")
+      Spira.add_repository! db_name, RDF::CouchDB::Repository.new(:database=>db)
+    end
+    db_name    
+  end
+
+
 private
   def generate_identifier
     if !url.blank?

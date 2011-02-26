@@ -1,0 +1,28 @@
+<% title "Contacts" %>
+<div class="grid_12" >
+  <p style="float:right;">
+    <%= link_to 'Edit', edit_admin_vcard_path(@vcard) %> |
+    <%= link_to 'Add another', new_admin_vcard_path %> |
+    <%= link_to 'List all', admin_vcards_path %> | 
+    <%= link_to 'Delete', admin_vcard_path(@vcard), :confirm => 'Are you sure?', :method => :delete %>
+  </p>
+  <hr/>
+</div>
+<div class="grid_3">
+  <div class="box">
+    <h2>Contact</h2>
+    <div class="block">
+      <h5><%= vcard_formatted_name(@vcard) %></h5>
+      <% unless @vcard.website_url.blank? %>
+      <p><b>Homepage:</b> <br/><%= link_to h(@vcard.website_url), @vcard.website_url %></p>
+      <% end %>
+      <p><b>Note:</b> <br/><%=h @vcard.note %></p>
+      <h5>Addresses</h5>
+      <%= render(:partial => 'admin/addresses/show', :collection => @vcard.addresses) %>
+      <hr/>
+      <h5>Contacts</h5>
+      <%= render(:partial => 'admin/contacts/show', :collection => @vcard.contacts) %>
+    </div>
+  </div>
+</div>
+<%#= render :partial => 'admin/content_documents/list_content_documents', :locals => {:content_documents => @vcard.get_creator_content_documents } %>

@@ -27,6 +27,12 @@ describe OpenMedia::Site do
     @site.skos_collection.uri.should === RDF::URI.new('http://data.civicopenmedia.org/somesitecom/concepts')
   end
 
+  describe 'metadata repository' do
+    it 'should return its metadata rdf repo (and create couch db if necessary)' do
+      @site.metadata_repository.should == "#{@site.identifier}_metadata"
+    end
+  end
+
   describe 'instance singleton method' do
     it 'should return first instance in couchdb' do
       @site.save!

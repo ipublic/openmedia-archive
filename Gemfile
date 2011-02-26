@@ -9,7 +9,7 @@ gem 'linkeddata'
 gem 'spira'
 
 group :test, :development do
-  gem "rspec-rails", '2.1.0'
+  gem "rspec-rails"
   gem 'autotest'
   gem 'autotest-rails'
 end

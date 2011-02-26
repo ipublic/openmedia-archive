@@ -1,0 +1,28 @@
+<% title "Contacts" %>
+<div class="grid_12">
+  <p style="float:right"><%= link_to 'New Contact', new_admin_vcard_path %> </p>
+  <hr />
+</div>
+<div class="grid_12">
+  <div class="box">
+    <h2>Contacts List</h2>
+    <div class="block" id="tables">
+      <table>
+	<thead>
+	  <tr>
+	    <th>Last Name</th>
+	    <th>First Name</th>
+	    <th>Organization</th>
+	  </tr>
+	</thead>
+	<% @vcards.each do |vcard| %>
+	<tr>
+	  <td><%= link_to vcard.n.first.family_name.first, admin_vcard_path(rdf_id(vcard)) %></td>
+	  <td><%= link_to vcard.n.first.given_name.first, admin_vcard_path(rdf_id(vcard)) %></td>
+	  <td><%= vcard.org.first ? vcard.org.first.organization_name.first : '' %></td>
+	</tr>
+	<% end %>
+      </table>
+    </div>
+  </div>
+</div>

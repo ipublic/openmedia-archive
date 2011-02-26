@@ -3,7 +3,6 @@ OpenMedia::Schema::RDF::Property   # this is here to make Rails autoloading and 
 class OpenMedia::Schema::RDFS::Class < OpenMedia::Schema::Base
 
   default_source 'types'
-  base_uri "http://data.civicopenmedia.org/"
   type RDFS.Class
 
   property :label, :predicate=>RDFS.label, :type=>XSD.string

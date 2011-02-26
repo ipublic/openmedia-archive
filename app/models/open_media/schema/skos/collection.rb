@@ -1,7 +1,6 @@
 class OpenMedia::Schema::SKOS::Collection < OpenMedia::Schema::Base
   
   default_source 'types'
-  base_uri "http://data.civicopenmedia.org/"
   type SKOS.Collection  
 
   property :label, :predicate=>SKOS.prefLabel, :type=>XSD.string

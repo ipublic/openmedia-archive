@@ -3,6 +3,8 @@ require 'open_media/schema/types'
 class OpenMedia::Schema::Base
   include Spira::Resource
 
+  base_uri "http://data.civicopenmedia.org/"  
+
   property :created, :predicate=>DC.created, :type=>XSD.dateTime
   property :modified, :predicate=>DC.modified, :type=>XSD.dateTime
 

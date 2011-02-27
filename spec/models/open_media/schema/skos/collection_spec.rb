@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'open_media/schema/skos/collection'
 
 describe OpenMedia::Schema::SKOS::Collection do
   before(:all) do

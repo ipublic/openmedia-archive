@@ -1,5 +1,3 @@
-require 'open_media/schema/types'
-
 class OpenMedia::Schema::Base
   include Spira::Resource
 

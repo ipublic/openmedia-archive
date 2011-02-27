@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'open_media/schema/owl/class'
 
 describe OpenMedia::Schema::OWL::Class do
 

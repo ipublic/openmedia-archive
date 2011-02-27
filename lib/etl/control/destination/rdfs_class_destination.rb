@@ -1,4 +1,5 @@
 require 'digest/sha2'
+require 'open_media/schema/rdfs/class'
 
 module ETL #:nodoc:
   module Control #:nodoc:

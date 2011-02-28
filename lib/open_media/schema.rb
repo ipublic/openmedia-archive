@@ -3,7 +3,8 @@ require 'spira/resource'
 require 'spira/types'
 
 # Define vocabularies not built-in
-RDF::OM_CORE = RDF::Vocabulary.new('http://data.civicopenmedia.org/core/')
+RDF::OM_DATA = RDF::Vocabulary.new('http://data.civicopenmedia.org/')
+RDF::OM_CORE = RDF::Vocabulary.new(RDF::OM_DATA['core/'])
 RDF::VCARD = RDF::Vocabulary.new(RDF::OM_CORE['vcard/'])
 
 require 'open_media/schema/types'

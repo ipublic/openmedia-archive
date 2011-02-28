@@ -14,5 +14,14 @@ class OpenMedia::Schema::Base
     self.modified=Time.now
   end
 
+  def identifier
+    if self.uri
+      if self.uri.fragment
+        self.uri.fragment.gsub(/[^a-z0-9]/,'_')
+      else
+        self.uri.path.split('/').last.downcase.gsub(/[^a-z0-9]/,'_')
+      end
+    end
+  end
 
 end

@@ -1,6 +1,8 @@
 require 'open_media/no_site_defined'
 
 class OpenMedia::Site < CouchRest::Model::Base
+
+  after_create :initialize_vcard
   
   DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
@@ -85,6 +87,11 @@ private
       end
     end
   end
+
+  def initialize_vcard
+    OpenMedia::Schema.configure_vcard
+  end
+
   
 
 end

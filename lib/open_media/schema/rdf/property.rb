@@ -23,16 +23,6 @@ module OpenMedia
           p
         end
 
-        def identifier
-          if self.uri
-            if self.uri.fragment
-              self.uri.fragment.gsub(/[^a-z0-9]/,'_')
-            else
-              self.uri.path.split('/').last.gsub(/[^a-z0-9]/,'_')
-            end
-          end
-        end
-
         def check_required_fields
           assert(!self.label.blank?, :label, 'Label cannot be blank')
           assert(!self.range.blank?, :range, 'Range cannot be blank')

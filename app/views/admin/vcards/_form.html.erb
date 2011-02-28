@@ -3,7 +3,7 @@
                :html => {:method=>@vcard.exists? ? :put : :post } do |vc| %>
   <div class="grid_12">
     <div class="box">
-      <h2><%= @vcard.exists? ? vcard_formatted_name(@vcard) : "New Contact" %></h2>
+      <h2><%= @vcard.exists? ? vcard_label(@vcard) : "New Contact" %></h2>
       <div class="block">
 	<%= vc.error_messages %>
 	<%= vc.fields_for :n, @vcard.n do |n| %>
@@ -36,6 +36,7 @@
 	    <li><%= a.label 'City' %> <%= a.text_field :locality %></li>
 	    <li><%= a.label 'State' %> <%= a.text_field :region %></li>
 	    <li><%= a.label 'ZIP' %> <%= a.text_field :postal_code %></li>	    
+	    <li><%= a.hidden_field :country_name, :value=>'United States' %></li>
 	    <% end %>
 
 	  </ol>

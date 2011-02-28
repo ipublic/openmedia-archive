@@ -1,21 +1,38 @@
-<% title "Contact #{vcard_formatted_name(@vcard)}" %>
+<% title "Contact #{vcard_label(@vcard)}" %>
 
 <div class="grid_12" >
   <p style="float: right">
     <%= link_to "Browse", admin_vcards_path %> | 
-    <%= link_to "Edit", edit_admin_vcard_path(rdf_id(@vcard)) %> |
-    <%= link_to 'Delete', admin_vcard_path(rdf_id(@vcard)), 
-	:confirm => "Are you sure you want to delete this contact: #{vcard_formatted_name(@vcard)}?", 
-        :method => :delete %>
+    <%= link_to "Edit", edit_admin_vcard_path(rdf_id(@vcard)) %>
   </p>
   <hr />
 </div>
 
 <div class="grid_12" >
   <div class="box">
-    <h2><%= vcard_formatted_name(@vcard) %></h2>
+    <h2><%= vcard_label(@vcard) %></h2>
     <div class="block">
-      <%= show_fields(@vcard, [:prefix, :given_name, :extended_name, :family_name]).html_safe %>
+      <%= show_fields(@vcard.n, [[:honorific_prefix, 'Prefix'], [:given_name, 'First Name'], 
+	                         [:extended_name, 'Middle Name'], [:family_name, 'Last Name'],
+	                         [:honorific_suffix, 'Suffix']]) %>
+      <% if @vcard.org %>
+      <%= show_fields(@vcard.org, [[:organization_name, 'Organization Name']]) %>
+      <% end %>
+
+
+      <%= show_fields(@vcard, [:title, :role]) %>
+
+      <% if @vcard.tel %>
+      <table class='property-table'>
+	<tr><th class='property-table'>Phone:</th> <td><%= @vcard.tel.value %></td></tr>
+      </table>
+      <% end %>
+
+      <% if @vcard.adr %>
+      <%= show_fields(@vcard.adr, [[:street_address, 'Street 1'], [:extended_address, 'Street 2'],
+                                   [:locality, 'City'], [:region, 'State'], [:postal_code, 'ZIP'], [:country_name, 'Country']]) %>
+      <% end %>
+
     </div>
   </div>
 </div>

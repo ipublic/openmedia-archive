@@ -39,6 +39,7 @@ module ApplicationHelper
       end
     end
     res += "</table>"
+    res.html_safe
   end
 
   def show_field (object, field_name, field_label=field_name.to_s.humanize)

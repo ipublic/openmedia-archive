@@ -43,6 +43,8 @@ end
 
 def create_test_site(data={})
   @test_site ||= OpenMedia::Site.create!(:url=>'http://test.gov')
+  COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
+  @test_site
 end
 
 def create_test_collection(data={})

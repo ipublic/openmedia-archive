@@ -7,6 +7,7 @@ gem 'fastercsv'
 gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 gem 'linkeddata'
 gem 'spira'
+gem 'uuid'
 
 group :test, :development do
   gem "rspec-rails"

@@ -3,4 +3,8 @@ module Admin::VcardsHelper
     'formatted name'
   end
 
+  def type_options
+    [['Work', RDF::VCARD.Work]]
+  end
+
 end

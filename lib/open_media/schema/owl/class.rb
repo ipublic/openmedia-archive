@@ -65,8 +65,7 @@ module OpenMedia
                     end
                   end
                 end
-                # Every property is an array at the moment....
-                cls.has_many(p.identifier.to_sym, :predicate=>p.uri, :type=>ptype)
+                cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>ptype)
               end
             end
             self.class.const_set(cls_name, cls)

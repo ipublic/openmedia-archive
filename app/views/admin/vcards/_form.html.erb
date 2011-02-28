@@ -1,38 +1,56 @@
 <div id="forms">
-  <%= form_for :vcard, :url=>admin_vcards_path do |f| %>
-  <div class="grid_6">
-    <div class="box">
-      <h2><%= vcard_formatted_name(@vcard) || "New Organization" %></h2>
-      <div class="block">
-	<%= f.error_messages %>
-	<fieldset>
-	  <p><%= f.label :name %> <%= f.text_field :name %></p>
-	  <p><%= f.label :abbreviation, 'Organization abbreviation' %> <%= f.text_field :abbreviation %></p>
-	  <p><%#= f.label :phone %> <%#= f.text_field :phone %></p>
-	  <p><%= f.label :email %> <%= f.text_field :email %></p>
-	  <p><%= f.label :website_url, 'Website URL'  %> <%= f.text_field :website_url %></p>
-	  <p><%= f.label :note %><br/> <%= f.text_area :note, :rows => 3 %></p>
-	</fieldset>
-	<%#= render @vcard.address  %>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid_6">
-    <div class="box">
-      <h2>Contacts</h2>
-      <div class="block" id="forms">
-	<fieldset>
-	  <%= render @vcard.contacts %>
-	</fieldset>
-      </div>
-    </div>
-  </div>
+  <%= form_for :vcard, :url=>@vcard.exists? ? admin_vcard_path(rdf_id(@vcard)) : admin_vcards_path,
+               :html => {:method=>@vcard.exists? ? :put : :post } do |vc| %>
   <div class="grid_12">
-    <p>
-      <%= link_to 'Back', :back %>
-      <%= f.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-    </p>
+    <div class="box">
+      <h2><%= @vcard.exists? ? vcard_formatted_name(@vcard) : "New Contact" %></h2>
+      <div class="block">
+	<%= vc.error_messages %>
+	<%= vc.fields_for :n, @vcard.n do |n| %>
+	<fieldset>
+	  <ol>	
+	    <li><%= n.label 'Prefix' %> <%= n.text_field :honorific_prefix %></li>
+	    <li><%= n.label 'First Name' %> <%= n.text_field :given_name %></li>
+	    <li><%= n.label 'Middle Name' %> <%= n.text_field :additional_name %></li>
+	    <li><%= n.label 'Last Name' %> <%= n.text_field :family_name %></li>
+	    <li><%= n.label 'Suffix' %> <%= n.text_field :honorific_suffix %></li>	
+	    <%= vc.fields_for :org, @vcard.org do |org| %>
+	    <li><%= org.label 'Organization' %> <%= org.text_field :organization_name %></li>
+	    <% end %>
+	    <li><%= vc.label 'Title' %> <%= vc.text_field :role %></li>	
+	    <li><%= vc.label 'Role' %> <%= vc.text_field :role %></li>	
+
+	    <%= vc.fields_for :tel, @vcard.tel do |t| %>
+	    <li><%= t.label 'Phone' %> <%= t.text_field :value %></li>
+	    <li><%= t.hidden_field :type, :value=>RDF::VCARD.Work.to_s %></li>
+	    <% end %>
+
+	    <%= vc.fields_for :email, @vcard.email do |e| %>
+	    <li><%= e.label 'Email' %> <%= e.text_field :value %></li>
+	    <%= e.hidden_field :type, :value=>RDF::VCARD.Work.to_s %>
+	    <% end %>
+
+	    <%= vc.fields_for :adr, @vcard.adr do |a| %>
+	    <li><%= a.label 'Street 1' %> <%= a.text_field :street_address %></li>
+	    <li><%= a.label 'Street 2' %> <%= a.text_field :extended_address %></li>
+	    <li><%= a.label 'City' %> <%= a.text_field :locality %></li>
+	    <li><%= a.label 'State' %> <%= a.text_field :region %></li>
+	    <li><%= a.label 'ZIP' %> <%= a.text_field :postal_code %></li>	    
+	    <% end %>
+
+	  </ol>
+	</fieldset>
+	<% end %>
+
+
+
+	<fieldset class="submit">
+	  <ol>
+	    <li><%= vc.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+	  </ol>
+	</fieldset>
+      </div>
+    </div>
   </div>
-  <% end %>	
+  <% end %>
 </div>

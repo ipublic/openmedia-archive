@@ -17,9 +17,9 @@
 	</thead>
 	<% @vcards.each do |vcard| %>
 	<tr>
-	  <td><%= link_to vcard.n.first.family_name.first, admin_vcard_path(rdf_id(vcard)) %></td>
-	  <td><%= link_to vcard.n.first.given_name.first, admin_vcard_path(rdf_id(vcard)) %></td>
-	  <td><%= vcard.org.first ? vcard.org.first.organization_name.first : '' %></td>
+	  <td><%= link_to vcard.n.family_name, admin_vcard_path(rdf_id(vcard)) %></td>
+	  <td><%= link_to vcard.n.given_name, admin_vcard_path(rdf_id(vcard)) %></td>
+	  <td><%= vcard.org ? vcard.org.organization_name : '' %></td>
 	</tr>
 	<% end %>
       </table>

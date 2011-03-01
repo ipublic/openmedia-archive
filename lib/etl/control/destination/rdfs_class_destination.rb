@@ -38,6 +38,23 @@ module ETL #:nodoc:
         raise ControlError, "RDFS Class required" unless @rdfs_class_uri
         @rdfs_class = OpenMedia::Schema::RDFS::Class.for(@rdfs_class_uri)
         raise ControlError, "Class #{@rdfs_class_uri} not found in schema" unless @rdfs_class.exists?
+
+        # Create/Retrieve the metadata for this batch
+        @datasource = ETL::Engine.import.datasource
+        metadata_model = OpenMedia::Schema::RDFS::Class.for(RDF::METADATA.Metadata).spira_resource
+        metadata_model.default_source(OpenMedia::Site.instance.metadata_repository)
+
+        metadata_attributes = {
+          :creator=>@datasource.creator_uri,
+          :publisher=>@datasource.publisher_uri,
+          :language=>'en-US',
+          :conformsTo=>@rdfs_class_uri,
+          :title=>@rdfs_class.label,
+          :description=>@rdfs_class.comment,
+          :type=>RDF::DCTYPE.Dataset,          
+        }
+        
+        
       end
       
       # Flush the currently buffered data
@@ -59,7 +76,7 @@ module ETL #:nodoc:
           r.before_create          
           r.statements.to_a          
         end
-        repo = @rdfs_class.spira_resource.repository
+        repo = @rdfs_class.skos_concept.collection.repository
         # fancy way to flatten array, since flattening array of RDF::Statement caused statements to break
         rdf_statements = rdf_statements.inject([]) {|ary, stmts| ary.concat(stmts)}
         repo.insert_statements(rdf_statements)

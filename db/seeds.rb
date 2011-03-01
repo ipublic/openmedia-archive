@@ -17,6 +17,6 @@ OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.string).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
 
 # TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
-
+require File.join(File.dirname(__FILE__),'seeds', 'metadata')
 require File.join(File.dirname(__FILE__),'seeds', 'vcard')
 TYPES_RDF_REPOSITORY.refresh_design_doc   # just in case

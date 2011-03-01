@@ -28,13 +28,17 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   property :metadata, OpenMedia::Metadata
   property :unique_id_property
   property :rdfs_class_uri
+  property :creator_uri
+  property :publisher_uri  
 
   timestamps!
   
   validates :title, :presence=>true
   validates :rdfs_class_uri, :presence=>true
   validates :source_type, :presence=>true
-  validates :parser, :presence=>true    
+  validates :parser, :presence=>true
+  validates :creator_uri, :presence=>true
+  validates :publisher_uri, :presence=>true  
   validate :dataset_validation
 
   # Do prefix search on all datasets in memory (TODO: revisit this when it gets too slow)
@@ -45,6 +49,16 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   def rdfs_class    
     OpenMedia::Schema::RDFS::Class.for(self.rdfs_class_uri)
   end
+
+  def publisher
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.publisher_uri)
+  end
+
+  def creator
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.creator_uri)
+  end
+
+
 
   
   def import!(opts={})

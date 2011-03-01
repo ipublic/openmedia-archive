@@ -22,6 +22,6 @@ class OpenMedia::Schema::Base
         self.uri.path.split('/').last.downcase.gsub(/[^a-z0-9]/,'_')
       end
     end
-  end
+  end  
 
 end

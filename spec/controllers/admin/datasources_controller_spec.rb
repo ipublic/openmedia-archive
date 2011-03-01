@@ -6,7 +6,8 @@ describe Admin::DatasourcesController do
   
   before(:all) do
     create_test_csv
-    reset_test_db!    
+    reset_test_db!
+    seed_test_db!
   end
   
   after(:all) do
@@ -27,6 +28,8 @@ describe Admin::DatasourcesController do
       @collection = create_test_collection(:site=>@site)
       @class = create_test_rdfs_class
       1.upto(3) {|i| ds = create_test_datasource(:title=>"Datasource #{i}", :rdfs_class_uri=>@class.uri.to_s,
+                                                 :publisher_uri => RDF::URI.new('http://foo.bar/publisher'),
+                                                 :creator_uri => RDF::URI.new('http://foo.bar/creator'),                                                 
                                                  :source_properties=>[{:label=>'A', :range_uri=>RDF::XSD.string},
                                                                       {:label=>'B', :range_uri=>RDF::XSD.string},
                                                                       {:label=>'C', :range_uri=>RDF::XSD.string},

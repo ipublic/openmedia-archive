@@ -73,6 +73,17 @@
 				<label for="datasource-class">Class</label> <input type="text" name="datasource-class" class="datasource-class"/>
 				<%= ds.hidden_field :rdfs_class_uri %>
 			</div></li>
+			<li>
+			  <label for="datasource-creator">Creator</label> 
+			  <%= ds.select :creator_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			</li>
+			<li>
+			  <label for="datasource-publisher">Publisher</label> 
+			  <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			</li>
+
+
+
 		</ol>
 	</fieldset>
 	<fieldset class="submit">

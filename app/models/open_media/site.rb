@@ -89,7 +89,7 @@ private
   end
 
   def initialize_vcard
-    OpenMedia::Schema.configure_vcard
+    OpenMedia::Schema::VCard.configure_vcard
   end
 
   

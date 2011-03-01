@@ -95,11 +95,9 @@ $(function() {
 				mustMatch: true,
 				source: "/schema/classes/autocomplete",
 				select: function(event, ui) {
-				    console.log($(event.target));
-				    console.log($(event.target).next('input'));
-
 				    $(event.target).next('input').val(ui.item.id);
 				}};
+
 
     $('a.add-class-property').live('click', function() {
 	var link = this;
@@ -139,7 +137,7 @@ $(function() {
     // basic button styling
     $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
     $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
-
+    
     $('.property-type-uri').autocomplete(typeAutoCompleteOpts);
     $('.property-range-uri').autocomplete(typeAutoCompleteOpts);
     $('.datasource-class-uri').autocomplete(typeAutoCompleteOpts);

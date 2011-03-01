@@ -16,6 +16,7 @@ class Admin::DatasourcesController < ApplicationController
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
     @datasource.metadata = OpenMedia::Metadata.new
     @datasources = OpenMedia::Datasource.all
+    @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
   end
   
   def new
@@ -87,7 +88,8 @@ class Admin::DatasourcesController < ApplicationController
         if @datasource.save
           redirect_to edit_admin_datasource_path(@datasource)
         else
-          @datasources = OpenMedia::Datasource.all        
+          @datasources = OpenMedia::Datasource.all
+          @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a          
           render :action=>'new_upload'
         end
       end
@@ -133,7 +135,8 @@ class Admin::DatasourcesController < ApplicationController
   end
      
   def edit
-    @datasource = OpenMedia::Datasource.get(params[:id])    
+    @datasource = OpenMedia::Datasource.get(params[:id])
+    @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a    
     if @datasource.nil?
       flash[:error] = 'Datasource not found.'
       redirect_to(admin_datasources_url)
@@ -151,7 +154,10 @@ class Admin::DatasourcesController < ApplicationController
         format.html { redirect_to(admin_datasources_path) }
         format.xml  { head :ok }    
       else
-        format.html { render :action => "edit" }
+        format.html do
+          @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a                  
+          render :action => "edit"
+        end
         format.xml  { render :xml => @datasource.errors, :status => :unprocessable_entity }
       end
     end      

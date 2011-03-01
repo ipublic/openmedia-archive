@@ -2,7 +2,6 @@
 <fieldset>
   <legend><b>Basic Info</b></legend>
   <p>
-    
     <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@datasource.new_record? %>
   </p>
   <p>
@@ -14,6 +13,17 @@
   <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
   <p><%= m.label :keywords, 'Keywords (separated by commas)' %><br/> <%= m.text_area :keywords, :rows => 3, 
     :value=>@datasource.metadata ? @datasource.metadata.keywords.join(', ') : '' %></p>
+
+  <p>
+    <label for="datasource-creator">Creator</label> 
+    <%= ds.select :creator_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+  </p>
+
+  <p>
+    <label for="datasource-publisher">Publisher</label> 
+    <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+  </p>
+
   <p class="date"><%= m.label :last_updated %> <%= m.text_field :last_updated %></p>
   <% end %>				
 </fieldset>	 	

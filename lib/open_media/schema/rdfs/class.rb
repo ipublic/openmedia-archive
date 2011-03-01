@@ -53,8 +53,6 @@ module OpenMedia
           cls_name = spira_class_name
           if !self.class.const_defined?(cls_name)
             cls = ::Class.new(OpenMedia::Schema::Base)
-            repo = self.skos_concept.collection.repository
-            cls.default_source(repo)
             cls.type(self.uri)
             self.properties.each do |p|
               next if p.range==self.uri        

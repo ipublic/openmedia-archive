@@ -1,4 +1,5 @@
 class Admin::VcardsController < ApplicationController
+
   before_filter :load_vcard
   #before_filter :convert_params, :only => [:create, :update]
 
@@ -84,6 +85,13 @@ class Admin::VcardsController < ApplicationController
 
   end
 
+  def autocomplete
+    startkey = params[:term].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
+    @uris = OpenMedia::Schema::VCard.prefix_search(startkey)
+    render :json=>@uris.collect{|u| {:id=>u.to_s, :label=>u.to_s, :value=>(u.fragment || u.path.split('/').last)} }    
+  end
+  
+
 private
   def vcard_model
     vcard = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource
@@ -140,6 +148,6 @@ private
 
   def load_vcard
     @vcard = vcard_model.for(params[:id]) if params[:id]
-  end
+  end  
 
 end

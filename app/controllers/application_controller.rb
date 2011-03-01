@@ -23,8 +23,6 @@ class ApplicationController < ActionController::Base
       raise "Could not convert #{resource.inspect} to an RDF::URI"
     end
   end
-  
-  
 
 private  
   def no_site_defined

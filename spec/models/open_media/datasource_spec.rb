@@ -9,6 +9,8 @@ describe OpenMedia::Datasource do
     @datasource = OpenMedia::Datasource.new(:title=>'4. Crime Test 3',
                                             :source_type=>OpenMedia::Datasource::FILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
                                             :skip_lines=>1,
+                                            :publisher_uri => RDF::URI.new('http://foo.bar/publisher'),
+                                            :creator_uri => RDF::URI.new('http://foo.bar/creator'),
                                             :source_properties=>[{:label=>'A', :range_uri=>RDF::XSD.string},
                                                                  {:label=>'B', :range_uri=>RDF::XSD.string},
                                                                  {:label=>'C', :range_uri=>RDF::XSD.string},
@@ -25,16 +27,18 @@ describe OpenMedia::Datasource do
   end
 
   after(:all) do
-    # delete_test_csv
+    delete_test_csv
   end
     
     
-  it 'should require a type, source_type, and parser' do
+  it 'should require a type, source_type, parser, :publisher_uri, and :creator_uri' do
     datasource = OpenMedia::Datasource.new
     datasource.should_not be_valid
     datasource.errors[:rdfs_class_uri].should_not be_nil
     datasource.errors[:source_type].should_not be_nil
-    datasource.errors[:parser].should_not be_nil    
+    datasource.errors[:parser].should_not be_nil
+    datasource.errors[:publisher_uri].should_not be_nil
+    datasource.errors[:creator_uri].should_not be_nil            
   end
 
   it 'should know how to load its rdfs_class' do
@@ -45,6 +49,8 @@ describe OpenMedia::Datasource do
   it 'should be searchable by title' do
     %w(Apples Applications Bananas).each do |t|
       ds = OpenMedia::Datasource.create!(:title=>t, :rdfs_class_uri=>@datasource_class.uri,
+                                         :publisher_uri => RDF::URI.new('http://foo.bar/publisher'),
+                                         :creator_uri => RDF::URI.new('http://foo.bar/creator'),
                                          :source_type=>OpenMedia::Datasource::FILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER)
     end
   

@@ -5,7 +5,7 @@ require 'spira/types'
 # Define vocabularies not built-in
 RDF::OM_DATA = RDF::Vocabulary.new('http://data.civicopenmedia.org/')
 RDF::OM_CORE = RDF::Vocabulary.new(RDF::OM_DATA['core/'])
-RDF::VCARD = RDF::Vocabulary.new(RDF::OM_CORE['vcard/'])
+RDF::DCTYPE = RDF::Vocabulary.new('http://purl.org/dc/dcmitype/')
 
 require 'open_media/schema/types'
 require 'open_media/schema/base'
@@ -17,6 +17,7 @@ require 'open_media/schema/owl/object_property'
 require 'open_media/schema/owl/class'
 require 'open_media/schema/skos/concept'
 require 'open_media/schema/skos/collection'
+require 'open_media/schema/vcard'
 
 # save current types, then overload settings method so it is not a thread local anymore
 spira_types = Spira.types

@@ -18,6 +18,7 @@ require 'open_media/schema/owl/class'
 require 'open_media/schema/skos/concept'
 require 'open_media/schema/skos/collection'
 require 'open_media/schema/vcard'
+require 'open_media/schema/metadata'
 
 # save current types, then overload settings method so it is not a thread local anymore
 spira_types = Spira.types

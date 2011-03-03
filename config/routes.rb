@@ -51,12 +51,17 @@ Openmedia::Application.routes.draw do
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
   
-  root :to => "admin/home#index"
+  root :to => "public/collections#index"
 
   match '/admin' => 'admin/home#index', :as => :admin
   match '/about' => 'admin/home#about', :as => :about
   match '/support' => 'admin/home#support', :as => :support
 
+  namespace :public do
+    resources :collections
+    resources :classes    
+  end
+  
   namespace :admin do
     resource :site
     resource :community

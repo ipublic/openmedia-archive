@@ -6,6 +6,6 @@ OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Language',
 OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Conforms To', :range=>::RDF::RDFS.Class}, RDF::DC.conformsTo)
 OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Description', :range=>::RDF::XSD.string}, RDF::DC.description)
 OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Title', :range=>::RDF::XSD.string}, RDF::DC.title)
-OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Type', :range=>::RDF::RDFS.Class}, RDF::DC.type)
+OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Resource Type', :range=>::RDF::RDFS.Class}, RDF::DC.type)
 OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Created', :range=>::RDF::XSD.dateTime}, RDF::DC.created)
 OpenMedia::Schema::RDF::Property.create_in_class!(metadata, {:label=>'Modified', :range=>::RDF::XSD.dateTime}, RDF::DC.modified)

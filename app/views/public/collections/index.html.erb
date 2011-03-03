@@ -1,0 +1,22 @@
+<% title "Dataset Categories (Collections)" %>
+<div class="grid_12">
+  <div class="box">
+    <h2>Browse</h2>
+    <div class="block" id="tables">
+      <table>
+				<thead>
+				  <tr>
+				    <th>Name</th>
+				    <th>No. Datasets</th>
+				  </tr>
+				</thead>
+				<% @collections.each do |c| %>
+				<tr>
+				  <td><%= link_to c.label, public_collection_path(rdf_id(c)) %></td>
+				  <td><%= c.members.size %></td>
+				</tr>
+				<% end %>
+      </table>
+    </div>
+  </div>
+</div>

@@ -27,6 +27,7 @@ class ApplicationController < ActionController::Base
 private  
   def no_site_defined
     flash[:error] = SITE_NOT_DEFINED_ERROR_MSG
+    session[:after_site_created] = params
     redirect_to new_admin_site_path
   end
 

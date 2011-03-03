@@ -1,0 +1,25 @@
+<% title "#{@class.label} Dataset" %>
+
+<div class="grid_12" >
+  <p style="float: right">
+    <%= link_to "Browse", public_collection_path(rdf_id(@class.skos_concept.collection)) %>
+  </p>
+  <hr />
+</div>
+
+<div class="grid_12" >
+  <div class="box">
+    <h2><%= @class.uri %></h2>
+    <div class="block">
+      <%= render :partial=>'admin/metadatas/show', :locals=>{:metadata=>@metadata} %>
+    </div>
+    
+    <p>
+      <b>Download: </b>
+      <%= link_to 'CSV', public_class_path(rdf_id(@class), :format=>'csv') %> |
+      <%= link_to 'XML', public_class_path(rdf_id(@class), :format=>'xml') %> |
+      <%= link_to 'JSON', public_class_path(rdf_id(@class), :format=>'json') %> |
+      <%= link_to 'RDF', public_class_path(rdf_id(@class), :format=>'rdf') %>
+    </p>
+  </div>
+</div>

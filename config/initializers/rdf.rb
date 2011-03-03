@@ -37,3 +37,5 @@ end
 # setup vcard models
 OpenMedia::Schema::VCard.configure_vcard
 
+# setup metadata model
+OpenMedia::Schema::Metadata.configure_metadata

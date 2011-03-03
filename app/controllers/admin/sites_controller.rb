@@ -11,7 +11,13 @@ class Admin::SitesController < ApplicationController
 
     if @site.save
       flash[:notice] = 'Site successfully created.'
-      redirect_to(admin_site_path)
+      if session[:after_site_created]
+        return_to = session[:after_site_created]
+        session[:after_site_created] = nil
+        redirect_to(return_to)
+      else
+        redirect_to(admin_site_path)
+      end
     else
       flash[:error] = 'Unable to create Site.'
       render :action => "new"

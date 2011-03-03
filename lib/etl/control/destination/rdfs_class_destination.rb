@@ -38,33 +38,20 @@ module ETL #:nodoc:
         raise ControlError, "RDFS Class required" unless @rdfs_class_uri
         @rdfs_class = OpenMedia::Schema::RDFS::Class.for(@rdfs_class_uri)
         raise ControlError, "Class #{@rdfs_class_uri} not found in schema" unless @rdfs_class.exists?
-
-        # Create/Retrieve the metadata for this batch
-        @datasource = ETL::Engine.import.datasource
-        metadata_model = OpenMedia::Schema::RDFS::Class.for(RDF::METADATA.Metadata).spira_resource
-        metadata_model.default_source(OpenMedia::Site.instance.metadata_repository)
-
-        metadata_attributes = {
-          :creator=>@datasource.creator_uri,
-          :publisher=>@datasource.publisher_uri,
-          :language=>'en-US',
-          :conformsTo=>@rdfs_class_uri,
-          :title=>@rdfs_class.label,
-          :description=>@rdfs_class.comment,
-          :type=>RDF::DCTYPE.Dataset,          
-        }
-        
-        
       end
       
       # Flush the currently buffered data
       def flush
+        @rdfs_class.spira_resource.default_source(@rdfs_class.skos_concept.collection.repository)
+        @rdfs_class.spira_resource.property(:metadata,
+                                            :predicate=>::RDF::METADATA.metadata,
+                                            :type=>:"OpenMedia::Schema::RDFS::Class::HttpDataCivicopenmediaOrgCoreMetadataMetadata")
+        
         ts = Time.now.to_i
         rdf_statements = buffer.flatten.collect do |row|
           # check to see if this row's compound key constraint already exists
           # note that the compound key constraint may not utilize virtual fields
           next unless row_allowed?(row)
-
           # add any virtual fields
           add_virtuals!(row)
           
@@ -72,13 +59,14 @@ module ETL #:nodoc:
           # bulk save them to repository manually
           uri = @rdfs_class.uri/"##{Digest::SHA2.hexdigest(row.to_s)}-#{ts}"
           r = @rdfs_class.for(uri, row)
+          r.metadata = ETL::Engine.import.datasource.metadata            
           r.before_save
-          r.before_create          
-          r.statements.to_a          
+          r.before_create
+          r.statements.to_a                    
         end
-        repo = @rdfs_class.skos_concept.collection.repository
         # fancy way to flatten array, since flattening array of RDF::Statement caused statements to break
         rdf_statements = rdf_statements.inject([]) {|ary, stmts| ary.concat(stmts)}
+        repo = Spira.repository(@rdfs_class.skos_concept.collection.repository)
         repo.insert_statements(rdf_statements)
         buffer.clear        
       end
@@ -88,7 +76,6 @@ module ETL #:nodoc:
         buffer << append_rows if append_rows
         flush
       end
-            
     end
   end
 end

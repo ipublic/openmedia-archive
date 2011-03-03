@@ -9,12 +9,13 @@ class Admin::DatasourcesController < ApplicationController
   def show
     @datasource = OpenMedia::Datasource.get(params[:id])
     @documents = []
-    @documents << @datasource.rdfs_class.spira_resource.each.first if @datasource.rdfs_class
+    model = @datasource.rdfs_class.spira_resource
+    model.default_source(@datasource.rdfs_class.skos_concept.collection.repository)
+    @documents << model.each.first if @datasource.rdfs_class
   end
   
   def new_upload
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
-    @datasource.metadata = OpenMedia::Metadata.new
     @datasources = OpenMedia::Datasource.all
     @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
   end

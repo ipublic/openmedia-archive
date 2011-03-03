@@ -71,7 +71,8 @@ module OpenMedia
                   end            
                 end
               end
-              cls.property(p.identifier.to_sym, :predicate=>p.uri, :type=>ptype)                  
+              pname = p.identifier == 'type' ? p.label.downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'').squeeze('_') : p.identifier.to_sym
+              cls.property(pname, :predicate=>p.uri, :type=>ptype)                  
             end
             self.class.const_set(cls_name, cls)
           end

@@ -10,7 +10,6 @@ class OpenMedia::Catalog < CouchRest::Model::Base
   ## Properties
   property :title
   property :identifier
-  property :metadata, OpenMedia::Metadata
 
   validates :title, :presence=>true, :uniqueness => true
   validates_presence_of :metadata

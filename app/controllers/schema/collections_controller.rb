@@ -42,7 +42,7 @@ class Schema::CollectionsController < ApplicationController
   
 private
   def load_collection
-    @collection = OpenMedia::Schema::SKOS::Collection.for(CGI.unescape(params[:id])) if params[:id]
+    @collection = OpenMedia::Schema::SKOS::Collection.for(params[:id]) if params[:id]
   end
 
   def convert_hidden

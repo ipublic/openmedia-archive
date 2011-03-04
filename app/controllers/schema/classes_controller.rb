@@ -82,8 +82,8 @@ class Schema::ClassesController < ApplicationController
   
 private
   def load_objects
-    @class = OpenMedia::Schema::RDFS::Class.for(CGI.unescape(params[:id])) if params[:id]
-    @collection = OpenMedia::Schema::SKOS::Collection.for(CGI.unescape(params[:collection_id])) if params[:collection_id]    
+    @class = OpenMedia::Schema::RDFS::Class.for(params[:id]) if params[:id]
+    @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_id]) if params[:collection_id]    
   end
 
   def filter_empty_properties

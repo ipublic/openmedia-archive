@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :current_user, :current_site, :rdf_id
+  before_filter :decode_rdf_id
 
   rescue_from OpenMedia::NoSiteDefined, :with=> :no_site_defined
 
@@ -18,7 +19,7 @@ class ApplicationController < ActionController::Base
     if resource.respond_to?(:uri)
       rdf_id(resource.uri)
     elsif resource.instance_of?(RDF::URI)
-      CGI.escape(resource.path[1..-1])
+      resource.path[1..-1].gsub(/\//,':')
     else
       raise "Could not convert #{resource.inspect} to an RDF::URI"
     end
@@ -30,5 +31,11 @@ private
     session[:after_site_created] = params
     redirect_to new_admin_site_path
   end
+
+  def decode_rdf_id
+    params[:id] = params[:id].gsub(/:/,'/') if params[:id]
+
+  end
+
 
 end

@@ -17,10 +17,9 @@
     <p>
       <b>Download: </b>
       <%= link_to 'CSV', public_class_path(rdf_id(@class), :format=>'csv') %> |
-      <%= link_to 'XML', public_class_path(rdf_id(@class), :format=>'xml') %> |
       <%= link_to 'JSON', public_class_path(rdf_id(@class), :format=>'json') %> |
-      <%= link_to 'RDF (n-triples)', public_class_path(rdf_id(@class), :format=>'nt') %> |
-      <%= link_to 'RDF (rdf/xml)', public_class_path(rdf_id(@class), :format=>'rdf') %>
+      <%= link_to 'RDF/XML', public_class_path(rdf_id(@class), :format=>'rdf') %> |
+      <%= link_to 'RDF (n-triples)', public_class_path(rdf_id(@class), :format=>'nt') %>
     </p>
   </div>
 </div>

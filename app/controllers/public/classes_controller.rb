@@ -9,23 +9,8 @@ class Public::ClassesController < ApplicationController
     @class.spira_resource.default_source(@class.skos_concept.collection.repository)
     respond_to do |format|
       format.html
-      format.xml do
-        headers["Content-Type"] ||= 'text/xml'
-        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.xml\""          
-        self.response_body = lambda {|response, output|
-          output.write('<?xml version="1.0" encoding="UTF-8"?>' + "\n")
-          output.write("<#{@class.identifier.pluralize}_dataset uri=\"#{@class.uri.to_s}\">")
-          @class.spira_resource.each do |r|
-            output.write(r.attributes.reject{|k,v| k==:metadata}.to_xml(:skip_instruct=>true, :root=>@class.identifier))
-          end
-          output.write("</#{@class.identifier.pluralize}>_dataaset")          
-
-        }
-      end
-      
       format.csv do
         headers["Content-Type"] ||= 'text/xml'
-        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.xml\""
         #this is required if you want this to work with IE		
         if request.env['HTTP_USER_AGENT'] =~ /msie/i
           headers['Pragma'] = 'public'
@@ -75,7 +60,7 @@ class Public::ClassesController < ApplicationController
       end
 
       format.rdf do
-        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.rdf\""
+        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.xml\""
         self.response_body = lambda {|response, output|
           RDF::Writer.for(:rdfxml).new(OutputWrapper.new(output)) do |writer|
             @class.spira_resource.each do |r|

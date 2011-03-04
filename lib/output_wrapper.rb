@@ -7,5 +7,16 @@ class OutputWrapper
 
   def <<(*args)
     @output.write(*args)
-  end 
+  end
+
+  def puts(*args)
+    @output.write(*args)
+    @output.write("\n")
+  end
+
+  def write(*args)
+    @output.write(*args)
+  end
+
+
 end

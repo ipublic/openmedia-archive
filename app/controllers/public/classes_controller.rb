@@ -22,6 +22,7 @@ class Public::ClassesController < ApplicationController
 
         }
       end
+      
       format.csv do
         headers["Content-Type"] ||= 'text/xml'
         headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.xml\""
@@ -61,9 +62,28 @@ class Public::ClassesController < ApplicationController
           output.write(']')
         }        
       end
+
+      format.nt do
+        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.nt\""
+        self.response_body = lambda {|response, output|
+          RDF::Writer.for(:ntriples).new(OutputWrapper.new(output)) do |writer|
+            @class.spira_resource.each do |r|
+              r.statements.each {|stmt| writer << stmt}
+            end
+          end
+        }       
+      end
+
+      format.rdf do
+        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.rdf\""
+        self.response_body = lambda {|response, output|
+          RDF::Writer.for(:rdfxml).new(OutputWrapper.new(output)) do |writer|
+            @class.spira_resource.each do |r|
+              r.statements.each {|stmt| writer << stmt}
+            end
+          end
+        }       
+      end      
     end
-
-
   end
-
 end

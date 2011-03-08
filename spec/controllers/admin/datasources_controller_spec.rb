@@ -53,7 +53,7 @@ describe Admin::DatasourcesController do
       describe 'into a new datasource' do
         before(:each) do
           @datasource_params = {:title=>'New Datasource', :rdfs_class_uri=>@class.uri.to_s,
-            :source_type=>OpenMedia::Datasource::FILE_TYPE,
+            :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE,
             :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
             :column_separator=>','}
         end
@@ -88,7 +88,7 @@ describe Admin::DatasourcesController do
           post :upload, :datasource=>@datasource_params,
           :data_file=>fixture_file_upload('/tmp/test.csv', 'text/csv'),
           :has_header_row=>true
-          
+          puts assigns[:datasource].errors.inspect
           assigns[:datasource].should_not be_new_record
           assigns[:datasource].has_attachment?('seed_data').should be_true
           
@@ -131,7 +131,7 @@ describe Admin::DatasourcesController do
         before(:all) do
           @datasource = OpenMedia::Datasource.first
           @datasource.rdfs_class_uri = @class.uri.to_s
-          @datasource.source_type = OpenMedia::Datasource::FILE_TYPE
+          @datasource.source_type = OpenMedia::Datasource::TEXTFILE_TYPE
           @datasource.parser = OpenMedia::Datasource::DELIMITED_PARSER
           @datasource.skip_lines = 1
           @datasource.column_separator = ','
@@ -168,7 +168,7 @@ describe Admin::DatasourcesController do
     describe 'posting new datasources' do
       before(:all) do
         @datasource_params = { :title=>'New Datasource', :rdfs_class_uri=>@class.uri.to_s,
-          :source_type => OpenMedia::Datasource::FILE_TYPE,
+          :source_type => OpenMedia::Datasource::TEXTFILE_TYPE,
           :parser => OpenMedia::Datasource::DELIMITED_PARSER,
           :column_separator => ',',
           :skip_lines => '1',

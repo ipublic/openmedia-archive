@@ -6,10 +6,11 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   
   use_database STAGING_DATABASE  
 
-  FILE_TYPE = 'file'
+  TEXTFILE_TYPE = 'textfile'
+  SHAPEFILE_TYPE = 'shapefile'  
   DATABASE_TYPE = 'database'
 
-  TYPES = [FILE_TYPE]
+  TYPES = [TEXTFILE_TYPE, SHAPEFILE_TYPE]
   
   DELIMITED_PARSER = 'delimited'
   FIXED_WIDTH_PARSER = 'fixed_width'
@@ -64,7 +65,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def import!(opts={})
-    if source_type==FILE_TYPE
+    if source_type==TEXTFILE_TYPE
       raise ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
     end
 
@@ -83,6 +84,15 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   def metadata
     metadata_model.for(metadata_uri) if metadata_uri
   end
+
+  def textfile?
+    source_type == TEXTFILE_TYPE
+  end
+
+  def shapefile?
+    source_type == SHAPEFILE_TYPE
+  end
+
   
 
 private

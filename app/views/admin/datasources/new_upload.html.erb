@@ -2,6 +2,7 @@
 
 <div class="grid_12">
   <%= form_for :datasource, :url=>upload_admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
+  <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::TEXTFILE_TYPE %>
   <%= ds.error_messages %>
 </div>
 
@@ -9,13 +10,12 @@
 	<fieldset class="omega">
 		<legend>Data Source</legend>
 	</fieldset>
-  <div class="accordion">
-		<h3><a href="#">Text Files</a></h3>
+  <div id="upload-accordion">
+		<h3 tabindex="1"><a href="#">Text Files</a></h3>
 		<div>
-		  <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::FILE_TYPE %>
 			<fieldset class="omega">
 				<ol>
-				  <li><label>File</label> <%= file_field_tag :data_file %></li>
+				  <li><label>File</label> <%= file_field_tag :textfile %></li>
 					<li><label>&nbsp;</label>
 					  <div class="radio">
 					    <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
@@ -38,11 +38,16 @@
 		    Fixed fields
 		  </div>
 		</div>
-		<h3><a href="#">Shapefiles</a></h3>
+		<h3 tabindex="2"><a href="#">Shapefiles</a></h3>
 		<div>
-    	<p>Shapefile fields</p>
+		  <fieldset class="omega">
+		    <ol>
+		      <li><label>ZIP File</label> <%= file_field_tag :shapefile %></li>
+		    </ol>
+		  </fieldset>
 		</div>
-		<h3><a href="#">Databases</a></h3>
+
+		<h3 tabindex="3"><a href="#">Databases</a></h3>
 		<div><p>Database connection properties</div>
   </div> <!-- Accordion -->
 </div> <!-- grid_6 -->

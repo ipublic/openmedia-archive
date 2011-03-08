@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 class Admin::DatasourcesController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
@@ -38,53 +40,83 @@ class Admin::DatasourcesController < ApplicationController
 
   def upload
     # either create new datasource and save seed data or do import on existing datasource
-    data_file = params.delete(:data_file)
+    textfile = params.delete(:textfile)
+    shapefile = params.delete(:shapefile)
+    datafile = textfile || shapefile    
     seed_data_attachment = nil
     if params[:datasource_id]
       @datasource = OpenMedia::Datasource.get(params[:datasource_id])
-      count = @datasource.import!(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile.path : data_file.path))
+      count = @datasource.import!(:file=>(datafile.respond_to?(:tempfile) ? datafile.tempfile.path : datafile.path))
       flash[:notice] = "Imported #{count} records into datasource #{@datasource.title}"      
       redirect_to admin_datasources_path
-    elsif params[:datasource]
+    elsif params[:datasource]      
       @datasource = OpenMedia::Datasource.new(params[:datasource])
-      if data_file
+      properties = []
+      if @datasource.textfile? && textfile
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
-        data = FasterCSV.parse(data_file.read, {:col_sep=>@datasource.column_separator})
-
-        if @datasource.rdfs_class_uri.blank?
-          @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
-          if @collection.exists?
-            @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
-            @collection.members << @class.uri
-            @collection.save!
-            property_names = []
-            if has_header_row
-              @datasource.skip_lines = 1
-              property_names = data[0]
+        data = FasterCSV.parse(textfile.read, {:col_sep=>@datasource.column_separator})
+        if has_header_row
+          @datasource.skip_lines = 1
+          properties = data[0].collect{|pn| {:label=>pn, :range=>RDF::XSD.string}}
+        else
+          1.upto(data[0].size) {|i| properties << {:label=>"Column#{i}", :range=>RDF::XSD.string}}
+        end
+      elsif @datasource.shapefile? && shapefile
+        if shapefile.content_type =~ /(zip|ZIP)$/
+          Dir.mktmpdir do |temp_dir|
+            `unzip #{shapefile.path} -d #{temp_dir}`
+            shpfn = Dir.glob(File.join(temp_dir,'*.shp')).first
+            if shpfn
+              jsfn = shpfn.gsub(/\.shp/,'.js')
+              %x!ogr2ogr -t_srs EPSG:4326 -a_srs EPSG:4326 -f "GeoJSON" #{jsfn} #{shpfn}!
+              File.open(jsfn) do |jsf|
+                geojson = JSON.load(jsf)
+                properties = geojson['features'].first['properties'].collect do |k,v|
+                  range = case v
+                            when TrueClass, FalseClass then RDF::XSD.boolean
+                            when Fixnum then RDF::XSD.integer
+                            when Float then RDF::XSD.float
+                            else RDF::XSD.string
+                          end
+                  {:label=>k, :range=>range}
+                end
+              end
             else
-              1.upto(data[0].size) {|i| property_names << "Column#{i}"}
+              @datasource.errors.add(:shapefile, "No .shp file found inside zip")
             end
-            property_names.each do |name|
-              @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>name, :range=>RDF::XSD.string)
-              @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>name, :range_uri=>RDF::XSD.string.to_s)
-            end
-            @class.save!          
-            @datasource.rdfs_class_uri = @class.uri.to_s
-          
-          else
-            @datasource.errors.add(:base, "Please select an existing Class or choose a Collection to create new Class in")
-          end            
+
+          end
+        else
+          @datasource.errors.add(:shapefile, "Please select a zip file")
         end
       else
         @datasource.errors.add(:base, "Please select a file")
       end
 
+      if @datasource.errors.size == 0 &&@datasource.rdfs_class_uri.blank?
+        @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
+        if @collection.exists?
+          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
+          @collection.members << @class.uri
+          @collection.save!
+          properties.each do |prop|
+            @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
+            @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
+          end
+          @class.save!          
+          @datasource.rdfs_class_uri = @class.uri.to_s
+          
+        else
+          @datasource.errors.add(:base, "Please select an existing Class or choose a Collection to create new Class in")
+        end
+      end
+
       if @datasource.errors.size == 0
-        if data_file
-          data_file.rewind        
-          @datasource.create_attachment(:file=>(data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file), :name=>'seed_data',
-                                        :content_type=>data_file.content_type)            
+        if datafile
+          datafile.rewind        
+          @datasource.create_attachment(:file=>(datafile.respond_to?(:tempfile) ? datafile.tempfile : datafile), :name=>'seed_data',
+                                        :content_type=>datafile.content_type)            
         end
         if @datasource.save
           redirect_to edit_admin_datasource_path(@datasource)
@@ -93,6 +125,10 @@ class Admin::DatasourcesController < ApplicationController
           @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a          
           render :action=>'new_upload'
         end
+      else
+        @datasources = OpenMedia::Datasource.all
+        @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a        
+        render :action=>:new_upload
       end
       
     else

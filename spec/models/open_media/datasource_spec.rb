@@ -7,7 +7,7 @@ describe OpenMedia::Datasource do
     create_test_csv    
         
     @datasource = OpenMedia::Datasource.new(:title=>'4. Crime Test 3',
-                                            :source_type=>OpenMedia::Datasource::FILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
+                                            :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
                                             :skip_lines=>1,
                                             :publisher_uri => RDF::URI.new('http://foo.bar/publisher'),
                                             :creator_uri => RDF::URI.new('http://foo.bar/creator'),
@@ -51,7 +51,7 @@ describe OpenMedia::Datasource do
       ds = OpenMedia::Datasource.create!(:title=>t, :rdfs_class_uri=>@datasource_class.uri,
                                          :publisher_uri => RDF::URI.new('http://foo.bar/publisher'),
                                          :creator_uri => RDF::URI.new('http://foo.bar/creator'),
-                                         :source_type=>OpenMedia::Datasource::FILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER)
+                                         :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE, :parser=>OpenMedia::Datasource::DELIMITED_PARSER)
     end
   
     OpenMedia::Datasource.search('App').size.should == 2

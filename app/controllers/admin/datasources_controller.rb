@@ -1,3 +1,4 @@
+require 'csv'
 require 'tmpdir'
 
 class Admin::DatasourcesController < ApplicationController
@@ -30,7 +31,21 @@ class Admin::DatasourcesController < ApplicationController
   def import_seed_data
     @datasource = OpenMedia::Datasource.get(params[:id])
     import_file = "/tmp/#{@datasource.id}-seed-data.csv"
-    File.open(import_file, 'w') {|f| f.write(@datasource.read_attachment('seed_data'))}
+    File.open(import_file, 'w') do |f|
+      if @datasource.textfile_source?
+        f.write(@datasource.read_attachment('seed_data'))
+      elsif @datasource.shapefile_source?
+        json = JSON.parse(@datasource.read_attachment('seed_data'))
+        source_property_names = @datasource.source_properties.collect{|p| p.label}
+        CSV::Writer.generate(f) do |csv|
+          json['features'].each do |feature|
+            data = source_property_names.select{|spn| spn != 'geometry' }.collect{|spn| feature['properties'][spn]}
+            data << JSON.generate(JSON.generate(feature['geometry']))
+            csv << data
+          end
+        end
+      end
+    end
     count = @datasource.import!(:file=>import_file)
     @datasource.delete_attachment('seed_data')
     @datasource.save!
@@ -52,7 +67,7 @@ class Admin::DatasourcesController < ApplicationController
     elsif params[:datasource]      
       @datasource = OpenMedia::Datasource.new(params[:datasource])
       properties = []
-      if @datasource.textfile? && textfile
+      if @datasource.textfile_source? && textfile
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
         data = FasterCSV.parse(textfile.read, {:col_sep=>@datasource.column_separator})
@@ -62,7 +77,11 @@ class Admin::DatasourcesController < ApplicationController
         else
           1.upto(data[0].size) {|i| properties << {:label=>"Column#{i}", :range=>RDF::XSD.string}}
         end
-      elsif @datasource.shapefile? && shapefile
+        textfile.rewind        
+        @datasource.create_attachment(:file=>(textfile.respond_to?(:tempfile) ? textfile.tempfile : textfile), :name=>'seed_data',
+                                        :content_type=>textfile.content_type)            
+        
+      elsif @datasource.shapefile_source? && shapefile
         if shapefile.content_type =~ /(zip|ZIP)$/
           Dir.mktmpdir do |temp_dir|
             `unzip #{shapefile.path} -d #{temp_dir}`
@@ -81,7 +100,12 @@ class Admin::DatasourcesController < ApplicationController
                           end
                   {:label=>k, :range=>range}
                 end
-              end
+                properties << {:label=>'geometry', :range=>RDF::CORE_OM.GeoJson}
+                jsf.rewind
+                @datasource.create_attachment(:file=>jsf, :name=>'seed_data',
+                                              :content_type=>'application/json')            
+                
+              end              
             else
               @datasource.errors.add(:shapefile, "No .shp file found inside zip")
             end
@@ -113,11 +137,6 @@ class Admin::DatasourcesController < ApplicationController
       end
 
       if @datasource.errors.size == 0
-        if datafile
-          datafile.rewind        
-          @datasource.create_attachment(:file=>(datafile.respond_to?(:tempfile) ? datafile.tempfile : datafile), :name=>'seed_data',
-                                        :content_type=>datafile.content_type)            
-        end
         if @datasource.save
           redirect_to edit_admin_datasource_path(@datasource)
         else

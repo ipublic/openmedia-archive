@@ -1,4 +1,4 @@
-<% title "Schema > Class > #{@class.uri}" %>
+<% title "Schema > Class > #{@class.label}" %>
 
 <div class="grid_12" >
   <p style="float: right">
@@ -13,7 +13,7 @@
 
 <div class="grid_12" >
   <div class="box">
-    <h2><%= @class.uri %></h2>
+    <h2><%= @class.identifier %></h2>
     <div class="block">
       <%= show_fields(@class, [:label, :comment, :uri, :created, :modified]).html_safe %>
     </div>
@@ -28,16 +28,16 @@
 	<thead>
 	  <tr>
 	    <th>Label</th>
-	    <th>Range</th>
-	    <th>URI</th>
+	    <th>Comment</th>
+	    <th>Identifier</th>
 	  </tr>
 	</thead>
 	<tbody>
 	  <% @class.properties.each do |property| %>
 	  <tr>
 	    <td><%= property.label %></td>
-	    <td><%= property.range %></td>
-	    <td><%= property.uri %></td>
+	    <td><%= property.comment %></td>
+	    <td><%= property.identifier %></td>
 	  </tr>
 	  <% end %>
 	</tbody>

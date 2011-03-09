@@ -85,11 +85,11 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     metadata_model.for(metadata_uri) if metadata_uri
   end
 
-  def textfile?
+  def textfile_source?
     source_type == TEXTFILE_TYPE
   end
 
-  def shapefile?
+  def shapefile_source?
     source_type == SHAPEFILE_TYPE
   end
 

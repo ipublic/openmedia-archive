@@ -83,6 +83,7 @@ class Schema::ClassesController < ApplicationController
 private
   def load_objects
     @class = OpenMedia::Schema::RDFS::Class.for(params[:id]) if params[:id]
+    params[:collection_id] = params[:collection_id].gsub(/:/,'/') if params[:collection_id]
     @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_id]) if params[:collection_id]    
   end
 

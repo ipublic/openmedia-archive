@@ -16,6 +16,9 @@ OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.short).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.string).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
 
+# create datatype for JSON
+OpenMedia::Schema::RDFS::Datatype.for(RDF::OM_CORE.GeoJson).save!
+
 # TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
 require File.join(File.dirname(__FILE__),'seeds', 'metadata')
 require File.join(File.dirname(__FILE__),'seeds', 'vcard')

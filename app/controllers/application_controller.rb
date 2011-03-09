@@ -34,7 +34,6 @@ private
 
   def decode_rdf_id
     params[:id] = params[:id].gsub(/:/,'/') if params[:id]
-
   end
 
 

@@ -1,10 +1,10 @@
-<% title "Schema > Collection: #{@collection.label} (#{@collection.uri})" %>
+<% title "Schema > Collection: #{@collection.label}" %>
 <div class="grid_12" >
 	<p style="float:right;">
 		<%= link_to "Browse", schema_collections_path %> | 
 		<%= link_to "Edit", edit_schema_collection_path(rdf_id(@collection)) %> |
 		<%= link_to 'Delete', schema_collection_path(rdf_id(@collection)), 
-					:confirm => "Are you sure you want to delete this collection: #{@collection.label}?", 
+					:confirm => "Are you sure you want to delete this collection, all of its classes, and all of the data those classes contain?", 
 					:method => :delete %>
 		</p>
 	<hr />

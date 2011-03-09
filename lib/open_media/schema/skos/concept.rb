@@ -18,6 +18,11 @@ module OpenMedia
           end
           @collection
         end
+
+        def before_destroy
+          self.class.repository.query(:object=>self.uri, :predicate=>::RDF::SKOS.member).each {|s| self.class.repository.delete_statement(s)}
+        end
+
       end
     end
   end

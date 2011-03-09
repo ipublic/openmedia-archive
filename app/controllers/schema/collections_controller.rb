@@ -35,7 +35,7 @@ class Schema::CollectionsController < ApplicationController
 
   def destroy
     OpenMedia::Site.instance.skos_collection.delete_member!(@collection.uri)
-    @collection.destroy!
+    @collection.destroy!    
     flash[:notice] = 'Collection successfully deleted.'
     redirect_to schema_collections_path
   end

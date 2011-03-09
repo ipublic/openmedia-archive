@@ -161,7 +161,13 @@ module OpenMedia
 
         def for(uri, data={})
           self.spira_resource.for(uri, data)
-        end  
+        end
+
+        def after_destroy
+          self.skos_concept.destroy! if self.skos_concept
+          self.spira_resource.each {|r| r.destroy!}
+        end
+
       end
     end
   end

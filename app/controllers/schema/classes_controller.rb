@@ -79,6 +79,13 @@ class Schema::ClassesController < ApplicationController
       
   end
 
+  def destroy
+    @class.destroy!    
+    flash[:notice] = 'Class successfully deleted.'
+    redirect_to schema_collection_path(rdf_id(@collection))
+  end
+
+
   
 private
   def load_objects

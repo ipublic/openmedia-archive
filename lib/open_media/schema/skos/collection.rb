@@ -44,6 +44,11 @@ module OpenMedia
           db_name
         end
 
+        def before_destroy
+          self.concepts.each {|c| c.rdfs_class.destroy!; c.destroy!}
+        end
+
+
         
         def self.create_in_collection!(collection, data)
           c = nil

@@ -126,7 +126,7 @@ class Admin::DatasourcesController < ApplicationController
           @collection.members << @class.uri
           @collection.save!
           properties.each do |prop|
-            prop[:label] = "#{prop[:label]} Field" if prop[:label].downcase=='type'
+            prop[:label] = "#{@class.label} #{prop[:label]}" if prop[:label].downcase=='type'
             @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
             @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
           end

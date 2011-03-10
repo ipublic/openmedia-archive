@@ -74,6 +74,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
       self.source_properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:rdfs_class=>'#{self.rdfs_class_uri}'}, {:order=>[" +
       self.rdfs_class.properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]}\n"
+
     ETL::Engine.init(:datasource=>self)
     ETL::Engine.process_string(self, ctl)
     ETL::Engine.import = nil

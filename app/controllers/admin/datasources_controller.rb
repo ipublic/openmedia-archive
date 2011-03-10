@@ -15,6 +15,7 @@ class Admin::DatasourcesController < ApplicationController
     model = @datasource.rdfs_class.spira_resource
     model.default_source(@datasource.rdfs_class.skos_concept.collection.repository)
     @documents << model.each.first if @datasource.rdfs_class
+    @documents.compact!
   end
   
   def new_upload
@@ -40,7 +41,7 @@ class Admin::DatasourcesController < ApplicationController
         CSV::Writer.generate(f) do |csv|
           json['features'].each do |feature|
             data = source_property_names.select{|spn| spn != 'geometry' }.collect{|spn| feature['properties'][spn]}
-            data << JSON.generate(JSON.generate(feature['geometry']))
+            data << JSON.generate(feature['geometry'])
             csv << data
           end
         end
@@ -100,7 +101,7 @@ class Admin::DatasourcesController < ApplicationController
                           end
                   {:label=>k, :range=>range}
                 end
-                properties << {:label=>'geometry', :range=>RDF::CORE_OM.GeoJson}
+                properties << {:label=>'geometry', :range=>RDF::OM_CORE.GeoJson}
                 jsf.rewind
                 @datasource.create_attachment(:file=>jsf, :name=>'seed_data',
                                               :content_type=>'application/json')            
@@ -125,6 +126,7 @@ class Admin::DatasourcesController < ApplicationController
           @collection.members << @class.uri
           @collection.save!
           properties.each do |prop|
+            prop[:label] = "#{prop[:label]} Field" if prop[:label].downcase=='type'
             @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
             @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
           end

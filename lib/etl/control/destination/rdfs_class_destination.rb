@@ -59,11 +59,19 @@ module ETL #:nodoc:
           # bulk save them to repository manually
           uri = @rdfs_class.uri/"##{Digest::SHA2.hexdigest(row.to_s)}-#{ts}"
           r = @rdfs_class.for(uri, row)
+
+          # HACKETY HACK - parse GeoJson string to object so it can be serialize
+          geometry = row.detect{|k,v| k==:geometry}
+          if r.respond_to?(:geometry)
+            r.geometry=JSON.parse(r.geometry)
+          end
+
           r.metadata = ETL::Engine.import.datasource.metadata            
           r.before_save
           r.before_create
           r.statements.to_a                    
         end
+
         # fancy way to flatten array, since flattening array of RDF::Statement caused statements to break
         rdf_statements = rdf_statements.inject([]) {|ary, stmts| ary.concat(stmts)}
         repo = Spira.repository(@rdfs_class.skos_concept.collection.repository)

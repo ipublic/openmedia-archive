@@ -10,18 +10,16 @@
 				<fieldset>
 				  <legend>Class Settings</legend>
 				  <ol>
-				    <li><%= f.label :label %> <%= f.text_field :label %></li>
-				    <li><%= f.label :comment %> <%= f.text_area :comment, :rows => 3  %></li>
+				    <li><%= f.label :label, 'Name', :class => 'narrow' %> <%= f.text_field :label, :class => 'wide' %></li>
+				    <li><%= f.label :comment, :class => 'narrow' %> <%= f.text_area :comment, :rows => 3, :class => 'wide' %></li>
 				  </ol>
 				</fieldset>
 
 				<fieldset class="omega">
 				  <legend>Properties</legend>
-				  <ol class="two-column">
-				    <% for property in @class.properties.sort {|p1,p2| p1.label <=> p2.label} %>
-				    <%= render :partial=>'property', :locals=>{:base_name=>'class[properties][]', :property=>property} %>
-				    <% end %>
-				  </ol>
+			    <% for property in @class.properties.sort {|p1,p2| p1.label <=> p2.label} %>
+			    	<%= render :partial=>'property', :locals=>{:base_name=>'class[properties][]', :property=>property} %>
+			    <% end %>
 			  	<a href="#" class="add-class-property add-element">Add Property</a>
 				</fieldset>
 				<fieldset class="submit">

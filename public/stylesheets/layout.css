@@ -1,29 +1,26 @@
 /*
 -----------------------------------------------
-Based upon Grey Box Method - Layout CSS
+Grey Box Method - Layout CSS
 ----------------------------------------------- */
 
 body {
 	background: #eee;
-	border-top: 3px solid #26537c;
+	border-top: 5px solid #000;
 	color: #333;
+	font-size: 11px;
 	padding: 0 0 40px;
-	font-size: 62.5%;
 }
 
 
 /* anchors
 ----------------------------------------------- */
 a {
-	color:#408dd2;
-/*	
-	text-decoration: none;
+	color: #000;
 	font-weight:bold;
-*/
+	text-decoration: none;
 }
 a:hover {
-	color:#a66100;
-	background: #ffb040;
+	color:#333;
 }
 
 
@@ -50,108 +47,23 @@ h1 a {
 
 /* branding
 ----------------------------------------------- */
-
-#header {
-	/*
-	background-image: url("/images/openmedia_logo.png");
-  background-repeat: no-repeat;
-  background-position: top left;
-	*/
-	margin-top: 10px;
-	margin-bottom: 20px;
-	background: #679fd2;
-}
-
 h1#branding {
 	font-weight:normal;
 	font-size:3em;
 	text-align:left;
-	margin-bottom: .25em;
-	background: #679fd2;
+	background:#aaa;
+	padding:.7em 1em;
+	margin-bottom:0;
 }
 
-h1#branding a {
-	color:#04376c;
-	text-decoration: none;
-	font-weight:bold;
-}
-
-h1#branding a:hover {
-	background: transparent;
-}
-
-#frontpage .spotlight {
-float: left;
-width: 235px;
-padding: 0px;
-padding-left : 70px;
-margin: 0 10px 20px 5px;
-
-}
-
-.grid_4 .spotlight {
-	background:#91bed4;
-	
-}
-
-#frontpage .spotlight h2 {
-font: normal normal normal 1.75em/.80em auto, sans-serif;
-padding: 0;
-margin: 0 0 0.5em -60px;
-
-}
-
-#frontpage .spotlight h2 a {
-text-decoration : none;
-padding-left : 60px;
-padding-bottom : 60px;
-display : block;
-}
-
-#frontpage .spotlight img {
-display: block;
-padding: 0.5em;
-}
-
-#frontpage .spotlight p a,
-#frontpage .spotlight p a:hover {	
-display : block;
-color : #000;
-text-decoration : none;
-}
-
-#frontpage .spotlight p {
-font-size : 1em;
-margin: -60px 0 .5em 0;
-}
-
-#frontpage_load_data {
-background : transparent url(images/rails.png) 0 -90px no-repeat;
-}
-
-#frontpage-support {
-background : transparent url(./images/icon-support.png) 0 -90px no-repeat;
-}
-
-#frontpage-develop {
-background : transparent url(./images/icon-develop.png) 0 -90px no-repeat;
-}
-
-#frontpage-learn:hover, 
-#frontpage-support:hover, 
-#frontpage-develop:hover {
-background-position : 0 0;
-}
 
 /* page heading
 ----------------------------------------------- */
 h2#page-heading {
-	color: #043a6b;
-	font-size:2em;
 	font-weight:normal;
-	padding:0 0 .5em .5em;
+	padding:.5em;
 	margin:0 0 10px 0;
-	border-bottom:1px solid #d0d0d0;
+	border-bottom:1px solid #ccc;
 }
 
 
@@ -159,41 +71,17 @@ h2#page-heading {
 ----------------------------------------------- */
 .box {
 	background:#ddd;
-	background:#fff;
 	margin-bottom:20px;
 	padding:10px 10px 1px 10px;
-/*	
-	border: 1px solid #ccc;
-  -moz-border-radius: .5em;
-  -webkit-border-radius: .5em;
-  border-radius: .5em;
-*/
 }
-
-.rounded_corners {
-  -moz-border-radius: .4em;
-  -webkit-border-radius: .4em;
-  border-radius: .4em;
-}
-
 .box h2 {
-	font-size:1.2em;
+	font-size:1em;
 	font-weight:normal;
+	text-transform:uppercase;
 	color:#fff;
-	background: #26537c;
+	background:#333;
 	margin:-10px -10px 0 -10px;
 	padding:6px 12px;
-  -moz-border-radius: .4em;
-  -webkit-border-radius: .4em;
-  border-radius: .4em;
-	
-	/*
-	-moz-border-radius-topright: .5em;
-	-moz-border-radius-topleft: .5em;
-  -webkit-border-top-right-radius: .5em;
-  -webkit-border-top-left-radius: .5em;
-	text-transform:uppercase;
-*/
 }
 .box h2 a,
 .box h2 a.visible {
@@ -224,7 +112,6 @@ h2#page-heading {
 }
 .block {
 	padding-top:10px;
-	overflow: auto;
 }
 div.menu {
 	padding:0;
@@ -358,7 +245,7 @@ ul.section li.current > a.active:hover {
 ----------------------------------------------- */
 table {
 	width:100%;
-	border:1px solid #26537c;
+	border:1px solid #bbb;
 	margin-bottom:10px;
 }
 col.colC {
@@ -366,18 +253,15 @@ col.colC {
 }
 th, td {
 	padding:.2em 1em;
-	text-align:left;	
+	text-align:left;
 }
-thead th { 
-	font-size:.8em;
-	font-style:italic;
-	border-bottom:2px solid #26537c;
-	background:#bf8430;
-	color: #fff;
+thead th {
+	border-bottom:2px solid #888;
+	background:#bbb;
 	padding:.4em 1em .2em;
 }
 thead th.table-head {
-	font-size:.8em;
+	font-size:1em;
 	font-weight:normal;
 	text-transform:uppercase;
 	color:#fff;
@@ -387,11 +271,12 @@ thead th.table-head {
 tbody th,
 tbody td {
 	border-top:1px solid #bbb;
-	background:#fff;	
+	border-bottom:1px solid #bbb;
+	background:#eee;
 }
 tbody tr.odd th,
 tbody tr.odd td {
-	background:#eee;
+	background:#fff;
 }
 tfoot th,
 tfoot td {
@@ -410,19 +295,17 @@ td.currency {
 	text-align:right;
 }
 
+
 /* forms
 ----------------------------------------------- */
-
-/*form {
+form {
 	overflow:hidden;
 }
-
 fieldset {
 	border:1px solid #bbb;
 	padding:10px;
 	position:relative;
 	background:#e9e9e9;
-	background:#D9E8F5;
 	margin-bottom:10px;
 }
 legend {
@@ -431,83 +314,11 @@ legend {
 	background:#fff;
 	border:1px solid #bbb;
 }
-form p.date select {
-	width:26%;
+fieldset.login p {
+	margin-bottom:1em;
+	margin-top:0pt;
 }
-form p.notice {
-	font-weight:bold;
-}
-
-*//* ------ */
-/*form, form ul, form li, fieldset, textarea {
-	margin: 0;
-	padding: 0;
-}
-
-label, input, select, textarea, form li span {
-	display: block;
-}
-
-form ul, form li {
-	list-style-type: none;
-}
-
-form li {
-	clear: both; 
-	height: 1%;
-	overflow: auto;
-}
-
-fieldset {
-	border: 0;
-}
-
-label, form li span {
-float: left;
-line-height:2em;
-width: 25%;
-padding-right: 1em;
-width: 9em;
-}
-
-input, select, textarea {
-	width:60%;
-	margin-left: 10em;
-float: left;
-}
-
-fieldset label, fieldset input {
-	float: left;
-}
-
-fieldset label {
-	clear: left;
-	width: 4.25em;
-	width: 32%;
-	margin-right:3%;
-	padding-right: .75em;
-}
-
-fieldset input {
-	margin-left: 5em; 
-	margin-right: 1.5em;
-}
-
-.required {
-	position: relative;
-	padding-right: 3.3em;
-}
-
-.required label span.warning {
-	position: absolute;
-	right: 0;
-	width: auto;
-	color: rgb(192,0,0);
-}
-*/
-/* ------ */
-
-/*fieldset p label {
+fieldset p label {
 	width:98%;
 }
 fieldset p input {
@@ -515,12 +326,6 @@ fieldset p input {
 }
 fieldset p select {
 	width:99%;
-}
-*/
-
-fieldset.login p {
-	margin-bottom:1em;
-	margin-top:0pt;
 }
 fieldset.login p label {
 	float:left;
@@ -535,21 +340,15 @@ fieldset.login p input {
 fieldset.login input.button {
 	margin-left:35%;
 }
+form p.notice {
+	font-weight:bold;
+}
 input.search.text {
-	width:50%;
+	width:66%;
 }
 input.search.button {
 	width:28%;
 	margin-left:2%;
-}
-.buttonSubmit {
-	font-size: .95em;
-	float: right;
-	position: relative;
-/*
-margin-right: 10px;
-margin-left: 95px;
-*/
 }
 
 
@@ -571,15 +370,7 @@ margin-left: 95px;
 .box .article {
 	border-top:3px solid #fff;
 	padding:13px 10px 0 10px;
-	background: #D9E8F5;
-	background: #fff;
 }
-
-.box .articles {
-	background: #D9E8F5;	
-	background: #fff;
-}
-
 .article h2 {
 	font-size:2em;
 	font-weight:normal;
@@ -628,9 +419,8 @@ margin-left: 95px;
 ----------------------------------------------- */
 #site_info .box {
 	color:#ccc;
-	background:#26537c;
+	background:#666;
 	margin-bottom:10px;
-	margin-top:10px;
 }
 #site_info a {
 	color:#fff;
@@ -727,11 +517,4 @@ margin-left: 95px;
 }
 #kwick .four {
 	background: #999;
-}
-.import-ds-fields {
-    height: 75px;
-    padding: 10px;
-}
-div#flash_notice {
-    color: green;
 }

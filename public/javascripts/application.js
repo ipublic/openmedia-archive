@@ -71,14 +71,14 @@ $(function() {
 
 	$(".radio").buttonset();
 
-	$('#new-ds-btn').click(function() {
+	$('#ds_btn_new').click(function() {
 		$('#existing-ds-fields').hide();
 		$('#existing-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=true; });
 		$('#new-ds-fields').show();
 		$('#new-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
 		});
 
-	$('#existing-ds-btn').click(function() {
+	$('#ds_btn_existing').click(function() {
 		$('#existing-ds-fields').show();
 		$('#existing-ds-fields').find('input, select, textarea').each(function(idx, elm) { elm.disabled=false; });
 		$('#new-ds-fields').hide();

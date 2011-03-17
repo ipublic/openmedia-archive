@@ -11,24 +11,35 @@ body {
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#26537C), to(#e0e0e0));
 	background-image: -moz-linear-gradient(19% 75% 90deg,#e0e0e0, #26537C);
 	background-repeat: repeat-x;
+	font-size: 62.5%;
+}
+
+#header {
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc773', endColorstr='#bf8630'); /* for IE */
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ffc773), to(#ffb240));
+	background-image: -moz-linear-gradient(19% 75% 90deg,#bf8630, #ffc773);
+	float: left;
+	width: 100%;
+	border-bottom: 2px solid #bbb;
+}
+
+h2#page-heading {
+	font-size: 2.2em;
 }
 
 h1#branding {
-	background-color: green;
-	border-bottom: 1px solid #bbb;
-	height: 2.0em;
 	font-weight:normal;
-	font-size: 3.8em;
-	text-align: center;
-	padding:.5em 0 1.5em;
+	font-size: 2.1em;
+	text-align: left;
 	margin-bottom:0;
+	float: left;
+	background: transparent;
 }
 
 h1#branding a {
 	filter: progid:DXImageTransform.Microsoft.DropShadow(OffX=2, OffY=2, Color='#ccc'); 
 	text-shadow: 2px 2px 2px #000;
 	text-decoration: none;
-	background: transparent;
 	color: #fff;
 }
 
@@ -70,6 +81,27 @@ ul.nav li a {
 ul.nav li.secondary:hover a:hover {
 	background:#0c5da5;
 }
+
+ul.nav-service  {
+	cursor:pointer;
+	list-style-type:none;
+	float:right;
+	text-align:center;	
+	
+}
+
+ul.nav-service li {
+	float:right;
+	border-left:2px solid #bbb;
+}
+
+ul.nav-service a {
+	color: #fff;
+	font-size:1.2em;
+	line-height:100%;
+	margin:0;padding:0 6px;
+}
+
 
 /* flash messages
 ----------------------------------------------- */
@@ -167,7 +199,7 @@ h4 {
 /* search
 ----------------------------------------------- */
 #search {
-	margin-top: -2px;
+	float: left;
 }
 
 #search ol {
@@ -177,7 +209,6 @@ h4 {
 #search li {
 	padding: 1em 1em 0 1em;
   margin: 0;
-	display: inline-block;
 }
 #search li input {
 width: 15em;
@@ -269,10 +300,8 @@ fieldset li {
 	float: left;
 	margin: 0;
 	padding: 0 1em .5em 0;  
-	border: 1px solid red;
-/*
-*/
-}
+/*	border: 1px solid red;
+*/}
 
 li.radio {padding-left: 8em;}
 
@@ -339,14 +368,15 @@ fieldset fieldset li {
   margin: 0;
 }
 
-.accordion ol {
+/*.accordion ol {
 /*background: green;
-*/}
+}
 
 .accordion ol li label {
   width: 7em;
   margin-right: 1em;
 }
+*/
 /*
 .radio li {
 	margin: 0;

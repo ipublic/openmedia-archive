@@ -1,7 +1,7 @@
 <% title "Schema > Class > #{@class.label}" %>
 
 <div class="grid_12" >
-  <p style="float: right">
+  <p>
     <%= link_to "Browse", schema_collection_path(rdf_id(@collection)) %> | 
     <%= link_to "Edit", edit_schema_collection_class_path(rdf_id(@collection), rdf_id(@class)) %> |
     <%= link_to 'Delete', schema_collection_class_path(rdf_id(@collection), rdf_id(@class)), 
@@ -27,19 +27,17 @@
       <table>
 	<thead>
 	  <tr>
-	    <th>Label</th>
-	    <th>Comment</th>
-	    <th>Range (Type)</th>
-	    <th>Identifier</th>
+	    <th>Property Name</th>
+	    <th>Property Type</th>
+	    <th>Description</th>
 	  </tr>
 	</thead>
 	<tbody>
 	  <% @class.properties.each do |property| %>
 	  <tr>
 	    <td><%= property.label %></td>
-	    <td><%= property.comment %></td>
 	    <td><%= property.range %></td>
-	    <td><%= property.identifier %></td>
+	    <td><%= property.comment %></td>
 	  </tr>
 	  <% end %>
 	</tbody>

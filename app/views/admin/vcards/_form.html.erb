@@ -17,7 +17,7 @@
 	    <%= vc.fields_for :org, @vcard.org do |org| %>
 	    <li><%= org.label 'Organization' %> <%= org.text_field :organization_name %></li>
 	    <% end %>
-	    <li><%= vc.label 'Title' %> <%= vc.text_field :role %></li>	
+	    <li><%= vc.label 'Title' %> <%= vc.text_field :title %></li>	
 	    <li><%= vc.label 'Role' %> <%= vc.text_field :role %></li>	
 
 	    <%= vc.fields_for :tel, @vcard.tel do |t| %>

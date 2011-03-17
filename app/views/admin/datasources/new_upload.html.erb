@@ -21,12 +21,12 @@
 				    <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
 				    <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
 					</li>
-					</ol>
 					<div id="csv-fields" class="import-ds-fields">
 				    <%= ds.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
-				    <ol><li><%= ds.label :column_separator, "Separator", :class => 'narrow' %> <%= ds.text_field :column_separator, :class => 'narrow' %></li></ol><ol>
-						<li><%= check_box_tag :has_header_row %> <label>Header Row?</label></li></ol>
+				    <li><%= ds.label :column_separator, "Separator", :class => 'narrow' %> <%= ds.text_field :column_separator, :class => 'narrow' %></li>
+						<li><%= check_box_tag :has_header_row %> <label>Header Row?</label></li>
 					</div>
+				</ol>
 			</fieldset>
 				
 		  <div id="xml-fields" class="import-ds-fields" style="display: none">
@@ -40,7 +40,7 @@
 		<div>
 		  <fieldset class="omega">
 		    <ol>
-		      <li><label>ZIP File</label> <%= file_field_tag :shapefile %></li>
+		      <li><label class='narrow'>ZIP File</label> <%= file_field_tag :shapefile %></li>
 		    </ol>
 		  </fieldset>
 		</div>

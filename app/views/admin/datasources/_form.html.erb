@@ -1,64 +1,67 @@
 <%= ds.error_messages %>
-<fieldset>
-  <legend><b>Basic Info</b></legend>
-  <p>
-    <%= ds.label :title %> <%= ds.text_field :title, :disabled=>!@datasource.new_record? %>
-  </p>
-  <p>
-    <%= ds.label :rdfs_class_uri, 'Class' %><br/>
-    <input class="datasource-class-uri" name="rdfs-class-identifier" size="30" type="text" value="<%= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
-    <%= ds.hidden_field :rdfs_class_uri %>
-  </p>				
-  <%= ds.fields_for :metadata, @datasource.metadata do |m| %>
-  <p><%= m.label :description %><br/> <%= m.text_area :description, :rows => 3 %></p>
+<div class="grid_6">
+	<fieldset>
+	  <legend>Basic Info</legend>
+		<ol>
+			<li>
+	    	<%= ds.label :title, :class => 'narrow' %> 
+				<%= ds.text_field :title, :disabled=>!@datasource.new_record?, :class => 'wide' %>
+	  	</li>
+		  <li>
+		    <%= ds.label :rdfs_class_uri, 'Class', :class => 'narrow' %><br/>
+		    <input class="datasource-class-uri wide" name="rdfs-class-identifier" type="text" value="<%= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
+		    <%= ds.hidden_field :rdfs_class_uri %>
+		  </li>				
+		  <%= ds.fields_for :metadata, @datasource.metadata do |m| %>
+			  <li><%= m.label :description, :class => 'narrow' %> <%= m.text_area :description, :rows => 3, :class => 'wide' %></p>
 
-  <p>
-    <label for="datasource-creator">Creator</label> 
-    <%= ds.select :creator_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
-  </p>
+			  <li>
+			    <label for="datasource-creator" class="narrow">Creator</label> 
+			    <%= ds.select :creator_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			  </li>
 
-  <p>
-    <label for="datasource-publisher">Publisher</label> 
-    <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
-  </p>
-  <% end %>				
-</fieldset>	 	
+			  <li>
+			    <label for="datasource-publisher" class="narrow">Publisher</label> 
+			    <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			  </li>
+			<% end %>
+		</ol>				
+	</fieldset>	 	
 
-<fieldset id="source">
-  <legend><b>Source</b></legend>
-  <p>
-    <%= ds.label :source_type %>
-    <%= ds.select :source_type, OpenMedia::Datasource::TYPES.collect {|t| [t.titleize, t]} %>
-  </p>
+	<fieldset id="source">
+	  <legend>Source</legend>
+		<ol>
+		  <li>
+		    <%= ds.label :source_type, :class => 'narrow' %>
+		    <%= ds.select :source_type, OpenMedia::Datasource::TYPES.collect {|t| [t.titleize, t]} %>
+		  </li>
 
-  <p id="parser">
-    <%= ds.label :parser %>
-    <%= ds.select :parser, OpenMedia::Datasource::PARSERS.collect {|p| [p.titleize, p]} %>
-  </p>
+		  <li>
+		    <%= ds.label :parser, :class => 'narrow' %>
+		    <%= ds.select :parser, OpenMedia::Datasource::PARSERS.collect {|p| [p.titleize, p]} %>
+		  </li>
 
-  <p>
-    <%= ds.label :column_separator %>
-    <%= ds.text_field :column_separator %>
-  </p>
+		  <li>
+		    <%= ds.label :column_separator, :class => 'narrow' %>
+		    <%= ds.text_field :column_separator, :class => 'narrow' %>
+		  </li>
 
-  <p>
-    <%= ds.label :skip_lines %>
-    <%= ds.text_field :skip_lines %>
-  </p>
-</fieldset>	 	
+		  <li>
+		    <%= ds.label :skip_lines, :class => 'narrow' %>
+		    <%= ds.text_field :skip_lines, :class => 'narrow' %>
+		  </li>
+		</ol>
+	</fieldset>	 	
+</div>
 
-<fieldset>
-  <legend><b>Source Properties</b></legend>
-  <ol class="two-column">
-    <% for property in @datasource.source_properties %>
-    <%= render :partial=>'datasource_property', :locals=>{ :property=>property } %>
-    <% end %>
-  </ol>
-  <a href="#" class="add-datasource-property add-element">add property</a>
-</fieldset>
-
-<fieldset class="submit">
-  <ol>
-    <li><%= ds.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
-  </ol>
-</fieldset>
+<div class="grid_12">
+	<fieldset class="omega">
+	  <legend>Source Properties</legend>
+	  <ol>
+	    <% for property in @datasource.source_properties %>
+	    <%= render :partial=>'datasource_property', :locals=>{ :property=>property } %>
+	    <% end %>
+	  </ol>
+	  <a href="#" class="add-datasource-property add-element">add property</a>
+	</fieldset>
+</div>

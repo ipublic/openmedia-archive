@@ -1,10 +1,10 @@
 <% title "Datasources" %>
-<div class="grid_8">
+<div class="grid_12">
   <% if @datasource.has_attachment?('seed_data') %>
-  <div class="box">
-    This datasource has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
-    to import this data.
-  </div>
+	  <div class="box">
+	    This datasource has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
+	    to import this data.
+	  </div>
   <% end %>
 
   <h2><%= @datasource.title %></h2>
@@ -12,10 +12,10 @@
   <div class="box">
     <%= render :partial=>'form', :locals=>{:ds=>ds} %>
   </div>
-  <p>
-    <%= link_to 'Back',  :back %>
-    <%= ds.submit "Submit", :class => "buttonSubmit", :style => "float: right;"%><br/>
-  </p>
+	<fieldset class="omega submit">
+	  <ol>
+	    <li><%= ds.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+	  </ol>
+	</fieldset>
   <% end %>
-
 </div>

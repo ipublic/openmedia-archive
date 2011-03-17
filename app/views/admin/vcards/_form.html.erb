@@ -1,7 +1,7 @@
 <div id="forms">
   <%= form_for :vcard, :url=>@vcard.exists? ? admin_vcard_path(rdf_id(@vcard)) : admin_vcards_path,
                :html => {:method=>@vcard.exists? ? :put : :post } do |vc| %>
-  <div class="grid_12">
+  <div class="grid_6">
     <div class="box">
       <h2><%= @vcard.exists? ? vcard_label(@vcard) : "New Contact" %></h2>
       <div class="block">
@@ -14,12 +14,21 @@
 	    <li><%= n.label 'Middle Name' %> <%= n.text_field :additional_name %></li>
 	    <li><%= n.label 'Last Name' %> <%= n.text_field :family_name %></li>
 	    <li><%= n.label 'Suffix' %> <%= n.text_field :honorific_suffix %></li>	
+		</ol>
+	</fieldset>
+	
+	<fieldset>
+		<ol>
 	    <%= vc.fields_for :org, @vcard.org do |org| %>
 	    <li><%= org.label 'Organization' %> <%= org.text_field :organization_name %></li>
 	    <% end %>
 	    <li><%= vc.label 'Title' %> <%= vc.text_field :title %></li>	
 	    <li><%= vc.label 'Role' %> <%= vc.text_field :role %></li>	
+		</ol>
+	</fieldset>
 
+	<fieldset class="omega">
+		<ol>
 	    <%= vc.fields_for :tel, @vcard.tel do |t| %>
 	    <li><%= t.label 'Phone' %> <%= t.text_field :value %></li>
 	    <li><%= t.hidden_field :type, :value=>RDF::VCARD.Work.to_s %></li>
@@ -43,9 +52,7 @@
 	</fieldset>
 	<% end %>
 
-
-
-	<fieldset class="submit">
+	<fieldset class="submit omega">
 	  <ol>
 	    <li><%= vc.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
 	  </ol>

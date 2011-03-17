@@ -85,11 +85,11 @@ class Admin::DatasourcesController < ApplicationController
       elsif @datasource.shapefile_source? && shapefile
         if shapefile.content_type =~ /(zip|ZIP)$/
           Dir.mktmpdir do |temp_dir|
-            `unzip #{shapefile.path} -d #{temp_dir}`
+            `#{UNZIP} #{shapefile.path} -d #{temp_dir}`
             shpfn = Dir.glob(File.join(temp_dir,'*.shp')).first
             if shpfn
               jsfn = shpfn.gsub(/\.shp/,'.js')
-              %x!ogr2ogr -t_srs EPSG:4326 -a_srs EPSG:4326 -f "GeoJSON" #{jsfn} #{shpfn}!
+              %x!#{OGR2OGR} -t_srs EPSG:4326 -a_srs EPSG:4326 -f "GeoJSON" #{jsfn} #{shpfn}!
               File.open(jsfn) do |jsf|
                 geojson = JSON.load(jsf)
                 properties = geojson['features'].first['properties'].collect do |k,v|

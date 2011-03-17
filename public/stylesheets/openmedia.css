@@ -269,16 +269,12 @@ fieldset li {
 	float: left;
 	margin: 0;
 	padding: 0 1em .5em 0;  
+	border: 1px solid red;
 /*
-border: 1px solid red;
 */
 }
 
-/*
-.narrow input, select, textarea {
-	width:10em;
-}
-*/
+li.radio {padding-left: 8em;}
 
 input.narrow {
 	width:12em;
@@ -351,11 +347,14 @@ fieldset fieldset li {
   width: 7em;
   margin-right: 1em;
 }
-
-.radio {
+/*
+.radio li {
+	margin: 0;
 	padding: 0em 0 1em 0;
+	float: left;
+	clear: both;
 }
-
+*/
 #csv-fields, #new-ds-fields, #existing-ds-fields li {
   padding-bottom: 1em;  
   margin-left: -1em;

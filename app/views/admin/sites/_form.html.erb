@@ -9,8 +9,8 @@
 					<fieldset>
 						<legend>General</legend>
 						<ol>
-						  <li><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name %></li>
-						  <li><%= f.label :url, 'Domain URL' %> <%= f.text_field :url %></li>
+						  <li><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
+						  <li><%= f.label :url, 'Domain URL' %> <%= f.text_field :url, :class => "wide" %></li>
 
 						  <li><%= f.label :adminstrator_contact_id, 'Sys Admin Contact' %> 
 								 <%= f.select :adminstrator_contact_id, contact_collection, {:prompt => 'Select contact'}  %></li>
@@ -22,8 +22,8 @@
 					<fieldset>
 						<legend>OpenMedia Servers</legend>
 						<ol>
-						  <li><%= f.label :internal_couchdb_server_uri, 'Internal server URI' %> <%= f.text_field :internal_couchdb_server_uri %></li>
-						  <li><%= f.label :public_couchdb_server_uri, 'Public server URI' %> <%= f.text_field :public_couchdb_server_uri %></li>
+						  <li><%= f.label :internal_couchdb_server_uri, 'Internal server URI' %> <%= f.text_field :internal_couchdb_server_uri, :class => "wide" %></li>
+						  <li><%= f.label :public_couchdb_server_uri, 'Public server URI' %> <%= f.text_field :public_couchdb_server_uri, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 
@@ -35,7 +35,7 @@
 					<fieldset class="omega">
 						<legend>Services</legend>
 						<ol>
-					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key %></li>
+					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key, :rows => 3, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 					<fieldset class="submit">

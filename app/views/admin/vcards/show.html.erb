@@ -2,13 +2,13 @@
 
 <div class="grid_12" >
   <p style="float: right">
-    <%= link_to "Browse", admin_vcards_path %> | 
+    <%= link_to "All Contacts", admin_vcards_path %> | 
     <%= link_to "Edit", edit_admin_vcard_path(rdf_id(@vcard)) %>
   </p>
   <hr />
 </div>
 
-<div class="grid_12" >
+<div class="grid_5" >
   <div class="box">
     <h2><%= vcard_label(@vcard) %></h2>
     <div class="block">

@@ -127,9 +127,26 @@ ul.nav-service a {
 }
 
 .box h2 {
-	color: #fff;
-	background:#26537c;
+	background-color: #26537C;
+	text-transform: none;
+  -moz-border-radius: .4em;
+  -webkit-border-radius: .4em;
+  border-radius: .4em;
+  -moz-box-shadow: 3px 3px 3px #ccc;
+  -webkit-box-shadow: 3px 3px 3px #ccc;
+  box-shadow: 3px 3px 3px #ccc;
+	filter: progid:DXImageTransform.Microsoft.DropShadow(OffX=3, OffY=3, Color=#c0c0c0, Positive='true'); 
+	/*
+	font-size:1em;
+	font-weight:normal;
+	color:#fff;
+	background:#333;
+	margin:-10px -10px 0 -10px;
+	padding:6px 12px;	
+	*/
 }
+
+
 
 /* anchors
 ----------------------------------------------- */

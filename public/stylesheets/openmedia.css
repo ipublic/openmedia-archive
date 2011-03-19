@@ -64,6 +64,23 @@ ul.main li a {
 	background-image: -moz-linear-gradient(19% 75% 90deg,#26537C, #689cd2);
 }
 
+ul.nav li ul {
+	cursor:default;
+	width:100%;
+	max-width:100%;
+	position:absolute;
+	height:auto;
+	top:3.3em;
+	background-position:0 0 !important;
+	left:-9000px;
+}
+
+ul.nav li a {
+	height:2.5em;
+	line-height:2.5em;
+}
+
+
 ul.main li:hover a {
 /*	filter: progid:DXImageTransform.Microsoft.DropShadow(OffX=2, OffY=2, Color='#ccc'); */
 	background:#0c5da5;
@@ -71,11 +88,6 @@ ul.main li:hover a {
 
 ul.main li:hover a:active {
 	background:#0c5da5;
-}
-
-ul.nav li a {
-	height:2.5em;
-	line-height:2.5em;
 }
 
 ul.nav li.secondary:hover a:hover {
@@ -86,8 +98,7 @@ ul.nav-service  {
 	cursor:pointer;
 	list-style-type:none;
 	float:right;
-	text-align:center;	
-	
+	text-align:center;		
 }
 
 ul.nav-service li {
@@ -102,6 +113,15 @@ ul.nav-service a {
 	margin:0;padding:0 6px;
 }
 
+ul.main li ul li a {
+  width:12em;
+  line-height:2em;
+  height:2em;
+  text-align:left;
+  color:#fff;
+  border-top:1px solid #bbb;
+  background:#444;
+}
 
 /* flash messages
 ----------------------------------------------- */
@@ -145,8 +165,6 @@ ul.nav-service a {
 	padding:6px 12px;	
 	*/
 }
-
-
 
 /* anchors
 ----------------------------------------------- */

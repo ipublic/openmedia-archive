@@ -1,0 +1,58 @@
+<% content_for :head do %>
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no"/>
+	<%#= stylesheet_link_tag "http://serverapi.arcgisonline.com/jsapi/arcgis/2.2/js/dojo/dijit/themes/claro/claro.css" %>
+
+	<script type="text/javascript">var djConfig = {parseOnLoad: true};</script>
+	<%= javascript_include_tag 'http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.2' %>
+	<%= javascript_include_tag 'map-arcgis.js' %>
+
+	<script type="text/javascript">
+  	dojo.require("esri.map");
+	  dojo.require("dijit.layout.BorderContainer");
+	  dojo.require("dijit.layout.ContentPane");
+	  var map;
+
+	  function init() {
+	    var initExtent = new esri.geometry.Extent(
+				{"xmin":-8591189.922223657,
+				 "ymin":4695514.45486338,
+				 "xmax":-8557557.629778225,
+				 "ymax":4726089.266177409,
+				 "spatialReference":{"wkid":102100}
+				});
+				
+	    map = new esri.Map("dsMap",{extent:initExtent});
+	    dojo.connect(map,"onLoad", function(map) {map.infoWindow.resize(250, 100);} );
+
+	    // Add the world street map layer to the map. View the ArcGIS Online site for services:
+	 		// http://arcgisonline/home/search.html?t=content&f=typekeywords:service    
+
+      // map.addLayer(new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"));
+	    var basemap = new esri.layers.ArcGISTiledMapServiceLayer("http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
+	    map.addLayer(basemap);  
+	
+      dojo.connect(map, "onClick", addPoint);
+
+	    // resize the map when the browser resizes - view the 'Resizing and repositioning the map' section in 
+	    // the following help topic for more details:
+	 		// http://help.esri.com/EN/webapi/javascript/arcgis/help/jshelp_start.htm#jshelp/inside_guidelines.htm
+	    var resizeTimer;
+	    dojo.connect(map, 'onLoad', function(theMap) {
+	      dojo.connect(dijit.byId('dsMap'), 'resize', function() {  //resize the map if the div is resized
+	        clearTimeout(resizeTimer);
+	        resizeTimer = setTimeout( function() {
+	          map.resize();
+	          map.reposition();
+	        }, 500);
+	      });
+	    });
+	  }
+	  dojo.addOnLoad(init);
+	</script>
+<% end %>
+
+<div dojotype="dijit.layout.BorderContainer" design="headline" gutters="false" style="width: 100%; height: 100%; margin: 0;">
+  <div class="shadow" id="dsMap" dojotype="dijit.layout.ContentPane" region="center" style="overflow:hidden;">
+  </div>
+</div>
+

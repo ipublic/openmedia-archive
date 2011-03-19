@@ -1,3 +1,4 @@
+
 <% title "#{@class.label} Dataset" %>
 
 <div class="grid_12" >
@@ -7,7 +8,7 @@
   <hr />
 </div>
 
-<div class="grid_12" >
+<div class="grid_6" >
   <div class="box">
     <h2><%= @class.uri %></h2>
     <div class="block">
@@ -23,3 +24,20 @@
     </p>
   </div>
 </div>
+
+<div class="grid_6 omega" >
+  <div class="box">
+    <h2>Map</h2>
+    <div class="block">
+	    <%= render :partial=>'shared/map' %>
+		</div>
+	</div>
+</div>
+
+<div class="grid_6 omega" >
+  <div class="box">
+    <h2>Chart</h2>
+    <div class="block">
+		</div>
+	</div>
+</div>	

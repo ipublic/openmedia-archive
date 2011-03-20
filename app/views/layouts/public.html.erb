@@ -24,7 +24,7 @@
 		<%= javascript_include_tag :defaults %>
 		
 	</head>
-	<body>
+	<body class="claro">
 		<div class="container_12">
 			<div class="grid_12">
 				<%= render :partial => 'shared/header' %>
@@ -49,5 +49,6 @@
 				</div>
 				<div class="clear"></div>
 			</div><!--#container_12-->
+			<%= yield :body %>
 	</body>
 </html>

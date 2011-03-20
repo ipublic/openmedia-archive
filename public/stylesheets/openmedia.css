@@ -43,6 +43,53 @@ h1#branding a {
 	color: #fff;
 }
 
+/* Map elements
+----------------------------------------------- */
+.map {
+	height: 100%; 
+	width: 100%;
+	padding:0;
+	margin: 0;
+	overflow:hidden;
+	border:solid 1px #bbb;
+}
+
+/* set title font properties */
+.infowindow .window .top .right .user .titlebar .title { 
+	font-family:Arial, Helvetica, sans-serif; 
+	font-weight:bold; 
+	font-size:14pt; 
+}
+
+/* set content font properties */
+ .infowindow .window .top .right .user .content { 
+	font-style:italic;
+	font-weight:bold; 
+	font-size:10pt; 
+}
+
+.claro .dijitButtonText {
+   color:#03c;
+   font-family: Arial, Helvetica, sans-serif
+   font-weight:bold;
+ }
+ .claro td.dijitMenuItemLabel {
+   color:#03c;
+   font-family: Arial, Helvetica, sans-serif
+   font-weight:500;
+ }
+
+/* Chart elements
+----------------------------------------------- */
+.chart div {
+	font: 10px sans-serif;
+	color: #fff;
+	background-color: #26537C;
+	text-align: right;
+	padding: 3px;
+	margin: 1px;
+}
+
 /* Navigation elements
 ----------------------------------------------- */
 ul.nav {
@@ -434,6 +481,17 @@ em {
 
 /* tables
 ----------------------------------------------- */
+table {
+	/* Grid960 table width property interferes with DoJo scale slider */
+	width: auto;
+}
+
+tbody th,
+tbody td {
+	/* Grid960 background property interferes with DoJo scale slider */
+	background: transparent;
+}
+
 .property-table {
 	border: none;
 	border-collapse: collapse;

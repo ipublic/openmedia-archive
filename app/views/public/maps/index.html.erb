@@ -1,0 +1,44 @@
+<% title "Map" %>
+<% content_for :head do %>
+	<!-- Use Dojo Claro 1.6 stylesheet (it interferes less with core CSS properties than ESRI-provded 1.5) -->
+	<%= stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/dojo/1.6/dijit/themes/claro/claro.css" %>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="Viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+
+	<%= javascript_include_tag "http://serverapi.arcgisonline.com/jsapi/arcgis/?v=2.2" %>
+	<%= javascript_include_tag "map-arcgis.js" %>
+<% end %>
+
+<div class="grid_12">
+	<div class="box">
+		<div class="block">
+			<div class="map shadow" id="map">
+			</div>
+		</div>
+	</div>
+</div>
+
+<% content_for :body do %>
+	<script type="text/javascript">
+		dojo.require("dijit.layout.ContentPane");
+		dojo.require("esri.map");
+		
+		function Init() {
+			new dijit.layout.ContentPane({region: "center", style: "height: 100%; width: 100%; margin: 0; padding: 0; overflow: hidden;"},"map");
+			var map = new esri.Map("map");
+			var layer = new esri.layers.ArcGISTiledMapServiceLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
+			map.addLayer(layer);
+			var resizeTimer;
+			dojo.connect(map, 'onLoad', function(theMap) {
+				dojo.connect(dijit.byId('map'), 'resize', function() {
+					clearTimeout(resizeTimer);
+					resizeTimer = setTimeout( function() {
+						map.resize();
+						map.reposition();
+					}, 500);
+				});
+			});
+		}
+		dojo.addOnLoad(Init);
+	</script>
+<% end %>

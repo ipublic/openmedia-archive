@@ -6,7 +6,7 @@
     </li>
     <li>
       <%= label_tag "datasource[source_properties][]#{property.label}_range_name", 'Type', :class => "narrow" %>
-      <%= text_field_tag "datasource[source_properties][]#{property.label}_range_name", property.range_uri ? (property.range.fragment || property.range.path.split('/').last) : nil,
+      <%= text_field_tag "datasource[source_properties][]#{property.label}_range_name", short_uri(property.range_uri),
 	  :class=>'property-range-uri' %>
       <input type="hidden" name="datasource[source_properties][][range_uri]" value="<%= property.range.to_s %>"/>
     </li>

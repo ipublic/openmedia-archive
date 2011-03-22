@@ -157,6 +157,7 @@ $(function() {
     $('.datasource-class-uri').autocomplete(typeAutoCompleteOpts);
     $('.datasource-class').autocomplete(typeAutoCompleteOpts);
     $('#source input.property-name').live('blur', syncSourceProperties);
+    $('.tooltip').tooltip();
 });
 
 function syncSourceProperties() {

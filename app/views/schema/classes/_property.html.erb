@@ -5,7 +5,7 @@
   </li>
   <li>
     <%= label_tag "#{base_name}#{property.label}_range_name", 'Type', :class => 'narrow' %>
-    <%= text_field_tag "#{base_name}#{property.label}_range_name", property.range ? (property.range.fragment || property.range.path.split('/').last) : nil,
+    <%= text_field_tag "#{base_name}#{property.label}_range_name", short_uri(property.range),
  :class=>'property-type-uri' %>
     <input type="hidden" name="<%=base_name %>[range]" value="<%= property.range.to_s %>"/>
     <% if property.exists? %>

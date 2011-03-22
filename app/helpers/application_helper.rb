@@ -80,6 +80,11 @@ module ApplicationHelper
   def vcard_label(vcard)
     [vcard_formatted_name(vcard), (vcard.org ? vcard.org.organization_name : nil)].select{|p| !p.blank?}.join(', ')
   end
-  
+
+  def short_uri(uri)    
+    return '' unless uri
+    return short_uri(RDF::URI.new(uri)) if uri.is_a?(String)
+    uri.fragment || uri.path.split('/').last    
+  end  
 
 end

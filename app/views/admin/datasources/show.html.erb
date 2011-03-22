@@ -56,7 +56,7 @@
 		     <% @datasource.source_properties.each do |sp| %>
 		     <tr>
 		       <th><%= sp.label %></th>
-		       <td><%= sp.range_uri %></td>
+		       <td><span class="tooltip" title="<%=sp.range_uri%>"><%= short_uri(sp.range_uri) %></span></td>
 		     </tr>
 		     <% end %>
 		   </table>

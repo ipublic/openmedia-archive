@@ -36,7 +36,7 @@
 	  <% @class.properties.each do |property| %>
 	  <tr>
 	    <td><%= property.label %></td>
-	    <td><%= property.range %></td>
+	    <td><span class="tooltip" title="<%=property.range%>"><%= short_uri(property.range) %></span></td>
 	    <td><%= property.comment %></td>
 	  </tr>
 	  <% end %>

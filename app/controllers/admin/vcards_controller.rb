@@ -31,11 +31,11 @@ class Admin::VcardsController < ApplicationController
   end
 
   def update
-    name_params = params[:vcard][:n]
-    org_params = params[:vcard][:org]
-    email_params = params[:vcard][:email]
-    tel_params = params[:vcard][:tel]        
-    adr_params = params[:vcard][:adr]
+    name_params = params[:vcard].delete(:n)
+    org_params = params[:vcard].delete(:org)
+    email_params = params[:vcard].delete(:email)
+    tel_params = params[:vcard].delete(:tel)
+    adr_params = params[:vcard].delete(:adr)
     begin
       if name_params
         if @vcard.n

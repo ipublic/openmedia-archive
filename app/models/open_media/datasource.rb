@@ -70,7 +70,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     end
 
     # generate ctl from dataset and source definition
-    ctl = "source :in, {:file=>'#{opts[:file]}', :parser=>'#{self.parser}', :skip_lines=>#{self.skip_lines}},["+
+    ctl = "source :in, {:file=>'#{opts[:file]}', :parser=>{:name=>'#{self.parser}', :options=>{:col_sep=>'#{self.column_separator}'}}, :skip_lines=>#{self.skip_lines}},["+
       self.source_properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:rdfs_class=>'#{self.rdfs_class_uri}'}, {:order=>[" +
       self.rdfs_class.properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]}\n"

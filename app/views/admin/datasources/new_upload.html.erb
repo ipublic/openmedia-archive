@@ -1,7 +1,8 @@
 <% title "Import Data" %>
 
+<%= form_for :datasource, :url=>upload_admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
+
 <div class="grid_12">
-  <%= form_for :datasource, :url=>upload_admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
   <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::TEXTFILE_TYPE %>
   <%= ds.error_messages %>
 </div>
@@ -11,10 +12,6 @@
 		<legend>Data Source</legend>
 	</fieldset>
   <div id="upload-accordion">
-		<h2 tabindex="1"><a href="#">Place Holder</a></h2>
-		<div>
-			<p>funny business</p>
-		</div>
 		<h2 tabindex="1"><a href="#">Text Files</a></h2>
 		<div>
 			<fieldset class="omega">

@@ -124,11 +124,11 @@ $(function() {
     });
     
     $('a.delete-class-property').live('click', function() {
-	var deletedPropertyURI = $(this).closest('li.class-property').find('.class-property-uri').val();
+	var deletedPropertyURI = $(this).closest('ol.class-property').find('.class-property-uri').val();
 	if (deletedPropertyURI) {
 	    $(this).closest('form').prepend($('<input type="hidden"/>').attr('name','deleted_property_uris[]').attr('value',deletedPropertyURI));
 	}
-	$(this).closest('li.class-property').remove();
+	$(this).closest('ol.class-property').remove();
 	return false;
     });
 

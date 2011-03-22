@@ -77,7 +77,7 @@ class Admin::VcardsController < ApplicationController
         end
       end
 
-      @vcard.update!(params[:vcard])
+      @vcard.update!(params[:vcard].to_hash.symbolize_keys!)
       redirect_to admin_vcard_path(rdf_id(@vcard))
     rescue => e
       render :action=>:edit

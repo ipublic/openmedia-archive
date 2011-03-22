@@ -53,7 +53,7 @@
 		     <thead>
 		       <tr><th>Name</th><th>Type</th></tr>
 		     </thead>
-		     <% @datasource.source_properties.each do |sp| %>
+		     <% @datasource.source_properties.sort {|p1,p2| p1.label <=> p2.label}.each do |sp| %>
 		     <tr>
 		       <th><%= sp.label %></th>
 		       <td><span class="tooltip" title="<%=sp.range_uri%>"><%= short_uri(sp.range_uri) %></span></td>

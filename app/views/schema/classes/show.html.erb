@@ -33,7 +33,7 @@
 	  </tr>
 	</thead>
 	<tbody>
-	  <% @class.properties.each do |property| %>
+	  <% @class.properties.sort {|p1,p2| p1.label <=> p2.label}.each do |property| %>
 	  <tr>
 	    <td><%= property.label %></td>
 	    <td><span class="tooltip" title="<%=property.range%>"><%= short_uri(property.range) %></span></td>

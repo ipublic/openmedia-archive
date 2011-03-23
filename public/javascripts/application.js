@@ -116,7 +116,7 @@ $(function() {
     $('a.add-class-property').live('click', function() {
 	var link = this;
 	$.get('/schema/classes/new_property', function(html) {
-	    $(link).prev('ol').append(html);
+	    $(html).insertBefore(link);
 	    $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
 	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
 	});

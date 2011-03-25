@@ -13,7 +13,7 @@
     <h2><%= vcard_label(@vcard) %></h2>
     <div class="block">
       <%= show_fields(@vcard.n, [[:honorific_prefix, 'Prefix'], [:given_name, 'First Name'], 
-	                         [:extended_name, 'Middle Name'], [:family_name, 'Last Name'],
+	                         [:additional_name, 'Middle Name'], [:family_name, 'Last Name'],
 	                         [:honorific_suffix, 'Suffix']]) %>
       <% if @vcard.org %>
       <%= show_fields(@vcard.org, [[:organization_name, 'Organization Name']]) %>

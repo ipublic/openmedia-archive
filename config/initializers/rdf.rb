@@ -9,7 +9,7 @@ RDF::METADATA = RDF::Vocabulary.new(RDF::OM_CORE['metadata/'])
 TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
 SITE_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>SITE_DATABASE)
 Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
-OpenMedia::Schema::RDFS::Class.refresh_design_doc
+OpenMedia::Schema::DesignDoc.refresh
 
 module Spira
  def settings

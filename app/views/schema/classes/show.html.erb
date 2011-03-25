@@ -1,10 +1,10 @@
-<% title "Schema > Class > #{@class.label}" %>
+<% title "Schema > Class > #{@class_def['label']}" %>
 
 <div class="grid_12" >
   <p class="page-nav">
     <%= link_to "All Classes", schema_collection_path(rdf_id(@collection)) %> | 
-    <%= link_to "Edit", edit_schema_collection_class_path(rdf_id(@collection), rdf_id(@class)) %> |
-    <%= link_to 'Delete', schema_collection_class_path(rdf_id(@collection), rdf_id(@class)), 
+    <%= link_to "Edit", edit_schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)) %> |
+    <%= link_to 'Delete', schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)), 
 	:confirm => "Are you sure you want to delete this class and all of its data?", 
         :method => :delete %>
   </p>
@@ -13,9 +13,9 @@
 
 <div class="grid_12" >
   <div class="box">
-    <h2><%= @class.identifier %></h2>
+    <h2><%= @class_def['identifier'] %></h2>
     <div class="block">
-      <%= show_fields(@class, [:label, :comment, :uri, :created, :modified]).html_safe %>
+      <%= show_fields(@class_def, [:label, :comment, :uri, :created, :modified]).html_safe %>
     </div>
   </div>
 </div>
@@ -33,11 +33,11 @@
 	  </tr>
 	</thead>
 	<tbody>
-	  <% @class.properties.sort {|p1,p2| p1.label <=> p2.label}.each do |property| %>
+	  <% @class_def['properties'].sort {|p1,p2| p1['label'] <=> p2['label']}.each do |property| %>
 	  <tr>
-	    <td><%= property.label %></td>
-	    <td><span class="tooltip" title="<%=property.range%>"><%= short_uri(property.range) %></span></td>
-	    <td><%= property.comment %></td>
+	    <td><%= property['label'] %></td>
+	    <td><span class="tooltip" title="<%=property['range']%>"><%= short_uri(property['range']) %></span></td>
+	    <td><%= property['comment'] %></td>
 	  </tr>
 	  <% end %>
 	</tbody>

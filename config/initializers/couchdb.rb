@@ -40,3 +40,29 @@ else
   COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
   PUBLIC_DATABASE = COUCHDB_SERVER.database!("public#{db_suffix}")
 end
+
+module CouchRest
+  class Database
+
+    # Query a CouchDB view, decorated bt a list. Accepts
+    # paramaters as described in http://wiki.apache.org/couchdb/HttpViewApi
+    def list(name, params = {}, &block)
+      keys = params.delete(:keys)
+      name = name.split('/')
+      dname = name.shift
+      lname = name.shift
+      vname = name.join('/')
+      url = CouchRest.paramify_url "#{@root}/_design/#{dname}/_list/#{lname}/#{vname}", params
+      if keys
+        CouchRest.post(url, {:keys => keys})
+      else
+        if block_given?
+          @streamer.view("_design/#{dname}/_list/#{lname}/#{vname}", params, &block)
+        else
+          CouchRest.get url
+        end
+      end
+    end
+    
+  end
+end

@@ -15,6 +15,12 @@ class Schema::ClassesController < ApplicationController
     @class = OpenMedia::Schema::RDFS::Class.new
   end
 
+  def show
+    @class_uri = RDF::OM_DATA[params[:id]]
+    @class_def = OpenMedia::Schema.get_class_definition(@class_uri.to_s)
+  end
+
+
   def new_property
     @property = OpenMedia::Schema::RDF::Property.new
     render :partial=>'property', :locals=>{:base_name=>'class[properties][]', :property=>@property}, :layout=>nil
@@ -42,6 +48,7 @@ class Schema::ClassesController < ApplicationController
   end
 
   def update
+    @class = OpenMedia::Schema::RDFS::Class.for(params[:id])
     begin
       if params[:deleted_property_uris]
         params[:deleted_property_uris].each do |dp|
@@ -79,7 +86,13 @@ class Schema::ClassesController < ApplicationController
       
   end
 
+  def edit
+    @class = OpenMedia::Schema::RDFS::Class.for(params[:id])    
+  end
+
+
   def destroy
+    @class = OpenMedia::Schema::RDFS::Class.for(params[:id])    
     @class.destroy!    
     flash[:notice] = 'Class successfully deleted.'
     redirect_to schema_collection_path(rdf_id(@collection))
@@ -89,7 +102,6 @@ class Schema::ClassesController < ApplicationController
   
 private
   def load_objects
-    @class = OpenMedia::Schema::RDFS::Class.for(params[:id]) if params[:id]
     params[:collection_id] = params[:collection_id].gsub(/:/,'/') if params[:collection_id]
     @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_id]) if params[:collection_id]    
   end

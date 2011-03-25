@@ -1,8 +1,8 @@
-<% title "Datasources" %>
+<% title "Data Sources" %>
 <div class="grid_12">
   <% if @datasource.has_attachment?('seed_data') %>
 	  <div class="box">
-	    This datasource has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
+	    This data source has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
 	    to import this data.
 	  </div>
   <% end %>

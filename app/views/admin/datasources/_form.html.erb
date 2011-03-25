@@ -1,14 +1,14 @@
 <%= ds.error_messages %>
 <div class="grid_6">
 	<fieldset>
-	  <legend>Basic Info</legend>
+	  <legend>OpenMedia</legend>
 		<ol>
 			<li>
-	    	<%= ds.label :title, :class => 'narrow' %> 
+	    	<%= ds.label :title, 'Name', :class => 'narrow' %> 
 				<%= ds.text_field :title, :disabled=>!@datasource.new_record?, :class => 'wide' %>
 	  	</li>
 		  <li>
-		    <%= ds.label :rdfs_class_uri, 'Class', :class => 'narrow' %><br/>
+		    <%= ds.label :rdfs_class_uri, 'Type', :class => 'narrow' %>
 		    <input class="datasource-class-uri wide" name="rdfs-class-identifier" type="text" value="<%= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
 		    <%= ds.hidden_field :rdfs_class_uri %>
 		  </li>				
@@ -29,7 +29,7 @@
 	</fieldset>	 	
 
 	<fieldset id="source">
-	  <legend>Source</legend>
+	  <legend>Data Source</legend>
 		<ol>
 		  <li>
 		    <%= ds.label :source_type, :class => 'narrow' %>
@@ -42,7 +42,7 @@
 		  </li>
 
 		  <li>
-		    <%= ds.label :column_separator, :class => 'narrow' %>
+		    <%= ds.label :column_separator, "Separator", :class => 'narrow' %>
 		    <%= ds.text_field :column_separator, :class => 'narrow' %>
 		  </li>
 

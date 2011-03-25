@@ -1,4 +1,4 @@
-<% title "Datasource: " + @datasource.title %>
+<% title "Data Source: " + @datasource.title %>
 <div class="grid_12">
 	<p class="page-nav">
 		<%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
@@ -19,8 +19,9 @@
 	<div class="box">
 		<h2><%= @datasource.title %></h2>
 		<div class="block">
-			<%= show_fields(@datasource, [:uri, :source_type, :parser, :column_separator, 
-			                              :skip_lines, [:rdfs_class_uri, 'Schema Class']]) %>
+			<%= show_fields(@datasource, [:uri, 
+																		 [:rdfs_class_uri, 'Type'],
+																		 :description]) %>
 			<table class="property-table">
 			  <tr>
 			    <th class="property-table">Creator:</th>
@@ -31,8 +32,11 @@
 			    <th class="property-table">Publisher:</th>
 			    <td><%= vcard_label(@datasource.publisher) %>
 			  </tr>
-
 			</table>
+
+			<%= show_fields(@datasource, [:source_type, :parser, 
+																	   [:column_separator, 'Separator'], 
+			                              :skip_lines]) %>
 		</div>
 	</div>
 	<div class="box">

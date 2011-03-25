@@ -7,6 +7,7 @@ RDF::OM_DATA = RDF::Vocabulary.new('http://data.civicopenmedia.org/')
 RDF::OM_CORE = RDF::Vocabulary.new(RDF::OM_DATA['core/'])
 RDF::DCTYPE = RDF::Vocabulary.new('http://purl.org/dc/dcmitype/')
 
+require 'open_media/schema/design_doc'
 require 'open_media/schema/types'
 require 'open_media/schema/base'
 require 'open_media/schema/rdf/property'
@@ -45,3 +46,14 @@ module Spira
  end
 end
 Spira.settings[:types] = spira_types
+
+module OpenMedia
+  module Schema
+    def self.get_class_definition(class_uri)
+      TYPES_DATABASE.list('schema/class_definition/schema_by_uri', :key=>class_uri)
+    end
+  end
+end
+
+
+

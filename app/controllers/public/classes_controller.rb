@@ -23,29 +23,22 @@ class Public::ClassesController < ApplicationController
           headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.csv\"" 
         end
         property_names = @class.properties.collect{|p| p.identifier}.sort
+        records = OpenMedia::Schema.get_records(@class.uri)
         self.response_body = lambda {|response, output|
           csv = FasterCSV.new(OutputWrapper.new(output), :row_sep => "\r\n")
           csv << property_names
-          @class.spira_resource.each do |r|
-            csv << property_names.collect{|pn| r.attributes[pn.to_sym]}
-          end          
+          records.each do |r|
+            csv << property_names.collect{|pn| r[pn]}
+          end
+
         }
 
       end
 
       format.json do
         headers["Content-Type"] ||= 'application/json'
-        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.json\""          
-        self.response_body = lambda {|response, output|
-          output.write('[')
-          first = true
-          @class.spira_resource.each do |r|
-            output.write(',') unless first
-            first = false
-            output.write(r.attributes.reject{|k,v| k==:metadata}.to_json)
-          end
-          output.write(']')
-        }        
+        headers["Content-Disposition"] = "attachment; filename=\"#{@class.identifier.pluralize}.json\""
+        render :json => OpenMedia::Schema.get_records(@class.uri)
       end
 
       format.nt do

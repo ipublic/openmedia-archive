@@ -1,4 +1,5 @@
 require 'rdf/couchdb'
+require 'open_media/schema/data_design_doc'
 
 module OpenMedia
   module Schema
@@ -39,6 +40,7 @@ module OpenMedia
           db_name = "#{OpenMedia::Site.instance.identifier}_#{self.identifier}"
           unless Spira.repository(db_name)
             db = COUCHDB_SERVER.database!("#{db_name}")
+            OpenMedia::Schema::DataDesignDoc.refresh(db)
             Spira.add_repository! db_name, ::RDF::CouchDB::Repository.new(:database=>db)
           end
           db_name

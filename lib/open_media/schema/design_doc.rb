@@ -4,7 +4,9 @@ module OpenMedia
 
       SCHEMA_DESIGN_DOC_ID = "_design/schema"
 
-      SCHEMA_PREDICATES = [::RDF.type, ::RDF::RDFS.label, ::RDF::RDFS.comment, ::RDF::RDFS.range, ::RDF::RDFS.domain, ::RDF::DC.modified, ::RDF::DC.created]
+      SCHEMA_PREDICATES = [::RDF.type, ::RDF::RDFS.label, ::RDF::RDFS.comment, ::RDF::RDFS.range, ::RDF::RDFS.domain,
+                           ::RDF::SKOS.prefLabel, ::RDF::SKOS.member, ::RDF::SKOS.Collection, ::RDF::SKOS.Concept,
+                           ::RDF::DC.modified, ::RDF::DC.created]
       SCHEMA_PREDICATE_CONDITIONAL = SCHEMA_PREDICATES.collect{|p| "doc['predicate']=='<#{p}>'"}.join(" || ")
 
       SCHEMA_DESIGN_DOC = {
@@ -40,7 +42,9 @@ module OpenMedia
 
                         }"
           }
+
         },
+
         "lists" => {
           'class_definition' => "function(head, req) {
                                        classDef = {uri: null, properties: []};
@@ -108,16 +112,20 @@ module OpenMedia
                                                classDef.properties[i].identifier = classDef.properties[i].uri.substring(classDef.properties[i].uri.indexOf('#'));
                                            }
                                        }
-                                       classDef.uri = trimBrackets(classDef.uri);
-                                       send(toJSON(classDef));
+                                       if (classDef.uri) {
+                                           classDef.uri = trimBrackets(classDef.uri);                                       
+                                           send(toJSON(classDef));
+                                       } else {
+                                           throw (['error', 'not_found', 'Class not found'])
+                                       }
                                    }"
         }
       }
+    
 
       def self.get
         @design_doc
       end
-
 
       def self.refresh(force = false)
         @design_doc = CouchRest::Design.new(SCHEMA_DESIGN_DOC)        

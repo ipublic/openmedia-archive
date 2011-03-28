@@ -52,6 +52,31 @@ module OpenMedia
     def self.get_class_definition(class_uri)
       TYPES_DATABASE.list('schema/class_definition/schema_by_uri', :key=>class_uri)
     end
+
+    def self.get_skos_collections
+      TYPES_DATABASE.list('schema/skos_collections/schema_by_uri')
+    end
+
+    def self.get_record_uris(class_uri)
+      repo = OpenMedia::Schema::RDFS::Class.for(class_uri).skos_concept.collection.repository
+      repo = Spira.repository(repo)
+      repo.query(:predicate=>::RDF.type, :object=>::RDF::URI.new(class_uri)).collect {|stmt| stmt.subject}
+    end
+
+
+
+    def self.get_records(class_uri)
+      uris = get_record_uris(class_uri).collect {|u| ::RDF::NTriples::Writer.serialize(u) }
+      repo = OpenMedia::Schema::RDFS::Class.for(class_uri).skos_concept.collection.repository
+      repo = Spira.repository(repo)
+      records = repo.instance_eval { @database }.list('schema_data/records/properties_by_uri',
+                                                      :keys=>uris, :include_docs=>true)
+      # records.each do |r|
+      #   r['created'] = ::DateTime.parse(r['created']) if r['created']
+      #   r['modified'] = ::DateTime.parse(r['modified']) if r['modified']        
+      # end
+      records
+    end
   end
 end
 

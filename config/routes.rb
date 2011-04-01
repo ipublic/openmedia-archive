@@ -50,6 +50,8 @@ Openmedia::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
+
+  devise_for :users
   
   root :to => "public/collections#index"
 
@@ -103,8 +105,8 @@ Openmedia::Application.routes.draw do
   end
 
   resource :account, :to=>"users"
-  resources :users
-  resources :user_sessions
+  # resources :users
+  # resources :user_sessions
 
   # See how all your routes lay out with "rake routes"
 

@@ -1,6 +1,6 @@
 <ul id="nav-service" class="nav-service">
 	<% if !current_user %>
-	  <li><%= link_to "Register", new_account_path %></li>
+	  <li><%= link_to "Register", new_user_registration_path %></li>
 	  <li><%= link_to "Log In", new_user_session_path %></li>
 	<% else %>
 	  <li><%= link_to "Log out", user_session_path, :method => :delete, 

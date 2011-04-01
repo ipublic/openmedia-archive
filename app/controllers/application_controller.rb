@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   helper_method :current_user, :current_site, :rdf_id
   before_filter :decode_rdf_id
-
+  
   rescue_from OpenMedia::NoSiteDefined, :with=> :no_site_defined
 
   SITE_NOT_DEFINED_ERROR_MSG = "You must first setup your site"

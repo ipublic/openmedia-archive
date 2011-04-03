@@ -53,7 +53,10 @@ class OpenMedia::InferenceRules::GeographicName < OpenMedia::InferenceRules::Inf
   
   def self.named_place_map(geoname_hash)
     np = OpenMedia::NamedPlace.new
+    # Geonames returns different keys for name, depending on web service call
     np.name = geoname_hash["placeName"]                if geoname_hash.has_key? "placeName"
+    np.name = geoname_hash["name"]                     if geoname_hash.has_key? "name"
+    
     np.state_abbreviation = geoname_hash["adminCode1"] if geoname_hash.has_key? "adminCode1"
     np.source_id = geoname_hash["geonameId"]           if geoname_hash.has_key? "geonameId"
     np.source = "http://geonames.org"

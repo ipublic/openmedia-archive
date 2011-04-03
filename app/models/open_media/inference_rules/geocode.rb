@@ -2,6 +2,7 @@ class OpenMedia::InferenceRules::Geocode < OpenMedia::InferenceRules::InferenceR
   # require 'addressable/uri'
   # require 'addressable/template'
   require 'rest_client'
+  RestClient.log = '/tmp/om_rest_client.log'
 
   # Free requests throttled to 1 every 15 seconds
   # Non-profit or commercial: Paypal $50 per 20,000 records, with a $50 minimum, to payment@geocoder.us

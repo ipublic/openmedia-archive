@@ -28,14 +28,14 @@
 					</fieldset>
 
 					<fieldset>
-						<legend>GNIS</legend>
-						<%= render :partial => 'admin/gnis/form', :locals => {:gnis => @site.gnis }  %>
+						<legend>Community</legend>
+						<%= render :partial => 'admin/named_places/form', :locals => {:named_place => @site.municipality }  %>
 					</fieldset>
 					
 					<fieldset class="omega">
 						<legend>Services</legend>
 						<ol>
-					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_field :googlemap_api_key, :rows => 3, :class => "wide" %></li>
+					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_area :googlemap_api_key, :rows => 3, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 					<fieldset class="submit">

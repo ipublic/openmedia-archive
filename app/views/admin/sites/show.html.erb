@@ -12,8 +12,16 @@
 				[:openmedia_name, "Site Name"],
 				:url
 				]).html_safe %>
-	    <p><b>Sys Admin Contact:</b> <br/></p>
-	    <p><b>Business Contact:</b> <br/></p>
+			<table class="property-table">
+				<tr>
+					<th>Sys Admin Contact:</th>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<th>Business Contact:</th>
+					<td>&nbsp;</td>
+				</tr>
+			</table>
 
 			<h4 class="show-property">OpenMedia Servers</h4>
 			<%= show_fields(@site, [
@@ -21,8 +29,8 @@
 				[:public_couchdb_server_uri, "Public server URI"]
 				]).html_safe %>
 
-			<h4 class="show-property">GNIS</h4>
-			<%= render :partial => 'admin/gnis/show', :locals => {:gnis => @gnis }  %>
+			<h4 class="show-property">Community</h4>
+			<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
 		
 			<h4 class="show-property">Services</h4>
 			<%= show_fields(@site, [

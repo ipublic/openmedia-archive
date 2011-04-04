@@ -1,0 +1,7 @@
+<%= fields_for(named_place) do |np| %>
+	<ol>
+		<li><%= np.label :name %> <%= np.text_field :name %></li>
+		<li><%= np.label :state_abbreviation, 'State' %> <%= np.text_field :state_abbreviation %></li>
+		<li><%= np.label :description %> <%= np.text_area :description, :rows => 3 %></li>
+	</ol>
+<% end %>

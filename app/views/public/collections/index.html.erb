@@ -12,7 +12,7 @@
 				</thead>
 				<% @collections.each do |c| %>
 				<tr>
-				  <td><%= link_to c.label, public_collection_path(rdf_id(c)) %></td>
+				  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
 				  <td><%= c.members.size %></td>
 				</tr>
 				<% end %>

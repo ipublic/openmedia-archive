@@ -1,5 +1,22 @@
 # Sample localization file for English. Add more files in this directory for other locales.
-# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
+# See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocalehttp://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
   hello: "Hello world"
+  activemodel:
+    errors:
+      models:
+        open_media:
+          site:
+            attributes:
+              identifier:
+                taken: has already been registered
+        user:
+          attributes:
+            email:
+              taken: address has already been registered						
+
+  devise:
+    admin_confirmations:
+      admin:
+        confirmed: Your account has been confirmed and you are now signed in as an admin

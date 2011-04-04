@@ -51,15 +51,19 @@ Openmedia::Application.routes.draw do
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
 
-  devise_for :users
-  
-  root :to => "public/collections#index"
+  devise_for :admins
 
-  match '/admin' => 'admin/home#index', :as => :admin
+  match '/admin' => 'admin/home#index', :as => :admin_root
   match '/about' => 'admin/home#about', :as => :about
   match '/support' => 'admin/home#support', :as => :support
 
-  namespace :public do
+  match '/home' => 'public/home#index', :as => :home
+  
+  root :to => "public/collections#index"
+  
+  scope :module => 'public' do
+    resource :home
+    resources :sites
     resources :collections
     resources :classes
     resources :maps
@@ -90,6 +94,7 @@ Openmedia::Application.routes.draw do
     resources :vcards
     resources :schedules
     resources :data_types
+    resource :profile
   end
 
   namespace :schema do
@@ -104,7 +109,7 @@ Openmedia::Application.routes.draw do
     end
   end
 
-  resource :account, :to=>"users"
+  # resource :account, :to=>"users"
   # resources :users
   # resources :user_sessions
 

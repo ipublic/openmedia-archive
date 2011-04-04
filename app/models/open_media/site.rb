@@ -38,7 +38,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   timestamps!
 
   ## Validations
-  validates_presence_of :url, :identifier
+  validates :url, :presence=>true, :uniqueness=>true
+  validates :identifier, :presence=>true, :uniqueness=>true  
 
   ## CouchDB Views
   # singleton class - no views
@@ -55,6 +56,10 @@ class OpenMedia::Site < CouchRest::Model::Base
   def url=(url)
     self['url'] = url
     generate_identifier
+  end
+
+  def subdomain
+    self.url ? self.url.split(/\.|\//)[2] : nil
   end
 
   def skos_collection
@@ -75,6 +80,10 @@ class OpenMedia::Site < CouchRest::Model::Base
     db_name    
   end
 
+  def vcards_rdf_uri
+    RDF::URI.new('http://data.civicopenmedia.org')/self.identifier/"vcards"
+  end
+
 
 private
   def generate_identifier
@@ -85,6 +94,7 @@ private
         self['idenfitier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
         self.url = "http://#{self.url}"
       end
+      self['identifier'] = self['identifier'].split(':')[0] if self['identifier']   # take port off identifier
     end
   end
 

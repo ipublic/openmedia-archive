@@ -1,5 +1,4 @@
-class Public::CollectionsController < ApplicationController
-  layout 'public'
+class Public::CollectionsController < Public::BaseController
   
   def index
     @collections = OpenMedia::Site.instance.skos_collection.sub_collections

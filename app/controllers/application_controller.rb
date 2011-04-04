@@ -7,10 +7,6 @@ class ApplicationController < ActionController::Base
 
   SITE_NOT_DEFINED_ERROR_MSG = "You must first setup your site"
 
-  def current_user
-    nil
-  end
-
   def current_site
     OpenMedia::Site.instance
   end

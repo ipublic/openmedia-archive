@@ -17,7 +17,7 @@ class Admin::VcardsController < ApplicationController
     email_params = params[:vcard][:email]
     tel_params = params[:vcard][:tel]        
     adr_params = params[:vcard][:adr]    
-    @vcard = vcard_model.for(RDF::URI.new('http://data.civicopenmedia.org')/OpenMedia::Site.instance.identifier/"#{UUID.new.generate.gsub(/-/,'')}",params[:vcard])
+    @vcard = vcard_model.for(OpenMedia::Site.instance.vcards_rdf_uri/UUID.new.generate.gsub(/-/,''), ,params[:vcard])
     @vcard.n = name_model.new(name_params).save! if name_params
     @vcard.org = org_model.new(org_params).save! if org_params
     @vcard.email = email_model.new(email_params).save! if email_params

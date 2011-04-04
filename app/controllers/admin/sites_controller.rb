@@ -2,12 +2,12 @@ class Admin::SitesController < ApplicationController
   
   def new
     @site = OpenMedia::Site.new
-    @site.gnis = OpenMedia::Gnis.new
+    @site.municipality = OpenMedia::NamedPlace.new
   end
   
   def create
     @site = OpenMedia::Site.new(params[:site])
-    @site.gnis = OpenMedia::Gnis.new(params[:gnis])
+    @site.municipality = OpenMedia::NamedPlace.new(params[:named_place])
 
     if @site.save
       flash[:notice] = 'Site successfully created.'
@@ -29,7 +29,7 @@ class Admin::SitesController < ApplicationController
     if @site.nil?
       redirect_to new_admin_site_path
     else
-      @gnis = @site.gnis
+      @municipality = @site.municipality
       
       respond_to do |format|
         format.html # show.html.erb
@@ -40,7 +40,7 @@ class Admin::SitesController < ApplicationController
 
   def edit
     @site = OpenMedia::Site.first
-    @gnis = @site.gnis
+    @municipality = @site.municipality
   end
 
   def update
@@ -51,7 +51,7 @@ class Admin::SitesController < ApplicationController
     
     if @site['_rev'].eql?(@updated_site.delete("rev"))
       @updated_site.delete("couchrest-type")
-      @updated_site.gnis = OpenMedia::Gnis.new(params[:gnis])
+      @updated_site.municipality = OpenMedia::NamedPlace.new(params[:open_media][:named_place])
 
       respond_to do |format|
 #        if @site.update_attributes(params[:site])

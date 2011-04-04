@@ -19,15 +19,14 @@ class OpenMedia::Site < CouchRest::Model::Base
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"
   property :public_couchdb_server_uri, :default => "http://localhost:5984"
-  property :replicate_community_catalog
+  property :replicate_om_types, :default => true
+  property :replicate_push_datasets, :default => true
   
   # Location properties
-  property :gnis, OpenMedia::Gnis # e.g.; 584282 for Ellicott City, MD
-  
-  property :site_domain_name, :default => "example.gov"
+  property :municipality, OpenMedia::NamedPlace
+
   property :site_proxy_prefix
   property :site_canonical_url, :default => "http://localhost"
-  property :site_organization_id
   property :site_default_city
   property :site_default_state
   
@@ -91,7 +90,7 @@ private
       if self.url =~ /^https?:\/\/(.*)$/
         self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
       else
-        self['idenfitier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
+        self['identifier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
         self.url = "http://#{self.url}"
       end
       self['identifier'] = self['identifier'].split(':')[0] if self['identifier']   # take port off identifier

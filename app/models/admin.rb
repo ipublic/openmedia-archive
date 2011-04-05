@@ -5,8 +5,8 @@ class Admin < CouchRest::Model::Base
   devise :database_authenticatable, :confirmable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  property :site_id
-  
+  belongs_to :site, :class_name=>'OpenMedia::Site'  
+
   view_by :email
   view_by :confirmation_token
   view_by :site_id
@@ -26,10 +26,6 @@ class Admin < CouchRest::Model::Base
     end
   end
 
-  def site
-    OpenMedia::Site.find(self.site_id)
-  end
-  
 
 end
 

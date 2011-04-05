@@ -11,6 +11,10 @@
 	  <ol>
 	    <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name %></li>
 	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :subdomain %>.<%= DOMAIN %></li>
+	    <%= fields_for :municipality do |m| %>
+	    <li><%= m.label :name, 'Municipality Name' %> <%= m.text_field :name %></li>
+	    <li><%= m.label :state_abbreviation, 'State' %> <%= m.select :state_abbreviation, OpenMedia::NamedPlace::STATE_ABBREVIATIONS %></li>
+	    <% end %>
 	  </ol>
 	</fieldset>
 	

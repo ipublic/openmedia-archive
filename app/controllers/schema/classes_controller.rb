@@ -29,7 +29,7 @@ class Schema::ClassesController < ApplicationController
   def create
     begin
       properties_params = params[:class].delete(:properties)
-      @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, params[:class])
+      @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, params[:class])
       @collection.members << @class.uri
       @collection.save!
       if properties_params

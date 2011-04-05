@@ -11,7 +11,7 @@ en:
             attributes:
               identifier:
                 taken: has already been registered
-        user:
+        admin:
           attributes:
             email:
               taken: address has already been registered						

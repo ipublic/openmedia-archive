@@ -2,6 +2,7 @@ require 'csv'
 require 'tmpdir'
 
 class Admin::DatasourcesController < ApplicationController
+  before_filter :authenticate_admin!  
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
 
@@ -122,7 +123,7 @@ class Admin::DatasourcesController < ApplicationController
       if @datasource.errors.size == 0 &&@datasource.rdfs_class_uri.blank?
         @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
         if @collection.exists?
-          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_user.site, :label=>@datasource.title)
+          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, :label=>@datasource.title)
           @collection.members << @class.uri
           @collection.save!
           properties.each do |prop|

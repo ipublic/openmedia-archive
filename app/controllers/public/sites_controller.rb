@@ -5,6 +5,7 @@ class Public::SitesController < ApplicationController
   
   def new
     @site = OpenMedia::Site.new(:openmedia_name=>'Our OpenMedia Site')
+    @municipality = OpenMedia::NamedPlace.new
     @admin = Admin.new
     @vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.new
     @name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new
@@ -20,17 +21,21 @@ class Public::SitesController < ApplicationController
       site_url = "#{site_url}:#{request.port}"
     end
 
-    @site = OpenMedia::Site.new(params[:site].merge(:url=>site_url))
+    @municipality = OpenMedia::InferenceRules::GeographicName.find_by_name(params[:municipality][:name], params[:municipality][:state_abbreviation]).first
+    @site = OpenMedia::Site.new(params[:site].merge(:url=>site_url, :municipality=>@municipality))
     @name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new(params[:name])
     @email = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardEmail.new(params[:email])
     
     if @admin.valid? && @site.valid?
       @site.save!
-      @admin.site_id=@site.id
+      @site.initialize_metadata
+      @admin.site=@site
       @admin.save!
       @vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(@site.vcards_rdf_uri/UUID.new.generate.gsub(/-/,''))
+      @name.save!
       @vcard.n = @name
       @vcard.email = @email
+      @email.save!
       @vcard.save!      
     else
       render :action=>:new

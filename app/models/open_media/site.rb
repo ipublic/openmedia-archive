@@ -2,8 +2,6 @@ require 'open_media/no_site_defined'
 
 class OpenMedia::Site < CouchRest::Model::Base
 
-  after_create :initialize_metadata
-  
   DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
@@ -43,15 +41,6 @@ class OpenMedia::Site < CouchRest::Model::Base
   ## CouchDB Views
   # singleton class - no views
   
-  def self.instance
-    @instance ||= self.first
-    if @instance.nil?
-      raise OpenMedia::NoSiteDefined.new
-    else
-      @instance
-    end
-  end
-
   def url=(url)
     self['url'] = url
     generate_identifier
@@ -83,7 +72,11 @@ class OpenMedia::Site < CouchRest::Model::Base
     RDF::URI.new('http://data.civicopenmedia.org')/self.identifier/"vcards"
   end
 
-
+  def initialize_metadata
+    OpenMedia::Schema::VCard.configure_vcard(self)
+    OpenMedia::Schema::Metadata.configure_metadata(self)
+  end
+  
 private
   def generate_identifier
     if !url.blank?
@@ -95,13 +88,6 @@ private
       end
       self['identifier'] = self['identifier'].split(':')[0] if self['identifier']   # take port off identifier
     end
-  end
-
-  def initialize_metadata
-    OpenMedia::Schema::VCard.configure_vcard
-    OpenMedia::Schema::Metadata.configure_metadata    
-  end
-
-  
+  end  
 
 end

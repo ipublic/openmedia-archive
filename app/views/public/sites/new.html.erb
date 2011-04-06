@@ -1,7 +1,7 @@
 <% title "Create New Site" %>
 <div id="forms">
   <%= form_for :site, :url=>sites_path do |f| %>
-  <div class="grid_8">
+  <div class="grid_6">
     <div class="box">
       <h2>Site Setup</h2>
       <div class="block">
@@ -12,7 +12,7 @@
 	  <%= m.hidden_field :source_id, :class=>'named-place-id' %>
 	  <ol>
 	    <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name %></li>
-	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :subdomain %>.<%= DOMAIN %></li>
+	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :subdomain, :class => "narrow" %>.<%= DOMAIN %></li>
 	    <li><%= m.label :name, 'Municipality Name' %> <%= m.text_field :name, :class=>'named-place' %></li>
 	  </ol>
 	</fieldset>

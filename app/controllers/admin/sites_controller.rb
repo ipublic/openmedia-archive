@@ -48,6 +48,7 @@ class Admin::SitesController < ApplicationController
     @site.attributes=params[:site]
     @site.municipality = OpenMedia::InferenceRules::GeographicName.find_by_name_and_id(params[:site][:municipality][:name],
                                                                                        params[:site][:municipality][:source_id].to_i)
+    @site.municipality.description = params[:site][:municipality][:description]
     respond_to do |format|
       if @site.save
         flash[:notice] = 'Successfully updated site settings.'

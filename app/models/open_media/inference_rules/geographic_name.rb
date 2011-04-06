@@ -16,7 +16,7 @@ class OpenMedia::InferenceRules::GeographicName < OpenMedia::InferenceRules::Inf
   GNIS_SERVICE = "http://gisdata.usgs.gov//XMLWebServices2/TNM_Gazetteer_Service.asmx/searchName"
 
 
-  def self.find_by_name(municipality, state_abbrev)
+  def self.find_by_name(municipality, state_abbrev=nil)
     response = ws_get(GEONAMES_PLACE_NAME, {:params => {:q => municipality,
                                                      :isNameRequired => true,
                                                      :country => 'us',
@@ -28,6 +28,11 @@ class OpenMedia::InferenceRules::GeographicName < OpenMedia::InferenceRules::Inf
     geoname_places.each { |place| named_places << named_place_map(place) }
     named_places
   end
+
+  def self.find_by_name_and_id(municipality, source_id)
+    self.find_by_name(municipality).detect{|np| np.source_id==source_id}
+  end
+
 
   def self.find_by_zipcode (zipcode)
     # js callback option available

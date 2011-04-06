@@ -11,8 +11,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :identifier,  :read_only => true
   property :url
   property :openmedia_name, :default => "Civic OpenMedia"
-  belongs_to :adminstrator_contact_id, :class_name=>'OpenMedia::Contact'
-  belongs_to :business_contact_id, :class_name=>'OpenMedia::Contact'
+  property :adminstrator_contact_uri
+  property :business_contact_uri
   
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"
@@ -36,7 +36,8 @@ class OpenMedia::Site < CouchRest::Model::Base
 
   ## Validations
   validates :url, :presence=>true, :uniqueness=>true
-  validates :identifier, :presence=>true, :uniqueness=>true  
+  validates :identifier, :presence=>true, :uniqueness=>true
+  validates_presence_of :municipality
 
   ## CouchDB Views
   # singleton class - no views
@@ -58,6 +59,15 @@ class OpenMedia::Site < CouchRest::Model::Base
     end
     collection
   end
+
+  def administrator_contact
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.adminstrator_contact_uri) if self.adminstrator_contact_uri
+  end
+
+  def business_contact
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.business_contact_uri) if self.business_contact_uri    
+  end
+
 
   def metadata_repository
     db_name = "#{self.identifier}_metadata"

@@ -1,5 +1,5 @@
 <div id="forms">
-	<%= form_for :site, :url => admin_site_path do |f| %>
+	<%= form_for :site, :url => admin_site_path, :html=>{:method=>:put} do |f| %>
 		<div class="grid_8">
 			<div class="box">
 				<h2><%= @site.openmedia_name || "Setup Site" %></h2>
@@ -13,9 +13,9 @@
 						  <li><%= f.label :url, 'Domain URL' %> <%= f.text_field :url, :class => "wide" %></li>
 
 						  <li><%= f.label :adminstrator_contact_id, 'Sys Admin Contact' %> 
-								 <%= f.select :adminstrator_contact_id, contact_collection, {:prompt => 'Select contact'}  %></li>
+								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
 						  <li><%= f.label :business_contact_id, 'Business Contact' %> 
-								 <%= f.select :business_contact_id, contact_collection, {:prompt => 'Select contact'}  %></li>
+								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
 							</ol>
 					</fieldset>
 					
@@ -29,7 +29,9 @@
 
 					<fieldset>
 						<legend>Community</legend>
-						<%= render :partial => 'admin/named_places/form', :locals => {:named_place => @site.municipality }  %>
+						<%= render :partial => 'admin/named_places/form', :locals => {:f => f, 
+						                                                              :attribute_name => :municipality,
+						                                                              :named_place=>@site.municipality}  %>
 					</fieldset>
 					
 					<fieldset class="omega">

@@ -15,11 +15,11 @@
 			<table class="property-table">
 				<tr>
 					<th>Sys Admin Contact:</th>
-					<td>&nbsp;</td>
+					<td><%= vcard_formatted_name(@site.administrator_contact) %></td>
 				</tr>
 				<tr>
 					<th>Business Contact:</th>
-					<td>&nbsp;</td>
+					<td><%= vcard_formatted_name(@site.business_contact) %></td>
 				</tr>
 			</table>
 

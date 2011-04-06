@@ -21,7 +21,7 @@ class Public::SitesController < ApplicationController
       site_url = "#{site_url}:#{request.port}"
     end
 
-    @municipality = OpenMedia::InferenceRules::GeographicName.find_by_name(params[:municipality][:name], params[:municipality][:state_abbreviation]).first
+    @municipality = OpenMedia::InferenceRules::GeographicName.find_by_name_and_id(params[:municipality][:name], params[:municipality][:source_id].to_i)
     @site = OpenMedia::Site.new(params[:site].merge(:url=>site_url, :municipality=>@municipality))
     @name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new(params[:name])
     @email = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardEmail.new(params[:email])
@@ -41,6 +41,11 @@ class Public::SitesController < ApplicationController
       render :action=>:new
     end
     
+  end
+
+  def autocomplete_geoname
+    places = OpenMedia::InferenceRules::GeographicName.find_by_name(params[:term])
+    render :json=>places.collect{|np| {:id=>np.source_id, :label=>"#{np.name}, #{np.state_abbreviation}", :value=>"#{np.name}, #{np.state_abbreviation}"}}
   end
 
 end

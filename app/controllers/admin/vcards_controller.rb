@@ -1,6 +1,5 @@
 class Admin::VcardsController < ApplicationController
   before_filter :authenticate_admin!
-  before_filter :setup_vcard
   before_filter :load_vcard
   #before_filter :convert_params, :only => [:create, :update]
 
@@ -105,10 +104,6 @@ class Admin::VcardsController < ApplicationController
   
 
 private
-
-  def setup_vcard
-    current_site.initialize_metadata
-  end
 
   def load_vcard
     @vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(params[:id]) if params[:id]

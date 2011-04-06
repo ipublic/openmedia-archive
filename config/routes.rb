@@ -63,7 +63,11 @@ Openmedia::Application.routes.draw do
   
   scope :module => 'public' do
     resource :home
-    resources :sites
+    resources :sites do
+      collection do
+        get :autocomplete_geoname
+      end
+    end
     resources :collections
     resources :classes
     resources :maps

@@ -158,6 +158,15 @@ $(function() {
     $('.datasource-class').autocomplete(typeAutoCompleteOpts);
     $('#source input.property-name').live('blur', syncSourceProperties);
     $('.tooltip').tooltip();
+
+    $('input.named-place').autocomplete({
+	delay: 300,
+	mustMatch: true,
+	source: "/sites/autocomplete_geoname",
+	select: function(event, ui) {
+	    $(event.target).closest('fieldset').find('.named-place-id').val(ui.item.id);
+	}
+    });
 });
 
 function syncSourceProperties() {

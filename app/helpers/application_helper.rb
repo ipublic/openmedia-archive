@@ -71,7 +71,7 @@ module ApplicationHelper
   end
 
   def vcard_formatted_name(vcard)
-    if vcard.n
+    if vcard && vcard.n
       names= [vcard.n.honorific_prefix, vcard.n.given_name, vcard.n.additional_name, vcard.n.family_name, vcard.n.honorific_suffix]
       names.select{|p| !p.blank?}.join(' ')
     end

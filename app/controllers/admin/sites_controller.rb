@@ -9,7 +9,6 @@ class Admin::SitesController < ApplicationController
   
   def create
     @site = OpenMedia::Site.new(params[:site])
-    @site.municipality = OpenMedia::NamedPlace.new(params[:named_place])
 
     if @site.save
       flash[:notice] = 'Site successfully created.'
@@ -27,7 +26,7 @@ class Admin::SitesController < ApplicationController
   end
 
   def show
-    @site = OpenMedia::Site.first
+    @site = current_site
     if @site.nil?
       redirect_to new_admin_site_path
     else
@@ -41,35 +40,20 @@ class Admin::SitesController < ApplicationController
   end
 
   def edit
-    @site = OpenMedia::Site.first
-    @municipality = @site.municipality
+    @site = current_site
   end
 
   def update
-    @site = OpenMedia::Site.first
-    @updated_site = OpenMedia::Site.new(params[:site])
-    
-    @revs = @site['_rev'] + ' ' + @updated_site['rev']
-    
-    if @site['_rev'].eql?(@updated_site.delete("rev"))
-      @updated_site.delete("couchrest-type")
-      @updated_site.municipality = OpenMedia::NamedPlace.new(params[:open_media][:named_place])
-
-      respond_to do |format|
-#        if @site.update_attributes(params[:site])
-        if @site.update_attributes(@updated_site)
-          flash[:notice] = 'Successfully updated site settings.'
-          format.html { redirect_to(admin_site_path) }
-          format.xml  { head :ok }
-        else
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
-        end
-      end
-    else
-      # Document revision is out of sync
-      flash[:notice] = 'Update conflict. Site settings have been updated elsewhere, reload Site page, then update again. ' + @revs
-      respond_to do |format|
+    @site = current_site
+    @site.attributes=params[:site]
+    @site.municipality = OpenMedia::InferenceRules::GeographicName.find_by_name_and_id(params[:site][:municipality][:name],
+                                                                                       params[:site][:municipality][:source_id].to_i)
+    respond_to do |format|
+      if @site.save
+        flash[:notice] = 'Successfully updated site settings.'
+        format.html { redirect_to(admin_site_path) }
+        format.xml  { head :ok }
+      else
         format.html { render :action => "edit" }
         format.xml  { render :xml => @site.errors, :status => :unprocessable_entity }
       end

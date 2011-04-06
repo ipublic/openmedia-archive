@@ -1,17 +1,30 @@
-<h2>Sign in</h2>
-
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
-  <p><%= f.label :email %><br />
-  <%= f.text_field :email %></p>
-
-  <p><%= f.label :password %><br />
-  <%= f.password_field :password %></p>
-
-  <% if devise_mapping.rememberable? -%>
-    <p><%= f.check_box :remember_me %> <%= f.label :remember_me %></p>
-  <% end -%>
-
-  <p><%= f.submit "Sign in" %></p>
-<% end %>
-
-<%= render :partial => "devise/shared/links" %>
+<% title "Sign in" %>
+<div id="forms">
+	<div class="grid_5">
+		<div class="box">
+			<div class="block">
+				<%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+				<fieldset class="omega">
+					<ol>
+						<li><%= f.label :email %> <%= f.text_field :email %></li>
+						<li><%= f.label :password %> <%= f.password_field :password %></li>
+					  <% if devise_mapping.rememberable? -%>
+							<fieldset>
+								<ol>
+					    		<li><%= f.check_box :remember_me %> <%= f.label :remember_me %></li>
+								</ol>
+							</fieldset>
+					  <% end -%>
+					</ol>
+				</fieldset>
+				<fieldset class="submit omega">
+					<ol>
+						<li><%= f.submit "Sign in", {:class => "submit"} %></li> 
+					</ol>
+				</fieldset>
+				<%= render :partial => "devise/shared/links" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

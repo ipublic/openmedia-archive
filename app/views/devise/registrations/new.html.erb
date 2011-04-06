@@ -1,18 +1,25 @@
-<h2>Sign up</h2>
-
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
-
-  <p><%= f.label :email %><br />
-  <%= f.text_field :email %></p>
-
-  <p><%= f.label :password %><br />
-  <%= f.password_field :password %></p>
-
-  <p><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></p>
-
-  <p><%= f.submit "Sign up" %></p>
-<% end %>
-
-<%= render :partial => "devise/shared/links" %>
+<% title "Sign up" %>
+<div id="forms">
+	<div class="grid_5">
+		<div class="box">
+			<div class="block">
+				<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+			  <%= devise_error_messages! %>
+				<fieldset class="omega">
+					<ol>
+						<li><%= f.label :email %> <%= f.text_field :email %></li>
+						<li><%= f.label :password %> <%= f.password_field :password %></li>
+					  <li><%= f.label :password_confirmation, 'Confirm' %> <%= f.password_field :password_confirmation %></li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit omega">
+					<ol>
+						<li><%= f.submit "Sign up", {:class => "submit", :style => "width: 10em"} %></li> 
+					</ol>
+				</fieldset>
+				<%= render :partial => "devise/shared/links" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,10 +1,10 @@
 <ul id="nav-service" class="nav-service">
 	<% if !current_admin %>
 	  <!--<li><= link_to "Register", new_user_registration_path ></li>-->
-	  <li><%= link_to "Log In", new_admin_session_path %></li>
+	  <li><%= link_to "Sign In", new_admin_session_path %></li>
 	<% else %>
-	  <li><%= link_to "Log out", destroy_admin_session_path,
-				:confirm => "Are you sure you want to log out?" %></li>
-	  <li><%= link_to current_admin.email, admin_profile_path %></li>
+	  <li><%= link_to "Sign out", destroy_admin_session_path,
+				:confirm => "Are you sure you want to sign out?" %></li>
+	  <li><%= link_to current_admin.email, edit_admin_registration_path %></li>
 	<% end %>	
 </ul>

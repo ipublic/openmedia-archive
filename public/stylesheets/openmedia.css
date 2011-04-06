@@ -300,6 +300,10 @@ width: 15em;
 width: 7em;
 }
 
+#search li input.submit-wide {
+width: 14em;
+}
+
 /* forms
 ----------------------------------------------- */
 fieldset {
@@ -338,14 +342,14 @@ fieldset.submit {
 
 legend {
 	position: relative;
-	left: -7px;
-	top: -0.55em;
+	top: -0.25em;
 	font-size: 1.6em;
   padding: 0 2px;
   font-weight: bold;
 	color: #408dd2;
 	border: none;
 /*
+left: -7px;
 margin-left: 1em;  
 */
 }

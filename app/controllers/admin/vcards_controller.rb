@@ -86,6 +86,17 @@ class Admin::VcardsController < ApplicationController
 
   end
 
+  def destroy
+    # @vcard.n.destroy! if @vcard.n
+    # @vcard.org.destroy! if @vcard.org 
+    # @vcard.email.destroy! if @vcard.email
+    # @vcard.tel.destroy! if @vcard.tel
+    # @vcard.adr.destroy! if @vcard.adr
+    # @vcard.destroy!
+    redirect_to admin_vcards_path
+  end
+
+
   def autocomplete
     startkey = params[:term].downcase.gsub(/[^a-z0-9]/,'_').gsub(/^\-|\-$/,'')
     @uris = OpenMedia::Schema::VCard.prefix_search(startkey)

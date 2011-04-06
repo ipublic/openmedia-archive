@@ -2,7 +2,6 @@
 	<%= form_for :site, :url => admin_site_path, :html=>{:method=>:put} do |f| %>
 		<div class="grid_8">
 			<div class="box">
-				<h2><%= @site.openmedia_name || "Setup Site" %></h2>
 				<div class="block">
 				  <%= f.error_messages %>
 					<%= f.hidden_field :rev, :value => @site['_rev'] if @site['_rev'] %>

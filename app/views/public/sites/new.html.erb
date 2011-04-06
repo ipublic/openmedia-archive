@@ -3,12 +3,11 @@
   <%= form_for :site, :url=>sites_path do |f| %>
   <div class="grid_6">
     <div class="box">
-      <h2>Site Setup</h2>
       <div class="block">
 	<%= f.error_messages %>
 	<%= fields_for :municipality do |m| %>
 	<fieldset>
-	  <legend>Site Info</legend>
+	  <legend>Site Information</legend>
 	  <%= m.hidden_field :source_id, :class=>'named-place-id' %>
 	  <ol>
 	    <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name %></li>
@@ -19,7 +18,7 @@
 	<% end %>
 
 	<fieldset>
-	  <legend>Admin User Info</legend>
+	  <legend class="omega">Admin Contact</legend>
 	  <ol>
 	    <%= fields_for :vcard do |vc| %>
 	    <%= vc.error_messages %>

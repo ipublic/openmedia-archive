@@ -7,16 +7,23 @@
 				  <%= f.error_messages %>
 					<%= f.hidden_field :rev, :value => @site['_rev'] if @site['_rev'] %>
 					<fieldset>
-						<legend>General</legend>
+						<legend>Site Information</legend>
 						<ol>
-						  <li><%= f.label :openmedia_name, 'Site name' %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
-						  <li><%= f.label :url, 'Domain URL' %> <%= f.text_field :url, :class => "wide" %></li>
+						  <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
+						  <li><%= f.label :url, 'URL' %> <%= f.text_field :url, :class => "wide" %></li>
 
-						  <li><%= f.label :adminstrator_contact_id, 'Sys Admin Contact' %> 
+						  <li><%= f.label :adminstrator_contact_id, 'Admin Contact' %> 
 								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
 						  <li><%= f.label :business_contact_id, 'Business Contact' %> 
 								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
 							</ol>
+					</fieldset>
+
+					<fieldset>
+						<legend>Municipality</legend>
+						<%= render :partial => 'admin/named_places/form', :locals => {:f => f, 
+						                                                              :attribute_name => :municipality,
+						                                                              :named_place=>@site.municipality}  %>
 					</fieldset>
 					
 					<fieldset>
@@ -27,13 +34,6 @@
 						</ol>
 					</fieldset>
 
-					<fieldset>
-						<legend>Community</legend>
-						<%= render :partial => 'admin/named_places/form', :locals => {:f => f, 
-						                                                              :attribute_name => :municipality,
-						                                                              :named_place=>@site.municipality}  %>
-					</fieldset>
-					
 					<fieldset class="omega">
 						<legend>Services</legend>
 						<ol>

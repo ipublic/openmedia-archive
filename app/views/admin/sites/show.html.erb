@@ -5,16 +5,15 @@
 </div>
 <div class="grid_7">
 	<div class="box">
-		<h2>Site: <%=h @site.openmedia_name %></h2>
 		<div class="block">
-			<h4 class="show-property">General</h4>
+			<h4 class="show-property">Site Information</h4>
 			<%= show_fields(@site, [
-				[:openmedia_name, "Site Name"],
+				[:openmedia_name, "Name"],
 				:url
 				]).html_safe %>
 			<table class="property-table">
 				<tr>
-					<th>Sys Admin Contact:</th>
+					<th>Admin Contact:</th>
 					<td><%= vcard_formatted_name(@site.administrator_contact) %></td>
 				</tr>
 				<tr>
@@ -23,15 +22,15 @@
 				</tr>
 			</table>
 
+			<h4 class="show-property">Municipality</h4>
+			<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
+		
 			<h4 class="show-property">OpenMedia Servers</h4>
 			<%= show_fields(@site, [
 				[:internal_couchdb_server_uri, "Internal server URI"],
 				[:public_couchdb_server_uri, "Public server URI"]
 				]).html_safe %>
 
-			<h4 class="show-property">Community</h4>
-			<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
-		
 			<h4 class="show-property">Services</h4>
 			<%= show_fields(@site, [
 				[:googlemap_api_key, "GoogleMap API Key"]

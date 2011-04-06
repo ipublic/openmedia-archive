@@ -94,7 +94,6 @@ Openmedia::Application.routes.draw do
     resources :vcards
     resources :schedules
     resources :data_types
-    resource :profile
   end
 
   namespace :schema do

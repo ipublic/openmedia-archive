@@ -38,7 +38,11 @@ private
       redirect_to home_path
     else
       @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}
-      @current_site.initialize_metadata if @current_site
+      if @current_site
+        @current_site.initialize_metadata
+      else
+        redirect_to home_path
+      end
     end
   end    
   

@@ -16,6 +16,11 @@ namespace :openmedia do
 
   desc "drop the couchdb databases for the current environment"
   task :drop_dbs => :environment do
+    OpenMedia::Site.all.each do |site|
+      COUCHDB_SERVER.databases.each do |db|
+        COUCHDB_SERVER.database(db).delete! if db =~ Regexp.new("^#{site.identifier}_")
+      end
+    end 
     SITE_DATABASE.delete! rescue nil
     STAGING_DATABASE.delete! rescue nil
     TYPES_DATABASE.delete! rescue nil

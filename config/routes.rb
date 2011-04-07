@@ -57,8 +57,6 @@ Openmedia::Application.routes.draw do
   match '/about' => 'admin/home#about', :as => :about
   match '/support' => 'admin/home#support', :as => :support
 
-  match '/home' => 'public/home#index', :as => :home
-  
   root :to => "public/collections#index"
   
   scope :module => 'public' do

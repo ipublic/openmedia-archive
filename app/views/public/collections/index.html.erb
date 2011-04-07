@@ -4,19 +4,31 @@
     <h2>Browse</h2>
     <div class="block" id="tables">
       <table>
-				<thead>
-				  <tr>
-				    <th>Name</th>
-				    <th>No. Datasets</th>
-				  </tr>
-				</thead>
-				<% @collections.each do |c| %>
-				<tr>
-				  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
-				  <td><%= c.members.size %></td>
-				</tr>
-				<% end %>
+	<thead>
+	  <tr>
+	    <th>Name</th>
+	    <th>No. Datasets</th>
+	  </tr>
+	</thead>
+	<% @collections.each do |c| %>
+	<tr>
+	  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
+	  <% if current_site %>
+	  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
+	  <% else %>
+	  <td><%= c.members.size %></td>
+	  <% end %>
+	</tr>
+	<% end %>
       </table>
     </div>
   </div>
 </div>
+
+<% if request.subdomains.count == 0 %>
+<div class="grid_12">
+  <div class="box">
+    Get your very own Civic OpenMedia instance!  <%= link_to 'Signup Now!', new_site_path %>
+  </div>
+</div>
+<% end %>

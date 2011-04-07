@@ -5,7 +5,8 @@ class Public::ClassesController < ApplicationController
   
   def show
     @class = OpenMedia::Schema::RDFS::Class.for(params[:id])
-    @metadata = OpenMedia::Datasource.find_by_rdfs_class_uri(:key=>@class.uri.to_s).metadata
+    @datasource = OpenMedia::Datasource.find_by_rdfs_class_uri(:key=>@class.uri.to_s)    
+    @metadata = @datasource.metadata if @datasource
     @class.spira_resource.default_source(@class.skos_concept.collection.repository)
     respond_to do |format|
       format.html

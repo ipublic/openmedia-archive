@@ -12,7 +12,9 @@
   <div class="box">
     <h2><%= @class.uri %></h2>
     <div class="block">
+      <% if @metadata %>
       <%= render :partial=>'admin/metadatas/show', :locals=>{:metadata=>@metadata} %>
+      <% end %>
     </div>
     
     <p>

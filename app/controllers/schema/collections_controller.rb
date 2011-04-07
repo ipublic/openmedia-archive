@@ -14,7 +14,7 @@ class Schema::CollectionsController < ApplicationController
 
   def show
     @collection = OpenMedia::Schema::SKOS::Collection.for(params[:id])
-    @classes = @collection.concepts.collect {|c| c.rdfs_class}
+    @classes = @collection.concepts.collect {|c| c.rdfs_class}.select{|c| current_site.skos_collection.uri.parent==c.uri.parent.parent}
   end
 
   def create

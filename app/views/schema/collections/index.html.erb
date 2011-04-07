@@ -19,7 +19,7 @@
 				<tr>
 				  <td><%= link_to c.label, schema_collection_path(rdf_id(c)) %></td>
 				  <td><%= c.uri %></td>
-				  <td><%= c.members.size %></td>
+				  <td><%= c.members.select{|cu| cu.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
 				  <td><%= c.hidden %></td>
 				</tr>
 				<% end %>

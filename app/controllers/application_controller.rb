@@ -39,15 +39,15 @@ private
   end
 
   def load_site
+    @ipublic_site = OpenMedia::Site.all.detect{|s| s.subdomain=='ipublic'}    
     if request.subdomains.count == 0
-      redirect_to home_path
+      @current_site = nil
     else
       @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}
-      @ipublic_site = OpenMedia::Site.all.detect{|s| s.subdomain=='ipublic'}
       if @current_site
         @current_site.initialize_metadata
       else
-        redirect_to home_path
+        redirect_to url_for(params.merge(:host=>"#{DOMAIN}:#{request.port}"))
       end
     end
   end    

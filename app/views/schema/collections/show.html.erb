@@ -1,11 +1,12 @@
 <% title "Schema > Collection: #{@collection.label}" %>
 <div class="grid_12" >
 	<p class="page-nav">
-		<%= link_to "All Collections", schema_collections_path %> | 
+		<%= link_to "All Collections", schema_collections_path %> <% if current_site.skos_collection.contains?(@collection) %> |
 		<%= link_to "Edit", edit_schema_collection_path(rdf_id(@collection)) %> |
 		<%= link_to 'Delete', schema_collection_path(rdf_id(@collection)), 
 					:confirm => "Are you sure you want to delete this collection, all of its classes, and all of the data those classes contain?", 
 					:method => :delete %>
+		<% end %>
 		</p>
 	<hr />
 </div>
@@ -27,7 +28,9 @@
 	<div class="box" id="tables">
 		<h2>Types</h2>
 		<div class="block">
+		        <% if current_site.skos_collection.contains?(@collection) %>
 			<p><%= link_to "Add Class", new_schema_collection_class_path(rdf_id(@collection)), {:class => 'add-element'} %><p>
+		        <% end %>
 			<table>
 				<thead>
 				  <tr>

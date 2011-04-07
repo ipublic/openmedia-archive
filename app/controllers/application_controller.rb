@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_site, :rdf_id
+  helper_method :current_site, :ipublic_site, :rdf_id
   before_filter :decode_rdf_id
   before_filter :load_site
   
@@ -11,6 +11,11 @@ class ApplicationController < ActionController::Base
   def current_site
     @current_site
   end
+
+  def ipublic_site
+    @ipublic_site
+  end
+
 
   def rdf_id(resource)
     if resource.respond_to?(:uri)
@@ -38,6 +43,7 @@ private
       redirect_to home_path
     else
       @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}
+      @ipublic_site = OpenMedia::Site.all.detect{|s| s.subdomain=='ipublic'}
       if @current_site
         @current_site.initialize_metadata
       else

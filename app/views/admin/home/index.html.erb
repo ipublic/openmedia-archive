@@ -1,4 +1,37 @@
-<% title "A Publishing System for Open Government Data" %>
+<% title "A publishing system for government open data" %>
+<div class="grid_4">
+  <div class="box">
+    <div class="block" id="tables">
+      <table style="width:100%">
+				<thead>
+				  <tr>
+				    <th>Name</th>
+				    <th>No. Datasets</th>
+				  </tr>
+				</thead>
+				<% @collections.each do |c| %>
+				<tr>
+				  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
+				  <% if current_site %>
+				  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
+				  <% else %>
+				  <td><%= c.members.size %></td>
+				  <% end %>
+				</tr>
+				<% end %>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="grid_4" >
+  <div class="box">
+    <div class="block">
+	    <%= render :partial=>'shared/map' %>
+		</div>
+	</div>
+</div>
+
 <div class="grid_4">
 		<div class="spotlight" id="frontpage_load_data">
 			<h2><%= link_to '1. Import Data', new_upload_admin_datasources_path, :title => "" %></h2>

@@ -1,32 +1,50 @@
-<% title "Dataset Categories (Collections)" %>
-<div class="grid_12">
+<% title "A publishing system for government open data" %>
+<div class="grid_4">
   <div class="box">
-    <h2>Browse</h2>
     <div class="block" id="tables">
-      <table>
-	<thead>
-	  <tr>
-	    <th>Name</th>
-	    <th>No. Datasets</th>
-	  </tr>
-	</thead>
-	<% @collections.each do |c| %>
-	<tr>
-	  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
-	  <% if current_site %>
-	  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
-	  <% else %>
-	  <td><%= c.members.size %></td>
-	  <% end %>
-	</tr>
-	<% end %>
+      <table style="width:100%">
+				<thead>
+				  <tr>
+				    <th>Name</th>
+				    <th>No. Datasets</th>
+				  </tr>
+				</thead>
+				<% @collections.each do |c| %>
+				<tr>
+				  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
+				  <% if current_site %>
+				  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
+				  <% else %>
+				  <td><%= c.members.size %></td>
+				  <% end %>
+				</tr>
+				<% end %>
       </table>
     </div>
   </div>
 </div>
 
+<div class="grid_4" >
+  <div class="box">
+    <div class="block">
+	    <%= render :partial=>'shared/map' %>
+		</div>
+	</div>
+</div>
+
+
 <% if request.subdomains.count == 0 %>
-<div class="grid_12">
+	<div class="grid_4 omega">
+	  <div class="box">
+	    <div class="block">
+		    Get your very own Civic OpenMedia instance!  <%= link_to 'Signup Now!', new_site_path %>
+	    </div>
+	  </div>
+	</div>
+<% end %>
+
+<% if request.subdomains.count == 0 %>
+<div class="grid_4 omega">
   <div class="box">
     Get your very own Civic OpenMedia instance!  <%= link_to 'Signup Now!', new_site_path %>
   </div>

@@ -3,7 +3,7 @@ class Public::CollectionsController < Public::BaseController
   def index
     @collections = ipublic_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
     if current_site
-      @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label})
+      @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site == ipublic_site
     end
   end
 

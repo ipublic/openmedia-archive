@@ -10,7 +10,7 @@
 
 <div class="grid_6" >
   <div class="box">
-    <h2><%= @class.uri %></h2>
+    <h2>Metadata</h2>
     <div class="block">
       <% if @metadata %>
       <%= render :partial=>'admin/metadatas/show', :locals=>{:metadata=>@metadata} %>
@@ -25,6 +25,15 @@
       <%= link_to 'RDF (n-triples)', class_path(rdf_id(@class), :format=>'nt') %>
     </p>
   </div>
+
+  <div class="box">
+	  <h2>Chart</h2>
+    <div class="block">
+	    <%= render :partial=>'/shared/chart' %>
+			<div id='chart'></div>
+			<%= @chart.render('chart').html_safe %>
+		</div>
+	</div>
 </div>
 
 <div class="grid_6 omega" >
@@ -38,7 +47,6 @@
 
 <div class="grid_6 omega" >
   <div class="box">
-    <h2>Chart</h2>
     <div id="chart" class="block">
 	    <%#= render :partial=>'shared/chart' %>
 		</div>

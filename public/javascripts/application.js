@@ -2,6 +2,25 @@
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
 
+// Example jQuery Sparklines 
+  /* Inline sparklines take their values from the contents of the tag */
+  $('.inlinesparkline').sparkline(); 
+
+  /* Sparklines can also take their values from the first argument 
+  passed to the sparkline() function */
+  var myvalues = [10,8,5,7,4,4,1];
+  $('.dynamicsparkline').sparkline(myvalues);
+
+  /* The second argument gives options such as chart type */
+  $('.dynamicbar').sparkline(myvalues, {type: 'bar', barColor: 'green'} );
+
+  /* Use 'html' instead of an array of values to pass options 
+  to a sparkline with data in the tag */
+  $('.inlinebar').sparkline('html', {type: 'bar', barColor: 'red'} );
+
+// END Example jQuery Sparklines 
+
+
 	$( "#create-class" ).button()
 		.click(function() {
 			$( "#dialog-new-class-form" ).dialog( "open" );

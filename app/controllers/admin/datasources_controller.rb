@@ -126,12 +126,12 @@ class Admin::DatasourcesController < ApplicationController
           @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, :label=>@datasource.title)
           @collection.members << @class.uri
           @collection.save!
-          properties.each do |prop|
-            if prop[:label]
-              prop[:label] = "#{@class.label} #{prop[:label]}" if prop[:label].downcase=='type'
-              @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
-              @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
-            end
+          properties.each_with_index do |prop,idx|
+            prop[:label] = "Column#{idx+1}" if prop[:label].nil?
+            prop[:label] = "#{@class.label} #{prop[:label]}" if prop[:label].downcase=='type'
+            prop[:label] = "Col #{prop[:label]}" if prop[:label] =~ /^\d*$/              
+            @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
+            @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
           end
           @class.save!          
           @datasource.rdfs_class_uri = @class.uri.to_s

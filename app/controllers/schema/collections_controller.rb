@@ -4,8 +4,8 @@ class Schema::CollectionsController < ApplicationController
   before_filter :convert_hidden, :only=>[:update, :create]
 
   def index
-    @collections = ipublic_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
-    @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site = ipublic_site
+    @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
+    @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site = om_site
   end
 
   def new

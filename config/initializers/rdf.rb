@@ -34,8 +34,14 @@ module Spira
  end
 end
 
-# setup vcard models
-OpenMedia::Schema::VCard.initialize_vcard
+begin
+  OpenMedia::Schema::RDFS::Class.for(::RDF::METADATA.Metadata)
+  OpenMedia::Schema::OWL::Class.for(::RDF::VCARD.VCard)
+  # setup vcard models
+  OpenMedia::Schema::VCard.initialize_vcard
+  
+  # setup metadata model
+  OpenMedia::Schema::Metadata.initialize_metadata
+rescue => e
 
-# setup metadata model
-OpenMedia::Schema::Metadata.initialize_metadata
+end

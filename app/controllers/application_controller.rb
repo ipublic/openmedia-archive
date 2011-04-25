@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_site, :ipublic_site, :rdf_id
+  helper_method :current_site, :om_site, :rdf_id
   before_filter :decode_rdf_id
   before_filter :load_site
   
@@ -12,8 +12,8 @@ class ApplicationController < ActionController::Base
     @current_site
   end
 
-  def ipublic_site
-    @ipublic_site
+  def om_site
+    @om_site
   end
 
 
@@ -39,11 +39,11 @@ private
   end
 
   def load_site
-    @ipublic_site = OpenMedia::Site.all.detect{|s| s.subdomain=='ipublic'}    
+    @om_site = OpenMedia::Site.all.detect{|s| s.subdomain=='om'}
     if request.subdomains.count == 0
       @current_site = nil
     else
-      @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}
+      @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}      
       if @current_site
         @current_site.initialize_metadata
       else

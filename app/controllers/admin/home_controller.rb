@@ -1,4 +1,5 @@
 class Admin::HomeController < ApplicationController
+  before_filter :check_for_subdomain
   before_filter :authenticate_admin!
 
   def index
@@ -16,5 +17,13 @@ class Admin::HomeController < ApplicationController
       @classes = @collection.concepts.collect {|c| c.rdfs_class}
     end
   end
+
+private
+  def check_for_subdomain
+    if request.subdomains.size == 0
+      redirect_to root_path
+    end
+  end
+
   
 end

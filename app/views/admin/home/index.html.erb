@@ -11,7 +11,7 @@
 				</thead>
 				<% @collections.each do |c| %>
 				<tr>
-				  <td><%= link_to c.label, collection_path(rdf_id(c)) %></td>
+				  <td><%= link_to c.label, schema_collection_path(rdf_id(c)) %></td>
 				  <% if current_site %>
 				  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
 				  <% else %>

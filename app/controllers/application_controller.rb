@@ -39,11 +39,11 @@ private
   end
 
   def load_site
-    @om_site = OpenMedia::Site.all.detect{|s| s.subdomain=='om'}
+    @om_site = OpenMedia::Site.find_by_identifier('om')
     if request.subdomains.count == 0
       @current_site = nil
     else
-      @current_site = OpenMedia::Site.all.detect{|s| s.subdomain==request.subdomains.first}      
+      @current_site = OpenMedia::Site.find_by_identifier(request.subdomains.first)
       if @current_site
         @current_site.initialize_metadata
       else

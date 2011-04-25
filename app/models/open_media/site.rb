@@ -35,21 +35,11 @@ class OpenMedia::Site < CouchRest::Model::Base
   timestamps!
 
   ## Validations
-  validates :url, :presence=>true, :uniqueness=>true
   validates :identifier, :presence=>true, :uniqueness=>true
   validates_presence_of :municipality
 
   ## CouchDB Views
-  # singleton class - no views
-  
-  def url=(url)
-    self['url'] = url
-    generate_identifier
-  end
-
-  def subdomain
-    self.url ? self.url.split(/\.|\//)[2] : nil
-  end
+  view_by :identifier
 
   def skos_collection
     collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")

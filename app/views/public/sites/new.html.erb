@@ -11,7 +11,7 @@
 	  <%= m.hidden_field :source_id, :class=>'named-place-id' %>
 	  <ol>
 	    <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name %></li>
-	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :subdomain, :class => "narrow" %>.<%= DOMAIN %></li>
+	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :identifier, :class => "narrow" %>.<%= OM_DOMAIN %><%= OM_PORT == 80 ? '' : OM_PORT %></li>
 	    <li><%= m.label :name, 'Municipality Name' %> <%= m.text_field :name, :class=>'named-place' %></li>
 	  </ol>
 	</fieldset>

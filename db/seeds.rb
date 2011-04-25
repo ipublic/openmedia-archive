@@ -29,7 +29,7 @@ OpenMedia::Schema::Metadata.initialize_metadata
 
 # create om site w/ dan as admin
 ec = OpenMedia::InferenceRules::GeographicName.find_by_name('Ellicott City').first
-om_site = OpenMedia::Site.create!(:url=>"http://om.#{DOMAIN}", :municipality=>ec, :openmedia_name=>'iPublic OpenMedia Portal')
+om_site = OpenMedia::Site.create!(:identifier=>"om", :municipality=>ec, :openmedia_name=>'iPublic OpenMedia Portal')
 om_site.initialize_metadata
 
 dan = Admin.create!(:email=>'dan.thomas@ipublic.org', :password=>'ChangeMe',

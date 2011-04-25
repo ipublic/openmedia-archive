@@ -1,7 +1,7 @@
 UNZIP = "/usr/bin/unzip"
 OGR2OGR = "/usr/local/bin/ogr2ogr"
-DOMAIN = "civicopenmedia.org"
-PORT = 80
+OM_DOMAIN = "civicopenmedia.org"
+OM_PORT = 80
 
 Openmedia::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
@@ -28,5 +28,5 @@ Openmedia::Application.configure do
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
 
-  config.action_mailer.default_url_options = { :host => "#{DOMAIN}:3000" }  
+  config.action_mailer.default_url_options = { :host => OM_DOMAIN, :port => OM_PORT }  
 end

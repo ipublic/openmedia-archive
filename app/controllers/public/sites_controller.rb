@@ -15,14 +15,9 @@ class Public::SitesController < ApplicationController
   def create
     @admin = Admin.new(:email=>params[:email][:value], :password=>params[:admin][:password],
                      :password_confirmation=>params[:admin][:password_confirmation])
-    subdomain = params[:site].delete(:subdomain)
-    site_url = "http://#{subdomain}.#{DOMAIN}"
-    if (request.port != 80)
-      site_url = "#{site_url}:#{request.port}"
-    end
 
     @municipality = OpenMedia::InferenceRules::GeographicName.find_by_name_and_id(params[:municipality][:name], params[:municipality][:source_id].to_i)
-    @site = OpenMedia::Site.new(params[:site].merge(:url=>site_url, :municipality=>@municipality))
+    @site = OpenMedia::Site.new(params[:site].merge(:municipality=>@municipality))
     @name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new(params[:name])
     @email = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardEmail.new(params[:email])
     

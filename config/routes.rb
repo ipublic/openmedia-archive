@@ -75,7 +75,18 @@ Openmedia::Application.routes.draw do
     resource :site
     resource :community
     resource :dashboard
-    resource :schema
+
+    namespace :schema do
+      resources :collections do
+        resources :classes
+      end
+      resources :classes do
+        collection do
+          get :new_property
+          get :autocomplete
+        end
+      end
+    end    
     
     resources :datasources do
       collection do
@@ -96,18 +107,6 @@ Openmedia::Application.routes.draw do
     resources :vcards
     resources :schedules
     resources :data_types
-  end
-
-  namespace :schema do
-    resources :collections do
-      resources :classes
-    end
-    resources :classes do
-      collection do
-        get :new_property
-        get :autocomplete
-      end
-    end
   end
 
   # resource :account, :to=>"users"

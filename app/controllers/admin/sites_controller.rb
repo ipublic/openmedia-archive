@@ -1,6 +1,4 @@
-class Admin::SitesController < ApplicationController
-
-  before_filter :authenticate_admin!
+class Admin::SitesController < Admin::BaseController
   
   def new
     @site = OpenMedia::Site.new

@@ -1,6 +1,4 @@
-class Admin::HomeController < ApplicationController
-  before_filter :check_for_subdomain
-  before_filter :authenticate_admin!
+class Admin::HomeController < Admin::BaseController
 
   def index
     @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
@@ -17,13 +15,5 @@ class Admin::HomeController < ApplicationController
       @classes = @collection.concepts.collect {|c| c.rdfs_class}
     end
   end
-
-private
-  def check_for_subdomain
-    if request.subdomains.size == 0
-      redirect_to root_path
-    end
-  end
-
   
 end

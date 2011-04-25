@@ -126,7 +126,7 @@ $(function() {
 
     var typeAutoCompleteOpts = {delay: 300,
 				mustMatch: true,
-				source: "/schema/classes/autocomplete",
+				source: "/admin/schema/classes/autocomplete",
 				select: function(event, ui) {
 				    $(event.target).next('input').val(ui.item.id);
 				}};
@@ -134,7 +134,7 @@ $(function() {
 
     $('a.add-class-property').live('click', function() {
 	var link = this;
-	$.get('/schema/classes/new_property', function(html) {
+	$.get('/admin/schema/classes/new_property', function(html) {
 	    $(html).insertBefore(link);
 	    $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
 	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    

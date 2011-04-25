@@ -1,6 +1,6 @@
 <div id="forms">
   <%= form_for :class, 
-               :url => @class.exists? ? schema_collection_class_path(rdf_id(@collection), rdf_id(@class)) : schema_collection_classes_path(rdf_id(@collection)),
+               :url => @class.exists? ? admin_schema_collection_class_path(rdf_id(@collection), rdf_id(@class)) : admin_schema_collection_classes_path(rdf_id(@collection)),
                :html => {:method=>@class.exists? ? :put : :post } do |f| %>
   <div class="grid_12">
     <div class="box">

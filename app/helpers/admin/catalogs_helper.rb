@@ -1,2 +1,0 @@
-module Admin::CatalogsHelper
-end

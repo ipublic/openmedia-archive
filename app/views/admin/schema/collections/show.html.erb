@@ -1,9 +1,9 @@
 <% title "Schema > Collection: #{@collection.label}" %>
 <div class="grid_12" >
 	<p class="page-nav">
-		<%= link_to "All Collections", schema_collections_path %> <% if current_site.skos_collection.contains?(@collection) %> |
-		<%= link_to "Edit", edit_schema_collection_path(rdf_id(@collection)) %> |
-		<%= link_to 'Delete', schema_collection_path(rdf_id(@collection)), 
+		<%= link_to "All Collections", admin_schema_collections_path %> <% if current_site.skos_collection.contains?(@collection) %> |
+		<%= link_to "Edit", edit_admin_schema_collection_path(rdf_id(@collection)) %> |
+		<%= link_to 'Delete', admin_schema_collection_path(rdf_id(@collection)), 
 					:confirm => "Are you sure you want to delete this collection, all of its classes, and all of the data those classes contain?", 
 					:method => :delete %>
 		<% end %>
@@ -28,7 +28,7 @@
 	<div class="box" id="tables">
 		<h2>Types</h2>
 		<div class="block">
-			<p><%= link_to "Add Class", new_schema_collection_class_path(rdf_id(@collection)), {:class => 'add-element'} %><p>
+			<p><%= link_to "Add Class", new_admin_schema_collection_class_path(rdf_id(@collection)), {:class => 'add-element'} %><p>
 			<table>
 				<thead>
 				  <tr>
@@ -42,7 +42,7 @@
 				<tbody>
 				<% @classes.each do |cls| %>
 				<tr>
-				  <td><%= link_to cls.label, schema_collection_class_path(rdf_id(@collection), rdf_id(cls)) %></td>
+				  <td><%= link_to cls.label, admin_schema_collection_class_path(rdf_id(@collection), rdf_id(cls)) %></td>
 				  <td><%= cls.uri %></td>
 				  <td><%= cls.properties.size %></td>
 				  <td><%= cls.instance_count %></td>

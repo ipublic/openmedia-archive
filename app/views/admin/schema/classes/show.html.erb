@@ -2,9 +2,9 @@
 
 <div class="grid_12" >
   <p class="page-nav">
-    <%= link_to "All Classes", schema_collection_path(rdf_id(@collection)) %> | 
-    <%= link_to "Edit", edit_schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)) %> |
-    <%= link_to 'Delete', schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)), 
+    <%= link_to "All Classes", admin_schema_collection_path(rdf_id(@collection)) %> | 
+    <%= link_to "Edit", edit_admin_schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)) %> |
+    <%= link_to 'Delete', admin_schema_collection_class_path(rdf_id(@collection), rdf_id(@class_uri)), 
 	:confirm => "Are you sure you want to delete this class and all of its data?", 
         :method => :delete %>
   </p>

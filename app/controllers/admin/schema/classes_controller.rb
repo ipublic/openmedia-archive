@@ -1,4 +1,4 @@
-class Schema::ClassesController < ApplicationController
+class Admin::Schema::ClassesController < Admin::BaseController
 
   before_filter :load_objects
   before_filter :filter_empty_properties, :only=>[:create, :update]  
@@ -39,7 +39,7 @@ class Schema::ClassesController < ApplicationController
         end
       end
       @class.save!
-      redirect_to schema_collection_path(rdf_id(@collection))
+      redirect_to admin_schema_collection_path(rdf_id(@collection))
     rescue Exception => e
       flash[:error] = e.to_s
       @class = OpenMedia::Schema::RDFS::Class.new(params[:class])
@@ -78,7 +78,7 @@ class Schema::ClassesController < ApplicationController
       end
       @class.save! if props_added
       flash[:notice] = 'Class successfully updated,'
-      redirect_to schema_collection_class_path(rdf_id(@collection), rdf_id(@class))
+      redirect_to admin_schema_collection_class_path(rdf_id(@collection), rdf_id(@class))
     rescue Exception => e
       flash[:error] = e.to_s
       render :action=>'edit'
@@ -95,7 +95,7 @@ class Schema::ClassesController < ApplicationController
     @class = OpenMedia::Schema::RDFS::Class.for(params[:id])    
     @class.destroy!    
     flash[:notice] = 'Class successfully deleted.'
-    redirect_to schema_collection_path(rdf_id(@collection))
+    redirect_to admin_schema_collection_path(rdf_id(@collection))
   end
 
 

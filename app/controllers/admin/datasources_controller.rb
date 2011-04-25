@@ -1,8 +1,7 @@
 require 'csv'
 require 'tmpdir'
 
-class Admin::DatasourcesController < ApplicationController
-  before_filter :authenticate_admin!  
+class Admin::DatasourcesController < Admin::BaseController
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
 

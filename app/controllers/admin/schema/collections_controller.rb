@@ -1,4 +1,4 @@
-class Schema::CollectionsController < ApplicationController
+class Admin::Schema::CollectionsController < Admin::BaseController
 
   before_filter :load_collection
   before_filter :convert_hidden, :only=>[:update, :create]
@@ -21,7 +21,7 @@ class Schema::CollectionsController < ApplicationController
     @collection = OpenMedia::Schema::SKOS::Collection.create_in_collection!(current_site.skos_collection, params[:collection])
     if @collection.errors.count == 0
       flash[:notice] = 'Collection successfully created.'
-      redirect_to schema_collections_path
+      redirect_to admin_schema_collections_path
     else
       render 'new'
     end
@@ -30,14 +30,14 @@ class Schema::CollectionsController < ApplicationController
   def update
     @collection.update!(params[:collection].symbolize_keys)
     flash[:notice] = 'Collection successfully updated.'
-    redirect_to schema_collections_path
+    redirect_to admin_schema_collections_path
   end
 
   def destroy
     current_site.skos_collection.delete_member!(@collection.uri)
     @collection.destroy!    
     flash[:notice] = 'Collection successfully deleted.'
-    redirect_to schema_collections_path
+    redirect_to admin_schema_collections_path
   end
   
 private

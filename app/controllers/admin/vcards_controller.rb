@@ -1,5 +1,5 @@
-class Admin::VcardsController < ApplicationController
-  before_filter :authenticate_admin!
+class Admin::VcardsController < Admin::BaseController
+
   before_filter :load_vcard
   #before_filter :convert_params, :only => [:create, :update]
 

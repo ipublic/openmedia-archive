@@ -4,7 +4,7 @@
     <h2>Browse</h2>
     <div class="block" id="tables">
 			<p>
-		    <%= link_to 'Add Collection', new_schema_collection_path, {:class => 'add-element'} %>
+		    <%= link_to 'Add Collection', new_admin_schema_collection_path, {:class => 'add-element'} %>
 		  </p>
       <table>
 				<thead>
@@ -17,7 +17,7 @@
 				</thead>
 				<% @collections.each do |c| %>
 				<tr>
-				  <td><%= link_to c.label, schema_collection_path(rdf_id(c)) %></td>
+				  <td><%= link_to c.label, admin_schema_collection_path(rdf_id(c)) %></td>
 				  <td><%= c.uri %></td>
 				  <td><%= c.members.select{|cu| cu.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
 				  <td><%= c.hidden %></td>

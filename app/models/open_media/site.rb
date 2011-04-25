@@ -41,6 +41,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   ## CouchDB Views
   view_by :identifier
 
+  before_validate :set_url  
+
   def skos_collection
     collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")
     unless collection.exists?
@@ -78,16 +80,9 @@ class OpenMedia::Site < CouchRest::Model::Base
   end
   
 private
-  def generate_identifier
-    if !url.blank?
-      if self.url =~ /^https?:\/\/(.*)$/
-        self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
-      else
-        self['identifier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
-        self.url = "http://#{self.url}"
-      end
-      self['identifier'] = self['identifier'].split(':')[0] if self['identifier']   # take port off identifier
+  def set_url
+    if self.url.nil? && self.identifier
+      self.url = "http://#{self.identifier}.#{OM_DOMAIN}#{OM_PORT == 80 ? '' : OM_PORT}"
     end
-  end  
-
+  end
 end

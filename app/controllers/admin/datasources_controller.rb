@@ -23,6 +23,8 @@ class Admin::DatasourcesController < ApplicationController
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
     @datasources = OpenMedia::Datasource.all
     @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
+    @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
+    @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site = om_site    
   end
   
   def new

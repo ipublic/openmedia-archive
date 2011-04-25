@@ -20,12 +20,13 @@ OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::OM_CORE.GeoJson).save!
 
 # TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
-require File.join(File.dirname(__FILE__),'seeds', 'metadata')
-require File.join(File.dirname(__FILE__),'seeds', 'vcard')
 TYPES_RDF_REPOSITORY.refresh_design_doc   # just in case
 
 OpenMedia::Schema::VCard.initialize_vcard
 OpenMedia::Schema::Metadata.initialize_metadata
+
+require File.join(File.dirname(__FILE__),'seeds', 'metadata')
+require File.join(File.dirname(__FILE__),'seeds', 'vcard')
 
 # create om site w/ dan as admin
 ec = OpenMedia::InferenceRules::GeographicName.find_by_name('Ellicott City').first

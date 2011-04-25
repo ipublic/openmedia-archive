@@ -47,7 +47,7 @@ private
       if @current_site
         @current_site.initialize_metadata
       else
-        redirect_to url_for(params.merge(:host=>"#{DOMAIN}:#{request.port}"))
+        redirect_to url_for(params.merge(:host=>"#{OM_DOMAIN}:#{request.port}"))
       end
     end
   end    

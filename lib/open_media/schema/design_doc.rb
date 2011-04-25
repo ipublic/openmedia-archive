@@ -109,7 +109,7 @@ module OpenMedia
                                                classDef.properties[i].comment = lookup(classDef.properties[i].uri, '<#{::RDF::RDFS.comment}>');
                                                classDef.properties[i].range = lookup(classDef.properties[i].uri, '<#{::RDF::RDFS.range}>');
                                                classDef.properties[i].uri = trimBrackets(classDef.properties[i].uri);
-                                               classDef.properties[i].identifier = classDef.properties[i].uri.substring(classDef.properties[i].uri.indexOf('#'));
+                                               classDef.properties[i].identifier = classDef.properties[i].uri.substring(classDef.properties[i].uri.indexOf('#')+1);
                                            }
                                        }
                                        if (classDef.uri) {

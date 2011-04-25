@@ -29,7 +29,7 @@
 	  <h2>Chart</h2>
     <div class="block">
 			<div id='chart'></div>
-			<%= @chart.render('chart').html_safe %>
+			<%= @chart.render('chart').html_safe if @chart %>
 		</div>
 	</div>
 	

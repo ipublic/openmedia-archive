@@ -26,6 +26,11 @@ class Admin < CouchRest::Model::Base
     end
   end
 
+  def remember_created_at
+    self['remember_created_at'].to_time if self['remember_created_at']
+  end
+
+
 
 end
 

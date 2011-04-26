@@ -30,18 +30,21 @@ RDF::VCARD = RDF::Vocabulary.new(RDF::OM_CORE['vcard/'])
 RDF::METADATA = RDF::Vocabulary.new(RDF::OM_CORE['metadata/'])
 
 TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
-SITE_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>SITE_DATABASE)
 Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
 
 begin
-  OpenMedia::Schema::DesignDoc.refresh  
+  OpenMedia::Schema::DesignDoc.refresh
+
   OpenMedia::Schema::RDFS::Class.for(::RDF::METADATA.Metadata)
   OpenMedia::Schema::OWL::Class.for(::RDF::VCARD.VCard)
+
   # setup vcard models
   OpenMedia::Schema::VCard.initialize_vcard
+
   
   # setup metadata model
   OpenMedia::Schema::Metadata.initialize_metadata
 rescue => e
-
+  puts e.inspect
 end
+

@@ -34,7 +34,7 @@ def reset_test_db!
   STAGING_DATABASE.recreate!
   TYPES_DATABASE.recreate!
   TYPES_RDF_REPOSITORY.refresh_design_doc
-  OpenMedia::Schema::RDFS::Class.refresh_design_doc
+  OpenMedia::Schema::DesignDoc.refresh    
 end
 
 def seed_test_db!
@@ -42,7 +42,8 @@ def seed_test_db!
 end
 
 def create_test_site(data={})
-  @test_site ||= OpenMedia::Site.create!(:url=>'http://test.gov')
+  @test_site ||= OpenMedia::Site.create!(:identifier=>'testgov', :url=>'http://test.gov',
+                                         :municipality=>OpenMedia::NamedPlace.new(:name=>'My City'))
   COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
   @test_site
 end

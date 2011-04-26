@@ -16,7 +16,8 @@ describe OpenMedia::Schema::RDFS::Class do
   it 'should create class in site and also create skos concept' do    
     @rdfs_class.reload
     @rdfs_class.uri.should == "http://data.civicopenmedia.org/#{@site.identifier}/classes/test_class"
-    TYPES_RDF_REPOSITORY.query(:subject=>@rdfs_class.uri, :predicate=>RDF.type, :object=>RDF::SKOS.Concept).size.should == 1
+    TYPES_RDF_REPOSITORY.query(:subject=>@rdfs_class.subject, :predicate=>RDF.type).size.should == 2
+    TYPES_RDF_REPOSITORY.query(:subject=>@rdfs_class.subject, :predicate=>RDF.type, :object=>RDF::SKOS.Concept).size.should == 1
   end
 
   it 'should have list of properties, including properties of with type of other classes' do
@@ -30,8 +31,8 @@ describe OpenMedia::Schema::RDFS::Class do
   it 'should be able to build a spira resource to manage instances of the class' do
     @rdfs_class.spira_resource.properties.keys.collect{|k| k.to_s}.sort.should == %w(created modified property_1 property_2)    
     @rdfs_class.spira_resource.should == OpenMedia::Schema::RDFS::Class::HttpDataCivicopenmediaOrgTestgovClassesTest_class
-    @rdfs_class.spira_resource.should_not be_nil
-    @rdfs_class.spira_resource.repository.should be_instance_of(RDF::CouchDB::Repository)
+    @rdfs_class.spira_resource.should_not be_nil    
+    @rdfs_class.spira_resource.default_source(@rdfs_class.skos_concept.collection.repository)
   end
 
   it 'should be able to retrieve its skos concept' do

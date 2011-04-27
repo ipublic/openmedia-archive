@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe OpenMedia::Schema::RDFS::Class do
 
-  before(:all) do
-    reset_test_db!
+  before(:each) do
     @site = create_test_site
     @rdfs_class = create_test_rdfs_class(:label=>'Test Class')
   end

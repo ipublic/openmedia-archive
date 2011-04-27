@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schema::ClassesController do
+describe Admin::Schema::ClassesController do
 
   before(:all) do
     reset_test_db!

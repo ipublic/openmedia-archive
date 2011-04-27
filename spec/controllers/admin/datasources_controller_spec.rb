@@ -4,27 +4,19 @@ require 'json'
 describe Admin::DatasourcesController do
   render_views
   
-  before(:all) do
+  before(:each) do
     create_test_csv
-    reset_test_db!
-    seed_test_db!
   end
   
-  after(:all) do
+  after(:each) do
     delete_test_csv
   end
   
-  describe 'before Site is configured' do
-    it 'should redirect to new site form when uploading data' do
-      get :new_upload
-      response.should redirect_to(new_admin_site_path)
-      flash[:error].should == ApplicationController::SITE_NOT_DEFINED_ERROR_MSG      
-    end
-  end
-
-  describe 'after Site is configured' do
-    before(:all) do
+  context 'after site is configured and admin is logged in' do
+    before(:each) do
       @site = create_test_site
+      @site.initialize_metadata
+      sign_in :admin, create_test_admin(@site)
       @collection = create_test_collection(:site=>@site)
       @class = create_test_rdfs_class
       1.upto(3) {|i| ds = create_test_datasource(:title=>"Datasource #{i}", :rdfs_class_uri=>@class.uri.to_s,
@@ -49,8 +41,8 @@ describe Admin::DatasourcesController do
       OpenMedia::Datasource.find(@datasource.id).should be_nil
     end
 
-    describe 'uploading data' do
-      describe 'into a new datasource' do
+    context 'uploading data' do
+      context 'into a new datasource' do
         before(:each) do
           @datasource_params = {:title=>'New Datasource', :rdfs_class_uri=>@class.uri.to_s,
             :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE,

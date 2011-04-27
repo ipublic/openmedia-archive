@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Schema::CollectionsController do
+describe Admin::Schema::CollectionsController do
   render_views
 
   before(:all) do

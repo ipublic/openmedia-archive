@@ -6,7 +6,7 @@ class Admin::DatasourcesController < Admin::BaseController
   skip_before_filter :verify_authenticity_token, :only => [:create]
 
   def index
-    @datasources = OpenMedia::Datasource.search(params[:search])
+    @datasources = current_site.datasources
   end
   
   def show
@@ -144,6 +144,7 @@ class Admin::DatasourcesController < Admin::BaseController
 
       if @datasource.errors.size == 0
         if @datasource.save
+          current_site.datasources << @datasource; current_site.save
           redirect_to edit_admin_datasource_path(@datasource)
         else
           @datasources = OpenMedia::Datasource.all

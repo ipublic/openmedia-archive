@@ -31,6 +31,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   # Services properties
   # Default googlemap_api_key is for http://localhost
   property :googlemap_api_key, :default => "ABQIAAAALBip6RF6CeNkMG5FsLJfjRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRnUJ7zjI2v5FZxVYW7aoB2EAT8hQ"
+
+  collection_of :datasources, :class_name=>'OpenMedia::Datasource'
   
   timestamps!
 

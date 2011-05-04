@@ -3,6 +3,10 @@
 $(function() {
 
 // Example jQuery Sparklines 
+	/* Inline sparklines take their values from the contents of the tag */
+	$('.compositeline').sparkline('html', { fillColor: false }); 
+  $('.compositeline').sparkline('html', { composite: true, fillColor: false, lineColor: 'blue' });
+
   /* Inline sparklines take their values from the contents of the tag */
   $('.inlinesparkline').sparkline(); 
 

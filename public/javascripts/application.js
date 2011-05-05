@@ -7,6 +7,20 @@ $(function() {
 	$('.compositeline').sparkline('html', { fillColor: false }); 
   $('.compositeline').sparkline('html', { composite: true, fillColor: false, lineColor: 'blue' });
 
+  // Bullet charts
+  $('.bullet').sparkline('html', { type: 'bullet' });
+
+  // Pie charts
+  $('.pie').sparkline('html', { type: 'pie', height: '1.5em', offset: -90, 
+																sliceColors: ['fb8072', 'b3de69', '80B1D3', 'FDB462', 
+																							'FCCDE5', 'D9D9D9', 'BC80BD', 'CCEBC5', 
+																              'FFED6F', '8DD3C7', 'FFFFB3', 'BEBADA']});
+
+
+  // Tri-state charts using inline values
+  $('.tristate').sparkline('html', {type: 'tristate'});
+  $('.tristatecols').sparkline('html', {type: 'tristate', colorMap: {'-2': '#fa7', '2': '#44f'} });
+
   /* Inline sparklines take their values from the contents of the tag */
   $('.inlinesparkline').sparkline(); 
 

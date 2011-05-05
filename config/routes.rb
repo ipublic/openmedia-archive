@@ -60,7 +60,6 @@ Openmedia::Application.routes.draw do
   root :to => "public/collections#index"
   
   scope :module => 'public' do
-    resource :home
     resources :sites do
       collection do
         get :autocomplete_geoname

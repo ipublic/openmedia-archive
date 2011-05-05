@@ -1,14 +1,13 @@
 require 'spec_helper'
 
 describe OpenMedia::Schema::RDF::Property do
-  before(:all) do
-    reset_test_db!
+  before(:each) do
     @site = create_test_site
     @rdfs_class = OpenMedia::Schema::RDFS::Class.create_in_site!(@site, :label=>'Reported Crimes', :comment=>'crime reports, etc')
   end
 
   describe 'validation' do
-    before(:all) do
+    before(:each) do
       @property = OpenMedia::Schema::RDF::Property.for('foo')
     end
 
@@ -22,16 +21,12 @@ describe OpenMedia::Schema::RDF::Property do
   end
 
   describe 'with all required properties' do
-    before(:all) do
+    before(:each) do
       @property = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Offense Code', :range=>RDF::XSD.string)
     end
 
-    it 'should get saved to rdf repo' do
-      OpenMedia::Schema::RDF::Property.count.should == 1
-    end
-
     it 'should get created with proper uri' do
-      @property.uri.should == "#{@rdfs_class.uri}#offense_code"
+      @property.should exist
     end
 
     it_should_behave_like OpenMedia::Schema::Base do

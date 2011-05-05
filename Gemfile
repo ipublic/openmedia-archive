@@ -16,6 +16,7 @@ group :test, :development do
   gem 'autotest'
   gem 'autotest-rails'
   gem 'rails3-generators', :git => 'git://github.com/shenoudab/rails3-generators.git'
+  gem 'spork', '~> 0.9.0.rc'
 end
 
 # Bundle edge Rails instead:

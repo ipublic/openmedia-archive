@@ -4,7 +4,13 @@ describe OpenMedia::Schema::RDFS::Class do
 
   before(:each) do
     @site = create_test_site
-    @rdfs_class = create_test_rdfs_class(:label=>'Test Class')
+    @collection = om_site.skos_collection.sub_collections.first #create_test_collection(:site=>@site)
+    @rdfs_class = create_test_rdfs_class(:site=>@site, :collection=>@collection, :label=>'Test Class')    
+    @rdfs_class2 = create_test_rdfs_class(:site=>@site, :collection=>@collection, :label=>'Test Class 2')
+
+    @property1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>@rdfs_class2.uri)
+    @property2 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 2', :range=>RDF::XSD.string)
+    
   end
   
   it 'should have label, comment, rdf:type' do
@@ -20,9 +26,6 @@ describe OpenMedia::Schema::RDFS::Class do
   end
 
   it 'should have list of properties, including properties of with type of other classes' do
-    rdfs_class2 = create_test_rdfs_class(:label=>'Test Class 2')
-    prop1 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 1', :range=>rdfs_class2.uri)
-    prop2 = OpenMedia::Schema::RDF::Property.create_in_class!(@rdfs_class, :label=>'Property 2', :range=>RDF::XSD.string)
     @rdfs_class.properties.size.should == 2
     @rdfs_class.properties.each{|p| p.should be_instance_of(OpenMedia::Schema::RDF::Property)}
   end
@@ -48,11 +51,6 @@ describe OpenMedia::Schema::RDFS::Class do
   # it_should_behave_like OpenMedia::Schema::Base do
   #   let(:base) { @rdfs_class }
   # end  
-
-  it 'should have class method for searching classes and datatypes' do
-    OpenMedia::Schema::RDFS::Class.prefix_search('test').size.should == 2
-    OpenMedia::Schema::RDFS::Class.prefix_search('test').first.should be_instance_of(RDF::URI)
-  end
 
   it 'should have method to efficiently get count of instances' do
     @rdfs_class.instance_count.should == @rdfs_class.spira_resource.count

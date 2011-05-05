@@ -12,7 +12,6 @@ class Admin < CouchRest::Model::Base
   view_by :site_id
 
   def self.find(id, opts=nil)
-    puts "Admin.find, id: #{id}, opts: #{opts.inspect}"
     if id == :first
       if opts[:conditions] && opts[:conditions][:id]
         self.find(opts[:conditions][:id])

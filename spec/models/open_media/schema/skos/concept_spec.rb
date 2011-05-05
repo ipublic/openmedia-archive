@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe OpenMedia::Schema::SKOS::Concept do
   before(:each) do
-    reset_test_db!
     @site = create_test_site
     @collection = @site.skos_collection
   end

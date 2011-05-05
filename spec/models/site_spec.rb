@@ -4,27 +4,20 @@ require 'spec_helper'
 describe OpenMedia::Site do
 
   before(:each) do
-    reset_test_db!
-    @site = OpenMedia::Site.new(:url=>'http://somesite.com')
+    @site = OpenMedia::Site.new(:identifier=>'somesite', :municipality=>OpenMedia::NamedPlace.new(:name=>'My City'))
   end
   
-  it 'should save and generate an identifier correctly' do
+  it 'should save and generate a url correctly' do
     lambda { @site.save! }.should change(OpenMedia::Site, :count).by(1)
-    @site.identifier.should == 'somesitecom'
+    @site.identifier.should == 'somesite'
+    @site.url.should == "http://somesite.#{OM_DOMAIN}"
   end
 
-  it 'should assume http:// if protocol not specified in url' do
-    @site.url = 'somesite.com'
-    @site.save!
-    @site.url.should == 'http://somesite.com'    
-    @site.identifier.should == 'somesitecom'
-  end
-
-  it 'should create skos collection if it does not yet exist' do
+  it 'should create skos collection on first access if it does not yet exist' do
     @site.save!
     lambda { @site.skos_collection }.should change(OpenMedia::Schema::SKOS::Collection, :count).by(1)
     @site.skos_collection.should be_instance_of(OpenMedia::Schema::SKOS::Collection)
-    @site.skos_collection.uri.should === RDF::URI.new('http://data.civicopenmedia.org/somesitecom/concepts')
+    @site.skos_collection.uri.should === 'http://data.civicopenmedia.org/somesite/concepts'
   end
 
   describe 'metadata repository' do

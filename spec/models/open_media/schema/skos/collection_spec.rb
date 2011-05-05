@@ -50,10 +50,11 @@ describe OpenMedia::Schema::SKOS::Collection do
       sub_collection.uri.should == @collection.uri/'public_safety'
       sub_collection.label.should == 'Public Safety'
       @collection.reload
-      @collection.sub_collections.size.should == 3
+      @collection.sub_collections.size.should == 1
     end
 
     it 'should not allow multiple collections to be created with same label' do
+      OpenMedia::Schema::SKOS::Collection.create_in_collection!(@collection, :label=>'Public Safety')      
       lambda { OpenMedia::Schema::SKOS::Collection.create_in_collection!(@collection, :label=>'Public Safety') }.should raise_error
     end
     

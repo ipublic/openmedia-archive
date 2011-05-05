@@ -1,49 +1,99 @@
-# This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'devise/test_helpers'
-require 'open_media/schema/rdfs/class'
+require 'spork'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Spork.prefork do
+  # Loading more in this block will cause your tests to run faster. However,
+  # if you change any configuration or code from libraries loaded here, you'll
+  # need to restart spork for it take effect.
 
-RSpec.configure do |config|
-  # == Mock Framework
-  #
-  # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-  #
-  # config.mock_with :mocha
-  # config.mock_with :flexmock
-  # config.mock_with :rr
-  config.mock_with :rspec
+  # This file is copied to spec/ when you run 'rails generate rspec:install'
+  ENV["RAILS_ENV"] ||= 'test'
+  require File.expand_path("../../config/environment", __FILE__)
+  require 'rspec/rails'
+  require 'devise/test_helpers'
+  require 'open_media/schema/rdfs/class'
+  require 'open_media/schema/base_spec'
+  
+  # Requires supporting ruby files with custom matchers and macros, etc,
+  # in spec/support/ and its subdirectories.
+  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  # config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  RSpec.configure do |config|
+    # == Mock Framework
+    #
+    # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
+    #
+    # config.mock_with :mocha
+    # config.mock_with :flexmock
+    # config.mock_with :rr
+    config.mock_with :rspec
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  # config.use_transactional_fixtures = true
-  config.include Devise::TestHelpers, :type => :controller
+    # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
+    # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  WATCHED_DBS = [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE]
-  start_sequences = { }
-  config.before(:each) do
-    WATCHED_DBS.each do |db|
-      start_sequences[db] = db.info['update_seq']
+    # If you're not using ActiveRecord, or you'd prefer not to run each of your
+    # examples within a transaction, remove the following line or assign false
+    # instead of true.
+    # config.use_transactional_fixtures = true
+    config.include Devise::TestHelpers, :type => :controller
+
+    WATCHED_DBS = [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE]
+    start_sequences = { }
+    config.before(:each) do
+      WATCHED_DBS.each do |db|
+        start_sequences[db] = db.info['update_seq']
+      end
+    end
+
+    config.after(:each) do
+      WATCHED_DBS.each do |db|
+        changes = db.get('_changes', :since=>start_sequences[db])
+        to_delete = changes['results'].select{|chg| !chg['deleted']}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
+        db.bulk_save(to_delete)
+      end
     end
   end
 
-  config.after(:each) do
-    WATCHED_DBS.each do |db|
-      changes = db.get('_changes', :since=>start_sequences[db])
-      to_delete = changes['results'].select{|chg| !chg['deleted']}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
-      db.bulk_save(to_delete)
-    end
-  end
+
 end
+
+Spork.each_run do
+  # This code will be run each time you run your specs.
+  require 'spec_utils'
+end
+
+# --- Instructions ---
+# Sort the contents of this file into a Spork.prefork and a Spork.each_run
+# block.
+#
+# The Spork.prefork block is run only once when the spork server is started.
+# You typically want to place most of your (slow) initializer code in here, in
+# particular, require'ing any 3rd-party gems that you don't normally modify
+# during development.
+#
+# The Spork.each_run block is run each time you run your specs.  In case you
+# need to load files that tend to change during development, require them here.
+# With Rails, your application modules are loaded automatically, so sometimes
+# this block can remain empty.
+#
+# Note: You can modify files loaded *from* the Spork.each_run block without
+# restarting the spork server.  However, this file itself will not be reloaded,
+# so if you change any of the code inside the each_run block, you still need to
+# restart the server.  In general, if you have non-trivial code in this file,
+# it's advisable to move it into a separate file so you can easily edit it
+# without restarting spork.  (For example, with RSpec, you could move
+# non-trivial code into a file spec/support/my_helper.rb, making sure that the
+# spec/support/* files are require'd from inside the each_run block.)
+#
+# Any code that is left outside the two blocks will be run during preforking
+# *and* during each_run -- that's probably not what you want.
+#
+# These instructions should self-destruct in 10 seconds.  If they don't, feel
+# free to delete them.
+
+
+
+
+
 
 # def reset_test_db!
 #   SITE_DATABASE.recreate!
@@ -61,92 +111,4 @@ end
 #   OpenMedia::Schema::VCard.initialize_vcard
 #   OpenMedia::Schema::Metadata.initialize_metadata  
 # end
-
-def create_test_site(data={})
-  @test_site ||= OpenMedia::Site.create!(:identifier=>'testgov', :url=>'http://test.gov',
-                                         :municipality=>OpenMedia::NamedPlace.new(:name=>'My City'))
-  COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
-  @test_site
-end
-
-def create_test_admin(site)
-  Admin.create!(:email=>'test@ipublic.org', :password=>'ChangeMe',
-                    :password_confirmation=>'ChangeMe', :site=>site, :confirmed_at=>Time.now)
-end
-
-
-def create_test_collection(data={})
-  unless @test_collection
-    @test_collection = OpenMedia::Schema::SKOS::Collection.for(create_test_site.skos_collection.uri/'testcollection', :label=>'Test Collection')
-    @test_collection.save!
-  end
-  @test_collection
-end
-
-
-def create_test_rdfs_class(data={})
-  properties = data.delete(:properties)
-  collection = create_test_collection
-  c = OpenMedia::Schema::RDFS::Class.create_in_site!(create_test_site, {:label=>'Reported Crimes', :comment=>'crime reports, etc'}.merge(data))
-  if properties
-    for p in properties
-      c.properties << OpenMedia::Schema::RDF::Property.create_in_class!(c, p.merge(:domain=>c))
-    end
-    c.save!
-  end
-  collection.members << c.uri
-  collection.save!
-  c
-end
-
-def create_test_owl_class(data={})
-  object_properties = data.delete(:object_properties)
-  collection = create_test_collection
-  c = OpenMedia::Schema::OWL::Class.create_in_site!(create_test_site, {:label=>'Reported Crimes', :comment=>'crime reports, etc'}.merge(data))
-  if object_properties
-    for p in object_properties
-      c.object_properties << OpenMedia::Schema::OWL::ObjectProperty.create_in_class!(c, p)
-    end
-    c.save!
-  end
-  c
-end
-
-
-def create_test_catalog(data={})
-  OpenMedia::Catalog.create!({:title=>'Test Catalog', :metadata=>{ }}.merge(data))
-end
-
-def create_test_datasource(data={})
-  data[:rdfs_class_uri] = create_test_rdfs_class.uri unless data[:rdfs_class_uri]
-  ds = OpenMedia::Datasource.create!({:title=>'Test Dataset',
-                                       :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE,
-                                       :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
-                                       :skip_lines=>1}.merge(data))
-
-end
-
-def create_test_csv
-  File.open('/tmp/test.csv', 'w') do |f|
-    f.puts('A,B,C,D')
-    f.puts('1,2,3,4')
-    f.puts('5,6,7,8')            
-  end
-end
-
-def delete_test_csv
-  File.delete('/tmp/test.csv')      
-end
-
-def spec_rdf_id(resource, cgi_escape = false)
-  if resource.respond_to?(:uri)
-    spec_rdf_id(resource.uri, cgi_escape)
-  elsif resource.instance_of?(RDF::URI)
-    cgi_escape ? CGI.escape(resource.path[1..-1]) : resource.path[1..-1]
-  else
-    raise "Could not convert #{resource.inspect} to an RDF::URI"
-  end
-end
-
-require 'open_media/schema/base_spec'
 

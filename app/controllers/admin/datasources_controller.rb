@@ -1,12 +1,12 @@
 require 'csv'
 require 'tmpdir'
 
-class Admin::DatasourcesController < ApplicationController
+class Admin::DatasourcesController < Admin::BaseController
 
   skip_before_filter :verify_authenticity_token, :only => [:create]
 
   def index
-    @datasources = OpenMedia::Datasource.search(params[:search])
+    @datasources = current_site.datasources
   end
   
   def show
@@ -22,6 +22,8 @@ class Admin::DatasourcesController < ApplicationController
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
     @datasources = OpenMedia::Datasource.all
     @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
+    @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
+    @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site = om_site    
   end
   
   def new
@@ -122,11 +124,13 @@ class Admin::DatasourcesController < ApplicationController
       if @datasource.errors.size == 0 &&@datasource.rdfs_class_uri.blank?
         @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
         if @collection.exists?
-          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(OpenMedia::Site.instance, :label=>@datasource.title)
+          @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, :label=>@datasource.title)
           @collection.members << @class.uri
           @collection.save!
-          properties.each do |prop|
+          properties.each_with_index do |prop,idx|
+            prop[:label] = "Column#{idx+1}" if prop[:label].nil?
             prop[:label] = "#{@class.label} #{prop[:label]}" if prop[:label].downcase=='type'
+            prop[:label] = "Col #{prop[:label]}" if prop[:label] =~ /^\d*$/              
             @class.properties << OpenMedia::Schema::RDF::Property.create_in_class!(@class, :label=>prop[:label], :range=>prop[:range])
             @datasource.source_properties << OpenMedia::DatasourceProperty.new(:label=>prop[:label], :range_uri=>RDF::XSD.string.to_s)
           end
@@ -140,6 +144,7 @@ class Admin::DatasourcesController < ApplicationController
 
       if @datasource.errors.size == 0
         if @datasource.save
+          current_site.datasources << @datasource; current_site.save
           redirect_to edit_admin_datasource_path(@datasource)
         else
           @datasources = OpenMedia::Datasource.all

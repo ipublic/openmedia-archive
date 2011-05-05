@@ -1,0 +1,23 @@
+<% title "Resend confirmation instructions" %>
+<div id="forms">
+	<div class="grid_5">
+		<div class="box">
+			<div class="block">
+				<%= form_for(resource, :as => resource_name, :url => confirmation_path(resource_name), :html => { :method => :post }) do |f| %>
+			  <%= devise_error_messages! %>
+				<fieldset class="omega">
+					<ol>
+						<li><%= f.label :email %> <%= f.text_field :email %></li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit omega">
+					<ol>
+						<li><%= f.submit "Resend confirmation instructions", {:class => "submit-wide"} %></li> 
+					</ol>
+				</fieldset>
+				<%= render :partial => "devise/shared/links" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,44 @@
+<% title "Schema > Collections" %>
+<div class="grid_8">
+  <div class="box">
+    <h2>Browse</h2>
+    <div class="block" id="tables">
+			<p>
+		    <%= link_to 'Add Collection', new_admin_schema_collection_path, {:class => 'add-element'} %>
+		  </p>
+      <table>
+				<thead>
+				  <tr>
+				    <th>Label</th>
+				    <th>URI</th>
+				    <th>No. Classes</th>
+				    <th>Hidden</th>
+				  </tr>
+				</thead>
+				<% @collections.each do |c| %>
+				<tr>
+				  <td><%= link_to c.label, admin_schema_collection_path(rdf_id(c)) %></td>
+				  <td><%= c.uri %></td>
+				  <td><%= c.members.select{|cu| cu.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
+				  <td><%= c.hidden %></td>
+				</tr>
+				<% end %>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3>
+					<a href="#">Article Heading</a>
+				</h3>
+				<h4>Subheading</h4>
+				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
+				<p>Something here about role of Datasets in system</p>
+			</div>
+			
+	</div>
+	</div>
+</div>

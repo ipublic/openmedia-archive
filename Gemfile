@@ -1,7 +1,9 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.4'
-gem 'couchrest_model', :git => 'git://github.com/couchrest/couchrest_model.git', :ref=>'83b70ec0808d'
+gem 'rails', '3.0.5'
+gem 'couchrest_model'
+gem 'devise', '1.1.9'
+gem 'devise_couch'
 gem 'dynamic_form'
 gem 'fastercsv'
 gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
@@ -13,6 +15,7 @@ group :test, :development do
   gem "rspec-rails"
   gem 'autotest'
   gem 'autotest-rails'
+  gem 'rails3-generators', :git => 'git://github.com/shenoudab/rails3-generators.git'
 end
 
 # Bundle edge Rails instead:

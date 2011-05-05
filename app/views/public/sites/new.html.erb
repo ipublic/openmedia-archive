@@ -1,0 +1,56 @@
+<% title "Create New Site" %>
+<div id="forms">
+  <%= form_for :site, :url=>sites_path do |f| %>
+  <div class="grid_6">
+    <div class="box">
+      <div class="block">
+	<%= f.error_messages %>
+	<%= fields_for :municipality do |m| %>
+	<fieldset>
+	  <legend>Site Information</legend>
+	  <%= m.hidden_field :source_id, :class=>'named-place-id' %>
+	  <ol>
+	    <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name %></li>
+	    <li><%= f.label :Subdomain, 'URL' %> http://<%= f.text_field :identifier, :class => "narrow" %>.<%= OM_DOMAIN %><%= OM_PORT == 80 ? '' : OM_PORT %></li>
+	    <li><%= m.label :name, 'Municipality Name' %> <%= m.text_field :name, :class=>'named-place' %></li>
+	  </ol>
+	</fieldset>
+	<% end %>
+
+	<fieldset>
+	  <legend class="omega">Admin Contact</legend>
+	  <ol>
+	    <%= fields_for :vcard do |vc| %>
+	    <%= vc.error_messages %>
+
+    	    <%= fields_for :name do |n| %>
+    	    <li><%= n.label :first_name %> <%= n.text_field :given_name %></li>
+    	    <li><%= n.label :last_name %> <%= n.text_field :family_name %></li>
+    	    <% end %>
+
+	    <%= fields_for :email do |e| %>
+	    <%= e.error_messages %>
+
+	    <li><%= e.label :email %> <%= e.text_field :value %></li>
+	    <%= e.hidden_field :type, :value=>RDF::VCARD.Work.to_s %>
+	    <% end %>
+	    <% end %>
+	    <%= fields_for :admin do |u| %>
+	    <%= u.error_messages %>
+	    <li><%= u.label :password %> <%= u.password_field :password %></li>
+	    <li><%= u.label :password_confirmation %> <%= u.password_field :password_confirmation %></li>
+	    <% end %>
+	  </ol>
+	</fieldset>
+
+	<fieldset class="submit omega">
+	  <ol>
+	    <li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li>
+	  </ol>
+	</fieldset>
+
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>

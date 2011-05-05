@@ -2,7 +2,7 @@
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-
+require 'devise/test_helpers'
 require 'open_media/schema/rdfs/class'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -26,26 +26,54 @@ RSpec.configure do |config|
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   # config.use_transactional_fixtures = true
+  config.include Devise::TestHelpers, :type => :controller
+
+  WATCHED_DBS = [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE]
+  start_sequences = { }
+  config.before(:each) do
+    WATCHED_DBS.each do |db|
+      start_sequences[db] = db.info['update_seq']
+    end
+  end
+
+  config.after(:each) do
+    WATCHED_DBS.each do |db|
+      changes = db.get('_changes', :since=>start_sequences[db])
+      to_delete = changes['results'].select{|chg| !chg['deleted']}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
+      db.bulk_save(to_delete)
+    end
+  end
 end
 
-def reset_test_db!
-  SITE_DATABASE.recreate!
-  OpenMedia::Site.instance_variable_set(:@instance, nil)
-  STAGING_DATABASE.recreate!
-  TYPES_DATABASE.recreate!
-  TYPES_RDF_REPOSITORY.refresh_design_doc
-  OpenMedia::Schema::RDFS::Class.refresh_design_doc
-end
-
-def seed_test_db!
-  load File.join(Rails.root, 'db', 'seeds.rb')
-end
+# def reset_test_db!
+#   SITE_DATABASE.recreate!
+#   OpenMedia::Site.instance_variable_set(:@instance, nil)
+#   STAGING_DATABASE.recreate!
+#   TYPES_DATABASE.recreate!
+#   TYPES_RDF_REPOSITORY.refresh_design_doc
+#   OpenMedia::Schema::DesignDoc.refresh
+# end
+# 
+# def seed_test_db!
+#   load File.join(Rails.root, 'db', 'seeds.rb')
+#   OpenMedia::Schema::RDFS::Class.for(::RDF::METADATA.Metadata)
+#   OpenMedia::Schema::OWL::Class.for(::RDF::VCARD.VCard)
+#   OpenMedia::Schema::VCard.initialize_vcard
+#   OpenMedia::Schema::Metadata.initialize_metadata  
+# end
 
 def create_test_site(data={})
-  @test_site ||= OpenMedia::Site.create!(:url=>'http://test.gov')
+  @test_site ||= OpenMedia::Site.create!(:identifier=>'testgov', :url=>'http://test.gov',
+                                         :municipality=>OpenMedia::NamedPlace.new(:name=>'My City'))
   COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
   @test_site
 end
+
+def create_test_admin(site)
+  Admin.create!(:email=>'test@ipublic.org', :password=>'ChangeMe',
+                    :password_confirmation=>'ChangeMe', :site=>site, :confirmed_at=>Time.now)
+end
+
 
 def create_test_collection(data={})
   unless @test_collection

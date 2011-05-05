@@ -1,4 +1,4 @@
-class Admin::CommunitiesController < ApplicationController
+class Admin::CommunitiesController < Admin::BaseController
   def show
   end
 

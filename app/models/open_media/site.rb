@@ -2,8 +2,6 @@ require 'open_media/no_site_defined'
 
 class OpenMedia::Site < CouchRest::Model::Base
 
-  after_create :initialize_metadata
-  
   DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
@@ -13,49 +11,39 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :identifier,  :read_only => true
   property :url
   property :openmedia_name, :default => "Civic OpenMedia"
-  belongs_to :adminstrator_contact_id, :class_name=>'OpenMedia::Contact'
-  belongs_to :business_contact_id, :class_name=>'OpenMedia::Contact'
+  property :adminstrator_contact_uri
+  property :business_contact_uri
   
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"
   property :public_couchdb_server_uri, :default => "http://localhost:5984"
-  property :replicate_community_catalog
+  property :replicate_om_types, :default => true
+  property :replicate_push_datasets, :default => true
   
   # Location properties
-  property :gnis, OpenMedia::Gnis # e.g.; 584282 for Ellicott City, MD
-  
-  property :site_domain_name, :default => "example.gov"
+  property :municipality, OpenMedia::NamedPlace
+
   property :site_proxy_prefix
   property :site_canonical_url, :default => "http://localhost"
-  property :site_organization_id
   property :site_default_city
   property :site_default_state
   
   # Services properties
   # Default googlemap_api_key is for http://localhost
   property :googlemap_api_key, :default => "ABQIAAAALBip6RF6CeNkMG5FsLJfjRT2yXp_ZAY8_ufC3CFXhHIE1NvwkxRnUJ7zjI2v5FZxVYW7aoB2EAT8hQ"
+
+  collection_of :datasources, :class_name=>'OpenMedia::Datasource'
   
   timestamps!
 
   ## Validations
-  validates_presence_of :url, :identifier
+  validates :identifier, :presence=>true, :uniqueness=>true
+  validates_presence_of :municipality
 
   ## CouchDB Views
-  # singleton class - no views
-  
-  def self.instance
-    @instance ||= self.first
-    if @instance.nil?
-      raise OpenMedia::NoSiteDefined.new
-    else
-      @instance
-    end
-  end
+  view_by :identifier
 
-  def url=(url)
-    self['url'] = url
-    generate_identifier
-  end
+  before_validate :set_url  
 
   def skos_collection
     collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")
@@ -66,6 +54,15 @@ class OpenMedia::Site < CouchRest::Model::Base
     collection
   end
 
+  def administrator_contact
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.adminstrator_contact_uri) if self.adminstrator_contact_uri
+  end
+
+  def business_contact
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.business_contact_uri) if self.business_contact_uri    
+  end
+
+
   def metadata_repository
     db_name = "#{self.identifier}_metadata"
     unless Spira.repository(db_name)
@@ -75,24 +72,19 @@ class OpenMedia::Site < CouchRest::Model::Base
     db_name    
   end
 
-
-private
-  def generate_identifier
-    if !url.blank?
-      if self.url =~ /^https?:\/\/(.*)$/
-        self['identifier'] = $1.gsub(/^\-|\-$/,'').gsub(/\./,'')
-      else
-        self['idenfitier'] = self.url.gsub(/^\-|\-$/,'').gsub(/\./,'')
-        self.url = "http://#{self.url}"
-      end
-    end
+  def vcards_rdf_uri
+    RDF::URI.new('http://data.civicopenmedia.org')/self.identifier/"vcards"
   end
 
   def initialize_metadata
-    OpenMedia::Schema::VCard.configure_vcard
-    OpenMedia::Schema::Metadata.configure_metadata    
+    OpenMedia::Schema::VCard.configure_vcard(self)
+    OpenMedia::Schema::Metadata.configure_metadata(self)
   end
-
   
-
+private
+  def set_url
+    if self.url.nil? && self.identifier
+      self.url = "http://#{self.identifier}.#{OM_DOMAIN}#{OM_PORT == 80 ? '' : OM_PORT}"
+    end
+  end
 end

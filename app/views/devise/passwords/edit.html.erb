@@ -1,0 +1,25 @@
+<% title ">Change your password" %>
+<div id="forms">
+	<div class="grid_5">
+		<div class="box">
+			<div class="block">
+				<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
+			  <%= devise_error_messages! %>
+			  <%= f.hidden_field :reset_password_token %>
+				<fieldset class="omega">
+					<ol>
+						<li><p><%= f.label :password %> <%= f.password_field :password %></p>
+					  <li><%= f.label :password_confirmation, 'Confirm' %> <%= f.password_field :password_confirmation %></li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit ">
+					<ol>
+						<li><%= f.submit "Change my password", {:class => "submit-wide"} %></li> 
+					</ol>
+				</fieldset>
+				<%= render :partial => "devise/shared/links" %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

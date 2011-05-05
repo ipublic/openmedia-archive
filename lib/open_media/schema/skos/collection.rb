@@ -36,8 +36,13 @@ module OpenMedia
           self.uri.path.split('/').last
         end
 
+        def contains?(collection_or_concept)
+          !members.detect{|m| m==collection_or_concept.uri}.nil?
+        end
+
         def repository
-          db_name = "#{OpenMedia::Site.instance.identifier}_#{self.identifier}"
+          site_identifier = self.uri.path.split('/')[1]          
+          db_name = "#{site_identifier}_#{self.identifier}"
           unless Spira.repository(db_name)
             db = COUCHDB_SERVER.database!("#{db_name}")
             OpenMedia::Schema::DataDesignDoc.refresh(db)

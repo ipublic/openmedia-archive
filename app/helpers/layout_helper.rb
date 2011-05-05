@@ -34,6 +34,10 @@ module LayoutHelper
     OpenMedia::Organization.by_name_and_identifier.collect {|o| [ o.name, o['_id']] }
   end
 
+  def vcard_collection    
+    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.collect{|vc| [vcard_label(vc), vc.uri]}    
+  end
+
   def contact_collection
     OpenMedia::Contact.by_full_name_and_email.collect {|o| [ o.full_name, o.email ] }
   end

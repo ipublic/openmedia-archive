@@ -33,15 +33,4 @@ describe OpenMedia::Site do
     end
   end
 
-  describe 'instance singleton method' do
-    it 'should return first instance in couchdb' do
-      @site.save!
-      OpenMedia::Site.instance.id.should == @site.id
-    end
-
-    it 'should raise OpenMedia::NoSiteDefined exception if no site is in database' do
-      lambda { OpenMedia::Site.instance }.should raise_error(OpenMedia::NoSiteDefined)
-    end
-  end
-
 end

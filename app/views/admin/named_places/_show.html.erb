@@ -1,0 +1,13 @@
+<%= show_fields(named_place, [
+		:name,
+		[:state_abbreviation, 'State'],
+		:description
+		]).html_safe %>
+<% unless named_place.geometries[0].coordinates[0].nil? %>
+	<table class="property-table">
+		<tr>
+			<th>Lon, Lat</th>
+			<td><%= "#{named_place.geometries[0].coordinates[0]}, #{named_place.geometries[0].coordinates[1]}" %></td>
+		</tr>
+	</table>
+<% end %>

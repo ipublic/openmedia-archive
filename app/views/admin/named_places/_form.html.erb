@@ -1,0 +1,7 @@
+<%= f.fields_for attribute_name, named_place do |np| %>
+<%= np.hidden_field :source_id, :class=>'named-place-id' %>
+	<ol>
+		<li><%= np.label :name %> <%= np.text_field :name, :class=>'named-place' %></li>
+		<li><%= np.label :description %> <%= np.text_area :description, :rows => 3 %></li>
+	</ol>
+<% end %>

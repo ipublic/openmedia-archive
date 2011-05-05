@@ -1,0 +1,29 @@
+<% title "Edit #{resource_name.to_s.humanize}" %>
+<div id="forms">
+	<div class="grid_5">
+		<div class="box">
+			<div class="block">
+				<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+			  <%= devise_error_messages! %>
+				<fieldset class="omega">
+					<ol>
+						<li><%= f.label :email %> <i>(leave blank if you don't want to change it)</i> <%= f.text_field :email %></li>
+						<li><%= f.label :password %> <%= f.password_field :password %></li>
+					  <li><%= f.label :password_confirmation, 'Confirm' %> <%= f.password_field :password_confirmation %></li>
+						<li><%= f.label :current_password %> <i>(current password needed to confirm your changes)</i> 
+					  <%= f.password_field :current_password %></li>
+					</ol>
+				</fieldset>
+				<fieldset class="submit ">
+					<ol>
+						<li><%= f.submit "Update", {:class => "submit"} %> <%= link_to "Back", :back %></li> 
+					</ol>
+				</fieldset>
+				<fieldset class="omega"><legend>Cancel my account<legend></fieldset>
+				<p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :confirm => "Are you sure?  This action cannot be undone.", :method => :delete %>.</p>
+				<% end %>
+				
+			</div>
+		</div>
+	</div>
+</div>

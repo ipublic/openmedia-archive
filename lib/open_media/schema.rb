@@ -50,6 +50,7 @@ Spira.settings[:types] = spira_types
 module OpenMedia
   module Schema
     def self.get_class_definition(class_uri)
+      class_uri = class_uri.to_s if class_uri.is_a?(::RDF::URI)            
       TYPES_DATABASE.list('schema/class_definition/schema_by_uri', :key=>class_uri)
     end
 
@@ -58,6 +59,7 @@ module OpenMedia
     end
 
     def self.get_record_uris(class_uri)
+      class_uri = class_uri.to_s if class_uri.is_a?(::RDF::URI)            
       repo = OpenMedia::Schema::RDFS::Class.for(class_uri).skos_concept.collection.repository
       repo = Spira.repository(repo)
       repo.query(:predicate=>::RDF.type, :object=>::RDF::URI.new(class_uri)).collect {|stmt| stmt.subject}
@@ -66,6 +68,7 @@ module OpenMedia
 
 
     def self.get_records(class_uri)
+      class_uri = class_uri.to_s if class_uri.is_a?(::RDF::URI)      
       uris = get_record_uris(class_uri).collect {|u| ::RDF::NTriples::Writer.serialize(u) }
       repo = OpenMedia::Schema::RDFS::Class.for(class_uri).skos_concept.collection.repository
       repo = Spira.repository(repo)

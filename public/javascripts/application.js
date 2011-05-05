@@ -2,6 +2,43 @@
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
 
+// Example jQuery Sparklines 
+	/* Inline sparklines take their values from the contents of the tag */
+	$('.compositeline').sparkline('html', { fillColor: false }); 
+  $('.compositeline').sparkline('html', { composite: true, fillColor: false, lineColor: 'blue' });
+
+  // Bullet charts
+  $('.bullet').sparkline('html', { type: 'bullet' });
+
+  // Pie charts
+  $('.pie').sparkline('html', { type: 'pie', height: '1.5em', offset: -90, 
+																sliceColors: ['fb8072', 'b3de69', '80B1D3', 'FDB462', 
+																							'FCCDE5', 'D9D9D9', 'BC80BD', 'CCEBC5', 
+																              'FFED6F', '8DD3C7', 'FFFFB3', 'BEBADA']});
+
+
+  // Tri-state charts using inline values
+  $('.tristate').sparkline('html', {type: 'tristate'});
+  $('.tristatecols').sparkline('html', {type: 'tristate', colorMap: {'-2': '#fa7', '2': '#44f'} });
+
+  /* Inline sparklines take their values from the contents of the tag */
+  $('.inlinesparkline').sparkline(); 
+
+  /* Sparklines can also take their values from the first argument 
+  passed to the sparkline() function */
+  var myvalues = [10,8,5,7,4,4,1];
+  $('.dynamicsparkline').sparkline(myvalues);
+
+  /* The second argument gives options such as chart type */
+  $('.dynamicbar').sparkline(myvalues, {type: 'bar', barColor: 'green'} );
+
+  /* Use 'html' instead of an array of values to pass options 
+  to a sparkline with data in the tag */
+  $('.inlinebar').sparkline('html', {type: 'bar', barColor: 'red'} );
+
+// END Example jQuery Sparklines 
+
+
 	$( "#create-class" ).button()
 		.click(function() {
 			$( "#dialog-new-class-form" ).dialog( "open" );
@@ -107,7 +144,7 @@ $(function() {
 
     var typeAutoCompleteOpts = {delay: 300,
 				mustMatch: true,
-				source: "/schema/classes/autocomplete",
+				source: "/admin/schema/classes/autocomplete",
 				select: function(event, ui) {
 				    $(event.target).next('input').val(ui.item.id);
 				}};
@@ -115,7 +152,7 @@ $(function() {
 
     $('a.add-class-property').live('click', function() {
 	var link = this;
-	$.get('/schema/classes/new_property', function(html) {
+	$.get('/admin/schema/classes/new_property', function(html) {
 	    $(html).insertBefore(link);
 	    $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
 	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
@@ -158,6 +195,15 @@ $(function() {
     $('.datasource-class').autocomplete(typeAutoCompleteOpts);
     $('#source input.property-name').live('blur', syncSourceProperties);
     $('.tooltip').tooltip();
+
+    $('input.named-place').autocomplete({
+	delay: 300,
+	mustMatch: true,
+	source: "/sites/autocomplete_geoname",
+	select: function(event, ui) {
+	    $(event.target).closest('fieldset').find('.named-place-id').val(ui.item.id);
+	}
+    });
 });
 
 function syncSourceProperties() {

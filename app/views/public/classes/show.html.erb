@@ -1,28 +1,47 @@
-
 <% title "#{@class.label} Dataset" %>
 
 <div class="grid_12" >
   <p class="page-nav">
-    <%= link_to "All Collections", public_collection_path(rdf_id(@class.skos_concept.collection)) %>
+    <%= link_to "All Collections", collection_path(rdf_id(@class.skos_concept.collection)) %>
   </p>
   <hr />
 </div>
 
 <div class="grid_6" >
   <div class="box">
-    <h2><%= @class.uri %></h2>
+    <h2>Metadata</h2>
     <div class="block">
+      <% if @metadata %>
       <%= render :partial=>'admin/metadatas/show', :locals=>{:metadata=>@metadata} %>
+      <% end %>
     </div>
     
     <p>
       <b>Download: </b>
-      <%= link_to 'CSV', public_class_path(rdf_id(@class), :format=>'csv') %> |
-      <%= link_to 'JSON', public_class_path(rdf_id(@class), :format=>'json') %> |
-      <%= link_to 'RDF/XML', public_class_path(rdf_id(@class), :format=>'rdf') %> |
-      <%= link_to 'RDF (n-triples)', public_class_path(rdf_id(@class), :format=>'nt') %>
+      <%= link_to 'CSV', class_path(rdf_id(@class), :format=>'csv') %> |
+      <%= link_to 'JSON', class_path(rdf_id(@class), :format=>'json') %> |
+      <%= link_to 'RDF/XML', class_path(rdf_id(@class), :format=>'rdf') %> |
+      <%= link_to 'RDF (n-triples)', class_path(rdf_id(@class), :format=>'nt') %>
     </p>
   </div>
+
+  <div class="box">
+	  <h2>Chart</h2>
+    <div class="block">
+			<div id='chart'></div>
+			<%= @chart.render('chart').html_safe if @chart %>
+		</div>
+	</div>
+	
+  <div class="box">
+	  <h2>Dashboard</h2>
+    <div class="block">
+			<p>Inline Sparkline: <span class="inlinesparkline">1,4,4,7,5,9,10</span>.</p>
+			<p>Sparkline with dynamic data: <span class="dynamicsparkline">Loading..</span></p>
+			<p>Bar chart with dynamic data: <span class="dynamicbar">Loading..</span></p>
+			<p>Bar chart with inline data: <span class="inlinebar">1,3,4,5,3,5</span></p>
+		</div>
+	</div>
 </div>
 
 <div class="grid_6 omega" >
@@ -36,7 +55,6 @@
 
 <div class="grid_6 omega" >
   <div class="box">
-    <h2>Chart</h2>
     <div id="chart" class="block">
 	    <%#= render :partial=>'shared/chart' %>
 		</div>

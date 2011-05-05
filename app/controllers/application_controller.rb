@@ -1,19 +1,21 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_user, :current_site, :rdf_id
+  helper_method :current_site, :om_site, :rdf_id
   before_filter :decode_rdf_id
-
+  before_filter :load_site
+  
   rescue_from OpenMedia::NoSiteDefined, :with=> :no_site_defined
 
   SITE_NOT_DEFINED_ERROR_MSG = "You must first setup your site"
 
-  def current_user
-    nil
+  def current_site
+    @current_site
   end
 
-  def current_site
-    OpenMedia::Site.instance
+  def om_site
+    @om_site
   end
+
 
   def rdf_id(resource)
     if resource.respond_to?(:uri)
@@ -36,5 +38,18 @@ private
     params[:id] = params[:id].gsub(/:/,'/') if params[:id]
   end
 
-
+  def load_site
+    @om_site = OpenMedia::Site.find_by_identifier('om')
+    if request.subdomains.count == 0
+      @current_site = nil
+    else
+      @current_site = OpenMedia::Site.find_by_identifier(request.subdomains.first)
+      if @current_site
+        @current_site.initialize_metadata
+      else
+        redirect_to url_for(params.merge(:host=>"#{OM_DOMAIN}:#{request.port}"))
+      end
+    end
+  end    
+  
 end

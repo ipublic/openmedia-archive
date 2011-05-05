@@ -50,24 +50,44 @@ Openmedia::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
   # root :to => "welcome#index"
-  
-  root :to => "public/collections#index"
 
-  match '/admin' => 'admin/home#index', :as => :admin
+  devise_for :admins
+
+  match '/admin' => 'admin/home#index', :as => :admin_root
   match '/about' => 'admin/home#about', :as => :about
   match '/support' => 'admin/home#support', :as => :support
 
-  namespace :public do
+  root :to => "public/collections#index"
+  
+  scope :module => 'public' do
+    resource :home
+    resources :sites do
+      collection do
+        get :autocomplete_geoname
+      end
+    end
     resources :collections
     resources :classes
     resources :maps
+    resources :dashboards
   end
   
   namespace :admin do
     resource :site
     resource :community
     resource :dashboard
-    resource :schema
+
+    namespace :schema do
+      resources :collections do
+        resources :classes
+      end
+      resources :classes do
+        collection do
+          get :new_property
+          get :autocomplete
+        end
+      end
+    end    
     
     resources :datasources do
       collection do
@@ -90,21 +110,9 @@ Openmedia::Application.routes.draw do
     resources :data_types
   end
 
-  namespace :schema do
-    resources :collections do
-      resources :classes
-    end
-    resources :classes do
-      collection do
-        get :new_property
-        get :autocomplete
-      end
-    end
-  end
-
-  resource :account, :to=>"users"
-  resources :users
-  resources :user_sessions
+  # resource :account, :to=>"users"
+  # resources :users
+  # resources :user_sessions
 
   # See how all your routes lay out with "rake routes"
 

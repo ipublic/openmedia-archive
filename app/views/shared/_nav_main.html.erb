@@ -1,5 +1,5 @@
 <ul class="nav main ">
-	<li><%= link_to 'Home', admin_path, :title => "" %>
+	<li><%= link_to 'Home', admin_root_path, :title => "" %>
 	<li><%= link_to 'Data', admin_datasources_path, :title => "" %>
 		<ul>
 			<li><%= link_to 'Import data', new_upload_admin_datasources_path, :title => "" %>
@@ -8,15 +8,15 @@
 			<li><%#= link_to 'Publish', new_admin_datasource_path, :title => "" %>
 			<li><%#= link_to 'New Datasource (deprecated)', new_admin_datasource_path, :title => "" %> -->
 		</ul>
-	<li><%= link_to 'Schema', schema_collections_path, :title => "" %>
-	<li><%= link_to 'Maps', admin_path, :title => "" %>
+	<li><%= link_to 'Schema', admin_schema_collections_path, :title => "" %>
+	<li><%= link_to 'Maps', admin_root_path, :title => "" %>
 	<li><%= link_to 'Reports', admin_reports_path, :title => "" %>
 	<li><%= link_to 'Site', admin_site_path, :title => "" %>
 		<ul>
 			<li><%= link_to 'Settings', admin_site_path, :title => "" %>
 			<li><%= link_to 'Contacts', admin_vcards_path, :title => "" %>
 			<li><%= link_to 'Job Schedule', admin_schedules_path, :title => "" %>
-			<li><%= link_to 'Community', admin_path, :title => "" %>	
+			<li><%= link_to 'Community', admin_root_path, :title => "" %>	
 		</ul>
 	<li><%= link_to 'Help', '/about', :title => "" %>
 		<ul>

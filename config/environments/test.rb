@@ -1,3 +1,9 @@
+UNZIP = "/usr/bin/unzip"
+OGR2OGR = "/usr/local/bin/ogr2ogr"
+OM_DOMAIN = "civicopenmedia.test"
+OM_PORT = 80
+
+
 Openmedia::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 

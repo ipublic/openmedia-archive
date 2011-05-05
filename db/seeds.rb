@@ -44,14 +44,23 @@ vcard.email = email
 vcard.save!
 
 ## Initialize the Commons Collections
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Economy')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Education')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Health')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'People')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Physical Geography')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Planning')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Public Safety')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Public Works')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Real Property')
-OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=>'Transportation')
+collections = [
+  'Arts', 'Animal Control', 'Agriculture',
+  'Banking, Finance and Insurance',
+  'Business',
+  'Census',
+  'Economy', 'Elections', 'Education', 'Environment',
+  'Government',
+  'Health', 'Human Services',
+  'Justice',
+  'Licensing', 'Labor Force',
+  'Military',
+  'Natural Resources',
+  'Parks and Recreation', 'People', 'Physical Geography', 'Planning', 'Property', 'Public Safety', 'Public Works',
+  'Science', 
+  'Technology and Communication', 'Transportation',
+  'Utilities',
+  'Weather'
+  ]
 
+collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}

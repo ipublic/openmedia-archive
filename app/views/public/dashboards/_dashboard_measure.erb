@@ -1,7 +1,7 @@
 <tr>
-	<td alt="Feb 2010 -> Jan 2011">Unemployment</td>
-	<td>10.7%</td>
-	<td>10.4%</td>
-	<td></td>
-	<td class="inlinesparkline">14.1,14,13.6,13.2,13.1,13.1,13.0,12.8,12.4,11.7,10.7,10.4</td>
+	<td><%= measure["measure"].html_safe %></td>
+	<td><%= measure["prior"].html_safe %></td>
+	<td><%= measure["current"].html_safe %></td>
+	<td><%= measure["rank"] %></td>
+	<td <%= "class='#{measure['visual']}'" if measure['visual'] %> <%= "values='#{measure['values'].join(',')}'" unless measure['values'].empty? %> ></td>
 </tr>

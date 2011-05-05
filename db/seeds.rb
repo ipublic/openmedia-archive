@@ -64,3 +64,56 @@ collections = [
   ]
 
 collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}
+
+
+d = OpenMedia::Dashboard.new({:title => "Michigan Governor's Dashboard"})
+g = OpenMedia::DashboardGroup.new({:title => "Economic Strength"})
+g.measures << {:measure => 'Gross Domestic Product (GDP) Growth', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => '',  #metadata publisher?
+               :measure_source_url => '',
+               :values => [-2.0,0.4,-2.7,-5.2],
+               :format => 'percent',
+               :prior => '(2.7)%', 
+               :current => '(5.2)%', 
+               :visual => 'inlinesparkline', 
+               :rank => 1}
+g.measures << {:measure => 'Unemployment', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => '',
+               :measure_source_url => '',
+               :values => [14.1,14,13.6,13.2,13.1,13.1,13.0,12.8,12.4,11.7,10.7,10.4],
+               :prior => '10.7%', 
+               :current => '10.4%',
+               :format => 'percent',
+               :visual => 'inlinesparkline', 
+               :rank => 1}
+d.groups << g
+
+g1 = OpenMedia::DashboardGroup.new({:title => "Health and Education"})
+g1.measures << {:measure => 'Infant mortality (per 1,000 births)', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => "America's Health Rankings",
+               :measure_source_url => 'http://www.americashealthrankings.org/Measure/2010/zUS/Infant%20Mortality.aspx',
+               :values => [8.2,7.8,7.8,7.6,7.6,7.7],
+               :format => 'percent',
+               :prior => '7.6%', 
+               :current => '7.7%', 
+               :visual => 'inlinesparkline', 
+               :rank => 1}
+g1.measures << {:measure => 'Obesity in the population', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => 'Centers for Disease Control and Prevention',
+               :measure_source_url => 'http://apps.nccd.cdc.gov/BRFSS/',
+               :values => [26.2, 28.8, 28.2, 29.5, 30.3],
+               :prior => '29.5%', 
+               :current => '30.3%',
+               :format => 'percent',
+               :visual => 'inlinesparkline', 
+               :rank => 1}
+d.groups << g1
+d.save

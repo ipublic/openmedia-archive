@@ -138,5 +138,117 @@ g.measures << {:measure => 'Obesity in the population',
                :format => 'percentage',
                :visual => 'inlinesparkline', 
                :rank => 40}
+
+g.measures << {:measure => '3rd graders reading at grade level', 
+             :om_source_class => '', 
+             :om_source_property => '',
+             :measure_source_organization => "",
+             :measure_source_url => '',
+             :values => [87,87,86,87,90],
+             :format => 'percentage',
+             :visual => 'inlinebar', 
+             :rank => ''}
+             
+g.measures << {:measure => 'College readiness', 
+            :om_source_class => '', 
+            :om_source_property => '',
+            :measure_source_organization => "",
+            :measure_source_url => '',
+            :values => [10,12,12,9,7],
+            :format => 'number',
+            :visual => 'bullet', 
+            :rank => '46'}
+
+d.groups << g
+
+g = OpenMedia::DashboardGroup.new({:title => "Value for Money Government"})
+g.measures = [] # Override behavior where new instance isn't clearing measures array
+g.measures << {:measure => "Bond rating (Standard and Poor's)", 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => "",
+               :measure_source_url => '',
+               :values => ['AA-', 'AA-'],
+               :format => 'string',
+               :visual => '', 
+               :rank => ''}
+               
+g.measures << {:measure => 'Property Crime per 100,000', 
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => "",
+              :measure_source_url => '',
+              :values => [3091,3213,3066,2935,2838],
+              :format => 'number',
+              :visual => 'inlinebar', 
+              :rank => ''}
+d.groups << g
+
+g = OpenMedia::DashboardGroup.new({:title => "Quality of Life"})
+g.measures = [] # Override behavior where new instance isn't clearing measures array
+g.measures << {:measure => 'State park popularity - annual visits per citizen', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => "",
+               :measure_source_url => '',
+               :values => [2.26,2.21,2.17,2.12,2.12,2.15],
+               :format => 'number',
+               :visual => 'inlinebar', 
+               :rank => ''}
+               
+g.measures << {:measure => 'Population growth (ages 25-34)', 
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => "",
+              :measure_source_url => '',
+              :values => [0.6,-0.1,-0.3,0.3,-0.6,-0.8,-1.2,-1.7,-1.9,-1.6],
+              :format => 'percentage',
+              :visual => 'inlinebar', 
+              :rank => ''}
+d.groups << g
+
+g = OpenMedia::DashboardGroup.new({:title => "Public Safety"})
+g.measures = [] # Override behavior where new instance isn't clearing measures array
+g.measures << {:measure => 'Violent Crime per 100,000', 
+               :om_source_class => '', 
+               :om_source_property => '',
+               :measure_source_organization => "",
+               :measure_source_url => '',
+               :values => [552,562,536,501,497],
+               :format => 'number',
+               :visual => 'inlinebar', 
+               :rank => '38'}
+               
+g.measures << {:measure => 'Property Crime per 100,000', 
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => "",
+              :measure_source_url => '',
+              :values => [3091,3213,3066,2935,2838],
+              :format => 'number',
+              :visual => 'inlinebar', 
+              :rank => '25'}
+
+g.measures << {:measure => 'Traffic Injuries - Fatal', 
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => "",
+              :measure_source_url => '',
+              :values => [1129,1084,1084,980,871],
+              :format => 'number',
+              :visual => 'inlinebar', 
+              :rank => ''}
+
+g.measures << {:measure => 'Traffic Injuries - Serious and Fatal', 
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => "",
+              :measure_source_url => '',
+              :values => [8486,7618,7485,6725,6511],
+              :format => 'number',
+              :visual => 'inlinebar', 
+              :rank => ''}
+
+
 d.groups << g
 d.save

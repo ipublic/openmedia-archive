@@ -1,7 +1,12 @@
 <div id="site_info">
 	<div class="box rounded_corners shadow">
-		<p>Data Feed System by <a href="http://www.ipublic.org/">iPublic.org</a>
-			 - Licensed under <a href="http://www.gnu.org/licenses/gpl.html" rel="license">GPL</a>
-		</p>
+	  <p>
+	    <span style="float: right">
+	      Get your very own Civic OpenMedia instance!  <a href="<%= url_for(:action=>'new', :controller=>'public/sites', :host=>OM_DOMAIN) %>">Signup Now</a>
+	    </span>
+
+	    Data Feed System by <a href="http://www.ipublic.org/">iPublic.org</a>
+	    - Licensed under <a href="http://www.gnu.org/licenses/gpl.html" rel="license">GPL</a>
+	  </p>
 	</div>
 </div>

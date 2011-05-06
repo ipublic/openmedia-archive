@@ -75,9 +75,9 @@ g.measures << {:measure => 'Gross Domestic Product (GDP) Growth',
                :measure_source_organization => '',  #metadata publisher?
                :measure_source_url => '',
                :values => [-2.0,0.4,-2.7,-5.2],
-               :format => 'percent',
+               :format => 'percentage',
                :visual => 'inlinesparkline', 
-               :rank => 1}
+               :rank => 49}
                
 g.measures << {:measure => 'Unemployment',
                :description => 'Unemployment figures measure the number of people without jobs who are actively seeking work. These numbers also reflect the success of the economy in providing opportunities for Michigan residents to support themselves and their families.',
@@ -86,30 +86,54 @@ g.measures << {:measure => 'Unemployment',
                :measure_source_organization => '',
                :measure_source_url => '',
                :values => [14.1,14,13.6,13.2,13.1,13.1,13.0,12.8,12.4,11.7,10.7,10.4],
-               :format => 'percent',
+               :format => 'percentage',
                :visual => 'inlinesparkline', 
-               :rank => 1}
+               :rank => 45}
+               
+g.measures << {:measure => 'Children living in poverty',
+              :description => 'Across the nation, families are struggling to make ends meet. Many parents are unable to provide their children with the basic food, clothing and medical care they need. Children who live in poverty are more likely to have low academic achievement and health, behavioral and emotional problems. This measure shows the share of children under age 18 who live in families with incomes below the federal poverty level, as defined by the U.S. Office of Management and Budget. ',
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => '',
+              :measure_source_url => '',
+              :values => [23,77],
+              :format => 'percentage',
+              :visual => 'pie', 
+              :rank => 38}
+
+g.measures << {:measure => 'Real personal income per capita',
+              :description => "This is Michigan's real personal income per capita, adjusted for inflation. In general, per capita income in Michigan has not kept up with inflation over the past few years. Real personal income per capita includes wages and salaries, transfer payments, dividends, interest and rental income. As income rises, individuals are better able to provide for their families, buy homes and improve their quality of life",
+              :om_source_class => '', 
+              :om_source_property => '',
+              :measure_source_organization => '',
+              :measure_source_url => '',
+              :values => [29392,29150,28901,29219,28862,28465,28369,28426,28250,27558],
+              :format => 'currency',
+              :visual => 'inlinesparkline', 
+              :rank => 37}
+               
 d.groups << g
 
-g1 = OpenMedia::DashboardGroup.new({:title => "Health and Education"})
-g1.measures << {:measure => 'Infant mortality (per 1,000 births)', 
+g = OpenMedia::DashboardGroup.new({:title => "Health and Education"})
+g.measures = [] # Override behavior where new instance isn't clearing measures array
+g.measures << {:measure => 'Infant mortality (per 1,000 births)', 
                :om_source_class => '', 
                :om_source_property => '',
                :measure_source_organization => "America's Health Rankings",
                :measure_source_url => 'http://www.americashealthrankings.org/Measure/2010/zUS/Infant%20Mortality.aspx',
                :values => [8.2,7.8,7.8,7.6,7.6,7.7],
-               :format => 'percent',
+               :format => 'percentage',
                :visual => 'inlinesparkline', 
-               :rank => 1}
+               :rank => 37}
                
-g1.measures << {:measure => 'Obesity in the population', 
+g.measures << {:measure => 'Obesity in the population', 
                :om_source_class => '', 
                :om_source_property => '',
                :measure_source_organization => 'Centers for Disease Control and Prevention',
                :measure_source_url => 'http://apps.nccd.cdc.gov/BRFSS/',
                :values => [26.2, 28.8, 28.2, 29.5, 30.3],
-               :format => 'percent',
+               :format => 'percentage',
                :visual => 'inlinesparkline', 
-               :rank => 1}
-d.groups << g1
+               :rank => 40}
+d.groups << g
 d.save

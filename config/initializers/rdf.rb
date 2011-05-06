@@ -26,9 +26,6 @@ module Spira
  end
 end
 
-RDF::VCARD = RDF::Vocabulary.new(RDF::OM_CORE['vcard/'])
-RDF::METADATA = RDF::Vocabulary.new(RDF::OM_CORE['metadata/'])
-
 TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
 Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
 

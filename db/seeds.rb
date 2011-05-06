@@ -28,6 +28,9 @@ OpenMedia::Schema::Metadata.initialize_metadata
 require File.join(File.dirname(__FILE__),'seeds', 'metadata')
 require File.join(File.dirname(__FILE__),'seeds', 'vcard')
 
+OpenMedia::Schema::VCard.initialize_vcard
+OpenMedia::Schema::Metadata.initialize_metadata
+
 # create om site w/ dan as admin
 ec = OpenMedia::InferenceRules::GeographicName.find_by_name('Ellicott City').first
 om_site = OpenMedia::Site.create!(:identifier=>"om", :municipality=>ec, :openmedia_name=>'iPublic OpenMedia Portal')

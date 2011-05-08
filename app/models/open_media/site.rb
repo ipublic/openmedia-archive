@@ -10,7 +10,9 @@ class OpenMedia::Site < CouchRest::Model::Base
   # General properties
   property :identifier,  :read_only => true
   property :url
+  property :welcome_message, :default => "Welcome to our Data Catalog"
   property :openmedia_name, :default => "Civic OpenMedia"
+  property :terms_of_use
   property :adminstrator_contact_uri
   property :business_contact_uri
   

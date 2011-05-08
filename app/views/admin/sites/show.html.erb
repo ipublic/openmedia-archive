@@ -9,6 +9,8 @@
 			<h4 class="show-property">Site Information</h4>
 			<%= show_fields(@site, [
 				[:openmedia_name, "Name"],
+				:welcome_message,
+				:terms_of_use,
 				:url
 				]).html_safe %>
 			<table class="property-table">

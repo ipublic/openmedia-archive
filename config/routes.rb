@@ -1,5 +1,6 @@
 Openmedia::Application.routes.draw do
 
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -57,7 +58,8 @@ Openmedia::Application.routes.draw do
   match '/about' => 'admin/home#about', :as => :about
   match '/support' => 'admin/home#support', :as => :support
 
-  root :to => "public/collections#index"
+#  root :to => "public/collections#index"
+  root :to => "public/welcome#index"
   
   scope :module => 'public' do
     resources :sites do

@@ -1,7 +1,6 @@
-UNZIP = "/usr/bin/unzip"
-OGR2OGR = "/usr/local/bin/ogr2ogr"
-OM_DOMAIN = "civicopenmedia.dev"
-OM_PORT = 80
+# require user-specific settings to handle differences between developer machine setup
+#require File.expand_path(ENV['USER'], File.dirname(__FILE__))
+require File.join(File.dirname(__FILE__), ENV['USER'])
 
 Openmedia::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb

@@ -15,12 +15,12 @@ OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(address, {:label=>'Cou
 OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(address, {:label=>'Type', :range=>RDF::OWL.Class}, RDF.type)
 
 tel = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.Tel, :label=>'Telephone', :comment=>'Resources that are vCard Telephony communication mechanisms').save!
-OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(tel, {:label=>'Value', :range=>RDF::XSD.string}, RDF.value)
-OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(tel, {:label=>'Type', :range=>RDF::OWL.Class}, RDF.type)
+OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(tel, {:label=>'Value', :range=>RDF::XSD.string}, RDF::VCARD.Tel/'value')
+OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(tel, {:label=>'Type', :range=>RDF::OWL.Class}, RDF::VCARD.Tel/'type')
 
 email = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.Email, :label=>'Email', :comment=>'Resources that are vCard Email Addresses').save!
-OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(email, {:label=>'Value', :range=>RDF::XSD.string}, RDF.value)
-OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(email, {:label=>'Type', :range=>RDF::OWL.Class}, RDF.type)
+OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(email, {:label=>'Value', :range=>RDF::XSD.string}, RDF::VCARD.Email/'value')
+OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(email, {:label=>'Type', :range=>RDF::OWL.Class}, RDF::VCARD.Email/'type')
 
 name = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.Name, :label=>'vCard Name Class', :comment=>'Resources that are vCard personal names').save!
 OpenMedia::Schema::OWL::DatatypeProperty.create_in_class!(name, {:label=>'Honorific Prefix', :range=>RDF::XSD.string}, RDF::VCARD['honorific-prefix'])

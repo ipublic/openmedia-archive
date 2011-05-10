@@ -71,6 +71,11 @@ Openmedia::Application.routes.draw do
     resources :classes
     resources :maps
     resources :dashboards
+    resources :welcome do
+      collection do
+        get :license
+      end
+    end
   end
   
   namespace :admin do

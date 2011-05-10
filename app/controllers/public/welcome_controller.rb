@@ -7,4 +7,7 @@ class Public::WelcomeController < ApplicationController
     @site_banner = @site.welcome_message
   end
 
+  def license
+  end
+
 end

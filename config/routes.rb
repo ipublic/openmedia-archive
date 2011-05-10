@@ -76,7 +76,7 @@ Openmedia::Application.routes.draw do
   namespace :admin do
     resource :site
     resource :community
-    resource :dashboard
+    resources :dashboards
 
     namespace :schema do
       resources :collections do
@@ -93,7 +93,6 @@ Openmedia::Application.routes.draw do
     resources :datasources do
       collection do
         get :new_property
-        get :new_upload
         post :upload
       end
 

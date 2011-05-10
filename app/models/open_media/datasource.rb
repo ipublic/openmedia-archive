@@ -1,4 +1,5 @@
 require 'etl'
+require 'md5'
 
 class OpenMedia::Datasource < CouchRest::Model::Base
 
@@ -19,13 +20,13 @@ class OpenMedia::Datasource < CouchRest::Model::Base
 
   PARSERS  = [DELIMITED_PARSER]
 
-  before_create :update_metadata
-  before_update :update_metadata
+  # before_create :update_metadata
+  # before_update :update_metadata
   
   property :source_type
   property :parser  
   property :column_separator    # separator for delimited parser
-  property :skip_lines, Integer, :default=>0 # lines to skip (i.e. header rows) for delimited parser
+  property :has_header_row
   property :source_properties, [OpenMedia::DatasourceProperty]
   
   property :title
@@ -38,12 +39,8 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   timestamps!
   
   validates :title, :presence=>true
-  validates :rdfs_class_uri, :presence=>true
   validates :source_type, :presence=>true
   validates :parser, :presence=>true
-  validates :creator_uri, :presence=>true
-  validates :publisher_uri, :presence=>true  
-  validate :dataset_validation
 
   view_by :rdfs_class_uri
 
@@ -53,7 +50,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def rdfs_class    
-    OpenMedia::Schema::RDFS::Class.for(self.rdfs_class_uri)
+    OpenMedia::Schema::RDFS::Class.for(self.rdfs_class_uri) if self.rdfs_class_uri
   end
 
   def publisher
@@ -63,6 +60,33 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   def creator
     OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.creator_uri)
   end
+
+  def initial_import!(file=nil)
+    if self.parser==DELIMITED_PARSER
+      rows_parsed = 0
+      batch_serial_number = MD5.md5(Time.now.to_i.to_s + rand.to_s).to_s
+      FasterCSV.foreach(file.path, :col_sep=>self.column_separator) do |row|
+        rows_parsed += 1
+        # create properties when processing first row
+        if rows_parsed==1
+          properties = []
+          if self.has_header_row
+            row.each{|pn| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>pn, :range_uri=>RDF::XSD.string.to_s)}            
+          else
+            1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty(:label=>"Column#{i}", :range=>RDF::XSD.string.to_s)}
+          end
+          self.save!
+          next if self.has_header_row
+        end
+        
+        raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
+        row.each_with_index {|val, idx| raw_record[self.source_properties[idx].identifier]=val}
+        raw_record.save!
+      end
+    end
+
+  end
+
 
   def import!(opts={})
     if source_type==TEXTFILE_TYPE
@@ -83,7 +107,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def metadata
-    metadata_model.for(metadata_uri) if metadata_uri
+    OpenMedia::Schema::RDFS::Class::HttpDataCivicopenmediaOrgCoreMetadataMetadata.for(metadata_uri) if metadata_uri
   end
 
   def textfile_source?
@@ -94,44 +118,14 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     source_type == SHAPEFILE_TYPE
   end
 
-  
-
-private
-  def dataset_validation
-    if self.class.all.detect{|ds| (ds.id != self.id && ds.title==self.title) }
-      self.errors.add(:title, TITLE_TAKEN_MSG)
-    end
+  def raw_records
+    OpenMedia::RawRecord.by_datasource_id(:key=>self.id)
   end
 
-  def generate_id
-    self.id = "_design/#{self.model_name}"
+  def raw_record_count
+    OpenMedia::RawRecord.by_datasource_id(:key=>self.id, :include_docs=>false)['total_rows']
   end
 
-  def metadata_model
-    OpenMedia::Schema::RDFS::Class.for(RDF::METADATA.Metadata).spira_resource
-  end
 
-  def vcard_model
-    OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource
-  end  
 
-  def update_metadata
-    md_data = { :creator=>vcard_model.for(creator_uri),
-      :publisher=>vcard_model.for(publisher_uri),
-      :language=>'en-US',
-      :conformsto=>rdfs_class,
-      :title=>rdfs_class.label,
-      :description=>rdfs_class.comment,
-      :resourcetype=>RDF::DCTYPE.Dataset
-    }
-    if metadata
-      metadata.update!(md_data)
-      puts "updated"
-    else
-      md = metadata_model.for(RDF::METADATA.Metadata/"#{UUID.new.generate.gsub(/-/,'')}", md_data).save!
-      self.metadata_uri = md.uri.to_s      
-    end
-  end
-  
-  
 end

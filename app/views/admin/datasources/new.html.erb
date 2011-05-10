@@ -1,12 +1,62 @@
-<% title "New Dataset" %>
+<% title "New Data Source" %>
+
+<%= form_for :datasource, :url=>admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
+
+<div class="grid_12">
+  <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::TEXTFILE_TYPE %>
+  <%= ds.error_messages %>
+</div>
+
 <div class="grid_8">
-  <div class="box">
-    <h2>New Dataset</h2>
-    <%= form_for :datasource, :url=>admin_datasources_path do |ds| %>
+  <fieldset class="omega">
+    <%= ds.label :title, :class => 'narrow' %> <%= ds.text_field :title, :class=> 'wide' %>
+  </fieldset>
+  <br/><br/><br/>
+  <div id="upload-accordion">
+    <h2 tabindex="1"><a href="#">Text Files</a></h2>
+    <div>
+      <fieldset class="omega">
+	<ol>
+	  <li><label class="narrow">File</label> <%= file_field_tag :textfile %></li>
+	  <li class="radio">
+	    <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
+	    <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
+	    <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
+	  </li>
+	  <div id="csv-fields" class="import-ds-fields">
+	    <%= ds.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
+	    <li><%= ds.label :column_separator, "Separator", :class => 'narrow' %> <%= ds.text_field :column_separator, :class => 'narrow' %></li>
+	    <li><%= ds.check_box :has_header_row %> <label>Header Row?</label></li>
+	  </div>
+	</ol>
+      </fieldset>
+      
+      <div id="xml-fields" class="import-ds-fields" style="display: none">
+	XML fields
+      </div>
+      <div id="fixed-fields" class="import-ds-fields" style="display: none">
+	Fixed fields
+      </div>
+    </div>
+    <h2 tabindex="2"><a href="#">Shapefiles</a></h2>
+    <div>
+      <fieldset class="omega">
+	<ol>
+	  <li><label class='narrow'>ZIP File</label> <%= file_field_tag :shapefile %></li>
+	</ol>
+      </fieldset>
+    </div>
 
-    <%= render :partial=>'form', :locals=>{:ds=>ds} %>
+    <h2 tabindex="3"><a href="#">Databases</a></h2>
+    <div><p>Database connection properties</div>
+  </div> <!-- Accordion -->
+  <br/>
+</div>
 
-    <% end %>
+<div class="grid_8">
+  <div style="float: right">
+    <%= ds.submit "Submit", :class => "submit"%> <%= link_to 'Cancel', :back %>
   </div>
 </div>
 
+<% end %>

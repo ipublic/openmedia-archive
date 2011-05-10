@@ -12,23 +12,14 @@ class Admin::DatasourcesController < Admin::BaseController
   def show
     @datasource = OpenMedia::Datasource.get(params[:id])
     @documents = []
-    model = @datasource.rdfs_class.spira_resource
-    model.default_source(@datasource.rdfs_class.skos_concept.collection.repository)
-    @documents << model.each.first if @datasource.rdfs_class
-    @documents.compact!
+    if @datasource.rdfs_class
+      model = @datasource.rdfs_class.spira_resource
+      model.default_source(@datasource.rdfs_class.skos_concept.collection.repository)
+    end
   end
-  
-  def new_upload
-    @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
-    @datasources = OpenMedia::Datasource.all
-    @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
-    @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
-    @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site = om_site    
-  end
-  
+    
   def new
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
-    @datasource.metadata = OpenMedia::Metadata.new
   end
 
   def import_seed_data
@@ -163,8 +154,6 @@ class Admin::DatasourcesController < Admin::BaseController
   end  
   
   def create
-    data_file = params[:datasource].delete(:data_file)
-    
     @datasource = OpenMedia::Datasource.new(params[:datasource])
     
     if @datasource.save
@@ -173,11 +162,17 @@ class Admin::DatasourcesController < Admin::BaseController
       #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file
       #  @datasource.import_data_file!(data_file, :has_header_row=>has_header_row, :delimiter_character=>delimiter_character)
       #end
+      current_site.datasources << @datasource
+      current_site.save!
+      
+      if @datasource.textfile_source? && params[:textfile]
+        @datasource.initial_import!(params[:textfile])
+      end
 
       respond_to do |format|
         format.html do
           flash[:notice] = 'Datasource successfully created.'
-          redirect_to admin_datasources_path
+          redirect_to admin_datasource_path(@datasource)
         end
 
         format.json { render :json=>{id=>@datasource.identifier}, :status=>:created }

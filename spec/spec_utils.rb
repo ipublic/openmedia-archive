@@ -58,11 +58,9 @@ def create_test_catalog(data={})
 end
 
 def create_test_datasource(data={})
-  data[:rdfs_class_uri] = create_test_rdfs_class.uri unless data[:rdfs_class_uri]
   ds = OpenMedia::Datasource.create!({:title=>'Test Dataset',
                                        :source_type=>OpenMedia::Datasource::TEXTFILE_TYPE,
-                                       :parser=>OpenMedia::Datasource::DELIMITED_PARSER,
-                                       :skip_lines=>1}.merge(data))
+                                       :parser=>OpenMedia::Datasource::DELIMITED_PARSER}.merge(data))
 
 end
 

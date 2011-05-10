@@ -81,8 +81,11 @@ class OpenMedia::Datasource < CouchRest::Model::Base
         
         raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
         row.each_with_index {|val, idx| raw_record[self.source_properties[idx].identifier]=val}
-        raw_record.save!
+        #raw_record.save!
+        OpenMedia::RawRecord.database.bulk_save_doc(raw_record)
+        OpenMedia::RawRecord.database.bulk_save if rows_parsed%500 == 0
       end
+      OpenMedia::RawRecord.database.bulk_save
     end
 
   end

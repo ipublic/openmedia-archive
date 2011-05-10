@@ -118,12 +118,12 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     source_type == SHAPEFILE_TYPE
   end
 
-  def raw_records
-    OpenMedia::RawRecord.by_datasource_id(:key=>self.id)
+  def raw_records(view_opts={})
+    OpenMedia::RawRecord.by_datasource_id({:key=>self.id}.merge(view_opts))
   end
 
   def raw_record_count
-    OpenMedia::RawRecord.by_datasource_id(:key=>self.id, :include_docs=>false)['total_rows']
+    OpenMedia::RawRecord.by_datasource_id(:key=>self.id, :include_docs=>false)['rows'].size
   end
 
 

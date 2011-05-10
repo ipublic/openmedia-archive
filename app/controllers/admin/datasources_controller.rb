@@ -191,6 +191,19 @@ class Admin::DatasourcesController < Admin::BaseController
       end
     end
   end
+
+  def raw_records
+    @datasource = OpenMedia::Datasource.find(params[:id])
+    count = @datasource.raw_record_count
+    records = @datasource.raw_records(:limit=>params[:iDisplayLength], :skip=>params[:iDisplayStart])
+    render :json=>{
+      :sEcho=>params[:sEcho],
+      :aaData=>records.collect{|rr| @datasource.source_properties.collect{|p| rr[p.identifier]}},
+      :iTotalRecords=>count,
+      :iTotalDisplayRecords=>count
+    }
+  end
+
      
   def edit
     @datasource = OpenMedia::Datasource.get(params[:id])

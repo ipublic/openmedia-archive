@@ -59,6 +59,41 @@ describe Admin::DatasourcesController do
         end
       end
     end
+
+    context 'viewing' do
+      before(:each) do
+        create_test_csv
+        @datasource = create_test_datasource(:column_separator=>',', :has_header_row=>'1')
+        @datasource.initial_import!(File.open('/tmp/test.csv'))        
+      end
+
+      it 'should show list of datasources' do
+        get :index
+        response.should be_success
+        response.should render_template('index')
+      end
+
+      it 'should show datasource info' do
+        get :show, :id=>@datasource.id
+        assigns[:datasource].id.should == @datasource.id
+        response.should be_success
+        response.should render_template('show')        
+      end
+
+      it 'should feed raw records to jquery datatables' do
+        @datasource.raw_record_count.should == 2
+        get :raw_records, :id=>@datasource.id, :iDisplayLength=>'1', :iDisplayStart=>'1', :sEcho=>'1'
+        response.should be_success
+        response.content_type.should == 'application/json'
+        json_response = JSON.parse(response.body)
+        json_response['sEcho'].should_not be_nil        
+        json_response['aaData'].should_not be_nil
+        json_response['aaData'].size.should == 1
+        json_response['iTotalRecords'].should_not be_nil
+        json_response['iTotalDisplayRecords'].should_not be_nil                
+      end
+
+    end
   end
   
   

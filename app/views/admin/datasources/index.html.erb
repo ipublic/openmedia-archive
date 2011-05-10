@@ -24,7 +24,7 @@
 				  <td><%= ds.source_type.titleize %></td>
 				  <td><%= ds.parser.titleize %></td>
 				  <td>
-				    <% if ds.rdfs_class.exists? %>
+				    <% if ds.rdfs_class && ds.rdfs_class.exists? %>
 				    <%= link_to ds.rdfs_class.label, admin_schema_collection_class_path(rdf_id(ds.rdfs_class.skos_concept.collection), rdf_id(ds.rdfs_class)) %>
 				    <% end %>
 				  </td>

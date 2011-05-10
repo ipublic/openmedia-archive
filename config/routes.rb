@@ -97,7 +97,7 @@ Openmedia::Application.routes.draw do
       end
 
       member do
-        get :import_seed_data
+        get :raw_records
       end
     end
     

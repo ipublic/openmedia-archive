@@ -17,9 +17,12 @@ class OpenMedia::InferenceRules::GeographicName < OpenMedia::InferenceRules::Inf
 
 
   def self.find_by_name(municipality, state_abbrev=nil)
+    # Note: featureClass => 'P' doesn't return all incorporated areas, e.g.; Michigan
     response = ws_get(GEONAMES_PLACE_NAME, {:params => {:q => municipality,
                                                      :isNameRequired => true,
                                                      :country => 'us',
+                                                     :style => 'full',
+                                                     :maxRows => 12,
                                                      :adminCode1 => state_abbrev,
                                                      :featureClass => 'A',
                                                      :username => GEONAMES_USERNAME }})

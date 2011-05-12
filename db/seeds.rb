@@ -49,13 +49,13 @@ vcard.save!
 ## Initialize the Commons Collections
 collections = [
   'Addresses', 'Agriculture', 'Arts', 'Animal Control',
-  'Banking, Finance and Insurance',
   'Business',
   'Census', 'Citizens', 'Community Services', 'Council and Boards',
   'Economy', 'Elections', 'Education', 'Environment', ' Energy',
-  'Finanace',
+  'Finance',
   'Government',
   'Health', 'Housing', 'Human Services',
+  'Insurance',
   'Justice',
   'Licenses and Permits', 'Labor Force',
   'Military', 'Motor Vehicles', 

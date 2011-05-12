@@ -1,28 +1,29 @@
-<div id="forms">
-	<%= form_for :site, :url => admin_site_path, :html=>{:method=>:put} do |f| %>
-		<div class="grid_8">
-			<div class="box">
-				<div class="block">
+<div class="grid_8">
+	<div class="box">
+			<div id="forms">
+				<%= form_for :site, :url => admin_site_path, :html=>{:method=>:put} do |f| %>
 				  <%= f.error_messages %>
 					<%= f.hidden_field :rev, :value => @site['_rev'] if @site['_rev'] %>
 					<fieldset>
 						<legend>Site Information</legend>
 						<ol>
-						  <li><%= f.label :openmedia_name, 'Name' %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
-						  <li><%= f.label :welcome_message %> <%= f.text_area :welcome_message, :rows => 3 %></li>
-						  <li><%= f.label :terms_of_use %> <%= f.text_area :terms_of_use, :rows => 5 %></li>
-						  <li><%= f.label :url, 'URL' %> <%= f.text_field :url, :class => "wide" %></li>
+						  <li><%= f.label :openmedia_name, 'Name', :class => "wide"  %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
+						  <li><%= f.label :welcome_message, :class => "wide" %> <%= f.text_area :welcome_message, :rows => 3, :class => "wide" %></li>
+						  <li><%= f.label :url, 'URL', :class => "wide"  %> <%= f.text_field :url, :class => "wide" %></li>
+						  <li><%= f.label :default_dashboard, :class => "wide"  %> 
+									<%= f.select :default_dashboard, dashboard_collection, {:prompt => 'Select Dashboard'}, :class => "wide" %></li>
 
-						  <li><%= f.label :adminstrator_contact_id, 'Admin Contact' %> 
-								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
-						  <li><%= f.label :business_contact_id, 'Business Contact' %> 
-								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select contact'}  %></li>
-							</ol>
+						  <li><%= f.label :adminstrator_contact_id, 'Admin Contact', :class => "wide"  %> 
+								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
+						  <li><%= f.label :business_contact_id, 'Business Contact', :class => "wide"  %> 
+								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
+						  <li><%= f.label :terms_of_use, :class => "wide"  %> <%= f.text_area :terms_of_use, :rows => 10, :class => "wide"  %></li>
+						</ol>
 					</fieldset>
 
 					<fieldset>
 						<legend>Municipality</legend>
-						<%= render :partial => 'admin/named_places/form', :locals => {:f => f, 
+						<%= render :partial => 'admin/named_places/form_wide', :locals => {:f => f, 
 						                                                              :attribute_name => :municipality,
 						                                                              :named_place=>@site.municipality}  %>
 					</fieldset>
@@ -30,24 +31,23 @@
 					<fieldset>
 						<legend>OpenMedia Servers</legend>
 						<ol>
-						  <li><%= f.label :internal_couchdb_server_uri, 'Internal server URI' %> <%= f.text_field :internal_couchdb_server_uri, :class => "wide" %></li>
-						  <li><%= f.label :public_couchdb_server_uri, 'Public server URI' %> <%= f.text_field :public_couchdb_server_uri, :class => "wide" %></li>
+						  <li><%= f.label :internal_couchdb_server_uri, 'Internal server URI', :class => "wide"  %> <%= f.text_field :internal_couchdb_server_uri, :class => "wide", :class => "wide"  %></li>
+						  <li><%= f.label :public_couchdb_server_uri, 'Public server URI', :class => "wide"  %> <%= f.text_field :public_couchdb_server_uri, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 
 					<fieldset class="omega">
 						<legend>Services</legend>
 						<ol>
-					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key' %> <%= f.text_area :googlemap_api_key, :rows => 3, :class => "wide" %></li>
+					  	<li><%= f.label :googlemap_api_key, 'GoogleMap API Key', :class => "wide"  %> <%= f.text_area :googlemap_api_key, :rows => 3, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 					<fieldset class="submit">
-						<ol>
-							<li><%= f.submit "Save", {:class => "submit"} %> <%= link_to 'Back',  :back %></li> 
+						<ol class ="submit-wide" >
+							<li><%= f.submit "Save" %> <%= link_to 'Back',  :back %></li> 
 						</ol>
 					</fieldset>
-				</div>
+				<% end %>	
 			</div>
-		</div>
-	<% end %>	
+	</div>
 </div>

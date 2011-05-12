@@ -1,0 +1,15 @@
+<% title "Dashboard: #{@dashboard.title}" %>
+<div class="grid_12">
+	<p>
+    <%= link_to 'All Dashboards', admin_dashboards_path %> |
+    <%= link_to 'Edit', edit_admin_dashboard_path %> |
+    <%= link_to 'Delete', new_admin_dashboard_path %>
+  </p>
+	<hr />
+</div>
+
+<div class="grid_8">
+	<% @dashboard.groups.each do |g|  %>
+		<%= render :partial => '/public/dashboards/dashboard_group', :locals  =>{ :group => g } %>
+	<% end %>
+</div>

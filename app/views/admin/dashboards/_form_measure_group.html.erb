@@ -1,0 +1,40 @@
+<ol>
+  <li>
+    <label class='narrow'>Measure Label</label>
+    <input name="<%=base_name %>[measure]" class="standard" type="text" value="<%= group['measure'] %>"/>
+  </li>
+  <li>
+	<!-- Present a list of accessible Collections  -->
+    <label class='narrow'>Source Collection</label>
+    <input name="<%=base_name %>[source_collection]" class="standard" type="text" value="<%= group['source_collection'] %>"/>
+  </li>
+  <li>
+	<!-- Present a list of accessible Classes under Collection above -->
+    <label class='narrow'>Source Class</label>
+    <input name="<%=base_name %>[source_class]" class="standard" type="text" value="<%= group['source_class'] %>"/>
+  </li>
+  <li>
+	<!-- Present a list of Properties from the selected Class above - filter to numeric types -->
+    <label class='narrow'>Source Property</label>
+    <input name="<%=base_name %>[source_property]" class="standard" type="text" value="<%= group['source_property'] %>"/>
+  </li>
+  <li>
+    <label class='narrow'>Format</label>
+    <input name="<%=base_name %>[format]" class="standard" type="text" value="<%= group['format'] %>"/>
+  </li>
+  <li>
+    <label class='narrow'>Graph Type</label>
+    <input name="<%=base_name %>[visual]" class="standard" type="text" value="<%= group['visual'] %>"/>
+  </li>
+  <li>
+    <label class='narrow'>Rank</label>
+    <input name="<%=base_name %>[rank]" class="standard" type="text" value="<%= group['rank'] %>"/>
+  </li>
+  <li>
+    <label class='narrow'>Description</label>
+    <input name="<%=base_name %>[Description]" class="standard" type="textarea" value="<%= group['Description'] %>"/>
+  </li>
+  <li>
+    <a href="#" class="delete-group-measure delete-measure" alt="Delete">Delete Measure</a>
+  </li>
+</ol>

@@ -39,6 +39,8 @@ $(function() {
 // END Example jQuery Sparklines 
 
 
+	$("#tabs").tabs();
+
 	$( "#create-class" ).button()
 		.click(function() {
 			$( "#dialog-new-class-form" ).dialog( "open" );

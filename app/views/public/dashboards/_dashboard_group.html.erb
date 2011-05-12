@@ -9,7 +9,7 @@
 			<th>Trend</th>
 			
 			<% group.measures.each do |m| %>
-				<%= render :partial => 'dashboard_measure', :locals => { :measure => m } %>
+				<%= render :partial => '/public/dashboards/dashboard_measure', :locals => { :measure => m } %>
 			<% end %>
 		</table>
 	</div>

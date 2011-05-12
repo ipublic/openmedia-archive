@@ -2,11 +2,10 @@
 	<div class="box rounded_corners shadow">
 	  <p>
 	    <% if public %>
-	    <span style="float: right">
-	      Get your very own Civic OpenMedia instance!  <a href="<%= url_for(:action=>'new', :controller=>'public/sites', :host=>OM_DOMAIN) %>">Signup Now</a>
-	    </span>
+		    <span style="float: right">
+		      Join the Community! <a href="<%= url_for(:action=>'new', :controller=>'public/sites', :host=>OM_DOMAIN) %>">Sign up</a>
+		    </span>
 	    <% end %>
-
 	    A publishing system for government open data by <a href="http://www.ipublic.org/">iPublic.org</a>
 	    - Licensed under <a href="<%= url_for(:controller => '/public/welcome', :action => 'license') %>">MIT License</a>
 	  </p>

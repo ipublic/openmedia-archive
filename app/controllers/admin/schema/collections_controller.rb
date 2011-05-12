@@ -21,7 +21,7 @@ class Admin::Schema::CollectionsController < Admin::BaseController
     @collection = OpenMedia::Schema::SKOS::Collection.create_in_collection!(current_site.skos_collection, params[:collection])
     if @collection.errors.count == 0
       flash[:notice] = 'Collection successfully created.'
-      redirect_to admin_schema_collections_path
+      redirect_to admin_schema_collection_path(rdf_id(@collection.uri))
     else
       render 'new'
     end
@@ -30,7 +30,7 @@ class Admin::Schema::CollectionsController < Admin::BaseController
   def update
     @collection.update!(params[:collection].symbolize_keys)
     flash[:notice] = 'Collection successfully updated.'
-    redirect_to admin_schema_collections_path
+    redirect_to admin_schema_collection_path(rdf_id(@collection.uri))
   end
 
   def destroy

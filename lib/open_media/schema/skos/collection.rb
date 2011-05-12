@@ -10,6 +10,7 @@ module OpenMedia
         type ::RDF::SKOS.Collection  
 
         property :label, :predicate=>::RDF::SKOS.prefLabel, :type=>XSD.string
+        property :definition, :predicate=>::RDF::SKOS.definition, :type=>XSD.string        
         property :hidden, :predicate=>::RDF::OM_CORE.hidden, :type=>XSD.boolean
         has_many :members, :predicate=>::RDF::SKOS.member
 

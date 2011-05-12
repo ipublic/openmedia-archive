@@ -217,6 +217,12 @@ ul.main li ul li a {
 	*/
 }
 
+/* articles
+----------------------------------------------- */
+.articles {
+	background: #f0f0f0;
+}
+
 /* anchors
 ----------------------------------------------- */
 a {
@@ -275,7 +281,7 @@ a:hover {
 h4 {
 	font-size: 16px;
 	margin: 0;
-	padding:4px;
+	padding: 0, 4px, 4px, 4px;
 	line-height:1.2em;
 	color: #408dd2;
 }
@@ -301,11 +307,7 @@ width: 15em;
 }
 
 #search li input.submit {
-width: 7em;
-}
-
-#search li input.submit-wide {
-width: 14em;
+	width: 7em;
 }
 
 /* forms
@@ -342,6 +344,7 @@ fieldset.submit {
 	border-style: 0 none #FFF;
 	padding-left: 12em;    
 	background-color: transparent;    
+	border: none;
 }
 
 legend {
@@ -378,12 +381,21 @@ label.narrow {
 	font-weight: bold;  
 }
 
+label.wide {
+	width: 12em;    
+}
+
+
 fieldset ol {
   margin: 0;
 	padding: 0;
 	list-style: none;  
   float:left;
 	width: 100%;
+}
+
+ol.submit-wide {
+	padding-left: 3em;
 }
 
 fieldset li {
@@ -403,12 +415,20 @@ input.standard {
 	width:18em;
 }
 
+input.wide {
+	width:30em;
+}
+
 textarea.standard {
 	width:16em;
 }
 
-input.wide {
-	width:30em;
+textarea.wide {
+	width: 30em;
+}
+
+select.wide {
+	width: 30em;
 }
 
 input.submit {
@@ -504,6 +524,8 @@ tbody td {
 	border: none;
 	border-collapse: collapse;
 	width: 100%;
+/*	border: 1px solid red;
+*/
 }
 
 .property-table thead th { 
@@ -525,7 +547,7 @@ tbody td {
 	color: #043a6b;
 	padding:.2em 0 .2em 0;
 	text-align: right;
-	width: 40%;
+	width: 25%;
 }
 
 .property-table td {
@@ -533,5 +555,5 @@ tbody td {
 	text-align: left;
 	background: transparent;
 	border: none;
-	word-break: break-all;
+/*	word-break: break-all;*/
 }

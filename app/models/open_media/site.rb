@@ -10,6 +10,7 @@ class OpenMedia::Site < CouchRest::Model::Base
   # General properties
   property :identifier,  :read_only => true
   property :url
+  property :default_dashboard
   property :welcome_message, :default => "Welcome to our Data Catalog"
   property :openmedia_name, :default => "Civic OpenMedia"
   property :terms_of_use, :default => "By using data made available through this site the user agrees to all the conditions stated in the following paragraphs: This agency makes no claims as to the completeness, accuracy or content of any data contained in this application; makes any representation of any kind, including, but not limited to, warranty of the accuracy or fitness for a particular use; nor are any such warranties to be implied or inferred with respect to the information or data furnished herein. The data is subject to change as modifications and updates are complete. It is understood that the information obtained from this site is being used at one's own risk. These Terms of Use govern any use of this service and may be changed at any time, without notice by the sponsor agency."

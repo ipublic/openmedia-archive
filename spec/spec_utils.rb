@@ -64,17 +64,14 @@ def create_test_datasource(data={})
 
 end
 
-def create_test_csv
-  File.open('/tmp/test.csv', 'w') do |f|
-    f.puts('A,B,C,D')
-    f.puts('1,2,3,4')
-    f.puts('5,6,7,8')            
-  end
+def test_csv_path
+  File.join(Rails.root, 'spec', 'testdata', 'test.csv')
 end
 
-def delete_test_csv
-  File.delete('/tmp/test.csv')      
+def test_shapefile_path
+  File.join(Rails.root, 'spec', 'testdata', 'AirSpacePly.zip')
 end
+
 
 def spec_rdf_id(resource)
   if resource.respond_to?(:uri)

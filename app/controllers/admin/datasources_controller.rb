@@ -17,6 +17,11 @@ class Admin::DatasourcesController < Admin::BaseController
       model.default_source(@datasource.rdfs_class.skos_concept.collection.repository)
     end
   end
+
+  def publishing
+    @datasource = OpenMedia::Datasource.get(params[:id])
+  end
+
     
   def new
     @datasource = OpenMedia::Datasource.new(:column_separator=>',', :skip_lines=>0)
@@ -167,6 +172,8 @@ class Admin::DatasourcesController < Admin::BaseController
       
       if @datasource.textfile_source? && params[:textfile]
         @datasource.initial_import!(params[:textfile])
+      elsif @datasource.shapefile_source? && params[:shapefile] && params[:shapefile].content_type =~ /(zip|ZIP)$/
+        @datasource.initial_import!(params[:shapefile])
       end
 
       respond_to do |format|

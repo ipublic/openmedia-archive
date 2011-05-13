@@ -10,8 +10,6 @@ Spork.prefork do
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require 'devise/test_helpers'
-  require 'open_media/schema/rdfs/class'
-  require 'open_media/schema/base_spec'
   
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
@@ -47,7 +45,7 @@ Spork.prefork do
     config.after(:each) do
       WATCHED_DBS.each do |db|
         changes = db.get('_changes', :since=>start_sequences[db])
-        to_delete = changes['results'].select{|chg| !chg['deleted']}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
+        to_delete = changes['results'].select{|chg| !chg['deleted'] && !(chg['id'] =~ /_design/)}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
         db.bulk_save(to_delete)
       end
     end
@@ -58,6 +56,8 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
+  require 'open_media/schema/rdfs/class'
+  require 'open_media/schema/base_spec'
   require 'spec_utils'
 end
 

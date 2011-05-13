@@ -1,0 +1,11 @@
+<% title "Data Source: " + @datasource.title %>
+
+<p class="page-nav">
+  <%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
+  <%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource) %>
+
+  <%= link_to 'All Datasources', admin_datasources_path %> | 
+  <%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
+  <%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
+  <%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
+</p>

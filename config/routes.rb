@@ -98,11 +98,12 @@ Openmedia::Application.routes.draw do
     resources :datasources do
       collection do
         get :new_property
-        post :upload
       end
 
       member do
         get :raw_records
+        get :publishing
+        put :publish
       end
     end
     

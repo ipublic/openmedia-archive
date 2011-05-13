@@ -62,32 +62,67 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def initial_import!(file=nil)
-    if self.parser==DELIMITED_PARSER
-      rows_parsed = 0
-      batch_serial_number = MD5.md5(Time.now.to_i.to_s + rand.to_s).to_s
-      FasterCSV.foreach(file.path, :col_sep=>self.column_separator) do |row|
-        rows_parsed += 1
-        # create properties when processing first row
-        if rows_parsed==1
-          properties = []
-          if self.has_header_row
-            row.each{|pn| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>pn, :range_uri=>RDF::XSD.string.to_s)}            
-          else
-            1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty(:label=>"Column#{i}", :range=>RDF::XSD.string.to_s)}
+    batch_serial_number = MD5.md5(Time.now.to_i.to_s + rand.to_s).to_s
+    rows_parsed = 0    
+    if self.textfile_source?
+      if self.parser==DELIMITED_PARSER
+        FasterCSV.foreach(file.path, :col_sep=>self.column_separator) do |row|
+          rows_parsed += 1
+          # create properties when processing first row
+          if rows_parsed==1
+            if self.has_header_row
+              row.each{|pn| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>pn, :range_uri=>RDF::XSD.string.to_s)}            
+            else
+              1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty(:label=>"Column#{i}", :range=>RDF::XSD.string.to_s)}
+            end
+            self.save!
+            next if self.has_header_row
           end
-          self.save!
-          next if self.has_header_row
+          
+          raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
+          row.each_with_index {|val, idx| raw_record[self.source_properties[idx].identifier]=val}
+          #raw_record.save!
+          OpenMedia::RawRecord.database.bulk_save_doc(raw_record)
+          OpenMedia::RawRecord.database.bulk_save if rows_parsed%500 == 0
         end
-        
-        raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
-        row.each_with_index {|val, idx| raw_record[self.source_properties[idx].identifier]=val}
-        #raw_record.save!
-        OpenMedia::RawRecord.database.bulk_save_doc(raw_record)
-        OpenMedia::RawRecord.database.bulk_save if rows_parsed%500 == 0
+        OpenMedia::RawRecord.database.bulk_save
       end
-      OpenMedia::RawRecord.database.bulk_save
-    end
+    elsif self.shapefile_source?
+      Dir.mktmpdir do |temp_dir|
+        `#{UNZIP} #{file.path} -d #{temp_dir}`
+        shpfn = Dir.glob(File.join(temp_dir,'*.shp')).first
+        if shpfn
+          jsfn = shpfn.gsub(/\.shp/,'.js')
+          %x!#{OGR2OGR} -t_srs EPSG:4326 -a_srs EPSG:4326 -f "GeoJSON" #{jsfn} #{shpfn}!
+          File.open(jsfn) do |jsf|
+            geojson = JSON.load(jsf)
+            geojson['features'].first['properties'].each do |k,v|
+              range = case v
+                      when TrueClass, FalseClass then RDF::XSD.boolean
+                      when Fixnum then RDF::XSD.integer
+                      when Float then RDF::XSD.float
+                      else RDF::XSD.string
+                      end
+              self.source_properties << OpenMedia::DatasourceProperty.new(:label=>k, :range_uri=>range.to_s)
+            end
+            self.source_properties  << OpenMedia::DatasourceProperty.new(:label=>'geometry', :range_uri=>RDF::OM_CORE.GeoJson.to_s)
+            self.save!
 
+            geojson['features'].each do |feature|
+              rows_parsed += 1
+              raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
+              self.source_properties.each {|sp| raw_record[sp.identifier] = feature['properties'][sp.label]}
+              raw_record['geometry'] = feature['geometry']
+              OpenMedia::RawRecord.database.bulk_save_doc(raw_record)
+              OpenMedia::RawRecord.database.bulk_save if rows_parsed%500 == 0              
+            end
+            OpenMedia::RawRecord.database.bulk_save
+          end              
+        else
+          @datasource.errors.add(:shapefile, "No .shp file found inside zip")
+        end
+      end
+    end
   end
 
 

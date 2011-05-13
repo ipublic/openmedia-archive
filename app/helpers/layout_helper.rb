@@ -25,17 +25,22 @@ module LayoutHelper
     OpenMedia::Site::DATABASES.collect {|db_name| [db_name, db_name.downcase] }
   end
 
-  def catalog_collection
-#    Catalog::CATALOGS.collect {|cat_name| [cat_name, cat_name.downcase] }
-    OpenMedia::Catalog.by_title_and_identifier.collect {|o| [ o.title, o['_id']] }
-  end
-
-  def organization_collection
-    OpenMedia::Organization.by_name_and_identifier.collect {|o| [ o.name, o['_id']] }
-  end
+## Deprecated
+#   def catalog_collection
+# #    Catalog::CATALOGS.collect {|cat_name| [cat_name, cat_name.downcase] }
+#     OpenMedia::Catalog.by_title_and_identifier.collect {|o| [ o.title, o['_id']] }
+#   end
+# 
+#   def organization_collection
+#     OpenMedia::Organization.by_name_and_identifier.collect {|o| [ o.name, o['_id']] }
+#   end
 
   def vcard_collection    
     OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.collect{|vc| [vcard_label(vc), vc.uri]}    
+  end
+
+  def dashboard_collection    
+    OpenMedia::Dashboard.by_title.collect {|o| [ o.title, o['_id']] }
   end
 
   def contact_collection

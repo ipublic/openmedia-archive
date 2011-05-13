@@ -3,40 +3,64 @@
 		<%= link_to 'Edit', edit_admin_site_path %>
 	<hr/>
 </div>
-<div class="grid_7">
+<div class="grid_8">
 	<div class="box">
-		<div class="block">
-			<h4 class="show-property">Site Information</h4>
-			<%= show_fields(@site, [
-				[:openmedia_name, "Name"],
-				:welcome_message,
-				:terms_of_use,
-				:url
-				]).html_safe %>
-			<table class="property-table">
-				<tr>
-					<th>Admin Contact:</th>
-					<td><%= vcard_formatted_name(@site.administrator_contact) %></td>
-				</tr>
-				<tr>
-					<th>Business Contact:</th>
-					<td><%= vcard_formatted_name(@site.business_contact) %></td>
-				</tr>
-			</table>
+		<h4 class="show-property">Site Information</h4>
+		<%= show_fields(@site, [
+			[:openmedia_name, "Name"],
+			:welcome_message,
+			[:url, "URL"],
+			:default_dashboard
+			]).html_safe %>
+		<table class="property-table">
+			<tr>
+				<th>Admin Contact:</th>
+				<td><%= vcard_formatted_name(@site.administrator_contact) %></td>
+			</tr>
+			<tr>
+				<th>Business Contact:</th>
+				<td><%= vcard_formatted_name(@site.business_contact) %></td>
+			</tr>
+			<tr>
+				<th>Terms of Use:</th>
+				<td><%= @site.terms_of_use %></td>
+			</tr>
+		</table>
 
-			<h4 class="show-property">Municipality</h4>
-			<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
-		
-			<h4 class="show-property">OpenMedia Servers</h4>
-			<%= show_fields(@site, [
-				[:internal_couchdb_server_uri, "Internal server URI"],
-				[:public_couchdb_server_uri, "Public server URI"]
-				]).html_safe %>
+		<h4 class="show-property">Municipality</h4>
+		<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
+	
+		<h4 class="show-property">OpenMedia Servers</h4>
+		<%= show_fields(@site, [
+			[:internal_couchdb_server_uri, "Internal server URI"],
+			[:public_couchdb_server_uri, "Public server URI"]
+			]).html_safe %>
 
-			<h4 class="show-property">Services</h4>
-			<%= show_fields(@site, [
-				[:googlemap_api_key, "GoogleMap API Key"]
-				]).html_safe %>
+		<h4 class="show-property">Services</h4>
+		<%= show_fields(@site, [
+			[:googlemap_api_key, "GoogleMap API Key"]
+			]).html_safe %>
+	</div>
+</div>
+
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3>Set System-wide Properties</h3>
+				<p class="meta">Configure and customize OpenMedia for your municipality</p>
+				<p>In Site Settings, you specify OpenMedia's configuration. It's important to verify that these values are correct. 
+					 Otherwise the system won't operate properly. 
+				<p>Here the OpenMedia administrator may choose a site name, welcome greeting, web address and an OpenMedia dashboard that 
+					 appears on your home page. You should identify technical and business contacts who support the site.</p>
+				<p>Use the suggested Terms of Use (or supply your own) to inform consumers of their rights, plus any restrictions or disclaimers,
+					 related to the use of OpenMedia published data.</p>
+				<p>The formal place name that you selected during the sign up process for your town/city/county/municipality, along with
+					 associated location properties, may be updated here.</p>
+				<p>If you run OpenMedia on multiple servers, this is where you specify the domain names/IP addresses and ports 
+					  of those servers</p>
+				<p>This is also where you provide login and token keys for Web services OpenMedia supports, including Google Map</p>
+			</div>
 		</div>
 	</div>
 </div>

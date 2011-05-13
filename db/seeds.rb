@@ -51,7 +51,7 @@ collections = [
   'Addresses', 'Agriculture', 'Arts', 'Animal Control',
   'Business',
   'Census', 'Citizens', 'Community Services', 'Council and Boards',
-  'Economy', 'Elections', 'Education', 'Environment', ' Energy',
+  'Economy', 'Elections', 'Education', 'Environment', 'Energy',
   'Finance',
   'Government',
   'Health', 'Housing', 'Human Services',
@@ -68,7 +68,7 @@ collections = [
   ]
 
 collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}
-
+# "The Addresses collection includes unique designations for physical locations and identifiers for non-physical  resources such as a web page.  Examples include: home and business site addresses, road intersections and Web page URL's"
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})
 g = OpenMedia::DashboardGroup.new({:title => "Economic Strength"})

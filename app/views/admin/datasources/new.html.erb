@@ -38,11 +38,21 @@
 	Fixed fields
       </div>
     </div>
+
     <h2 tabindex="2"><a href="#">Shapefiles</a></h2>
     <div>
       <fieldset class="omega">
 	<ol>
 	  <li><label class='narrow'>ZIP File</label> <%= file_field_tag :shapefile %></li>
+	</ol>
+      </fieldset>
+    </div>
+
+    <h2 tabindex="2"><a href="#">Web Service</a></h2>
+    <div>
+      <fieldset class="omega">
+	<ol>
+	  <li><label class='narrow'>URL</label> <%= ds.text_field :webservice_url, :size=>75 %></li>
 	</ol>
       </fieldset>
     </div>

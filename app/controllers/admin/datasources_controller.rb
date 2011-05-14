@@ -174,6 +174,8 @@ class Admin::DatasourcesController < Admin::BaseController
         @datasource.initial_import!(params[:textfile])
       elsif @datasource.shapefile_source? && params[:shapefile] && params[:shapefile].content_type =~ /(zip|ZIP)$/
         @datasource.initial_import!(params[:shapefile])
+      elsif @datasource.webservice_source?
+        @datasource.initial_import!
       end
 
       respond_to do |format|

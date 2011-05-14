@@ -10,6 +10,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   TEXTFILE_TYPE = 'textfile'
   SHAPEFILE_TYPE = 'shapefile'  
   DATABASE_TYPE = 'database'
+  WEBSERVICE_TYPE = 'webservice'  
 
   TYPES = [TEXTFILE_TYPE, SHAPEFILE_TYPE]
   
@@ -27,6 +28,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   property :parser  
   property :column_separator    # separator for delimited parser
   property :has_header_row
+  property :webservice_url
   property :source_properties, [OpenMedia::DatasourceProperty]
   
   property :title
@@ -119,9 +121,12 @@ class OpenMedia::Datasource < CouchRest::Model::Base
             OpenMedia::RawRecord.database.bulk_save
           end              
         else
-          @datasource.errors.add(:shapefile, "No .shp file found inside zip")
+          raise "No .shp file found inside zip"
         end
       end
+    elsif self.webservice_source?
+      # Web Service code goes here!!
+      raise "If this were implemented, I'd get the data from #{self.webservice_url}"
     end
   end
 
@@ -155,6 +160,11 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   def shapefile_source?
     source_type == SHAPEFILE_TYPE
   end
+
+  def webservice_source?
+    source_type == WEBSERVICE_TYPE
+  end
+    
 
   def raw_records(view_opts={})
     OpenMedia::RawRecord.by_datasource_id({:key=>self.id}.merge(view_opts))

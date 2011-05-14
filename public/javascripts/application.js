@@ -90,19 +90,23 @@ $(function() {
 	$('p.date input').datepicker();
 
 	$("#upload-accordion").accordion({ header: 'h2' });
-  $("#upload-accordion").accordion({ autoHeight: true,
-    change: function(event, ui) { 
-			if($(this).accordion('option', 'active')==0) {
-	    	$('#datasource_source_type').val('textfile');
-			}
-			else if($(this).accordion('option', 'active')==1) {
-	    	$('#datasource_source_type').val('shapefile');
-			}
-			else if($(this).accordion('option', 'active')==2) {
-	    	$('#datasource_source_type').val('database');
-			}
-    }
-  });
+
+  	$("#upload-accordion").accordion({ autoHeight: true,
+  	  change: function(event, ui) { 
+  		if($(this).accordion('option', 'active')==0) {
+  		    $('#datasource_source_type').val('textfile');
+  		}
+  		else if($(this).accordion('option', 'active')==1) {
+  		    $('#datasource_source_type').val('shapefile');
+  		}
+  		else if($(this).accordion('option', 'active')==2) {
+  		    $('#datasource_source_type').val('webservice');
+  		}
+  		else if($(this).accordion('option', 'active')==3) {
+  		    $('#datasource_source_type').val('database');
+  		}
+  	  }
+  	});
 
 	$('.accordion .head').click(function() {
 		$(this).next().toggle('slow');

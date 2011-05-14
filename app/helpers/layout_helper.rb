@@ -35,6 +35,13 @@ module LayoutHelper
 #     OpenMedia::Organization.by_name_and_identifier.collect {|o| [ o.name, o['_id']] }
 #   end
 
+  def collections_collection
+      ## TODO Use proper call to determine site, complete method
+
+    # @om_site = OpenMedia::Site.all.detect{|s| s.subdomain == @om_site_id}
+    # @site_collections = @om_site.skos_collection.sub_collections
+  end
+
   def vcard_collection    
     OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.collect{|vc| [vcard_label(vc), vc.uri]}    
   end

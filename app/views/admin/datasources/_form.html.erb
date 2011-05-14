@@ -1,5 +1,5 @@
 <%= ds.error_messages %>
-<div class="grid_6">
+<div class="grid_8">
 	<fieldset>
 	  <legend>OpenMedia</legend>
 		<ol>
@@ -17,12 +17,12 @@
 
 			  <li>
 			    <label for="datasource-creator" class="narrow">Creator</label> 
-			    <%= ds.select :creator_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			    <%= ds.select :creator_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
 			  </li>
 
 			  <li>
 			    <label for="datasource-publisher" class="narrow">Publisher</label> 
-			    <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+			    <%= ds.select :publisher_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
 			  </li>
 			<% end %>
 		</ol>				

@@ -47,8 +47,8 @@
 		  </li>
 
 		  <li>
-		    <%= ds.label :skip_lines, :class => 'narrow' %>
-		    <%= ds.text_field :skip_lines, :class => 'narrow' %>
+		    <%= ds.label :has_header_row, "Has header row?", :class => 'wide' %>
+		    <%= check_box("datasource", "has_header_row") %>
 		  </li>
 		</ol>
 	</fieldset>	 	

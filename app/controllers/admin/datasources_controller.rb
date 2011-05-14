@@ -216,7 +216,7 @@ class Admin::DatasourcesController < Admin::BaseController
      
   def edit
     @datasource = OpenMedia::Datasource.get(params[:id])
-    @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a    
+    # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a    
     if @datasource.nil?
       flash[:error] = 'Datasource not found.'
       redirect_to(admin_datasources_url)

@@ -10,6 +10,12 @@ section, article, header, footer, nav, aside, hgroup {
 	height: 200px;
 }
 
+.map {
+	margin-left:0em;
+	width: 900px;
+	height: 600px;
+}
+
 body {
 	border-top: 4px solid #26537c;
 	background: #e0e0e0; /* light grey */

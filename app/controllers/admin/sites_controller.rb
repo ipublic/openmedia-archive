@@ -1,4 +1,5 @@
 class Admin::SitesController < Admin::BaseController
+  include GoogleMapsHelper
   
   def new
     @site = OpenMedia::Site.new
@@ -29,6 +30,10 @@ class Admin::SitesController < Admin::BaseController
       redirect_to new_admin_site_path
     else
       @municipality = @site.municipality
+ 
+    # Load GoogleMaps
+      initialize_map   
+      @map.markers << @site.geomarker
       
       respond_to do |format|
         format.html # show.html.erb

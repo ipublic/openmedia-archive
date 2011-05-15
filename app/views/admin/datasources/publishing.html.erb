@@ -1,11 +1,100 @@
-<% title "Data Source: " + @datasource.title %>
+<% title "Data Source: " + @datasource.title  %>
+<div class="grid_12">
+  <p class="page-nav">
+    <%= link_to 'All Datasources', admin_datasources_path %> | 
+    <%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
+    <%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
+    <%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
+  </p>
+  <hr/>
+  
+  <h2>Publishing</h2>
+  <%= form_for :datasource, :url=>publish_admin_datasource_path(:id=>@datasource.id), :html=>{:method=>:put} do |ds| %>
+  <%= ds.error_messages %>
+  <div class="box">
+    <fieldset>
+      <legend>Summary</legend>
+      <ol>
+	<li>Published Records: <%= @datasource.published_raw_record_count %><br/>
+	    Unpublished Records: <%= @datasource.raw_record_count - @datasource.published_raw_record_count %>
+	</li>
+      </ol>
+    </fieldset
+  <div class="box">
+    <fieldset>
+      <legend>Metadata</legend>
+      <ol>
+	<%= ds.fields_for :metadata, @datasource.metadata do |m| %>
+	<li><%= m.label :description, :class => 'narrow' %> <%= m.text_area :description, :rows => 3, :class => 'wide' %></li>
+	<% end %>
 
-<p class="page-nav">
-  <%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
-  <%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource) %>
+	<li>
+	  <label for="datasource-creator" class="narrow">Creator</label> 
+	  <%= ds.select :creator_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
+	</li>
 
-  <%= link_to 'All Datasources', admin_datasources_path %> | 
-  <%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
-  <%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
-  <%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
-</p>
+	<li>
+	  <label for="datasource-publisher" class="narrow">Publisher</label> 
+	  <%= ds.select :publisher_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
+	</li>
+      </ol>
+    </fieldset>
+    
+    <fieldset>
+      <legend>Schema</legend>
+      <ol>
+
+	<!--<li>
+	  <%#= ds.label :rdfs_class_uri, 'Class', :class => 'narrow' %>
+	  <input class="datasource-class-uri wide" name="rdfs-class-identifier" type="text" value="<%#= @datasource.rdfs_class.uri.path.split('/').last if @datasource.rdfs_class %>"/>
+	  <%= ds.hidden_field :rdfs_class_uri %>
+	</li>-->
+
+	<!--<li>OR create new class in collection:</li>-->
+	<li>
+	  <p>Choose the collection to place the new schema class:</p>
+	  <label class='narrow'>Collection</label> 
+	  <select name="collection_uri">
+	    <%= options_for_select @collections.collect {|c| [c.label, c.uri]} %>
+	  </select>
+	</li>
+      </ol>
+    </fieldset>
+
+    <fieldset>
+      <legend>Data Transformation</legend>
+
+      <table style="width: 800px">
+	<thead>
+	  <tr>
+	    <th colspan="2">Source</th><th colspan="2">Destination</th>
+	  </tr>
+	  <tr>
+	    <th>Property Name</th><th>Type</th><th>Property Name</th><th>Type</th>
+	  </tr>
+	</thead>
+	<% @datasource.source_properties.sort {|p1,p2| p1.label <=> p2.label}.each do |sp| %>	
+	<tr>
+	  <td><%= sp.label %></td>
+	  <td><span class="tooltip" title="<%=sp.range_uri%>"><%= short_uri(sp.range_uri) %></span></td>
+	  <td>	    
+	    <%= render :partial=>'rdf_property_select', :locals=>{ :rdfs_class=>@datasource.rdfs_class, :selected=>sp.rdf_property_uri } %>
+	  </td>
+	  <td><!-- short_uri(sp.rdf_property.range) --></td>
+	</tr>
+	<% end %>
+      </table>
+
+
+    </fieldset>
+
+
+  </div>
+
+  <fieldset class="omega submit">
+    <ol>
+      <li><%= ds.submit "Publish", :class => "submit", :id=>'publish-button', :disabled=>true %> <%= link_to 'Back', :back %></li>
+    </ol>
+  </fieldset>
+  <% end %>
+</div>

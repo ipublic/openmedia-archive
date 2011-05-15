@@ -6,6 +6,7 @@ class OpenMedia::DatasourceProperty < Hash
   property :identifier
   property :comment
   property :range_uri
+  property :rdf_property_uri
 
   timestamps!
 
@@ -21,6 +22,10 @@ class OpenMedia::DatasourceProperty < Hash
     RDF::URI.new(self.range_uri) if self.range_uri
   end
 
+  def rdf_property
+    OpenMedia::Schema::RDF::Property.for(self.rdf_property_uri) if self.rdf_property_uri
+  end
+  
 
 private
 

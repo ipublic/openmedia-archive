@@ -21,8 +21,8 @@ class OpenMedia::Datasource < CouchRest::Model::Base
 
   PARSERS  = [DELIMITED_PARSER]
 
-  # before_create :update_metadata
-  # before_update :update_metadata
+  #before_create :update_metadata
+  #before_update :update_metadata
   
   property :source_type
   property :parser  
@@ -131,13 +131,9 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
 
-  def import!(opts={})
-    if source_type==TEXTFILE_TYPE
-      raise ETL::ControlError.new(':file required in options for a file source') unless opts[:file] 
-    end
-
+  def publish!
     # generate ctl from dataset and source definition
-    ctl = "source :in, {:file=>'#{opts[:file]}', :parser=>{:name=>'#{self.parser}', :options=>{:col_sep=>'#{self.column_separator}'}}, :skip_lines=>#{self.skip_lines}},["+
+    ctl = "source :in, {:datasource=>'#{self.id}'}, ["+
       self.source_properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]\n"
     ctl << "destination :out, {:rdfs_class=>'#{self.rdfs_class_uri}'}, {:order=>[" +
       self.rdfs_class.properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]}\n"
@@ -168,10 +164,41 @@ class OpenMedia::Datasource < CouchRest::Model::Base
 
   def raw_records(view_opts={})
     OpenMedia::RawRecord.by_datasource_id({:key=>self.id}.merge(view_opts))
-  end
+  end  
 
+  def unpublished_raw_records(view_opts={})
+    OpenMedia::RawRecord.by_unpublished({:key=>self.id}.merge(view_opts))
+  end  
+  
   def raw_record_count
     OpenMedia::RawRecord.by_datasource_id(:key=>self.id, :include_docs=>false)['rows'].size
+  end
+
+  def published_raw_record_count(view_opts={})
+    OpenMedia::RawRecord.by_datasource_id_and_published(:startkey=>[self.id], :endkey=>[self.id, {}], :include_docs=>false)['rows'].size
+  end
+  
+
+  def valid_for_publishing?
+    false
+  end
+
+  def update_metadata(data={})
+    md_data = { :creator=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(creator_uri),
+      :publisher=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(publisher_uri),
+      :language=>'en-US',
+      :conformsto=>rdfs_class,
+      :title=>rdfs_class.label,
+      :description=>rdfs_class.comment,
+      :resourcetype=>RDF::DCTYPE.Dataset
+    }.merge(data)
+    if metadata
+      metadata.update!(md_data)
+      puts "updated"
+    else
+      md = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreMetadataMetadata.for(RDF::METADATA.Metadata/"#{UUID.new.generate.gsub(/-/,'')}", md_data).save!
+      self.metadata_uri = md.uri.to_s      
+    end
   end
 
 

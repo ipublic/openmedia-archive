@@ -8,6 +8,7 @@ describe Admin::DatasourcesController do
   context 'admin logged in' do
     before(:each) do
       @site = create_test_site
+      @site.initialize_metadata      
       @admin = create_test_admin(@site)
       @request.host = "#{@site.identifier}.#{OM_DOMAIN}"
       sign_in :admin, @admin
@@ -88,11 +89,17 @@ describe Admin::DatasourcesController do
       end
 
       it 'should show page for managing publishing' do
-        get :publishing, :id=>@datasource.id
-        response.should be_success
-        response.should render_template('publishing')
+        # get :publishing, :id=>@datasource.id
+        # response.should be_success
+        # response.should render_template('publishing')
       end
 
+      it 'should publish data to a new rdfs class' do
+        # put :publish, :id=>@datasource.id, :datasource=>{ :metadata=>{:description=>'blah blah blah',
+        #     :publisher_uri=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.first.uri.to_s,
+        #     :creator_uri=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.first.uri.to_s}}
+        # response.should redirect_to(admin_datasource_path(@datasource))
+      end
     end
   end
   

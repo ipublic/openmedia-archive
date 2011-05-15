@@ -399,7 +399,7 @@ module ETL #:nodoc:
       end
       
       def source_types
-        [:file, :database]
+        [:file, :database, :datasource]
       end
       
       def destination_types

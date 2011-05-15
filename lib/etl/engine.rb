@@ -477,11 +477,11 @@ module ETL #:nodoc:
       ETL::Engine.import.status = (errors.length > 0 ? OpenMedia::Import::STATUS_COMPLETED_WITH_ERRORS : OpenMedia::Import::STATUS_COMPLETED)
       @output.rewind
       ETL::Engine.import.output = @output.read
-      sources.each do |source|
-        File.open(source.last_local_file) do |source_csv|
-          ETL::Engine.import.create_attachment(:name=>File.basename(source_csv.path), :content_type=>'text/csv', :file=>source_csv)
-        end
-      end
+      #sources.each do |source|
+      #  File.open(source.last_local_file) do |source_csv|
+      #    ETL::Engine.import.create_attachment(:name=>File.basename(source_csv.path), :content_type=>'text/csv', :file=>source_csv)
+      #  end
+      #end
 
 
       ETL::Engine.import.save!

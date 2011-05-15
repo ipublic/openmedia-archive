@@ -191,6 +191,18 @@ $(function() {
 	return false;
     });
 
+    $('#datasource_metadata_description, #datasource_creator_uri, #datasource_publisher_uri').change(function() {
+	var desc = $('#datasource_metadata_description').val();
+	var creator_uri = $('#datasource_creator_uri').val();
+	var publisher_uri = $('#datasource_publisher_uri').val();
+	if (desc !='' && creator_uri != '' && publisher_uri != '') {
+	    $('#publish-button').removeAttr("disabled");
+	} else {
+	    $('#publish-button').attr("disabled", "disabled");
+	}
+
+    });
+
     // basic button styling
     $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
     $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    

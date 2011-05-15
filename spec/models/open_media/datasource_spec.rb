@@ -51,4 +51,24 @@ describe OpenMedia::Datasource do
     end
   end
 
+  context 'publishing' do
+    context 'valid_for_publishing?' do
+      before(:each) do
+        @datasource = create_test_datasource(:column_separator=>',', :has_header_row=>'1')
+        @datasource.initial_import!(File.open(test_csv_path))
+        OpenMedia::Site.first.initialize_metadata
+      end
+      
+      it 'should require description, rdfs_class_uri, creator_uri, and publisher_uri' do
+        @datasource.should_not be_valid_for_publishing
+        @datasource.rdfs_class_uri = create_test_rdfs_class(:site=>OpenMedia::Site.first).uri.to_s
+        @datasource.metadata = {:description => 'blah blah blah',
+          :creator_uri => OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.first.uri.to_s,          
+          :publisher_uri => OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.first.uri.to_s
+        }
+        @datasource.should be_valid_for_publishing
+      end
+    end
+  end
+
 end

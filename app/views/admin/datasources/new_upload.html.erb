@@ -52,48 +52,48 @@
 </div> <!-- grid_6 -->
 
 <div class="grid_6 omega">
-	<fieldset class="omega">
-		<legend>OpenMedia</legend>
-		<ol>
-			<li><%= ds.label :title, :class => 'narrow' %> <%= ds.text_field :title, :class=> 'wide' %></li>
-			<li class="radio">
-		    <%= radio_button_tag('ds_btn', 'new', true) %> <%= label_tag 'ds_btn_new', 'New' %>
-		    <%= radio_button_tag('ds_btn', 'existing') %> <%= label_tag 'ds_btn_existing', 'Existing' %>
-			</li>
-			<li>
-				<div id="existing-ds-fields" style="display: none" class="import-ds-fields">
-					<label class='narrow'>Name</label> <%= select_tag :datasource_id, options_from_collection_for_select(@datasources, :id, :title), :disabled=>'disabled' %>
-				</div>
-			</li>
-			<li>
-				<label class='narrow'>Collection</label> 
-				<select name="collection_uri">
-					<%= options_for_select @collections.collect {|c| [c.label, c.uri]} %>
-				</select>
-			</li>
-			<li>
-				<div id="new-ds-fields" class="import-ds-fields">
-				<label for="datasource-class" class='narrow'>Class</label> <input type="text" name="datasource-class" class="datasource-class"/>
-				<%= ds.hidden_field :rdfs_class_uri %>
-				</div>
-			</li>
-			<li>
-			  <label for="datasource-creator"class='narrow'>Creator</label> 
-			  <%= ds.select :creator_uri, vcard_collection %>
-			</li>
-			<li>
-			  <label for="datasource-publisher"class='narrow'>Publisher</label> 
-			  <%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
-			</li>
+  <fieldset class="omega">
+    <legend>OpenMedia</legend>
+    <ol>
+      <li><%= ds.label :title, :class => 'narrow' %> <%= ds.text_field :title, :class=> 'wide' %></li>
+      <li class="radio">
+	<%= radio_button_tag('ds_btn', 'new', true) %> <%= label_tag 'ds_btn_new', 'New' %>
+	<%= radio_button_tag('ds_btn', 'existing') %> <%= label_tag 'ds_btn_existing', 'Existing' %>
+      </li>
+      <li>
+	<div id="existing-ds-fields" style="display: none" class="import-ds-fields">
+	  <label class='narrow'>Name</label> <%= select_tag :datasource_id, options_from_collection_for_select(@datasources, :id, :title), :disabled=>'disabled' %>
+	</div>
+      </li>
+      <li>
+	<label class='narrow'>Collection</label> 
+	<select name="collection_uri">
+	  <%= options_for_select @collections.collect {|c| [c.label, c.uri]} %>
+	</select>
+      </li>
+      <li>
+	<div id="new-ds-fields" class="import-ds-fields">
+	  <label for="datasource-class" class='narrow'>Class</label> <input type="text" name="datasource-class" class="datasource-class"/>
+	  <%= ds.hidden_field :rdfs_class_uri %>
+	</div>
+      </li>
+      <li>
+	<label for="datasource-creator"class='narrow'>Creator</label> 
+	<%= ds.select :creator_uri, vcard_collection %>
+      </li>
+      <li>
+	<label for="datasource-publisher"class='narrow'>Publisher</label> 
+	<%= ds.select :publisher_uri, @vcards.collect{|vc| [vcard_label(vc), vc.uri]} %>
+      </li>
 
 
 
-		</ol>
-	</fieldset>
-	<fieldset class="submit">
-		<ol>
-			<li><%= ds.submit "Import", :class => "submit"%> <%= link_to 'Cancel', :back %></li>
-		</ol>
-	</fieldset>	
+    </ol>
+  </fieldset>
+  <fieldset class="submit">
+    <ol>
+      <li><%= ds.submit "Import", :class => "submit"%> <%= link_to 'Cancel', :back %></li>
+    </ol>
+  </fieldset>	
 </div>
 <% end %>

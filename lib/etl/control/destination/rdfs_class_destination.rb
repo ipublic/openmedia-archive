@@ -76,7 +76,14 @@ module ETL #:nodoc:
         rdf_statements = rdf_statements.inject([]) {|ary, stmts| ary.concat(stmts)}
         repo = Spira.repository(@rdfs_class.skos_concept.collection.repository)
         repo.insert_statements(rdf_statements)
-        buffer.clear        
+
+        # rows are actually OpenMedia::RawRecords, mark them published
+        buffer.flatten.collect do |row|
+          row.published = Time.now
+          OpenMedia::RawRecord.database.bulk_save_doc(row)
+        end
+        buffer.clear
+        OpenMedia::RawRecord.database.bulk_save        
       end
       
       # Close the connection

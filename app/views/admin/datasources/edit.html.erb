@@ -1,11 +1,14 @@
 <% title "Data Sources" %>
 <div class="grid_12">
-  <% if @datasource.has_attachment?('seed_data') %>
-	  <div class="box">
-	    This data source has a data file attached to it from the Import page.  Click <%= link_to 'here', import_seed_data_admin_datasource_path(@datasource) %>
-	    to import this data.
-	  </div>
-  <% end %>
+  <p class="page-nav">
+    <%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
+    <%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource) %>
+
+    <%= link_to 'All Datasources', admin_datasources_path %> | 
+    <%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
+    <%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
+    <%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
+  </p>
 
   <h2><%= @datasource.title %></h2>
   <%= form_for :datasource, :url=>admin_datasource_path(:id=>@datasource.id), :html=>{:method=>:put} do |ds| %>

@@ -4,6 +4,12 @@ section, article, header, footer, nav, aside, hgroup {
 	display: block;
 }
 
+.reference-map {
+	margin-left:15.5em;
+	width: 300px;
+	height: 200px;
+}
+
 body {
 	border-top: 4px solid #26537c;
 	background: #e0e0e0; /* light grey */
@@ -306,7 +312,7 @@ h4 {
 width: 15em;
 }
 
-#search li input.submit {
+#search li input. {
 	width: 7em;
 }
 

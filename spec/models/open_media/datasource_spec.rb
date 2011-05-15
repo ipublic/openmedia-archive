@@ -10,7 +10,7 @@ describe OpenMedia::Datasource do
     @ds.errors[:source_type].should_not be_nil    
   end
 
-  context 'dataset import from csv file' do
+  context 'datasource import from csv file' do
     before(:each) do
       @datasource = create_test_datasource(:column_separator=>',', :has_header_row=>'1')
       @datasource.initial_import!(File.open(test_csv_path))
@@ -24,7 +24,15 @@ describe OpenMedia::Datasource do
       @datasource.raw_records.size.should == 2
       @datasource.raw_record_count.should == 2
     end
+
+    it 'should name columns automatically when no header row in csv' do
+      @datasource = create_test_datasource(:column_separator=>',', :has_header_row=>'0')
+      @datasource.initial_import!(File.open(test_csv_path))
+      @datasource.source_properties.collect {|p| p.label}.should == %w(Column1 Column2 Column3 Column4)
+    end
+    
   end
+
 
   context 'dataset import from shapefile' do
     before(:each) do

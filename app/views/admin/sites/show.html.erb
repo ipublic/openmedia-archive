@@ -29,7 +29,11 @@
 
 		<h4 class="show-property">Municipality</h4>
 		<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
-	
+
+		<%= raw Cartographer::Header.new.to_s %>    
+		<%= raw @map.to_html %>  
+		<div class="reference-map" id="map" >[Map]</div>
+
 		<h4 class="show-property">OpenMedia Servers</h4>
 		<%= show_fields(@site, [
 			[:internal_couchdb_server_uri, "Internal server URI"],

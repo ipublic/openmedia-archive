@@ -1,0 +1,30 @@
+<% title "Maps" %>
+<div class="grid_12">
+	<p>
+    <%= link_to 'Add Map', new_admin_map_path %>
+  </p>
+	<hr />
+</div>
+
+<div class="grid_8">
+  <div class="box">
+    <div class="block" id="tables">
+      <table style="width: 100%">
+				<thead>
+				  <tr>
+				    <th>Title</th>
+				    <th>Description</th>
+				    <th>Feature Class</th>						
+				  </tr>
+				</thead>
+				<% @maps.each do |map| %>
+				<tr>
+				  <td><%= link_to map.title, admin_map_path(map) %></td>
+				  <td><%= map.description %></td>
+				  <td><%= map.feature_class %></td>
+				</tr>
+				<% end %>
+      </table>
+    </div>
+  </div>
+</div>

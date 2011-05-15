@@ -85,13 +85,16 @@ class OpenMedia::Site < CouchRest::Model::Base
   end
   
   def geomarker
-    @ll = Array.[]( 39.2722118, -76.83419 ) # default to Ellicott City
+    Cartographer::Gmarker.new(:name=> "Site", :marker_type => "Building", :position => ll)  
+  end    
+
+  def ll 
+    @ll = Array.[]( 39.2722118, -76.83419 ) # default to Ellicott City, MD
     
     # Find geoemtry point value and reverse coordinates the way Google likes it
     self.municipality.geometries.each {|g| @ll = g.coordinates.reverse if g.type == "Point"}
-    
-    Cartographer::Gmarker.new(:name=> self.municipality.name, :marker_type => "Building", :position => @ll)  
-  end    
+    @ll
+  end
 
 private
   def set_url

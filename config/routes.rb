@@ -1,6 +1,5 @@
 Openmedia::Application.routes.draw do
 
-
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -82,6 +81,7 @@ Openmedia::Application.routes.draw do
     resource :site
     resource :community
     resources :dashboards
+    resources :maps
 
     namespace :schema do
       resources :collections do

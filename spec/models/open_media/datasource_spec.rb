@@ -28,7 +28,7 @@ describe OpenMedia::Datasource do
     it 'should name columns automatically when no header row in csv' do
       @datasource = create_test_datasource(:column_separator=>',', :has_header_row=>'0')
       @datasource.initial_import!(File.open(test_csv_path))
-      @datasource.source_properties.collect {|p| p.label}.should == %w(Column1 Column2 Column3 Column4)
+      @datasource.source_properties.collect {|p| p.label}.should == %w(Column001 Column002 Column003 Column004)
     end
     
   end

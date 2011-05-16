@@ -75,7 +75,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
             if self.has_header_row && self.has_header_row != '0'
               row.each{|pn| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>pn, :range_uri=>RDF::XSD.string.to_s)}            
             else
-              1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>"Column#{i}", :range_uri=>RDF::XSD.string.to_s)}
+              1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>"Column%03i"%i, :range_uri=>RDF::XSD.string.to_s)}
             end
             self.save!
             next if self.has_header_row

@@ -7,51 +7,51 @@
 					:confirm => "Are you sure you want to delete this collection, all of its classes, and all of the data those classes contain?", 
 					:method => :delete %>
 		<% end %>
-		</p>
+	</p>
 	<hr />
 </div>
-<div class="grid_12">
+<div class="grid_7">
 	<div class="box">
-		<h2><%= @collection.label%></h2>
+		<h2>Addresses</h2>
 		<div class="block">
-			<%= show_fields(@collection, [
-				:label, 
-				:uri,
-			        :hidden,
-			        :created,
-			        :modified]).html_safe %>
+			<% if @collection.definition.nil? %>
+				<%= link_to "Add Description", edit_admin_schema_collection_path(rdf_id(@collection)) %>
+			<% else %>
+				<p><%= @collection.definition %></p>
+				<p><%= link_to "Edit Description", edit_admin_schema_collection_path(rdf_id(@collection)) %>
+			<% end %>
 		</div>
 	</div>
 </div>
-
-<div class="grid_12">
-	<div class="box" id="tables">
-		<h2>Types</h2>
-		<div class="block">
-			<p><%= link_to "Add Class", new_admin_schema_collection_class_path(rdf_id(@collection)), {:class => 'add-element'} %><p>
-			<table>
-				<thead>
-				  <tr>
-				    <th>Class</th>
-				    <th>URI</th>
-				    <th>No. Properties</th>
-				    <th>No. Instances</th>
-				    <th>Comment</th>
-				  </tr>
-				</thead>
-				<tbody>
+<div class="grid_5 omega">
+	<div id="tabs">
+		<ul>
+			<li><a href="#tabs-1">Classes</a></li>
+			<li><a href="#tabs-2">Sites</a></li>
+		</ul>
+		<div id="tabs-1">
+			<p class="meta">Classes used from the Commons</p>
+			<hr />
+			<ul>
+				<li>None listed</li>
+			</ul>
+			<p>Classes created for this Collection</p>
+			<hr />
+			<ul>
+				<%= "<li>None listed</li>".html_safe if @classes.count == 0 %>
 				<% @classes.each do |cls| %>
-				<tr>
-				  <td><%= link_to cls.label, admin_schema_collection_class_path(rdf_id(@collection), rdf_id(cls)) %></td>
-				  <td><%= cls.uri %></td>
-				  <td><%= cls.properties.size %></td>
-				  <td><%= cls.instance_count %></td>
-				  <td><%= cls.comment %></td>
-				</tr>
+					<li><%= link_to cls.label, admin_schema_collection_class_path(rdf_id(@collection), rdf_id(cls)) %> <%= "(#{cls.instance_count})" %></li>
 				<% end %>
-				</tbody>
-			</table>
-      
+			</ul>
+			<p><%= link_to "Add Class", new_admin_schema_collection_class_path(rdf_id(@collection)), {:class => 'add-element'} %><p>
+		</div>
+		<div id="tabs-2">
+			<p>Sites with data in this Collection</p>
+			<hr />
+			<ul>
+				<li>None listed</li>
+			</ul>
 		</div>
 	</div>
+	
 </div>

@@ -61,10 +61,10 @@ module ETL #:nodoc:
           r = @rdfs_class.for(uri, row)
 
           # HACKETY HACK - parse GeoJson string to object so it can be serialize
-          geometry = row.detect{|k,v| k==:geometry}
-          if r.respond_to?(:geometry)
-            r.geometry=JSON.parse(r.geometry)
-          end
+          # geometry = row.detect{|k,v| k==:geometry}
+          # if r.respond_to?(:geometry)
+          #  r.geometry=JSON.parse(r.geometry)
+          # end
 
           r.metadata = ETL::Engine.import.datasource.metadata            
           r.before_save

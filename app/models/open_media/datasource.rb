@@ -105,6 +105,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
                       when Float then RDF::XSD.float
                       else RDF::XSD.string
                       end
+              k = "#{self.title} #{k}" if k.downcase == 'type'
               self.source_properties << OpenMedia::DatasourceProperty.new(:label=>k, :range_uri=>range.to_s)
             end
             self.source_properties  << OpenMedia::DatasourceProperty.new(:label=>'geometry', :range_uri=>RDF::OM_CORE.GeoJson.to_s)

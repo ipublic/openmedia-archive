@@ -419,6 +419,19 @@ fieldset li {
 
 li.radio {padding-left: 8em;}
 
+label:after {
+	content: ':';
+}
+
+input, textarea {
+	background: #eee;
+}
+
+input:focus, 
+textarea:focus {
+	background: #fff;
+}
+
 input.narrow {
 	width:12em;
 }

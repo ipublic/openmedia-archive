@@ -32,10 +32,8 @@ class Admin::SitesController < Admin::BaseController
       @municipality = @site.municipality
  
     # Load GoogleMaps
-      initialize_map
-      @map.zoom = 10
-      @map.center = @site.ll
-      @map.markers << @site.geomarker
+      initialize_gmap
+      @gmap.markers << @site.geomarker
       
       respond_to do |format|
         format.html # show.html.erb

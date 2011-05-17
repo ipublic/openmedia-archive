@@ -1,17 +1,20 @@
 module GoogleMapsHelper  
 
-  def initialize_map
-    @map = Cartographer::Gmap.new('map')    
-    @map.zoom = :bound    
-    @map.icons << Cartographer::Gicon.new  
+  def initialize_gmap
+    @gmap = Cartographer::Gmap.new('map')
+    @gmap.center = current_site.ll  # center on muni coords by default 
+    @gmap.zoom = 10
     
-    @map.controls << :type
-    @map.controls << :large
-    @map.controls << :scale
-    @map.controls << :overview
-    @map.debug = false 
-    @map.marker_mgr = false
-    @map.marker_clusterer = true
+    # @gmap.zoom = :bound    
+    @gmap.icons << Cartographer::Gicon.new  
+    
+    @gmap.controls << :type
+    @gmap.controls << :large
+    @gmap.controls << :scale
+    @gmap.controls << :overview
+    @gmap.debug = false 
+    @gmap.marker_mgr = false
+    @gmap.marker_clusterer = true
     
     cluster_icons = []
 
@@ -42,7 +45,7 @@ module GoogleMapsHelper
              }
      cluster_icons << org
 
-     @map.marker_clusterer_icons = cluster_icons
-    return @map
+     @gmap.marker_clusterer_icons = cluster_icons
+    return @gmap
   end
 end

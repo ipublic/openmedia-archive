@@ -1,5 +1,8 @@
 class OpenMedia::DatasourceProperty < Hash
 
+  INTEGER_REGEX = /^[-+]?\d+$/
+  FLOAT_REGEX = /^[-+]?[0-9]*\.[0-9]+$/
+  
   include CouchRest::Model::CastedModel
 
   property :label
@@ -25,6 +28,17 @@ class OpenMedia::DatasourceProperty < Hash
   def rdf_property
     OpenMedia::Schema::RDF::Property.for(self.rdf_property_uri) if self.rdf_property_uri
   end
+
+  def set_range_from_csv_value(data)
+    if data =~ INTEGER_REGEX
+      self.range_uri = RDF::XSD.integer.to_s
+    elsif data =~ FLOAT_REGEX
+      self.range_uri = RDF::XSD.float.to_s      
+    else
+      self.range_uri = RDF::XSD.string.to_s      
+    end
+  end
+
   
 
 private

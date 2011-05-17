@@ -26,6 +26,7 @@ class Admin::DatasourcesController < Admin::BaseController
     @datasource = OpenMedia::Datasource.new(params[:datasource])
     
     if @datasource.save
+      logger.debug("saved #{@datasource.id}")
       # this was here for Refine, commenting out for datasource workflow changes
       #if data_file
       #  data_file = data_file.respond_to?(:tempfile) ? data_file.tempfile : data_file

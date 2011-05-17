@@ -67,8 +67,6 @@ module OpenMedia
       repo.query(:predicate=>::RDF.type, :object=>::RDF::URI.new(class_uri)).collect {|stmt| stmt.subject}
     end
 
-
-
     def self.get_records(class_uri)
       class_uri = class_uri.to_s if class_uri.is_a?(::RDF::URI)      
       uris = get_record_uris(class_uri).collect {|u| ::RDF::NTriples::Writer.serialize(u) }
@@ -82,6 +80,11 @@ module OpenMedia
       # end
       records
     end
+
+    def self.classes_with_geometry
+      TYPES_DATABASE.view('schema/classes_with_geometry')['rows'].collect{|r| r['key']}.collect{|uri| OpenMedia::Schema::RDFS::Class.for(::RDF::URI.new(uri))}
+    end
+
   end
 end
 

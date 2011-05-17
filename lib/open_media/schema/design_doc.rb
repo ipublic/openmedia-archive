@@ -41,6 +41,13 @@ module OpenMedia
                             }
 
                         }"
+          },
+          'classes_with_geometry' => {
+            'map' => "function(doc) {
+                          if(doc['subject'] && doc['predicate'] && doc['object'] && (doc['predicate'] == '<#{::RDF::RDFS.domain}>') && (doc['subject'].match(/#geometry>$/))) {
+                              emit(doc['object'].substring(1,doc['object'].length-1), 1);
+                          }
+                      }"
           }
 
         },

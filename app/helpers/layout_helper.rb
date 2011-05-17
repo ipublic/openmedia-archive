@@ -35,6 +35,10 @@ module LayoutHelper
 #     OpenMedia::Organization.by_name_and_identifier.collect {|o| [ o.name, o['_id']] }
 #   end
 
+  def geometry_collection
+    OpenMedia::Schema.classes_with_geometry.each.collect{|klass| [klass.label, klass.uri]}
+  end
+
   def collections_collection
       ## TODO Use proper call to determine site, complete method
 

@@ -1,23 +1,21 @@
 <% title "Data Sources" %>
-<div class="grid_8">
-	<p>
-    <%= link_to 'New', new_admin_datasource_path %>
-  </p>
+<div class="grid_12">
+	<p><%= link_to 'Add Data Source', new_admin_datasource_path %></p>
 	<hr/>
-  <div class="box">
-    <h2>Browse</h2>
-    <div class="block" id="tables">
-      <table>
-				<thead>
-				  <tr>
-				    <th>Title</th>
-				    <th>Source Type</th>
-				    <th>Parser</th>
-				    <th>Class</th>
-				    <th>Updated</th>
-				  </tr>
-				</thead>
-				<% @datasources.each do |ds| %>
+</div>
+<div class="grid_8">
+	<div class="block" id="tables">
+	  <table>
+			<thead>
+			  <tr>
+			    <th>Title</th>
+			    <th>Source Type</th>
+			    <th>Parser</th>
+			    <th>Class</th>
+			    <th>Updated</th>
+			  </tr>
+			</thead>
+			<% @datasources.each do |ds| %>
 				<tr>
 				  <td><%= link_to ds.title, admin_datasource_path(ds.id) %></td>
 				  <td><%= ds.source_type.titleize %></td>
@@ -29,23 +27,18 @@
 				  </td>
 				  <td><%= ds.updated_at.to_s(:full) %></td>
 				</tr>
-				<% end %>
-      </table>
-    </div>
-  </div>
+			<% end %>
+	  </table>
+	</div>
 </div>
+
 <div class="grid_4">
 	<div class="box articles">
 		<div class="block" id="articles">
 			<div class="first article">
-				<h3>
-					<a href="#">Article Heading</a>
-				</h3>
-				<h4>Subheading</h4>
-				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
-				<p>Something here about role of Datasources in system</p>
+				<h3>Content Sources</h3>
+				<p class="meta">Upload and publish data sets</p>
 			</div>
-			
-	</div>
+		</div>
 	</div>
 </div>

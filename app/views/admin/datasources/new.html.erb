@@ -7,53 +7,50 @@
   <%= ds.error_messages %>
 </div>
 
-<div class="grid_8">
+<div class="grid_7">
   <fieldset class="omega">
-    <%= ds.label :title, :class => 'narrow' %> <%= ds.text_field :title, :class=> 'wide' %>
+    <%= ds.label :title %> <%= ds.text_field :title, :class=> 'wide' %>
   </fieldset>
   <br/><br/><br/>
   <div id="upload-accordion">
     <h2 tabindex="1"><a href="#">Text Files</a></h2>
     <div>
       <fieldset class="omega">
-	<ol>
-	  <li><label class="narrow">File</label> <%= file_field_tag :textfile %></li>
-	  <li class="radio">
-	    <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
-	    <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
-	    <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
-	  </li>
-	  <div id="csv-fields" class="import-ds-fields">
-	    <%= ds.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
-	    <li><%= ds.label :column_separator, "Separator", :class => 'narrow' %> <%= ds.text_field :column_separator, :class => 'narrow' %></li>
-	    <li><%= ds.check_box :has_header_row %> <label>Header Row?</label></li>
-	  </div>
-	</ol>
+				<ol>
+				  <li><label class="narrow">File</label> <%= file_field_tag :textfile %></li>
+				  <li class="radio">
+				    <%= radio_button_tag('file_type', 'CSV', true) %> <%= label_tag 'file_type_CSV', 'CSV' %>
+				    <%= radio_button_tag('file_type', 'XML') %> <%= label_tag 'file_type_XML', 'XML' %>
+				    <%= radio_button_tag('file_type', 'Fixed') %> <%= label_tag 'file_type_Fixed', 'Fixed' %>
+				  </li>
+				  <div id="csv-fields" class="import-ds-fields">
+				    <%= ds.hidden_field :parser, :value=>OpenMedia::Datasource::DELIMITED_PARSER %>
+				    <li><%= ds.label :column_separator, "Separator", :class => 'narrow' %> 
+								<%= ds.text_field :column_separator, :class => 'narrow' %></li>
+				    <li><%= ds.check_box :has_header_row %> <label>Header Row?</label></li>
+				  </div>
+				</ol>
       </fieldset>
       
-      <div id="xml-fields" class="import-ds-fields" style="display: none">
-	XML fields
-      </div>
-      <div id="fixed-fields" class="import-ds-fields" style="display: none">
-	Fixed fields
-      </div>
+      <div id="xml-fields" class="import-ds-fields" style="display: none">XML fields</div>
+      <div id="fixed-fields" class="import-ds-fields" style="display: none">Fixed fields</div>
     </div>
 
-    <h2 tabindex="2"><a href="#">Shapefiles</a></h2>
+    <h2 tabindex="2"><a href="#">Shape Files</a></h2>
     <div>
       <fieldset class="omega">
-	<ol>
-	  <li><label class='narrow'>ZIP File</label> <%= file_field_tag :shapefile %></li>
-	</ol>
+				<ol>
+				  <li><label class='narrow'>Zip File</label> <%= file_field_tag :shapefile %></li>
+				</ol>
       </fieldset>
     </div>
 
     <h2 tabindex="2"><a href="#">Web Service</a></h2>
     <div>
       <fieldset class="omega">
-	<ol>
-	  <li><label class='narrow'>URL</label> <%= ds.text_field :webservice_url, :size=>75 %></li>
-	</ol>
+				<ol>
+				  <li><label class='narrow'>URL</label> <%= ds.text_field :webservice_url, :class => 'wide' %></li>
+				</ol>
       </fieldset>
     </div>
 
@@ -61,12 +58,11 @@
     <div><p>Database connection properties</div>
   </div> <!-- Accordion -->
   <br/>
-</div>
-
-<div class="grid_8">
-  <div style="float: right">
-    <%= ds.submit "Submit", :class => "submit"%> <%= link_to 'Cancel', :back %>
-  </div>
+	<fieldset class="submit">
+		<ol class ="submit-wide" >
+			<li><%= ds.submit "Save" %> <%= link_to 'Back',  :back %></li> 
+		</ol>
+	</fieldset>
 </div>
 
 <% end %>

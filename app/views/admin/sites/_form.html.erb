@@ -10,15 +10,15 @@
 						  <li><%= f.label :openmedia_name, 'Name', :class => "wide"  %> <%= f.text_field :openmedia_name, :class => "wide" %></li>
 						  <li><%= f.label :welcome_banner, :class => "wide" %> <%= f.text_field :welcome_banner, :class => "wide" %></li>
 						  <li><%= f.label :welcome_message, :class => "wide" %> <%= f.text_area :welcome_message, :rows => 3, :class => "wide" %></li>
-						  <li><%= f.label :url, 'URL', :class => "wide"  %> <%= f.text_field :url, :class => "wide" %></li>
+						  <li><%= f.label :url, 'Public URL', :class => "wide"  %> <%= f.text_field :url, :class => "wide" %></li>
 						  <li><%= f.label :default_dashboard, :class => "wide"  %> 
-									<%= f.select :default_dashboard, dashboard_collection, {:prompt => 'Select Dashboard'}, :class => "wide" %></li>
+									<%= f.select :default_dashboard, dashboard_collection, {:prompt => 'Select Dashboard', :include_blank => true}, :class => "wide" %></li>
 
 						  <li><%= f.label :adminstrator_contact_id, 'Admin Contact', :class => "wide"  %> 
 								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
 						  <li><%= f.label :business_contact_id, 'Business Contact', :class => "wide"  %> 
 								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
-						  <li><%= f.label :terms_of_use, :class => "wide"  %> <%= f.text_area :terms_of_use, :rows => 10, :class => "wide"  %></li>
+						  <li><%= f.label :terms_of_use, :class => "wide"  %> <%= f.text_area :terms_of_use, :rows => 15, :class => "wide"  %></li>
 						</ol>
 					</fieldset>
 

@@ -1,7 +1,9 @@
 module GoogleMapsHelper  
 
   def initialize_gmap
-    @gmap = Cartographer::Gmap.new('map')
+    @info_win = Cartographer::InfoWindow.new(:name => "custom_name",:content => 'This is a lovely window')
+    @gmap = Cartographer::Gmap.new('map',{:shared_info_window => @info_win })
+    # @gmap = Cartographer::Gmap.new('map', {})
     @gmap.center = current_site.ll  # center on muni coords by default 
     @gmap.zoom = 10
     

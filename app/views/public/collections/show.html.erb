@@ -1,7 +1,6 @@
 <% title "#{@collection.label} Datasets" %>
 <div class="grid_12">
   <div class="box">
-    <h2>Browse</h2>
     <div class="block" id="tables">
       <table>
 				<thead>
@@ -9,6 +8,7 @@
 				    <th>Name</th>
 				    <th>No. Properties</th>
 				    <th>No. Records</th>
+				    <th>Download Data</th>
 				  </tr>
 				</thead>
 				<% @classes.each do |cls| %>
@@ -16,6 +16,7 @@
 				  <td><%= link_to cls.label, class_path(rdf_id(cls)) %></td>
 				  <td><%= cls.properties.size %></td>
 				  <td><%= cls.instance_count %></td>
+					<td>&nbsp;</td>
 				</tr>
 				<% end %>
       </table>

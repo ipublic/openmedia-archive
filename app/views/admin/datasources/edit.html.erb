@@ -1,16 +1,15 @@
-<% title "Data Sources" %>
+<% title "Data Sources > Edit: #{@datasource.title}" %>
 <div class="grid_12">
   <p class="page-nav">
     <%#= link_to 'Refine Content', refine_admin_datasource_path(@datasource) %> 
     <%#= link_to 'Describe Datasource', describe_admin_datasource_path(@datasource) %>
 
     <%= link_to 'All Datasources', admin_datasources_path %> | 
-    <%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
-    <%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
-    <%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
+    <%= link_to "Show", admin_datasource_path(@datasource) %> 
+    <%#= link_to 'Publish', publishing_admin_datasource_path(@datasource) %> 
+    <%#= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
   </p>
-
-  <h2><%= @datasource.title %></h2>
+<hr/>
   <%= form_for :datasource, :url=>admin_datasource_path(:id=>@datasource.id), :html=>{:method=>:put} do |ds| %>
   <div class="box">
     <%= render :partial=>'form', :locals=>{:ds=>ds} %>

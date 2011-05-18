@@ -1,4 +1,5 @@
 class Public::CollectionsController < Public::BaseController
+  layout 'public'
   
   def index
     @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}

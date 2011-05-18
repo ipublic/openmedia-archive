@@ -1,4 +1,6 @@
 class Public::DashboardsController < ApplicationController
+  layout 'public'
+  
   def index
     
   end

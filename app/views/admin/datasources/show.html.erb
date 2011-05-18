@@ -15,9 +15,13 @@
 		<h2><%= @datasource.title %></h2>
 		<div class="block">
 			<%= show_fields(@datasource, [:uri, 
-																		 [:rdfs_class_uri, 'Type'],
-																		 :description]) %>
+			    [:rdfs_class_uri, 'Type']]) %>
 			<table class="property-table">
+			  <tr>
+			    <th class="property-table">Description:</th>
+			    <td><%= @datasource.metadata.description %>
+			  </tr>
+
 			  <tr>
 			    <th class="property-table">Creator:</th>
 			    <td><%= vcard_label(@datasource.creator) %>

@@ -127,7 +127,7 @@ class Admin::DatasourcesController < Admin::BaseController
     # create rdfs class with same properties/typea as datasource
     @collection = OpenMedia::Schema::SKOS::Collection.for(params[:collection_uri])
     if @datasource.rdfs_class_uri.blank? && @collection.exists?
-      @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, :label=>@datasource.title)
+      @class = OpenMedia::Schema::RDFS::Class.create_in_site!(current_site, :label=>@datasource.title, :comment=>params[:datasource][:metadata][:description])
       @collection.members << @class.uri
       @collection.save!
       @datasource.source_properties.each_with_index do |prop,idx|

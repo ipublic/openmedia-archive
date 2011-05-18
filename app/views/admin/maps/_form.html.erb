@@ -1,7 +1,7 @@
 <div class="grid_8">
 	<div class="box">
 		<div id="forms">
-			<%= form_for @map, :url => admin_maps_path, :html => {:method=>:put} do |f| %>
+			<%= form_for :map, :url => admin_maps_path do |f| %>
 				  <%= f.error_messages %>
 					<%= f.hidden_field :rev, :value => @map['_rev'] if @map['_rev'] %>
 					<fieldset>
@@ -9,7 +9,8 @@
 						<ol>
 						  <li><%= f.label :title %> <%= f.text_field :title, :class => "wide" %></li>
 						  <li><%= f.label :description %> <%= f.text_area :description, :rows => 3 %></li>
-						  <li><%= f.label :feature_class %> <%= f.text_field :feature_class %></li>
+						  <li><%= f.label :feature_class %> 
+									<%= f.select :feature_class, geometry_collection, {:prompt => 'Select Class'}, :class => "wide" %></li>
 						</ol>
 					</fieldset>
 
@@ -21,10 +22,4 @@
 			<% end %>	
 		</div>
 	</div>
-</div>
-
-<div class="grid_12">
-	<%= raw Cartographer::Header.new.to_s %>    
-	<%= raw @map.to_html %>  
-	<div class="map" id="map" >[Map]</div>
 </div>

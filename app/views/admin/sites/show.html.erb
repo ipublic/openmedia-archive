@@ -9,11 +9,21 @@
 		<%= show_fields(@site, [
 			[:openmedia_name, "Name"],
 			:welcome_banner,
-			:welcome_message,
-			[:url, "URL"],
-			:default_dashboard
+			:welcome_message
 			]).html_safe %>
 		<table class="property-table">
+			<tr>
+				<th>Public URL:</th>
+				<td><%= link_to @site.url, @site.url %><td>
+			</tr>
+			<tr>
+				<th>Default Dashboard:</th>
+				<% unless @site.default_dashboard.empty? %>
+					<td><%= link_to dashboard_title_from_id(@site.default_dashboard), admin_dashboard_path(@site.default_dashboard) %></td>
+				<% else %>
+					<td>&nbsp;</td>
+				<% end %>
+			</tr>
 			<tr>
 				<th>Admin Contact:</th>
 				<td><%= vcard_formatted_name(@site.administrator_contact) %></td>

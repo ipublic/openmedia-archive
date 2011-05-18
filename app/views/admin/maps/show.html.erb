@@ -5,10 +5,8 @@
     <%= link_to 'Edit', edit_admin_map_path %> |
     <%= link_to 'Delete', new_admin_map_path %>
   </p>
-	<hr />
 
 	<%= raw Cartographer::Header.new.to_s %>    
-	<%= raw @map.to_html %>  
-	<div class="map" id="map" >[Map]</div>
+	<%= raw @gmap.to_html %>  
+	<div class="full-map" id="map" >[Map]</div>
 </div>
-g

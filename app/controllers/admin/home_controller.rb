@@ -1,8 +1,12 @@
 class Admin::HomeController < Admin::BaseController
 
   def index
-    @dashboard = current_site.default_dashboard
-    @dashboard = OpenMedia::Dashboard.first if @dashboard.empty?
+    dash_id = current_site.default_dashboard
+    if dash_id.empty?
+      @dashboard = OpenMedia::Dashboard.first
+    else
+      @dashboard = OpenMedia::Dashboard.get dash_id
+    end
     
     @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
     if current_site

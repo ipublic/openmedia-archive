@@ -2,7 +2,7 @@ class Admin::HomeController < Admin::BaseController
 
   def index
     dash_id = current_site.default_dashboard
-    if dash_id.empty?
+    if dash_id.blank?
       @dashboard = OpenMedia::Dashboard.first
     else
       @dashboard = OpenMedia::Dashboard.get dash_id

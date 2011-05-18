@@ -20,6 +20,10 @@ module LayoutHelper
   # def form_date_to_json(year, month, day)
   #   Time.local(year.to_i, month.to_i, day.to_i)
   # end
+  def dashboard_title_from_id(id)
+    dash = OpenMedia::Dashboard.get(id)
+    dash.title
+  end
   
   def database_collection
     OpenMedia::Site::DATABASES.collect {|db_name| [db_name, db_name.downcase] }

@@ -7,7 +7,7 @@ class Public::WelcomeController < ApplicationController
     @site = om_site if @site.nil?
     
     dash_id = current_site.default_dashboard
-    if dash_id.empty?
+    if dash_id.blank?
       @dashboard = OpenMedia::Dashboard.first
     else
       @dashboard = OpenMedia::Dashboard.get dash_id

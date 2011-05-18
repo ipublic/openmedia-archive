@@ -1,64 +1,55 @@
-<% title @site_banner %>
-<div class="grid_8">
+<div class="grid_12">
+	<h2 id="welcome-message"><%= @site.welcome_message %></h2>
+</div>
+
+<div class="grid_4">
   <div class="box">
-	  <h2>Default Dashboard</h2>
+	  <h2>Data Collections</h2>
+    <div class="block">
+			<p>Browse and download published data by category</p>
+			<ul>
+				<% @collections.each do |c| %>
+					<% if current_site && c.members.size > 0 %>
+					  <li><%= link_to c.label, collection_path(rdf_id(c)) %></li>
+					<% end %>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+
+  <div class="box">
+	  <h2>Powered by Civic OpenMedia</h2>
+    <div class="block">
+			<p>Civic OpenMedia is a publishing system for government open data. </p>
+			<ul>
+				<li><a href="http://www.civicopenmedia.org/">Learn more</a></li>
+				<li><a href="#">Find OpenMedia Municipalities</a></li>
+				<li><a href='#'>Sign up for free account</a></li>
+				<li><a href='#'>Download software</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<div class="grid_8 omega">
+  <div class="box">
+	  <h2>Dashboard</h2>
     <div class="block">
 	    <%= render :partial=>'/shared/chart' %>
 			<p>Inline Sparkline: <span class="inlinesparkline">1,4,4,7,5,9,10</span>.</p>
 			<p>Sparkline with dynamic data: <span class="dynamicsparkline">Loading..</span></p>
 			<p>Bar chart with dynamic data: <span class="dynamicbar">Loading..</span></p>
 			<p>Bar chart with inline data: <span class="inlinebar">1,3,4,5,3,5</span></p>
+			<h5>Change Dashboard</h5>
 		</div>
 	</div>
 
-  <div class="box">
-	  <h2>Default Map</h2>
-    <div class="block">
-	    <%= render :partial=>'/shared/chart' %>
-			<p>Inline Sparkline: <span class="inlinesparkline">1,4,4,7,5,9,10</span>.</p>
-			<p>Sparkline with dynamic data: <span class="dynamicsparkline">Loading..</span></p>
-			<p>Bar chart with dynamic data: <span class="dynamicbar">Loading..</span></p>
-			<p>Bar chart with inline data: <span class="inlinebar">1,3,4,5,3,5</span></p>
+	<% unless @gmap.nil? %>
+	  <div class="box">
+			<%= raw Cartographer::Header.new.to_s %>    
+			<%= raw @gmap.to_html %>  
+			<div class="gmap" id="map" >[Map]</div>
 		</div>
-	</div>
+	<% end %>
 </div>
 
-<div class="grid_4 omega">
-  <div class="box">
-	  <h2>Dashboards</h2>
-    <div class="block">
-			<p>Other Dashboards</p>
-		</div>
-	</div>
-
-  <div class="box">
-	  <h2>OpenMedia Sites</h2>
-    <div class="block">
-			<a href="http://www.civicopenmedia.org/">OpenMedia Commons</a>
-			<p>Find OpenMedia Municipalities</p>
-		</div>
-	</div>
-
-  <div class="box">
-	  <h2>Developers</h2>
-    <div class="block">
-			<p>Download data</p>
-		</div>
-	</div>
-
-  <div class="box">
-	  <h2>What is Civic OpenMedia?</h2>
-    <div class="block">
-			<p>About OM</p>
-		</div>
-	</div>
-
-  <div class="box">
-	  <h2>Get OpenMedia for Your Municipality</h2>
-    <div class="block">
-			<p>Sign up for account</p>
-			<p>Download</p>
-		</div>
-	</div>
-
-</div>

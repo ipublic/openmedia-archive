@@ -26,6 +26,32 @@
   </div>
 
   <div class="box">
+    <h2>Properties</h2>
+    <div class="block">
+      <table>
+	<thead>
+	  <tr>
+	    <th>Property Name</th>
+	    <th>Property Type</th>
+	    <th>Description</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @class.properties.sort {|p1,p2| p1.label <=> p2.label}.each do |property| %>
+	  <tr>
+	    <td><%= property.label %></td>
+	    <td><span class="tooltip" title="<%=property.range %>"><%= short_uri(property.range) %></span></td>
+	    <td><%= property.comment %></td>
+	  </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+
+</div>
+
+
+  <div class="box">
 	  <h2>Chart</h2>
     <div class="block">
 			<div id='chart'></div>

@@ -16,7 +16,12 @@
 				  <td><%= link_to cls.label, class_path(rdf_id(cls)) %></td>
 				  <td><%= cls.properties.size %></td>
 				  <td><%= cls.instance_count %></td>
-					<td>&nbsp;</td>
+				  <td>
+				    <%= link_to 'CSV', class_path(rdf_id(cls), :format=>'csv') %> |
+				    <%= link_to 'JSON', class_path(rdf_id(cls), :format=>'json') %> |
+				    <%= link_to 'RDF/XML', class_path(rdf_id(cls), :format=>'rdf') %> |
+				    <%= link_to 'RDF (n-triples)', class_path(rdf_id(cls), :format=>'nt') %>
+				  </td>
 				</tr>
 				<% end %>
       </table>

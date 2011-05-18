@@ -8,12 +8,21 @@ section, article, header, footer, nav, aside, hgroup {
 	margin-left:15.5em;
 	width: 300px;
 	height: 200px;
+  border: 1px solid #ccc;
 }
 
-.map {
-	margin-left:0em;
+.gmap {
+	margin-top: 1em;
+	width: 600px;
+	height: 400px;
+  border: 1px solid #ccc;
+}
+
+.full-map {
+	margin-left: 20px;
 	width: 900px;
 	height: 600px;
+  border: 1px solid #ccc;
 }
 
 body {
@@ -40,8 +49,19 @@ body {
 }
 
 h2#page-heading {
-	font-size: 2.2em;
+	font-size: 2.2em;	
 }
+
+h2#welcome-message {
+	font-weight: normal;
+	padding: .5em;
+	margin: -10px 0 10px 0;
+	border-bottom: 1px solid #ccc;
+	font-size: 2em;
+	text-align: center;
+	color: #999;
+}
+
 
 h1#branding {
 	font-weight:normal;

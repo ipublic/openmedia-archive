@@ -19,8 +19,8 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   SAX_PARSER = 'sax'
   XML_PARSER = 'xml'
 
-  PARSERS  = [DELIMITED_PARSER]
-
+  PARSERS  = [DELIMITED_PARSER]  
+  
   #before_create :update_metadata
   #before_update :update_metadata
   
@@ -63,6 +63,13 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.creator_uri)
   end
 
+  def has_header_row=(hhr)
+    if hhr && hhr.class != TrueClass && hhr.class != FalseClass
+      self['has_header_row'] = (hhr.match(/(true|t|yes|y|1)$/i) != nil)
+    end
+  end
+
+
   def initial_import!(file=nil)
     batch_serial_number = MD5.md5(Time.now.to_i.to_s + rand.to_s).to_s
     rows_parsed = 0    
@@ -72,7 +79,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
           rows_parsed += 1
           # create properties when processing first row
           if rows_parsed==1
-            if self.has_header_row && self.has_header_row != '0'
+            if self.has_header_row
               row.each{|pn| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>pn, :range_uri=>RDF::XSD.string.to_s)}            
             else
               1.upto(row.size) {|i| self.source_properties << OpenMedia::DatasourceProperty.new(:label=>"Column%03i"%i, :range_uri=>RDF::XSD.string.to_s)}
@@ -80,10 +87,27 @@ class OpenMedia::Datasource < CouchRest::Model::Base
             self.save!
             next if self.has_header_row
           end
+
+          # detect source property types based on first row of data
+          if rows_parsed==1 || (rows_parsed==2 && self.has_header_row)
+            self.source_properties.each_with_index {|dsp,idx| dsp.set_range_from_csv_value(row[idx])}
+            self.save!
+          end
+
           
           raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
-          row.each_with_index {|val, idx| raw_record[self.source_properties[idx].identifier]=val}
+          row.each_with_index do |val, idx|
+            source_property = self.source_properties[idx]
+            if source_property.range_uri == RDF::XSD.integer.to_s
+              val = val.to_i
+            elsif source_property.range_uri == RDF::XSD.float.to_s
+              val = val.to_f
+            end
+            raw_record[source_property.identifier]=val
+          end
           #raw_record.save!
+          raw_record['created_at'] = Time.now
+          raw_record['updated_at'] = Time.now          
           OpenMedia::RawRecord.database.bulk_save_doc(raw_record)
           OpenMedia::RawRecord.database.bulk_save if rows_parsed%500 == 0
         end

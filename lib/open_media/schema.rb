@@ -78,6 +78,9 @@ module OpenMedia
       #   r['created'] = ::DateTime.parse(r['created']) if r['created']
       #   r['modified'] = ::DateTime.parse(r['modified']) if r['modified']        
       # end
+      records.each do |r|
+        r['geometry'] = ::JSON.parse(::RDF::NTriples::Reader.unserialize(r['geometry']).object) if r['geometry']
+      end
       records
     end
 

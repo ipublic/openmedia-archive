@@ -6,20 +6,18 @@
 
 		<%= link_to 'All Datasources', admin_datasources_path %> | 
 		<%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
-		<%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %> |
+		<%= link_to 'Publish', publishing_admin_datasource_path(@datasource) %> |
 		<%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>
 	</p>
-
 	<hr/>
+
 	<div class="box">
-		<h2><%= @datasource.title %></h2>
-		<div class="block">
-			<%= show_fields(@datasource, [:uri, 
+			<%= show_fields(@datasource, [:title, :uri, 
 			    [:rdfs_class_uri, 'Type']]) %>
 			<table class="property-table">
 			  <tr>
 			    <th class="property-table">Description:</th>
-			    <td><%= @datasource.metadata.description %>
+			    <td><%= @datasource.metadata.description if @datasource.metadata %>
 			  </tr>
 
 			  <tr>
@@ -36,12 +34,12 @@
 			<%= show_fields(@datasource, [:source_type, :parser, [:column_separator, 'Separator'], 
 			                              :has_header_row]) %>
 		</div>
-	</div>
 </div>
 
 <div class="grid_12" style="overflow: auto">
   <div class="box">
     <h2>Unpublished Data</h2>
+		<div class="block">
 
     <table id="raw-data-table" class="display">
       <thead>
@@ -55,6 +53,7 @@
       </tbody>
     </table>
   </div>
+</div>
 </div>
 
 <script>

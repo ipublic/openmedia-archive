@@ -1,16 +1,27 @@
 <% title "A publishing system for government open data" %>
 <div class="grid_4">
-  <div class="box">
-		<h4>Collections</h4>
-		<ul>
-			<% @collections.each do |c| %>
-		  	<li><%= link_to c.label, admin_schema_collection_path(rdf_id(c)) %></li>
-			<% end %>
-		</ul>
+		<div class="spotlight" id="frontpage_load_data">
+			<h2><%= link_to '1. Specify Sources', new_admin_datasource_path, :title => "" %></h2>
+			<p>Upload your organization's data content</p>
+		</div>
+</div>
+<div class="grid_4">
+	<div class="spotlight">
+		<h2><%= link_to '2. Prepare and Publish', admin_datasources_path, :title => "" %></h2>
+		<p>Define terms, filter and extend datasource values, make data accessible to others </p>
 	</div>
-
-
+</div>
+<div class="grid_4 omega">
+	<div class="spotlight">
+		<h2><%= link_to '3. Visualize Information', admin_dashboards_path, :title => "" %></h2>
+		<p>Produce dashboards, charts and maps.</p>
+	</div>
+</div>
+<hr/>
+<div class="clear"></div>
+<div class="grid_4">
   <div class="box">
+		<h2>Data Collections</h2>
     <div class="block" id="tables">
       <table style="width:100%">
 				<thead>
@@ -34,7 +45,11 @@
   </div>
 </div>
 
-<div class="grid_4" >
+<div class="grid_8 omega" >
+		<% @dashboard.groups.each do |g|  %>
+			<%= render :partial => '/public/dashboards/dashboard_group', :locals  =>{ :group => g } %>
+		<% end %>
+
   <div class="box">
     <div class="block">
 	    <%= render :partial=>'shared/map' %>
@@ -42,21 +57,3 @@
 	</div>
 </div>
 
-<div class="grid_4">
-		<div class="spotlight" id="frontpage_load_data">
-			<h2><%= link_to '1. Import Data', new_admin_datasource_path, :title => "" %></h2>
-			<p>Upload your organization's data content</p>
-		</div>
-</div>
-<div class="grid_4">
-	<div class="spotlight">
-		<h2><%= link_to '2. Edit Content', admin_datasources_path, :title => "" %></h2>
-		<p>Define terms, edit, filter and extend datasource values</p>
-	</div>
-</div>
-<div class="grid_4">
-	<div class="spotlight">
-		<h2><%= link_to '3. Publish', admin_settings_path, :title => "" %></h2>
-		<p>Make datasources accessible to others</p>
-	</div>
-</div>

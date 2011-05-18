@@ -80,7 +80,12 @@ Openmedia::Application.routes.draw do
   namespace :admin do
     resource :site
     resource :community
-    resources :dashboards
+    resources :dashboards do
+      collection do
+        get :new_group
+        get :new_measure
+      end
+    end
     resources :maps
 
     namespace :schema do

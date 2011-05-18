@@ -13,12 +13,21 @@ class Admin::DashboardsController < Admin::BaseController
     @dashboard_group = OpenMedia::DashboardGroup.new
   end
 
+  def new_group
+    render :partial=>'form_dashboard_group', :locals=> { :group=>OpenMedia::DashboardGroup.new }
+  end
+
+  def new_measure
+    render :partial=>'form_measure', :locals=> { :measure=>{ } }
+  end
+  
+
   def create
     @dashboard = OpenMedia::Dashboard.new(params[:dashboard])
 
     if @dashboard.save
       flash[:notice] = 'Successfully created Dashboard.'
-      redirect_to(admin_dashboard_path)
+      redirect_to(admin_dashboard_path(@dashboard))
     else
       flash[:error] = 'Unable to create Dashboard.'
       render :action => "new"

@@ -1,33 +1,29 @@
-<div id="forms">
-	<%= form_for @dashboard, :url => admin_dashboards_path, :html => {:method=>:put} do |f| %>
-		<div class="grid_8">
-			<div class="box">
-				<div class="block">
-				  <%= f.error_messages %>
-					<%= f.hidden_field :rev, :value => @dashboard['_rev'] if @dashboard['_rev'] %>
-					<fieldset>
-						<legend>General</legend>
-						<ol>
-						  <li><%= f.label :title %> <%= f.text_field :title, :class => "wide" %></li>
-						  <li><%= f.label :description %> <%= f.text_area :description, :rows => 3 %></li>
-						</ol>
-					</fieldset>
+<div class="grid_8">
+  <div class="box">
+    <div class="block">
+      <%= f.error_messages %>
+      <%= f.hidden_field :rev, :value => @dashboard['_rev'] if @dashboard['_rev'] %>
+      <fieldset>
+	<legend>General</legend>
+	<ol>
+	  <li><%= f.label :title %> <%= f.text_field :title, :class => "wide" %></li>
+	  <li><%= f.label :description %> <%= f.text_area :description, :rows => 3 %></li>
+	</ol>
+      </fieldset>
 
-					<fieldset class="omega">
-						<legend>Measure Groups</legend>
-						<% for group in @dashboard.groups {|p1,p2| p1.title <=> p2.title} %>
-				    	<%= render :partial => 'form_measure_group', :locals => {:base_name => 'group[measures][]', :group => group} %>
-				    <% end %>
-				  	<a href="#" class="add-measure-group add-element">Add Measure Group</a>
-					</fieldset>
-					
-					<fieldset class="submit">
-						<ol>
-							<li><%= f.submit "Save", {:class => "submit"} %> <%= link_to 'Back', :back %></li> 
-						</ol>
-					</fieldset>
-				</div>
-			</div>
-		</div>
-	<% end %>	
+      <fieldset class="omega">
+	<legend>Measure Groups</legend>
+	<% for group in @dashboard.groups {|p1,p2| p1.title <=> p2.title} %>
+	<%= render :partial => 'form_dashboard_group', :locals => {:group => group} %>
+	<% end %>
+	<a href="#" class="add-measure-group add-element">Add Measure Group</a>
+      </fieldset>
+      
+      <fieldset class="submit">
+	<ol>
+	  <li><%= f.submit "Save", {:class => "submit"} %> <%= link_to 'Back', :back %></li> 
+	</ol>
+      </fieldset>
+    </div>
+  </div>
 </div>

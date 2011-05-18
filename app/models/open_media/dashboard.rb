@@ -1,6 +1,9 @@
 class OpenMedia::Dashboard < CouchRest::Model::Base
   
   use_database SITE_DATABASE
+
+  FORMATS = %w(percentage currency number string)
+  VISUALS = %w(inlinesparkline pie inlinebar bullet)
   
   ## Property Definitions
   # General properties

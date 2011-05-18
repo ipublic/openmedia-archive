@@ -3,6 +3,6 @@ class OpenMedia::DashboardGroup < Hash
   
   property :title
   property :description
-  property :measures, :default => []
+  property :measures, [OpenMedia::DashboardMeasure], :default => []
 
 end

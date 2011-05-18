@@ -203,6 +203,28 @@ $(function() {
 
     });
 
+    // Dashboard Admin
+    $('a.add-measure-group').live('click', function() {
+	var link = this;
+	$.get('/admin/dashboards/new_group', function(html) {
+	    $(html).insertBefore(link);
+	    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+	    $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	});
+	return false;
+    });
+
+    $('a.add-measure').live('click', function() {
+	var link = this;
+	$.get('/admin/dashboards/new_measure', function(html) {
+	    $(html).insertBefore(link);
+	    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+	    $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	});
+	return false;
+    });
+
+
     // basic button styling
     $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
     $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    

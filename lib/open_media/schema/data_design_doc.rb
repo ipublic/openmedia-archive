@@ -50,7 +50,11 @@ module OpenMedia
                                      } else {
                                          propertyIdentifier = predicate.substring(predicate.lastIndexOf('/')+1);
                                      }
-                                     rec[propertyIdentifier] = trimLiteral(trimBrackets(trimQuotes(row['doc']['object'])));
+                                     if (row['doc']['object'].match(/GeoJson>$/)) {
+                                         rec[propertyIdentifier] = row['doc']['object'];
+                                     } else {
+                                         rec[propertyIdentifier] = trimLiteral(trimBrackets(trimQuotes(row['doc']['object'])));
+                                     }
                                  }
                              }
                              send(toJSON(records));                             

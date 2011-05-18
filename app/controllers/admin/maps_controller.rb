@@ -69,7 +69,7 @@ class Admin::MapsController < ApplicationController
 
     if @map.save
       flash[:notice] = 'Successfully created Map.'
-      redirect_to(admin_map_path)
+      redirect_to(admin_map_path(@map))
     else
       flash[:error] = 'Unable to create Map.'
       render :action => "new"

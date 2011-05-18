@@ -1,6 +1,9 @@
 class Admin::HomeController < Admin::BaseController
 
   def index
+    @dashboard = current_site.default_dashboard
+    @dashboard = OpenMedia::Dashboard.first if @dashboard.empty?
+    
     @collections = om_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}
     if current_site
       @collections.concat(current_site.skos_collection.sub_collections.sort{|c1,c2| c1.label <=> c2.label}) unless current_site == om_site

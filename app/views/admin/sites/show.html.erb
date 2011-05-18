@@ -8,6 +8,7 @@
 		<h4 class="show-property">Site Information</h4>
 		<%= show_fields(@site, [
 			[:openmedia_name, "Name"],
+			:welcome_banner,
 			:welcome_message,
 			[:url, "URL"],
 			:default_dashboard
@@ -31,7 +32,7 @@
 		<%= render :partial => 'admin/named_places/show', :locals => {:named_place => @municipality }  %>
 
 		<%= raw Cartographer::Header.new.to_s %>    
-		<%= raw @map.to_html %>  
+		<%= raw @gmap.to_html %>  
 		<div class="reference-map" id="map" >[Map]</div>
 
 		<h4 class="show-property">OpenMedia Servers</h4>

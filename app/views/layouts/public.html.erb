@@ -28,7 +28,13 @@
     <div class="container_12">
       <div class="grid_12">
 	<%#= render :partial => 'shared/header', :locals=>{:skip_nav=>true} %>
-	<h2 id="page-heading"><%= link_to current_site.welcome_banner, root_path %></h2> 
+	<h2 id="page-heading">
+	  <% if current_site %>
+	  <%= link_to current_site.welcome_banner, root_path %>
+	  <% else %>
+	  <%= link_to 'Civic OpenMedia', root_path %>
+	  <% end %>
+	</h2> 
 
 	<% if content_for?(:title) %>
 	<h2 id="page-heading"><%= h yield(:title) %></h2> 			  

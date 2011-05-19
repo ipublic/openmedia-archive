@@ -18,7 +18,7 @@ class Admin::DashboardsController < Admin::BaseController
   end
 
   def new_measure
-    render :partial=>'form_measure', :locals=> { :measure=>{ } }
+    render :partial=>'form_measure', :locals=> { :measure=>OpenMedia::DashboardMeasure.new }
   end
   
 

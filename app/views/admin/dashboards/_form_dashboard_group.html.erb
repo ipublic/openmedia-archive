@@ -1,22 +1,22 @@
-<ol style="padding: 10px; margin: 5px; border: 1px solid blue; float: left:">
+<ol>
   <li>
-    <a href="#" class="delete-dashboard-group delete-element">Delete Group</a>
+    <label>Title</label>
+    <input name="dashboard[groups][][title]" type="text" value="<%= group.title %>"/>
   </li>
   <li>
-    <label class='narrow'>Title</label>
-    <input name="dashboard[groups][][title]" class="standard" type="text" value="<%= group.title %>"/>
-  </li>
-  <li>
-    <label class='narrow'>Description</label>
+    <label>Description</label>
     <input name="dashboard[groups][][description]" class="standard" type="text" value="<%= group.description %>"/>
   </li>
   <li>
-    <fieldset class="omega">
-      <legend>Measures</legend>
-      <% for measure in group.measures %>
-      <%= render :partial=>'form_measure', :locals=>{:measure=>measure} %>
-      <% end %>      
-      <a href="#" class="add-measure add-element">Add Measure</a>
-    </fieldset>
+    <a href="#" class="delete-dashboard-group delete-element">Delete Group</a>
   </li>
+</ol>
+<ol>
+  <fieldset class="omega">
+    <legend>Measures</legend>
+    <% for measure in group.measures %>
+    	<%= render :partial=>'form_measure', :locals=>{:measure=>measure} %>
+    <% end %>      
+    <a href="#" class="add-measure add-element">Add Measure</a>
+  </fieldset>
 </ol>

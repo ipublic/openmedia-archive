@@ -1,20 +1,18 @@
-<div class="grid_8">
+<div class="grid_9">
   <div class="box">
-    <div class="block">
       <%= f.error_messages %>
       <%= f.hidden_field :rev, :value => @dashboard['_rev'] if @dashboard['_rev'] %>
       <fieldset>
-	<legend>General</legend>
 	<ol>
 	  <li><%= f.label :title %> <%= f.text_field :title, :class => "wide" %></li>
-	  <li><%= f.label :description %> <%= f.text_area :description, :rows => 3 %></li>
+	  <li><%= f.label :description, :style => "clear:left;"  %> <%= f.text_area :description, :rows => 3, :class => "wide" %></li>
 	</ol>
       </fieldset>
 
       <fieldset class="omega">
 	<legend>Measure Groups</legend>
 	<% for group in @dashboard.groups {|p1,p2| p1.title <=> p2.title} %>
-	<%= render :partial => 'form_dashboard_group', :locals => {:group => group} %>
+		<%= render :partial => 'form_dashboard_group', :locals => {:group => group} %>
 	<% end %>
 	<a href="#" class="add-measure-group add-element">Add Measure Group</a>
       </fieldset>
@@ -24,6 +22,5 @@
 	  <li><%= f.submit "Save", {:class => "submit"} %> <%= link_to 'Back', :back %></li> 
 	</ol>
       </fieldset>
-    </div>
   </div>
 </div>

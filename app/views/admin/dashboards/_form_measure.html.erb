@@ -1,44 +1,57 @@
-<ol  style="padding: 10px; margin: 5px">
-  <li>
-    <label class='narrow'>Measure Label</label>
+<table class="measure">
+	<tr>
+  <td>
+    <label>Measure Label</label><br/>
     <input name="dashboard[groups][][measures][][measure]" class="standard" type="text" value="<%= measure['measure'] %>"/>
-  </li>
-  <li>
-    <label class='narrow'>Source Class</label>
+  </td>
+  <td>
+    <label class='wide'>Sort Property</label><br/>
+    <input name="dashboard[groups][][measures][][sort_property]" class="standard dashboard-property" type="text" value="<%= measure.sort_property %>"/>
+  </td>
+<td>&nbsp;</tr>
+</tr>
+	<tr>
+  <td>
+    <label class='wide'>Source Class</label><br/>
     <input class="standard dashboard-source-class" type="text" value="<%= last_url_component(measure['source_class']) %>"/>
     <input name="dashboard[groups][][measures][][source_class]" type="hidden" value="<%= measure['source_class'] %>"/>
-  </li>
-  <li>
-    <!-- Present a list of Properties from the selected Class above - filter to numeric types -->
-    <label class='narrow'>Source Property</label>
+  </td>
+  <td>
+    <!-- Present a tdst of Properties from the selected Class above - filter to numeric types -->
+    <label class='wide'>Source Property</label><br/>
     <input name="dashboard[groups][][measures][][source_property]" class="standard dashboard-property" type="text" value="<%= measure.source_property %>"/>
-  </li>
-  <li>
-    <label class='narrow'>Sort Property</label>
-    <input name="dashboard[groups][][measures][][sort_property]" class="standard dashboard-property" type="text" value="<%= measure.sort_property %>"/>
-  </li>
-  <li>
-    <label class='narrow'>Format</label>    
-    <select name="dashboard[groups][][measures][][format]">
+  </td>
+	<td>&nbsp;</tr>
+
+</tr>
+<tr>
+  <td>
+    <label class='wide'>Format</label>  <br/>  
+    <select name="dashboard[groups][][measures][][format]", class="standard">
       <%= options_for_select([''].concat(OpenMedia::Dashboard::FORMATS), measure['format']) %>
     </select>
-  </li>
-  <li>
-    <label class='narrow'>Graph Type</label>
-    <select name="dashboard[groups][][measures][][visual]">
+  </td>
+  <td>
+    <label class='wide'>Graph Type</label><br/>
+    <select name="dashboard[groups][][measures][][visual]", class="standard">
       <%= options_for_select([''].concat(OpenMedia::Dashboard::VISUALS), measure['visual']) %>
     </select>
-  </li>
-  <li>
-    <label class='narrow'>Rank</label>
+  </td>
+	<td>&nbsp;</tr>
+
+</tr>
+<tr>
+  <td>
+    <label class='wide'>Rank</label><br/>
     <input name="dashboard[groups][][measures][][rank]" class="standard" type="text" value="<%= measure['rank'] %>"/>
-  </li>
-  <li>
-    <label class='narrow'>Description</label>
+  </td>
+  <td>
+    <label class='wide'>Description</label><br/>
     <input name="dashboard[groups][][measures][][description]" class="standard" type="text" value="<%= measure['description'] %>"/>
 
-  </li>
-  <li>
+  </td>
+  <td style="vertical-align: bottom">
     <a href="#" class="delete-measure delete-element" alt="Delete">Delete Measure</a>
-  </li>
-</ol>
+  </td>
+</tr>
+</table>

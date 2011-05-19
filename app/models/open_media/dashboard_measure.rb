@@ -19,6 +19,8 @@ class OpenMedia::DashboardMeasure < Hash
       else
         self['values'] = OpenMedia::Schema.get_records(self.source_class).collect{|r| r[self.source_property]}
       end
+      # HACKETY HACK
+      self['values'] = self['values'].select{|v| v != "0.0" && v!="0"}
 
     end
     self['values']

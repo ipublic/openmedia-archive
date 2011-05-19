@@ -98,9 +98,9 @@ class OpenMedia::Datasource < CouchRest::Model::Base
           raw_record = OpenMedia::RawRecord.new(:datasource=>self, :batch_serial_number=>batch_serial_number)
           row.each_with_index do |val, idx|
             source_property = self.source_properties[idx]
-            if source_property.range_uri == RDF::XSD.integer.to_s
+            if val && source_property.range_uri == RDF::XSD.integer.to_s
               val = val.to_i
-            elsif source_property.range_uri == RDF::XSD.float.to_s
+            elsif val && source_property.range_uri == RDF::XSD.float.to_s
               val = val.to_f
             end
             raw_record[source_property.identifier]=val

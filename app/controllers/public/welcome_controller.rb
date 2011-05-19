@@ -24,6 +24,9 @@ class Public::WelcomeController < ApplicationController
   end
 
   def license
+    # @site = current_site
+    # @site = om_site if @site.nil?
+    @site = om_site
   end
 
 end

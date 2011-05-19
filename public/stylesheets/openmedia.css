@@ -344,6 +344,7 @@ width: 15em;
 
 /* forms
 ----------------------------------------------- */
+
 fieldset {
 	float: left;
 	clear: left;
@@ -393,6 +394,23 @@ margin-left: 1em;
 */
 }
 
+table.measure {
+	margin-left: 10em;
+	margin-bottom: 2em;
+	border: none;
+	border-bottom: 1px dotted #BFBAB0;    
+}
+
+table.measure label {
+	color: #043a6b;
+	font-size: 1em;
+	font-weight: bold;  
+}
+
+.measure tr td {
+	border: none;
+}
+
 label {
 	float: left;    
 	width: 8em;    
@@ -415,6 +433,10 @@ label.narrow {
 
 label.wide {
 	width: 12em;    
+}
+
+label.top {
+	display: block;
 }
 
 
@@ -462,6 +484,10 @@ textarea.wide {
 
 select.wide {
 	width: 30em;
+}
+
+select.standard {
+	width: 18em;
 }
 
 input.submit {

@@ -1,9 +1,10 @@
-# require user-specific settings to handle differences between developer machine setup
-#require File.expand_path(ENV['USER'], File.dirname(__FILE__))
-require File.join(File.dirname(__FILE__), ENV['USER'])
+UNZIP = "/usr/bin/unzip"
+OGR2OGR = "/usr/local/src/FWTools-linux-x86_64-3.0.6/bin_safe/ogr2ogr"
+OM_DOMAIN = "civicopenmedia.us"
+OM_PORT = 80
 
 Openmedia::Application.configure do
-  # Settings specified here will take precedence over those in config/application.rb
+  # Settings specified here will take precedence over those in config/environment.rb
 
   # In the development environment your application's code is reloaded on
   # every request.  This slows down response time but is perfect for development
@@ -40,4 +41,3 @@ Openmedia::Application.configure do
     :enable_starttls_auto => true
   }
 end
-

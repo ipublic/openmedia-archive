@@ -50,7 +50,8 @@ vcard.save!
 collections = [
   'Addresses', 'Agriculture', 'Arts', 'Animal Control',
   'Business',
-  'Census', 'Citizens', 'Community Services', 'Council and Boards',
+  'Citizens', 'Community Services', 'Council and Boards',
+  'Demographics',
   'Economy', 'Elections', 'Education', 'Environment', 'Energy',
   'Finance',
   'Government',

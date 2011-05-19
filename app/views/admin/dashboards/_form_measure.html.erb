@@ -1,36 +1,37 @@
 <ol  style="padding: 10px; margin: 5px">
   <li>
     <label class='narrow'>Measure Label</label>
-    <input name="dashboard[group][][measures][][measure]" class="standard" type="text" value="<%= measure['measure'] %>"/>
+    <input name="dashboard[groups][][measures][][measure]" class="standard" type="text" value="<%= measure['measure'] %>"/>
   </li>
   <li>
     <label class='narrow'>Source Class</label>
-    <input name="dashboard[group][][measures][][om_source_class]" class="standard" type="text" value="<%= measure['om_source_class'] %>"/>
+    <input class="standard dashboard-source-class" type="text" value="<%= last_url_component(measure['source_class']) %>"/>
+    <input name="dashboard[groups][][measures][][source_class]" type="hidden" value="<%= measure['source_class'] %>"/>
   </li>
   <li>
     <!-- Present a list of Properties from the selected Class above - filter to numeric types -->
     <label class='narrow'>Source Property</label>
-    <input name="dashboard[group][][measures][][om_source_property]" class="standard" type="text" value="<%= measure['om_source_class'] %>"/>
+    <input name="dashboard[groups][][measures][][source_property]" class="standard dashboard-property" type="text" value="<%= measure['source_property'] %>"/>
   </li>
   <li>
     <label class='narrow'>Format</label>    
-    <select name="dashboard[group][][measures][][format]">
+    <select name="dashboard[groups][][measures][][format]">
       <%= options_for_select([''].concat(OpenMedia::Dashboard::FORMATS), measure['format']) %>
     </select>
   </li>
   <li>
     <label class='narrow'>Graph Type</label>
-    <select name="dashboard[group][][measures][][visual]">
+    <select name="dashboard[groups][][measures][][visual]">
       <%= options_for_select([''].concat(OpenMedia::Dashboard::VISUALS), measure['visual']) %>
     </select>
   </li>
   <li>
     <label class='narrow'>Rank</label>
-    <input name="dashboard[group][][measures][][rank]" class="standard" type="text" value="<%= measure['rank'] %>"/>
+    <input name="dashboard[groups][][measures][][rank]" class="standard" type="text" value="<%= measure['rank'] %>"/>
   </li>
   <li>
     <label class='narrow'>Description</label>
-    <input name="dashboard[group][][measures][][description]" class="standard" type="text" value="<%= measure['description'] %>"/>
+    <input name="dashboard[groups][][measures][][description]" class="standard" type="text" value="<%= measure['description'] %>"/>
 
   </li>
   <li>

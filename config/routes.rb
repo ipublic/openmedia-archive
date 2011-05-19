@@ -96,6 +96,7 @@ Openmedia::Application.routes.draw do
         collection do
           get :new_property
           get :autocomplete
+          get :property_list
         end
       end
     end    

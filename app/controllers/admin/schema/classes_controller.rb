@@ -98,6 +98,14 @@ class Admin::Schema::ClassesController < Admin::BaseController
     redirect_to admin_schema_collection_path(rdf_id(@collection))
   end
 
+  def property_list
+    #response = OpenMedia::Schema.get_class_definition(params[:class_uri])['properties'].collect{|p| { :label=>p['label'], :identifier=>p['identifier'] }
+    #}.sort {|a,b| a[:label] <=> b[:label]}
+    response = OpenMedia::Schema.get_class_definition(params[:class_uri])['properties'].collect{|p| p['identifier'] }.sort {|a,b| a <=> b}
+    render :json=>response
+  end
+
+
 
   
 private

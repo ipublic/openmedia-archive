@@ -41,7 +41,8 @@ class Admin::DashboardsController < Admin::BaseController
   
   def update
     @dashboard = OpenMedia::Dashboard.get(params[:id])
-
+    @dashboard.attributes = params[:dashboard]
+    @dashboard.groups = nil unless params[:dashboard][:groups]
     respond_to do |format|
       if @dashboard.save
         flash[:notice] = 'Successfully updated Dashboard.'

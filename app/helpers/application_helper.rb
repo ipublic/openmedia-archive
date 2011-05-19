@@ -85,6 +85,17 @@ module ApplicationHelper
     return '' unless uri
     return short_uri(RDF::URI.new(uri)) if uri.is_a?(String)
     uri.fragment || uri.path.split('/').last    
-  end  
+  end
+
+  def last_url_component(url)
+    if url
+      if url =~ /#/
+        url.split('#').last
+      else
+        url.split('/').last
+      end
+    end
+  end
+
 
 end

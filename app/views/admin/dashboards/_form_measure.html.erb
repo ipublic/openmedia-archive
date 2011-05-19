@@ -11,7 +11,11 @@
   <li>
     <!-- Present a list of Properties from the selected Class above - filter to numeric types -->
     <label class='narrow'>Source Property</label>
-    <input name="dashboard[groups][][measures][][source_property]" class="standard dashboard-property" type="text" value="<%= measure['source_property'] %>"/>
+    <input name="dashboard[groups][][measures][][source_property]" class="standard dashboard-property" type="text" value="<%= measure.source_property %>"/>
+  </li>
+  <li>
+    <label class='narrow'>Sort Property</label>
+    <input name="dashboard[groups][][measures][][sort_property]" class="standard dashboard-property" type="text" value="<%= measure.sort_property %>"/>
   </li>
   <li>
     <label class='narrow'>Format</label>    

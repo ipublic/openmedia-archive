@@ -231,7 +231,7 @@ $(function() {
 					      var classURI = ui.item.id;
 					      $(event.target).next('input').val(classURI);
 					      $.getJSON('/admin/schema/classes/property_list?class_uri='+classURI, function(data) {
-						  $(event.target).closest('li').next().find('input.dashboard-property').autocomplete({source: data});
+						  $(event.target).closest('ol').find('input.dashboard-property').autocomplete({source: data});
 					      });
 
 					  }};
@@ -242,7 +242,7 @@ $(function() {
 	var sourceClassInput = this;
 	if (classURI != '' && classURI != null) {
 	    $.getJSON('/admin/schema/classes/property_list?class_uri='+classURI, function(data) {
-		$(sourceClassInput).closest('li').next().find('input.dashboard-property').autocomplete({source: data});
+		$(sourceClassInput).closest('ol').find('input.dashboard-property').autocomplete({source: data});
 	    });
 	}
     });

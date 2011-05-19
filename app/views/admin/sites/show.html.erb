@@ -18,7 +18,7 @@
 			</tr>
 			<tr>
 				<th>Default Dashboard:</th>
-				<% unless @site.default_dashboard.empty? %>
+				<% unless @site.default_dashboard.blank? %>
 					<td><%= link_to dashboard_title_from_id(@site.default_dashboard), admin_dashboard_path(@site.default_dashboard) %></td>
 				<% else %>
 					<td>&nbsp;</td>

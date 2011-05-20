@@ -6,8 +6,8 @@
 
 		<%= link_to 'All Datasources', admin_datasources_path %> | 
 		<%= link_to "Edit", edit_admin_datasource_path(@datasource) %> |
-		<%= link_to 'Publishing', publishing_admin_datasource_path(@datasource) %>
-	</p>
+		<%= link_to 'Publish', publishing_admin_datasource_path(@datasource) %> |
+		<%= link_to 'Delete', admin_datasource_path(@datasource), :confirm => 'Are you sure?', :method => :delete %>	</p>
 	<hr/>
 
 	<div class="box">

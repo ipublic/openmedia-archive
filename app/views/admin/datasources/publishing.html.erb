@@ -77,9 +77,11 @@
 	  <td><%= sp.label %></td>
 	  <td><span class="tooltip" title="<%=sp.range_uri%>"><%= short_uri(sp.range_uri) %></span></td>
 	  <td>	    
-	    <%= render :partial=>'rdf_property_select', :locals=>{ :rdfs_class=>@datasource.rdfs_class, :selected=>sp.rdf_property_uri } %>
+	    <%= render :partial=>'rdf_property_select', :locals=>{ :rdfs_class=>@datasource.rdfs_class, :selected=>sp.rdf_property_uri || sp.identifier } %>
 	  </td>
-	  <td><!-- short_uri(sp.rdf_property.range) --></td>
+	  <td><!-- short_uri(sp.rdf_property.range) -->
+	    <%= short_uri(sp.range_uri) %>
+	  </td>
 	</tr>
 	<% end %>
       </table>

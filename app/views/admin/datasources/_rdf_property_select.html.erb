@@ -1,6 +1,6 @@
 <select name="datasource[source_properties][][rdf_property_uri]">
   <!-- this should be changed to choose a property from destination rdfs_class -->
   <% for source_property in @datasource.source_properties %>
-  <option><%= source_property.label %></option>
+  <option value="<%= source_property.identifier%>"<% if selected==source_property.identifier %> selected<% end %>><%= source_property.label %></option>
   <% end %>
 </select>

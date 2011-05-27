@@ -12,11 +12,10 @@ class Schema::Collection < CouchRest::Model::Base
 
   timestamps!
 
-  validates_presence_of :label
+  validates_presence_of :label, :namespace
   validates_uniqueness_of :identifier, :view => 'all'
 
   ## Callbacks
-#  before_save :generate_identifier
   before_create :generate_identifier
 
   view_by :label
@@ -33,6 +32,12 @@ class Schema::Collection < CouchRest::Model::Base
       "function(keys, values, rereduce) {
         return sum(values);
       }"
+    view_by :iri_base,
+      :map => 
+        "function(doc) {
+          if ((doc['couchrest-type'] == 'Schema::Collection') && 
+              (doc.namespace['iri_base'] != null))  
+          { emit(doc.namespace['iri_base'], null);}}"
 
 private
   def generate_identifier

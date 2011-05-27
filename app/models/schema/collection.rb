@@ -19,25 +19,24 @@ class Schema::Collection < CouchRest::Model::Base
   before_create :generate_identifier
 
   view_by :label
+  
   view_by :tags,
     :map =>
       "function(doc) {
         if (doc['couchrest-type'] == 'Schema::Collection' && doc.tags) {
-          doc.tags.forEach(function(tag){
-            emit(doc.tag, 1);
-          });
-        }
-      }",
-    :reduce =>
-      "function(keys, values, rereduce) {
-        return sum(values);
-      }"
-    view_by :iri_base,
-      :map => 
-        "function(doc) {
-          if ((doc['couchrest-type'] == 'Schema::Collection') && 
-              (doc.namespace['iri_base'] != null))  
-          { emit(doc.namespace['iri_base'], null);}}"
+          doc.tags.forEach(function(tag) {
+            emit(tag, 1); 
+            });
+          }
+        }"
+      
+  view_by :iri_base,
+    :map => 
+      "function(doc) {
+        if ((doc['couchrest-type'] == 'Schema::Collection') && (doc.namespace['iri_base'] != null)) { 
+            emit(doc.namespace['iri_base'], null);
+            }
+        }"
 
 private
   def generate_identifier

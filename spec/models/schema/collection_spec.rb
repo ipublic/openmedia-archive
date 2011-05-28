@@ -19,7 +19,7 @@ describe Schema::Collection do
   it "should use iri_base view to return matching docs" do
     @collection.save!
     @res = Schema::Collection.by_iri_base(:key => @site_iri)
-    @res[0].identifier.should == 'schema::collection_dcgov_education'
+    @res[0].identifier.should == 'collection_dcgov_education'
   end
   
   it 'should use tags view to return matching docs' do
@@ -27,13 +27,13 @@ describe Schema::Collection do
     @res = Schema::Collection.by_tags(:key => "fire")
     @res.length.should == 0 
     @res = Schema::Collection.by_tags(:key => "teachers")
-    @res[0].identifier.should == 'schema::collection_dcgov_education'
+    @res[0].identifier.should == 'collection_dcgov_education'
   end
 
-  describe 'metadata repository' do
-    it 'should return its metadata rdf repo (and create couch db if necessary)' do
-      @site.metadata_repository.should == "#{@site.identifier}_metadata"
-    end
-  end
+  # describe 'metadata repository' do
+  #   it 'should return its metadata rdf repo (and create couch db if necessary)' do
+  #     @site.metadata_repository.should == "#{@site.identifier}_metadata"
+  #   end
+  # end
 
 end

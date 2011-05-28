@@ -37,9 +37,14 @@ class Schema::Collection < CouchRest::Model::Base
             }
         }"
 
+
+  def vocabularies
+    Schema::Vocabulary.by_collection_id(:key => self.identifier)
+  end
+
 private
   def generate_identifier
-    self['identifier'] = self.class.to_s.downcase + '_' +
+    self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.namespace.alias.to_s.downcase + '_' +
                          label.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
   end

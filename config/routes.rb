@@ -87,10 +87,10 @@ Openmedia::Application.routes.draw do
       end
     end
     resources :maps
-    resources :vocabularies
 
     namespace :schema do
       resources :collections do
+        resources :vocabularies
         resources :classes
       end
       resources :classes do

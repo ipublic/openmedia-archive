@@ -12,7 +12,7 @@ gem 'spira'
 gem 'uuid'
 
 group :test, :development do
-  gem "rspec-rails"
+  gem "rspec-rails", "2.6.1"
   gem 'autotest'
   gem 'autotest-rails'
   gem 'rails3-generators', :git => 'git://github.com/shenoudab/rails3-generators.git'

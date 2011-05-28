@@ -3,11 +3,10 @@ class Schema::Collection < CouchRest::Model::Base
   use_database TYPES_DATABASE
   unique_id :identifier
 
-  property :identifier
-  property :namespace, Schema::Namespace
-  property :comment, String    # RDFS#Comment
-
+  property :identifier, String
   property :label, String       # User assigned name, RDFS#Label
+  property :comment, String     # RDFS#Comment
+  property :namespace, Schema::Namespace
   property :tags, [String]
 
   timestamps!
@@ -40,7 +39,9 @@ class Schema::Collection < CouchRest::Model::Base
 
 private
   def generate_identifier
-    self['identifier'] = self.class.to_s.downcase + '_' + label.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+    self['identifier'] = self.class.to_s.downcase + '_' +
+                         self.namespace.alias.to_s.downcase + '_' +
+                         label.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
   end
 
 end

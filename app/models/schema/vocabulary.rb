@@ -46,8 +46,10 @@ class Schema::Vocabulary < CouchRest::Model::Base
     :map => 
       "function(doc) {
         if ((doc['couchrest-type'] == 'Schema::Vocabulary') && (doc.geometries.length > 0 )) { 
-            emit(doc, null);
-            }
+          doc.geometries.forEach(function(geometry) {
+            emit(geometry, 1);
+            });
+          }
         }"
         
   def to_jsonld

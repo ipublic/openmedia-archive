@@ -5,24 +5,26 @@ class Schema::Namespace < CouchRest::Model::Base
   unique_id :identifier
 
   property :identifier
-  property :uri
+  property :uri                     # addressable/uri hash values
   property :authority
-  property :abbreviation, String            # alias => "abbreviation"
+  property :authority_uri
+  property :abbreviation, String    # used for CURIE abbreviations
   
   validates_uniqueness_of :identifier, :view => 'all'
   
   before_create :generate_identifier
   
-  view_by :abbreviation
-  view_by :authority
+  view_by :authority_uri
   
   def uri=(value)
     if value.is_a?(Hash)
+      # Record came from database
       self["uri"] = value 
     else
-      addressable_uri = Addressable::URI.parse(value)
-      self["authority"] = addressable_uri.authority
-      self["uri"] = addressable_uri.to_hash
+      add_uri = Addressable::URI.parse(value)
+      self["authority"] = add_uri.authority
+      self["authority_uri"] = escape_string(self["authority"])
+      self["uri"] = add_uri.to_hash
     end
   end
   
@@ -33,11 +35,11 @@ class Schema::Namespace < CouchRest::Model::Base
   def prefix 
     self["abbreviation"] + ":"
   end
-
+  
 private
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.abbreviation if new?
+                         self.authority_uri if new?
   end
   
   def escape_string(str)

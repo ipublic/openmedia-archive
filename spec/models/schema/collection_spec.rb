@@ -3,23 +3,27 @@ require 'spec_helper'
 describe Schema::Collection do
 
   before(:each) do
-    @site_iri = "http://dc.gov/"
+    @uri = "http://civicopenmedia.us/vocabulary/"
+    @abbrev = "om"
+    @site_namespace = Schema::Namespace.new(:uri => @uri, :abbreviation => @abbrev)
+    @site_namespace.save!
+    @site_id = @site_namespace.identifier
     @collection = Schema::Collection.new(:label=>"Education", :tags=>["schools", "teachers", "students"], 
                                          :comment => "Matters associated with public schools",
-                                         :namespace => Schema::Namespace.new(:alias => "dcgov",
-                                                                             :iri_base => @site_iri))
+                                         :namespace => @site_namespace)
   end
   
   it 'should save and generate an identifier correctly' do
     lambda { @collection.save! }.should change(Schema::Collection, :count).by(1)
     @collection.label.should == "Education"
-    @collection.identifier.should == 'schema::collection_dcgov_education'
+    @collection.identifier.should == 'collection_civicopenmedia_us_education'
   end
   
-  it "should use iri_base view to return matching docs" do
+  it 'should return this Collection when using Schema::Namespace#collections method' do
     @collection.save!
-    @res = Schema::Collection.by_iri_base(:key => @site_iri)
-    @res[0].identifier.should == 'collection_dcgov_education'
+    @ns = Schema::Namespace.get(@site_id)
+    @cols = Schema::Collection.find_by_namespace_id(@ns.identifier)
+    @cols[0].label.should == "Education"
   end
   
   it 'should use tags view to return matching docs' do
@@ -27,7 +31,7 @@ describe Schema::Collection do
     @res = Schema::Collection.by_tags(:key => "fire")
     @res.length.should == 0 
     @res = Schema::Collection.by_tags(:key => "teachers")
-    @res[0].identifier.should == 'collection_dcgov_education'
+    @res[0].identifier.should == 'collection_civicopenmedia_us_education'
   end
 
   # describe 'metadata repository' do

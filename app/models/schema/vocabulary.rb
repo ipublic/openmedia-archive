@@ -4,18 +4,20 @@ class Schema::Vocabulary < CouchRest::Model::Base
   unique_id :identifier
 
   belongs_to :collection, :class_name => "Schema::Collection"
-
+  belongs_to :namespace, :class_name => "Schema::Namespace"
+  
   property :identifier, String
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
+  property :tags, [String]
   property :properties, [Schema::Property]
-  property :namespace, Schema::Namespace
-  property :type, String        # RDFS.domain, => foaf:Agent
+
+#  property :type, String        # RDFS.domain, => foaf:Agent
   property :geometries, [GeoJson::Geometry]
   
   timestamps!
 
-  validates_presence_of :label, :namespace, :collection_id
+  validates_presence_of :label, :namespace_id, :collection_id
   validates_uniqueness_of :identifier, :view => 'all'
   
   ## Callbacks
@@ -23,6 +25,7 @@ class Schema::Vocabulary < CouchRest::Model::Base
 
   view_by :label
   view_by :collection_id
+  view_by :namespace_id
     
   view_by :tags,
     :map =>
@@ -34,14 +37,6 @@ class Schema::Vocabulary < CouchRest::Model::Base
           }
         }"
       
-  view_by :iri_base,
-    :map => 
-      "function(doc) {
-        if ((doc['couchrest-type'] == 'Schema::Vocabulary') && (doc.namespace['iri_base'] != null)) { 
-            emit(doc.namespace['iri_base'], null);
-            }
-        }"
-        
   view_by :has_geometry,
     :map => 
       "function(doc) {
@@ -52,21 +47,52 @@ class Schema::Vocabulary < CouchRest::Model::Base
           }
         }"
         
+  ##
+  # Returns the Vocabularies for passed Namespace.
+  #
+  # @return [Vocabulary]
+  def self.find_by_namespace_id(ns_id)
+    self.by_namespace_id(:key => ns_id)
+  end
+
+  ##
+  # Returns the Vocabularies for passed Collection.
+  #
+  # @return [Vocabulary]
+  def self.find_by_collection_id(col_id)
+    self.by_collection_id(:key => col_id)
+  end
+
+  ##
+  # Returns a JSON-LD (Linked Data) representation of this vocabulary.
+  #
+  # @return {JSON-LD}
   def to_jsonld
 
   end
 
+  ##
+  # Returns the base URI for this vocabulary.
+  #
+  # @return [URI]  
+  def to_uri
+
+  end
+
+  ##
+  # Returns a hash of CURIE and Namespaces used to define this vocabulary
+  #
+  # @return {CURIE key, Namespace value}
   def context
-    # A hash of Namespaces used to define this vocabulary
-    namespaces = Hash.new
-    self.properties.each { |prop| namespaces[prop.namespace.alias.to_s] = prop.namespace.iri_base.to_s }
-    namespaces
+    # namespaces = Hash.new
+    # self.properties.each { |prop| namespaces[prop.namespace.alias.to_s] = prop.namespace.iri_base.to_s }
+    # namespaces
   end
   
 private
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.namespace.alias.to_s.downcase + '_' +
+                         self.namespace.authority_uri.to_s.downcase + '_' +
                          label.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
   end
   

@@ -19,7 +19,7 @@ describe Schema::Collection do
     @collection.identifier.should == 'collection_civicopenmedia_us_education'
   end
   
-  it 'should return this Collection when using Schema::Namespace#collections method' do
+  it 'should return this Collection when searching by Namespace' do
     @collection.save!
     @ns = Schema::Namespace.get(@site_id)
     @cols = Schema::Collection.find_by_namespace_id(@ns.identifier)

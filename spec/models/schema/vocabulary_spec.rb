@@ -26,12 +26,14 @@ describe Schema::Vocabulary do
   end
 
   it 'should return this Vocabulary when searching by Namespace' do
+    @vocabulary.save!
     @ns = Schema::Namespace.get(@site_id)
     @vocabs = Schema::Vocabulary.find_by_namespace_id(@ns.identifier)
     @vocabs[0].label.should == "Reading Proficiency-Third Grade"
   end
   
   it 'should return this Vocabulary when searching by Collection' do
+    @vocabulary.save!
     @vocabs = Schema::Vocabulary.find_by_collection_id(@collection.identifier)
     @vocabs[0].label.should == "Reading Proficiency-Third Grade"
   end

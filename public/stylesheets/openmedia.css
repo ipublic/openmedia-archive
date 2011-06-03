@@ -4,6 +4,25 @@ section, article, header, footer, nav, aside, hgroup {
 	display: block;
 }
 
+.form-errors {
+	margin: 0 0 1.5em 0;
+}
+
+.errorExplanation {
+	border: 1px solid #ccc;
+	padding-left: 10em;
+}
+
+.errorExplanation h2 {
+	font-size: 1.8em;	
+}
+
+.errorExplanation li {
+	color: red;
+	font-size: 1.2em;	
+}
+
+
 .reference-map {
 	margin-left:15.5em;
 	width: 300px;
@@ -461,6 +480,17 @@ fieldset li {
 
 li.radio {padding-left: 8em;}
 
+div.field_with_errors {
+	float: left;
+}
+
+div.field_with_errors>label {
+	color: red;
+}
+
+div.field_with_errors>input {
+/*	background-color: red;
+*/}
 
 input.narrow {
 	width:12em;

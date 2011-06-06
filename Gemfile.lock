@@ -134,7 +134,7 @@ GEM
       rdf (>= 0.3.3)
     rdf-trix (0.3.0)
       rdf (~> 0.3.0)
-    rest-client (1.6.1)
+    rest-client (1.6.3)
       mime-types (>= 1.16)
     rspec (2.6.0)
       rspec-core (~> 2.6.0)

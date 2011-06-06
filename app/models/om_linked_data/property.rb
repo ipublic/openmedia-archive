@@ -1,7 +1,5 @@
 class OmLinkedData::Property < CouchRest::Model::Base
 
-  # require 'json/pure' unless defined?(JSON::State) 
-
   use_database TYPES_DATABASE
   unique_id :identifier
 
@@ -10,12 +8,11 @@ class OmLinkedData::Property < CouchRest::Model::Base
   property :comment, String                           # => RDFS#Comment
   property :tags, [String]
 
-  property :namespace, OmLinkedData::Namespace
-  property :subdomain
-  property :authority
-
+  property :base_uri, String
+  property :subdomain, String
   property :uri, String
   property :term, String                              # Escaped vocabulary name suitable for inclusion in IRI
+  property :authority, String
 
   property :range                                     # => RDFS.range
   property :expected_type, OmLinkedData::Datatype     # Support type coercion
@@ -29,64 +26,26 @@ class OmLinkedData::Property < CouchRest::Model::Base
   
   timestamps!
 
-  # validates_presence_of :label, :namespace
+  validates_presence_of :label, :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
   
   before_create :generate_uri
   before_create :generate_identifier
   
   view_by :label
+  view_by :authority
+  view_by :base_uri
 
-  # view_by :namespace_authority,
-  #   :map =>
-  #   "function(doc) {
-  #     if ((doc['couchrest-type'] == 'OmLinkedData::Property') && 
-  #         (doc['namespace'] != null) &&
-  #         (doc['namespace']['authority'] != null)) {
-  #           emit(doc['namespace']['authority'], null); 
-  #           }
-  #     }"
-  # 
-  # view_by :namespace_uri,
-  #   :map =>
-  #   "function(doc) {
-  #     if ((doc['couchrest-type'] == 'OmLinkedData::Property') && 
-  #         (doc['namespace'] != null) &&
-  #         (doc['namespace']['authority'] != null)) {
-  #           emit(doc['namespace']['uri'], null); 
-  #           }
-  #     }"
-  # 
-  # view_by :tags,
-  #   :map =>
-  #     "function(doc) {
-  #       if (doc['couchrest-type'] == 'OmLinkedData::Property' && doc.tags) {
-  #         doc.tags.forEach(function(tag) {
-  #           emit(tag, 1); 
-  #           });
-  #         }
-  #       }"
+  view_by :tags,
+    :map =>
+      "function(doc) {
+        if (doc['couchrest-type'] == 'OmLinkedData::Property' && doc.tags) {
+          doc.tags.forEach(function(tag) {
+            emit(tag, 1); 
+            });
+          }
+        }"
 
-  # Require label and namespace properties
-  # Property Term is dependent on label property
-  # Property URI is dependent on namespace
-  # def new(options={})
-  #   raise ArgumentError, 
-  #     "Requires 'label', 'subdomain' properties" unless options.include?(:label) && options.include?(:authority)
-  #   super
-  #   self.label = options[:label]
-  #   self.term = escape_string(self.label)
-  #   self.authority = options[:authority]
-  #   generate_uri
-  #   
-  #   self.comment = options[:comment] if options.include?(:comment)
-  #   self.tags = options[:tags] if options.include?(:tags)
-  #   self.range = options[:range] if options.include?(:range)
-  #   self.deprecated = options[:deprecated] if options.include?(:deprecated)
-  #   self.expected_type = options[:expected_type] if options.include?(:expected_type)
-  #   self.enumerations = options[:enumerations] if options.include?(:enumerations)
-  # end
-  
   # Property Name in Compact URI form => "foaf:name"
   def curie
     self.namespace['subdomain'] + ':' + self.term
@@ -94,7 +53,16 @@ class OmLinkedData::Property < CouchRest::Model::Base
   
 private
   def generate_uri
+    
+    # base_uri => "http://dcgov.civicopenmedia.us"
+    parts = base_uri.split('.')
+    self.subdomain = parts.first.split("http://").last
+    domain = base_uri.split(subdomain + '.').last.gsub('.','_')
+
+    # authority => "civicopenmedia_us_dcgov"
+    self.authority = domain + '_' + subdomain
     self.term = escape_string(self.label)
+
     rdf_uri = RDF::URI.new('http://civicopenmedia.us')/self.subdomain/"terms#"/self.term
     self.uri = rdf_uri.to_s
   end

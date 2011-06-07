@@ -1,5 +1,4 @@
-class Schema::DesignDoc
+class OmLinkedData::DesignDoc
   
-  property: properties, Schema::Vocabulary
   
 end

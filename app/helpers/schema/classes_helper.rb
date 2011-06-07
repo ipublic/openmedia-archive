@@ -1,2 +1,0 @@
-module Schema::ClassesHelper
-end

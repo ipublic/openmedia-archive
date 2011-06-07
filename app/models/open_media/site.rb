@@ -8,7 +8,7 @@ class OpenMedia::Site < CouchRest::Model::Base
   
   ## Property Definitions
   # General properties
-  property :identifier,  :read_only => true
+  property :identifier #, :read_only => true
   property :url
   property :default_dashboard
   property :welcome_banner, :default => "Welcome to our Data Catalog"
@@ -21,8 +21,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"
   property :public_couchdb_server_uri, :default => "http://localhost:5984"
-  property :replicate_om_types, :default => true
-  property :replicate_push_datasets, :default => true
+  property :replicate_om_types, TrueClass, :default => true
+  property :replicate_push_datasets, TrueClass, :default => true
   
   # Location properties
   property :municipality, OpenMedia::NamedPlace
@@ -40,14 +40,15 @@ class OpenMedia::Site < CouchRest::Model::Base
   
   timestamps!
 
-  ## Validations
-  validates :identifier, :presence=>true, :uniqueness=>true
-  validates_presence_of :municipality
+  # Validations
+  validates_presence_of :identifier, :municipality
+  validates_uniqueness_of :identifier, :view => 'all'
+
+  before_create :set_url
 
   ## CouchDB Views
   view_by :identifier
 
-  before_validate :set_url  
 
   def skos_collection
     collection = OpenMedia::Schema::SKOS::Collection.for("#{self.identifier}/concepts")

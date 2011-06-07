@@ -8,20 +8,26 @@ class OmLinkedData::Collection < CouchRest::Model::Base
   property :comment, String     # RDFS#Comment
   property :tags, [String]
   property :hidden, TrueClass, :default => false
-  property :authority, String
   property :namespace, OmLinkedData::Namespace
+
+  property :base_uri, String
+  property :subdomain, String
+  property :uri, String
+  property :term, String                 # Escaped vocabulary name suitable for inclusion in IRI
+  property :authority, String
 
   timestamps!
 
-  validates_presence_of :label, :authority
+  validates_presence_of :label, :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
 
   ## Callbacks
+  before_create :generate_uri
   before_create :generate_identifier
-#  before_create :get_authority
 
   view_by :label
   view_by :authority
+  view_by :base_uri
   
   view_by :tags,
     :map =>
@@ -34,17 +40,28 @@ class OmLinkedData::Collection < CouchRest::Model::Base
         }"
 
 private
+  def generate_uri
+  
+    # base_uri => "http://dcgov.civicopenmedia.us"
+    parts = base_uri.split('.')
+    self.subdomain = parts.first.split("http://").last
+    domain = base_uri.split(subdomain + '.').last.gsub('.','_')
+
+    # authority => "civicopenmedia_us_dcgov"
+    self.authority = domain + '_' + subdomain
+    self.term = escape_string(self.label)
+
+    rdf_uri = RDF::URI.new('http://civicopenmedia.us')/self.subdomain/"collections#"/self.term
+    self.uri = rdf_uri.to_s
+  end
+
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' +
-                         label.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') if new?
+                         self.authority + '_' + self.term if new?
   end
   
-  # def get_authority
-  #   if self["authority"].nil?
-  #     ns = OmLinkedData::Namespace.new
-  #     self['authority'] = ns.authority
-  #   end
-  # end
-
+  def escape_string(str)
+    str.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+  end
+  
 end

@@ -69,8 +69,7 @@ private
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' +
-                         self.term if new?
+                         self.authority + '_' + self.term if new?
   end
 
   def escape_string(str)

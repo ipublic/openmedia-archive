@@ -16,6 +16,10 @@ OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.short).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.string).save!
 OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
 
+# OmLinkedData::DataType.new(:label => RDF::XSD.base64Binary.fragment.capitalize, :uri => RDF::XSD.base64Binary.uri).save!
+# RDF::URI.new('http://data.civicopenmedia.org')/"om"/"enum"
+
+
 # create datatype for JSON
 OpenMedia::Schema::RDFS::Datatype.for(RDF::OM_CORE.GeoJson).save!
 
@@ -68,7 +72,9 @@ collections = [
   'Weather'
   ]
 
-collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}
+#collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}
+collections.sort.each { |col| OmLinkedData::Collection.create!(:label=> col, :base_uri => om_site.url)}
+
 # "The Addresses collection includes unique designations for physical locations and identifiers for non-physical  resources such as a web page.  Examples include: home and business site addresses, road intersections and Web page URL's"
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})

@@ -8,7 +8,6 @@ class OmLinkedData::Collection < CouchRest::Model::Base
   property :comment, String     # RDFS#Comment
   property :tags, [String]
   property :hidden, TrueClass, :default => false
-  property :namespace, OmLinkedData::Namespace
 
   property :base_uri, String
   property :subdomain, String
@@ -18,7 +17,8 @@ class OmLinkedData::Collection < CouchRest::Model::Base
 
   timestamps!
 
-  validates_presence_of :label, :base_uri
+  validates_presence_of :label
+  validates_presence_of :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
 
   ## Callbacks
@@ -28,6 +28,7 @@ class OmLinkedData::Collection < CouchRest::Model::Base
   view_by :label
   view_by :authority
   view_by :base_uri
+  view_by :term
   
   view_by :tags,
     :map =>

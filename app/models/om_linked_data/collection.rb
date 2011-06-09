@@ -40,6 +40,22 @@ class OmLinkedData::Collection < CouchRest::Model::Base
           }
         }"
 
+  ## Return a Hash with URI's as keys and Collection hashes in an associated Array
+  ## Calling with an empty URI will return all Collections
+  def self.sort_by_base_uri(uri = '')
+    @sorted_collections = Hash.new
+    if uri.empty?
+      all_collections = OmLinkedData::Collection.all
+    else
+      all_collections = OmLinkedData::Collection.by_base_uri(:key => uri)
+    end
+    
+    all_collections.each do |c| 
+      @sorted_collections.key?(c.base_uri) ? @sorted_collections[c.base_uri] << c : @sorted_collections[c.base_uri] = Array.[](c)
+    end
+    @sorted_collections
+  end
+
 private
   def generate_uri
   

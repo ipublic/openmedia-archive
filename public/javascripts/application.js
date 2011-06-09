@@ -40,6 +40,11 @@ $(function() {
 
 
 	$("#tabs").tabs();
+	
+	$("#filter-collections").buttonset()
+		.click(function(){
+			
+		});
 
 	$( "#create-class" ).button()
 		.click(function() {

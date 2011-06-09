@@ -19,7 +19,7 @@
 				<p><%= @collection.comment %></p>
 				<p><%= link_to "Edit Description", edit_admin_om_linked_data_collection_path(@collection) %>
 			<% end %>
-			<% unless @collection.tags.nil? %>
+			<% if @collection.tags.length > 0 %>
 				<h5>Tags</h5>
 				<ul>
 					<% @collection.tags.sort.each do |t| %>
@@ -37,20 +37,23 @@
 			<li><a href="#tabs-2">Sites</a></li>
 		</ul>
 		<div id="tabs-1">
-			<p class="meta">Vocabularies used from the Commons</p>
+			<h5>Vocabularies used from the Commons</h5>
 			<hr />
 			<ul>
-				<li>None listed</li>
-			</ul>
-			<p>Vocabularies created for this Collection</p>
-			<hr />
-			<ul>
-				<%= "<li>None listed</li>".html_safe if @vocabularies.count == 0 %>
-				<% @vocabularies.each do |vocab| %>
-					<li>add link <%#= link_to vocab.label, admin_om_linked_data_collection_class_path(@collection), vocab) %> <%#= "(#{vocab.instance_count})" %></li>
+				<%= "<li>None listed</li>".html_safe if @commons_vocabs.length == 0 %>
+				<% @commons_vocabs.sort.each do |v| %>
+					<li><%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v.identifier) %></LI>
 				<% end %>
 			</ul>
-			<p><%#= link_to "Add Vocabulary", new_admin_om_linked_data_vocabulary_class_path(@collection), {:class => 'add-element'} %><p>
+			<h5>Vocabularies created for this Collection</h5>
+			<hr />
+			<ul>
+				<%= "<li>None listed</li>".html_safe if @site_vocabs.length == 0 %>
+				<% @site_vocabs.each do |v| %>
+					<li>add link <%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v) %> <%#= "(#{vocab.instance_count})" %></li>
+				<% end %>
+			</ul>
+			<p><%= link_to "Add Vocabulary", new_admin_om_linked_data_collection_vocabulary_path(@collection), {:class => 'add-element'} %><p>
 		</div>
 		<div id="tabs-2">
 			<p>Sites with data in this Collection</p>

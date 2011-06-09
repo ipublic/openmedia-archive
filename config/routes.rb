@@ -89,8 +89,9 @@ Openmedia::Application.routes.draw do
     resources :maps
     
     namespace :om_linked_data do
-      resources :collections
-      resources :vocabularies
+      resources :collections do
+        resources :vocabularies
+      end
     end
 
     namespace :schema do

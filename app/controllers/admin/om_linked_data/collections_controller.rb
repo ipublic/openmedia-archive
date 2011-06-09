@@ -27,7 +27,11 @@ class Admin::OmLinkedData::CollectionsController < Admin::BaseController
 
     def show
       @collection = ::OmLinkedData::Collection.find(params[:id])
-      @vocabularies = ::OmLinkedData::Vocabulary.find_by_collection_id(params[:id])
+      @sorted_vocabs = @collection.sort_vocabularies_by_base_uri
+      
+      @commons_vocabs = @sorted_vocabs.delete(om_site.url) { |val| val = [] }
+      @site_vocabs = @sorted_vocabs.delete(current_site.url) { |val| val = [] }
+#      @other_vocabs = 
     end
 
     def edit

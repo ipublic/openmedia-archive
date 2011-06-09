@@ -37,45 +37,21 @@ OpenMedia::Schema::Metadata.initialize_metadata
 
 # create om site w/ dan as admin
 ec = OpenMedia::InferenceRules::GeographicName.find_by_name('Ellicott City').first
-om_site = OpenMedia::Site.create!(:identifier=>"om", :municipality=>ec, :openmedia_name=>'iPublic OpenMedia Portal', :welcome_banner=>"Civic OpenMedia", :welcome_message=>"A publishing system for government open data")
-om_site.initialize_metadata
+@om_site = OpenMedia::Site.create!(:identifier=>"om", :municipality=>ec, :openmedia_name=>'iPublic OpenMedia Portal', :welcome_banner=>"Civic OpenMedia", :welcome_message=>"A publishing system for government open data")
+@om_site.initialize_metadata
 
 dan = Admin.create!(:email=>'dan.thomas@ipublic.org', :password=>'ChangeMe',
-                    :password_confirmation=>'ChangeMe', :site=>om_site, :confirmed_at=>Time.now)
+                    :password_confirmation=>'ChangeMe', :site=>@om_site, :confirmed_at=>Time.now)
 
 name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new(:given_name=>'Dan', :family_name=>'Thomas').save!
 email = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardEmail.new(:value=>'dan.thomas@ipublic.org', :type=>RDF::VCARD.Work.to_s).save!
-vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(om_site.vcards_rdf_uri/UUID.new.generate.gsub(/-/,''))
+vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(@om_site.vcards_rdf_uri/UUID.new.generate.gsub(/-/,''))
 vcard.n = name
 vcard.email = email
 vcard.save!
 
-## Initialize the Commons Collections
-collections = [
-  'Addresses', 'Agriculture', 'Arts', 'Animal Control',
-  'Business',
-  'Citizens', 'Community Services', 'Council and Boards',
-  'Demographics',
-  'Economy', 'Elections', 'Education', 'Environment', 'Energy',
-  'Finance',
-  'Government',
-  'Health', 'Housing', 'Human Services',
-  'Insurance',
-  'Justice',
-  'Licenses and Permits', 'Labor Force',
-  'Military', 'Motor Vehicles', 
-  'Natural Resources', 'Neighborhoods',
-  'Parks and Recreation', 'People', 'Performance Management', 'Physical Geography', 'Planning', 'Property', 'Public Safety', 'Public Works',
-  'Science', 
-  'Technology and Communication', 'Transportation',
-  'Utilities',
-  'Weather'
-  ]
+require File.join(File.dirname(__FILE__),'seeds', 'collections')
 
-#collections.sort.each { |col| OpenMedia::Schema::SKOS::Collection.create_in_collection!(om_site.skos_collection, :label=> col)}
-collections.sort.each { |col| OmLinkedData::Collection.create!(:label=> col, :base_uri => om_site.url)}
-
-# "The Addresses collection includes unique designations for physical locations and identifiers for non-physical  resources such as a web page.  Examples include: home and business site addresses, road intersections and Web page URL's"
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})
 g = OpenMedia::DashboardGroup.new({:title => "Economic Strength"})

@@ -20,6 +20,6 @@ collections = [
   'Weather'
   ]
 
-collections.sort.each { |col| ::OmLinkedData::Collection.create!(:label=> col, :base_uri => om_site.url)}
+collections.sort.each { |col| ::OmLinkedData::Collection.create!(:label=> col, :base_uri => @om_site.url)}
 
 # "The Addresses collection includes unique designations for physical locations and identifiers for non-physical resources such as a web page.  Examples include: home and business site addresses, road intersections and Web page URL's"

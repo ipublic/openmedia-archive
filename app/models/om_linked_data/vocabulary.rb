@@ -25,7 +25,9 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   
   timestamps!
 
-  validates_presence_of :label, :collection_id, :base_uri
+  validates_presence_of :label
+  validates_presence_of :collection_id
+  validates_presence_of :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
   
   ## Callbacks
@@ -90,6 +92,25 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
     # self.properties.each { |prop| namespaces[prop.namespace.alias.to_s] = prop.namespace.iri_base.to_s }
     # namespaces
   end
+  
+  ## Return a Hash with URIs as key's and Vocaulary hashes in an associated Array
+  ## Calling with an empty Collection_id will return all Vocaularies
+  def self.sort_by_base_uri(collection_id = '')
+    
+    @sorted_vocabularies = Hash.new
+    if collection_id.empty?
+      all_vocabs = OmLinkedData::Vocabulary.all
+    else
+      all_vocabs = OmLinkedData::Vocabulary.by_collection_id(:key => collection_id)
+    end
+    
+    all_vocabs.each do |v| 
+      @sorted_vocabularies.key?(v.base_uri) ? @sorted_vocabularies[v.base_uri] << v : @sorted_vocabularies[v.base_uri] = Array.[](v)
+    end
+    @sorted_vocabularies
+  end
+
+  
   
 private
   def generate_uri

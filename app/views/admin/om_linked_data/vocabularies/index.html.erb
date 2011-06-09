@@ -1,0 +1,42 @@
+<% title "Vocabularies" %>
+<div class="grid_12">
+  <%= link_to 'Add Vocabulary', new_admin_om_linked_data_vocabulary_path %>
+	<hr />
+</div>
+<div class="grid_8">
+    <div class="block" id="tables">
+      <table>
+				<thead>
+				  <tr>
+				    <th>Label</th>
+				    <th>ID</th>
+						<th>Comments</th>
+				    <th>No. Properties</th>
+				  </tr>
+				</thead>
+				<% @vocabularies.each do |v| %>
+				<tr>
+				  <td><%= link_to v.label, admin_schema_collection_path(v) %></td>
+				  <td><%= v.identifier %></td>
+				  <td><%= v.comments %></td>
+					<td>put prop ct here</td>>
+				</tr>
+				<% end %>
+      </table>
+  </div>
+</div>
+
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3>Organize Data Content</h3>
+				<p class="meta">Help others find and use your site's data.</p>
+				<p>OpenMedia schemas add uniformity to data content and group that content into common themes.</p>
+				<p>Here you will find predefined Collections: common categories where you may publish uploaded content.</p>
+				<p>Within Collections, Classes for open and consensus standards are provided (as available) to make it easy to quickly publish and share information using common terms and vocabularies.</p>
+				<p>If an appropriate Collection or Class isn't already available, you may also add your own.</p>
+			</div>
+		</div>
+	</div>
+</div>

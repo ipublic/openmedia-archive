@@ -9,12 +9,13 @@ class OmLinkedData::Namespace < Hash
   
   def initialize(b)
     super
-    self.base_uri = b.to_s
-    addr = Addressable::URI.parse(self.base_uri)
-    self.fqdn = addr.host
-    self.authority = escape_string(self.fqdn)
+    self["base_uri"] = b
+    addr = Addressable::URI.parse(self["base_uri"])
+    self["fqdn"] = addr.host
+    self["authority"] = escape_string(self["fqdn"])
     parts = addr.host.split('.')
-    self.subdomain = parts.first if parts.length == 3
+    self["subdomain"] = parts.first if parts.length == 3
+    # return self
   end
 
 private

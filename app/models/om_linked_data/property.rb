@@ -26,7 +26,8 @@ class OmLinkedData::Property < CouchRest::Model::Base
   
   timestamps!
 
-  validates_presence_of :label, :base_uri
+  validates_presence_of :label
+  validates_presence_of :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
   
   before_create :generate_uri

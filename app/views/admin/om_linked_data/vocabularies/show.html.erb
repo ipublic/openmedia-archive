@@ -1,2 +1,50 @@
-<h1>Admin::Schema::Vocabularies#show</h1>
-<p>Find me in app/views/admin/schema/vocabularies/show.html.erb</p>
+<% title "Collections > Vocabulary > #{@vocabulary.label}" %>
+
+<div class="grid_12" >
+  <p class="page-nav">
+    <%= link_to "All Classes", admin_om_linked_data_collection_path(@collection) %> | 
+    <%= link_to "Edit", edit_admin_om_linked_data_collection_vocabulary_path(@collection, @vocabulary) %> |
+    <%= link_to 'Delete', admin_om_linked_data_collection_vocabulary_path(@collection, @vocabulary), 
+	:confirm => "Are you sure you want to delete this Vocabulary and all of its data?", 
+        :method => :delete %>
+  </p>
+  <hr />
+</div>
+
+<div class="grid_12" >
+  <div class="box">
+    <h2><%= @vocabulary.label %></h2>
+    <div class="block">
+      <%= show_fields(@vocabulary, [:label, :comment, :uri, 
+																		 [:created_at, "Created"], 
+																		 [:updated_at, "Modified"]
+																		]).html_safe %>
+    </div>
+  </div>
+</div>
+
+<div class="grid_12">
+  <div class="box" id="tables">
+    <h2>Properties</h2>
+    <div class="block">
+      <table>
+	<thead>
+	  <tr>
+	    <th>Property Name</th>
+	    <th>Property Type</th>
+	    <th>Description</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @vocabulary.properties.sort {|p1,p2| p1['label'] <=> p2['label']}.each do |property| %>
+	  <tr>
+	    <td><%= property.label %></td>
+	    <td><span class="tooltip" title="<%= property.expected_type %>"><%= property.expected_type %></span></td>
+	    <td><%= property.comment %></td>
+	  </tr>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -12,11 +12,11 @@
   <div class="block" id="tables">
     <table>
 		<thead>
-		  <tr>
+			<tr>
 		    <th>Label</th>
 		    <th>ID</th>
-				<th>Comments</th>
 		    <th>No. Vocabularies</th>
+		    <th>No. Records</th>
 		  </tr>
 		</thead>
 		<% if @collections.nil? %>
@@ -26,8 +26,8 @@
 			<tr>
 			  <td><%= link_to c.label, admin_om_linked_data_collection_path(c) %></td>
 			  <td><%= c.identifier.split("collection_openmedia_dev_").last  %></td>
-			  <td><%= c.comment %></td>
 				<td><%= OmLinkedData::Vocabulary.find_by_collection_id(c.identifier).length %>
+				<td>Use reduce to sum number of instances</td>
 			</tr>
 			<% end %>
 		<% end %>

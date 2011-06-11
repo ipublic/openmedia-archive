@@ -10,10 +10,10 @@ describe OmLinkedData::Collection do
                                           :comment => "Matters associated with public schools")
   end
   
-  it 'should fail to initialize instance without both a label and namespace' do
+  it 'should fail to initialize instance without both a label and base_uri' do
     lambda {  @bad_collection = OmLinkedData::Collection.new().save! }.should raise_error
     lambda {  @bad_collection = OmLinkedData::Collection.new(:label => @label).save! }.should raise_error
-    lambda {  @bad_collection = OmLinkedData::Collection.new(:base_uri => @ns).save! }.should raise_error
+    lambda {  @bad_collection = OmLinkedData::Collection.new(:base_uri => @uri).save! }.should raise_error
   end
 
   it 'should save and generate an identifier correctly' do

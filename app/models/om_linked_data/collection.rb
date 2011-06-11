@@ -11,9 +11,10 @@ class OmLinkedData::Collection < CouchRest::Model::Base
 
   property :base_uri, String
   property :subdomain, String
+  property :authority, String
+
   property :uri, String
   property :term, String                 # Escaped vocabulary name suitable for inclusion in IRI
-  property :authority, String
 
   timestamps!
 

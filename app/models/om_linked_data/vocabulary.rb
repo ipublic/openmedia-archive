@@ -10,24 +10,22 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   property :comment, String     # RDFS#Comment
   property :tags, [String]
 
+  property :uri, String
+  property :term, String
+  
   property :base_uri, String
   property :subdomain, String
-  property :uri, String
   property :authority, String
-  property :term, String
-
-  collection_of :properties, :class_name => 'OmLinkedData::Property'  # Props with same semantic meaning
-#  property :properties, [OmLinkedData::Property]
-#  property :type, String        # RDFS.domain, => foaf:Agent
+  
+  collection_of :types, :class_name => 'OmLinkedData::Type'  # Props with same semantic meaning
 
   ## TODO -- move geometries into Properties
-  property :geometries, [GeoJson::Geometry]
+  # property :geometries, [GeoJson::Geometry]
   
   timestamps!
 
   validates_presence_of :label
   validates_presence_of :collection_id
-  validates_presence_of :base_uri
   validates_uniqueness_of :identifier, :view => 'all'
   
   ## Callbacks
@@ -36,8 +34,7 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
 
   view_by :label
   view_by :collection_id
-  view_by :authority
-  view_by :base_uri
+  view_by :uri
   
   view_by :tags,
     :map =>
@@ -49,15 +46,15 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
           }
         }"
     
-  view_by :has_geometry,
-    :map => 
-      "function(doc) {
-        if ((doc['couchrest-type'] == 'OmLinkedData::Vocabulary') && (doc.geometries.length > 0 )) { 
-          doc.geometries.forEach(function(geometry) {
-            emit(geometry, 1);
-            });
-          }
-        }"
+  # view_by :has_geometry,
+  #   :map => 
+  #     "function(doc) {
+  #       if ((doc['couchrest-type'] == 'OmLinkedData::Vocabulary') && (doc.geometries.length > 0 )) { 
+  #         doc.geometries.forEach(function(geometry) {
+  #           emit(geometry, 1);
+  #           });
+  #         }
+  #       }"
   
   ##
   # Returns the Vocabularies for passed Collection.
@@ -72,14 +69,6 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   #
   # @return {JSON-LD}
   def to_jsonld
-
-  end
-
-  ##
-  # Returns the base URI for this vocabulary.
-  #
-  # @return [URI]  
-  def to_uri
 
   end
 
@@ -109,11 +98,11 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
     end
     @sorted_vocabularies
   end
-
-  
   
 private
   def generate_uri
+    self.term = escape_string(self.label)
+
     # base_uri => "http://dcgov.civicopenmedia.us"
     parts = base_uri.split('.')
     self.subdomain = parts.first.split("http://").last
@@ -121,7 +110,6 @@ private
 
     # authority => "civicopenmedia_us_dcgov"
     self.authority = domain + '_' + subdomain
-    self.term = escape_string(self.label)
 
     rdf_uri = RDF::URI.new('http://civicopenmedia.us')/self.subdomain/"vocabularies#"/self.term
     self.uri = rdf_uri.to_s
@@ -129,7 +117,7 @@ private
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' + self.term if new?
+                         self.collection.authority + '_' + self.term if new?
   end
 
   def escape_string(str)

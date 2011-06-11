@@ -56,8 +56,6 @@ end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-  require 'open_media/schema/rdfs/class'
-  require 'open_media/schema/base_spec'
   require 'spec_utils'
 end
 

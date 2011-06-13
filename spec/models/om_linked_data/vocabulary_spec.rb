@@ -3,10 +3,12 @@ require 'spec_helper'
 describe OmLinkedData::Vocabulary do
 
   before(:each) do
-    @uri = "http://dcgov.civicopenmedia.us"
+    @ns = OmLinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
+    @uri = @ns.base_uri
     @col_label = "Education"
     @collection = OmLinkedData::Collection.new(:label=>@col_label, 
                                               :base_uri => @uri,
+                                              :authority => @ns.authority,
                                               :tags=>["schools", "teachers", "students"], 
                                               :comment => "Matters associated with public schools")
     @collection.save!
@@ -34,7 +36,7 @@ describe OmLinkedData::Vocabulary do
 
   it 'should return this Vocabulary when searching by URI' do
     @res = @vocabulary.save
-    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies#reading_proficiency_third_grade"
+    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/reading_proficiency_third_grade"
     @vocabs = OmLinkedData::Vocabulary.by_uri(:key => @res.uri)
     @vocabs.length.should == 1
     @vocabs[0].label.should == "Reading Proficiency-Third Grade"

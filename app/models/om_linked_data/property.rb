@@ -14,8 +14,8 @@ class OmLinkedData::Property < CouchRest::Model::Base
   property :term, String                              # Escaped vocabulary name suitable for inclusion in IRI
   property :authority, String
 
-  property :range                                     # => RDFS.range
-  property :expected_type, OmLinkedData::Datatype     # Support type coercion
+#  property :range                                     # => RDFS.range
+  property :expected_type, OmLinkedData::Type     # Support type coercion
   
   property :deprecated, TrueClass, :default => false  # Deprecated propoerties may not be used 
                                                        # for future vocabularies

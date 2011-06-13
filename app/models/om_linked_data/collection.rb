@@ -20,6 +20,7 @@ class OmLinkedData::Collection < CouchRest::Model::Base
 
   validates_presence_of :label
   validates_presence_of :base_uri
+  validates_presence_of :authority
   validates_uniqueness_of :identifier, :view => 'all'
 
   ## Callbacks
@@ -59,23 +60,14 @@ class OmLinkedData::Collection < CouchRest::Model::Base
 
 private
   def generate_uri
-  
-    # base_uri => "http://dcgov.civicopenmedia.us"
-    parts = base_uri.split('.')
-    self.subdomain = parts.first.split("http://").last
-    domain = base_uri.split(subdomain + '.').last.gsub('.','_')
-
-    # authority => "civicopenmedia_us_dcgov"
-    self.authority = domain + '_' + subdomain
-    self.term = escape_string(self.label)
-
-    rdf_uri = RDF::URI.new('http://civicopenmedia.us')/self.subdomain/"collections#"/self.term
+    rdf_uri = RDF::URI.new(self.base_uri)/"collections#"/escape_string(self.label.downcase)
     self.uri = rdf_uri.to_s
   end
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' + self.term if new?
+                         self.authority + '_' + 
+                         escape_string(self.label.downcase) if new?
   end
   
   def escape_string(str)

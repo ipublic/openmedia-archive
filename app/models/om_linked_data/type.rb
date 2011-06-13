@@ -49,19 +49,20 @@ class OmLinkedData::Type < CouchRest::Model::Base
 
 private
   def generate_uri
-    self.term = escape_string(self.label)
+    self.term = escape_string(self.label.downcase)
 
-    rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.term
+    rdf_uri = RDF::URI.new(self.vocabulary.uri)/"#"/self.term
     self.uri = rdf_uri.to_s
   end
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.vocabulary.authority + '_' + self.term if new?
+                         self.vocabulary.authority + '_' + 
+                         self.term.downcase if new?
   end
 
   def escape_string(str)
-    str.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+    str.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
   end
 
 

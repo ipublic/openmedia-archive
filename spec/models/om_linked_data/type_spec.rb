@@ -2,10 +2,12 @@ require 'spec_helper'
 
 describe OmLinkedData::Type do
   before(:each) do
-    @uri = "http://dcgov.civicopenmedia.us"
+    @ns = OmLinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
+    @uri = @ns.base_uri
     @col_label = "Public Safety"
     @collection = OmLinkedData::Collection.new(:label=>@col_label, 
-                                              :base_uri => @uri
+                                              :base_uri => @uri,
+                                              :authority => @ns.authority
                                               )
     @collection.save!
     
@@ -37,7 +39,7 @@ describe OmLinkedData::Type do
   
   it 'should return this Type when searching by URI' do
     @res = @type.save
-    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies#crime/offense"
+    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/crime#offense"
     @types = OmLinkedData::Type.by_uri(:key => @res.uri)
     @types.length.should == 1
     @types[0].label.should == "Offense"

@@ -3,9 +3,11 @@ require 'spec_helper'
 describe OmLinkedData::Collection do
 
   before(:each) do
-    @uri = "http://dcgov.civicopenmedia.us"
+    @ns = OmLinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
+    @uri = @ns.base_uri
     @collection = OmLinkedData::Collection.new(:label=>"Education", 
                                           :base_uri => @uri,
+                                          :authority => @ns.authority,
                                           :tags=>["schools", "teachers", "students"], 
                                           :comment => "Matters associated with public schools")
   end

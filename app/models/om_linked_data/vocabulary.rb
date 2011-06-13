@@ -11,11 +11,10 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   property :tags, [String]
 
   property :uri, String
-  property :term, String
-  
   property :base_uri, String
-  property :subdomain, String
   property :authority, String
+
+  property :curie_prefix, String
   
   collection_of :types, :class_name => 'OmLinkedData::Type'  # Props with same semantic meaning
 
@@ -25,8 +24,10 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   timestamps!
 
   validates_presence_of :label
+  validates_presence_of :base_uri
   validates_presence_of :collection_id
   validates_uniqueness_of :identifier, :view => 'all'
+  
   
   ## Callbacks
   before_create :generate_uri
@@ -85,7 +86,6 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   ## Return a Hash with URIs as key's and Vocaulary hashes in an associated Array
   ## Calling with an empty Collection_id will return all Vocaularies
   def self.sort_by_base_uri(collection_id = '')
-    
     @sorted_vocabularies = Hash.new
     if collection_id.empty?
       all_vocabs = OmLinkedData::Vocabulary.all
@@ -101,27 +101,19 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   
 private
   def generate_uri
-    self.term = escape_string(self.label)
-
-    # base_uri => "http://dcgov.civicopenmedia.us"
-    parts = base_uri.split('.')
-    self.subdomain = parts.first.split("http://").last
-    domain = base_uri.split(subdomain + '.').last.gsub('.','_')
-
-    # authority => "civicopenmedia_us_dcgov"
-    self.authority = domain + '_' + subdomain
-
-    rdf_uri = RDF::URI.new('http://civicopenmedia.us')/self.subdomain/"vocabularies#"/self.term
+    rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.label.downcase)
     self.uri = rdf_uri.to_s
+    self.authority = self.collection.authority
   end
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.collection.authority + '_' + self.term if new?
+                         self.authority + '_' + 
+                         escape_string(self.label.downcase) if new?
   end
 
   def escape_string(str)
-    str.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+    str.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
   end
   
 end

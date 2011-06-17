@@ -1,6 +1,14 @@
 ## Initialize the Commons Collections
 
-::OmLinkedData::Collection.create!(:base_uri => @om_site.url, :label=> 'Addresses', 
+ns = ::OmLinkedData::Namespace.new(@om_site.url)
+::OmLinkedData::Collection.create!(:base_uri => ns.base_uri, 
+                                    :label=> 'Core', 
+                                    :authority => ns.authority, 
+                                    :tags => ["intrinsic", "default", "base"], 
+                                    :comment => "The Core collection includes OpenMedia built-in types.")
+
+::OmLinkedData::Collection.create!(:base_uri => ns.base_uri, :label=> 'Addresses', 
+  :authority => ns.authority, 
   :tags => ["residence", "house", "home", "headquarters", "place", "business", "location", "intersection", 
             "100 block", "site address", "po box", "url", "uri"], 
   :comment => 
@@ -27,6 +35,9 @@ collections = [
   'Weather'
   ]
 
-collections.sort.each { |col| ::OmLinkedData::Collection.create!(:label=> col, :base_uri => @om_site.url)}
+collections.sort.each { |col| ::OmLinkedData::Collection.create!(:label=> col, 
+                                                                :base_uri => ns.base_uri,
+                                                                :authority => ns.authority
+                                                                )}
 
 

@@ -23,11 +23,11 @@ OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
 # create datatype for JSON
 OpenMedia::Schema::RDFS::Datatype.for(RDF::OM_CORE.GeoJson).save!
 
-# TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
+#TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
 TYPES_RDF_REPOSITORY.refresh_design_doc   # just in case
-
-OpenMedia::Schema::VCard.initialize_vcard
-OpenMedia::Schema::Metadata.initialize_metadata
+# # 
+# OpenMedia::Schema::VCard.initialize_vcard
+# OpenMedia::Schema::Metadata.initialize_metadata
 
 require File.join(File.dirname(__FILE__),'seeds', 'metadata')
 require File.join(File.dirname(__FILE__),'seeds', 'vcard')
@@ -52,6 +52,20 @@ vcard.save!
 
 require File.join(File.dirname(__FILE__),'seeds', 'collections')
 
+
+core_coll = ::OmLinkedData::Collection.find_by_label("Core")
+xsd_vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001", 
+                                          :label => "XMLSchema",
+                                          :property_delimiter => "#",
+                                          :curie_prefix => "xsd",
+                                          :collection => core_coll,
+                                          :comment => "Datatypes defined in XML schemas"
+                                          ).save
+                                          
+["base64Binary", "boolean", "byte", "date", "dateTime", "double", "duration", 
+  "float", "integer", "long", "short", "string", "time"].each do |label|
+  ::OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => label).save!                                    
+end
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})
 g = OpenMedia::DashboardGroup.new({:title => "Economic Strength"})

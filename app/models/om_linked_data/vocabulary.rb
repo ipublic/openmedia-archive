@@ -15,6 +15,7 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   property :authority, String
 
   property :curie_prefix, String
+  property :property_delimiter, String, :default => "/"
   
   collection_of :types, :class_name => 'OmLinkedData::Type'  # Props with same semantic meaning
 
@@ -101,9 +102,15 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   
 private
   def generate_uri
-    rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.label.downcase)
-    self.uri = rdf_uri.to_s
     self.authority = self.collection.authority
+    
+    # If this is local vocabulary, construct the OM path
+    if self.base_uri.include? "http://civicopenmedia.us/"
+      rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.label)
+    else
+      rdf_uri = RDF::URI.new(self.base_uri)/self.label
+    end
+    self.uri = rdf_uri.to_s
   end
 
   def generate_identifier
@@ -113,7 +120,7 @@ private
   end
 
   def escape_string(str)
-    str.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+    str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
   end
   
 end

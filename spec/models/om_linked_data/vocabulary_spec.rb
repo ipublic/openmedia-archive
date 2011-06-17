@@ -19,7 +19,9 @@ describe OmLinkedData::Vocabulary do
                             :base_uri => @uri,
                             :tags => ["reading", "testing", "third grade"], 
                             :comment => "Percentage of children in third grade who read on grade level")
+  
   end
+  
   
   it 'should fail to initialize instance without a label, collection and base_uri' do
     lambda {  @bad_vocab = OmLinkedData::Vocabulary.new().save! }.should raise_error
@@ -34,9 +36,34 @@ describe OmLinkedData::Vocabulary do
     @res[0].identifier.should == 'vocabulary_civicopenmedia_us_dcgov_reading_proficiency_third_grade'
   end
 
+  it 'should recognize a local vocabulary and generate correct URI' do
+    lcl_vocab = ::OmLinkedData::Vocabulary.new(:label => "LocalVocabulary",
+                                                :base_uri => @uri, 
+                                                :collection => @collection,
+                                                :curie_prefix => "om",
+                                                :comment => "Datatypes defined on local OM site"
+                                                ).save
+                                                
+    vocab = ::OmLinkedData::Vocabulary.get(lcl_vocab.identifier)
+    vocab.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/LocalVocabulary"
+  end
+  
+  it 'should recognize an external vocabulary and generate correct URI' do
+    xsd_vocab = ::OmLinkedData::Vocabulary.new(:label => "XMLSchema",
+                                                :base_uri => "http://www.w3.org/2001", 
+                                                :collection => @collection,
+                                                :curie_prefix => "xsd",
+                                                :comment => "Datatypes defined in XML schemas"
+                                                ).save
+                                                
+    vocab = ::OmLinkedData::Vocabulary.get(xsd_vocab.identifier)
+    vocab.uri.should == "http://www.w3.org/2001/XMLSchema"
+  end
+  
+
   it 'should return this Vocabulary when searching by URI' do
     @res = @vocabulary.save
-    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/reading_proficiency_third_grade"
+    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/Reading_Proficiency_Third_Grade"
     @vocabs = OmLinkedData::Vocabulary.by_uri(:key => @res.uri)
     @vocabs.length.should == 1
     @vocabs[0].label.should == "Reading Proficiency-Third Grade"

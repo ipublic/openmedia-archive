@@ -8,15 +8,14 @@ describe OmLinkedData::Type do
     @collection = OmLinkedData::Collection.new(:label=>@col_label, 
                                               :base_uri => @uri,
                                               :authority => @ns.authority
-                                              )
-    @collection.save!
+                                              ).save
     
     @vocab_label = "Crime"
     @vocabulary = OmLinkedData::Vocabulary.new(:label=>@vocab_label, 
                                               :base_uri => @uri,
-                                              :collection => @collection
-                                              )
-    @vocabulary.save
+                                              :collection => @collection,
+                                              :property_delimiter => "#"
+                                              ).save
     
     @label = "Offense"
     @type = OmLinkedData::Type.new(:label => @label, 
@@ -39,7 +38,7 @@ describe OmLinkedData::Type do
   
   it 'should return this Type when searching by URI' do
     @res = @type.save
-    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/crime#offense"
+    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/Crime#offense"
     @types = OmLinkedData::Type.by_uri(:key => @res.uri)
     @types.length.should == 1
     @types[0].label.should == "Offense"
@@ -57,6 +56,19 @@ describe OmLinkedData::Type do
     @res.length.should == 0 
     @res = OmLinkedData::Type.by_tags(:key => "police")
     @res[0].identifier.should == 'type_civicopenmedia_us_dcgov_offense'
+  end
+  
+  it 'should save and return an external vocabulary and Type' do
+    xsd_vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001", 
+                                              :label => "XMLSchema",
+                                              :property_delimiter => "#",
+                                              :curie_prefix => "xsd",
+                                              :collection => @collection,
+                                              :comment => "Datatypes defined in XML schemas"
+                                              ).save
+    
+    @type = OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => "integer").save
+    @type.uri.should == "http://www.w3.org/2001/XMLSchema#integer"
   end
   
 end

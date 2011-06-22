@@ -60,6 +60,7 @@ class OmLinkedData::Collection < CouchRest::Model::Base
 
 private
   def generate_uri
+    self.term ||= self.label.downcase
     rdf_uri = RDF::URI.new(self.base_uri)/"collections#"/escape_string(self.label.downcase)
     self.uri = rdf_uri.to_s
   end
@@ -67,7 +68,7 @@ private
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 
-                         escape_string(self.label.downcase) if new?
+                         escape_string(self.term) if new?
   end
   
   def escape_string(str)

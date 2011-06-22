@@ -13,7 +13,8 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   property :uri, String
   property :base_uri, String
   property :authority, String
-
+  property :term, String
+  
   property :curie_prefix, String
   property :property_delimiter, String, :default => "/"
   
@@ -36,6 +37,7 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
 
   view_by :label
   view_by :collection_id
+  view_by :curie_prefix
   view_by :uri
   
   view_by :tags,
@@ -103,12 +105,13 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
 private
   def generate_uri
     self.authority = self.collection.authority
+    self.term ||= self.label
     
     # If this is local vocabulary, construct the OM path
     if self.base_uri.include? "http://civicopenmedia.us/"
-      rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.label)
+      rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.term)
     else
-      rdf_uri = RDF::URI.new(self.base_uri)/self.label
+      rdf_uri = RDF::URI.new(self.base_uri)/self.term
     end
     self.uri = rdf_uri.to_s
   end
@@ -116,7 +119,7 @@ private
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 
-                         escape_string(self.label.downcase) if new?
+                         escape_string(self.term.downcase) if new?
   end
 
   def escape_string(str)

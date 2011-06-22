@@ -33,7 +33,7 @@ describe OmLinkedData::Type do
   it 'should save and generate an identifier correctly' do
     lambda { @type.save! }.should change(OmLinkedData::Type, :count).by(1)
     @res = OmLinkedData::Type.by_label(:key => @label)
-    @res[0].identifier.should == 'type_civicopenmedia_us_dcgov_offense'
+    @res[0].identifier.should == 'type_civicopenmedia_us_dcgov_crime_offense'
   end
   
   it 'should return this Type when searching by URI' do
@@ -55,7 +55,7 @@ describe OmLinkedData::Type do
     @res = OmLinkedData::Type.by_tags(:key => "xyxyxy")
     @res.length.should == 0 
     @res = OmLinkedData::Type.by_tags(:key => "police")
-    @res[0].identifier.should == 'type_civicopenmedia_us_dcgov_offense'
+    @res[0].identifier.should == 'type_civicopenmedia_us_dcgov_crime_offense'
   end
   
   it 'should save and return an external vocabulary and Type' do

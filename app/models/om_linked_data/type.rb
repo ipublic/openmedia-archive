@@ -10,8 +10,9 @@ class OmLinkedData::Type < CouchRest::Model::Base
   property :comment, String       # => RDFS#Comment
   property :tags, [String]
 
+  property :term, String          # type id appended to URI. preserves string case if provided, 
+                                  #   adapted from "label" property if not provided
   property :uri, String
-  property :term, String
 
   collection_of :types, :class_name => 'OmLinkedData::Type'
 
@@ -23,6 +24,7 @@ class OmLinkedData::Type < CouchRest::Model::Base
 
   view_by :uri
   view_by :label
+  view_by :term
   view_by :vocabulary_id
   
   ## Callbacks
@@ -49,14 +51,16 @@ class OmLinkedData::Type < CouchRest::Model::Base
 
 private
   def generate_uri
-    rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.label.downcase
+    self.term ||= self.label.downcase
+    rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.term
     self.uri = rdf_uri.to_s
   end
 
   def generate_identifier
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.vocabulary.authority + '_' + 
-                         escape_string(self.label.downcase) if new?
+                         self.vocabulary.term.downcase + '_' +
+                         escape_string(self.term.downcase) if new?
   end
 
   def escape_string(str)

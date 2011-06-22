@@ -63,9 +63,31 @@ xsd_vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001"
                                           ).save
                                           
 ["base64Binary", "boolean", "byte", "date", "dateTime", "double", "duration", 
-  "float", "integer", "long", "short", "string", "time"].each do |label|
-  ::OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => label).save!                                    
+  "float", "integer", "long", "short", "string", "time"].each do |term|
+  ::OmLinkedData::Type.new(:vocabulary => xsd_vocab, :term => term, :label => term).save!                                    
 end
+
+geo_vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2003/01/geo/", 
+                                          :term => "wgs84_pos",
+                                          :property_delimiter => "#",
+                                          :curie_prefix => "geo",
+                                          :collection => core_coll,
+                                          :label => "W3C Geo Vocabulary",
+                                          :comment => "A basic RDF vocabulary that provides the Semantic Web community with a namespace for representing lat(itude), long(itude) and other information about spatially-located things, using WGS84 as a reference datum"
+                                          ).save
+
+::OmLinkedData::Type.create!(:vocabulary => geo_vocab, 
+                          :label => "Latitude", 
+                          :term => "lat",
+                          :tags => ["northing", "coordinate"]
+                          )
+                                              
+::OmLinkedData::Type.create!(:vocabulary => geo_vocab, 
+                          :label => "Longitude", 
+                          :term => "long",
+                          :tags => ["easting", "coordinate"]
+                          )                              
+
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})
 g = OpenMedia::DashboardGroup.new({:title => "Economic Strength"})

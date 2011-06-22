@@ -11,8 +11,9 @@ describe OmLinkedData::Type do
                                               ).save
     
     @vocab_label = "Crime"
-    @vocabulary = OmLinkedData::Vocabulary.new(:label=>@vocab_label, 
-                                              :base_uri => @uri,
+    @vocabulary = OmLinkedData::Vocabulary.new(:base_uri => @uri,
+                                              :term => @vocab_label, 
+                                              :label=>@vocab_label,
                                               :collection => @collection,
                                               :property_delimiter => "#"
                                               ).save
@@ -69,6 +70,27 @@ describe OmLinkedData::Type do
     
     @type = OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => "integer").save
     @type.uri.should == "http://www.w3.org/2001/XMLSchema#integer"
+    @type.compound?.should == false
+  end
+  
+  it 'should save and return a Compound Type' do 
+    xsd_vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001", 
+                                              :label => "XMLSchema",
+                                              :property_delimiter => "#",
+                                              :curie_prefix => "xsd",
+                                              :collection => @collection,
+                                              :comment => "Datatypes defined in XML schemas"
+                                              ).save
+    
+    @int = OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => "integer").save
+    @lng = OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => "long").save
+    @str = OmLinkedData::Type.new(:vocabulary => xsd_vocab, :label => "string").save
+    
+    @type.types << @int << @lng << @str
+    @comp = @type.save
+    
+    @comp.types[0].label.should == "integer"
+    @comp.compound?.should == true
   end
   
 end

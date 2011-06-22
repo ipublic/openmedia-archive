@@ -42,7 +42,7 @@ class OmLinkedData::Type < CouchRest::Model::Base
         }"
   
   def compound?
-    self.properties.length > 0 ? true : false
+    self.types.length > 0 ? true : false
   end
 
   def self.find_by_vocabulary_id(vocab_id)

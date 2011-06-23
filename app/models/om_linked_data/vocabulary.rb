@@ -18,7 +18,8 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   property :curie_prefix, String
   property :property_delimiter, String, :default => "/"
   
-  collection_of :types, :class_name => 'OmLinkedData::Type'  # Props with same semantic meaning
+  collection_of :properties, :class_name => 'OmLinkedData::Property'
+  collection_of :types, :class_name => 'OmLinkedData::Type'
 
   ## TODO -- move geometries into Properties
   # property :geometries, [GeoJson::Geometry]

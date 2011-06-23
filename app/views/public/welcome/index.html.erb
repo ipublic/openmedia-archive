@@ -32,10 +32,12 @@
 </div>
 
 <div class="grid_8 omega">
-	<% @dashboard.groups.each do |g|  %>
-		<%= render :partial => '/public/dashboards/dashboard_group', :locals  =>{ :group => g } %>
+	<% unless @dashboard.nil? %>
+		<% @dashboard.groups.each do |g|  %>
+			<%= render :partial => '/public/dashboards/dashboard_group', :locals  =>{ :group => g } %>
+		<% end %>
+		<h5>Change Dashboard</h5>
 	<% end %>
-	<h5>Change Dashboard</h5>
 
 	<% unless @gmap.nil? %>
 	  <div class="box">

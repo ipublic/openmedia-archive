@@ -4,7 +4,9 @@ class OmLinkedData::Type < CouchRest::Model::Base
   unique_id :identifier
 
   belongs_to :vocabulary, :class_name => "OmLinkedData::Vocabulary"
-
+  collection_of :properties, :class_name => 'OmLinkedData::Property' 
+  collection_of :types, :class_name => 'OmLinkedData::Type'
+  
   property :identifier
   property :label, String         # User assigned name, RDFS#Label
   property :comment, String       # => RDFS#Comment
@@ -14,7 +16,6 @@ class OmLinkedData::Type < CouchRest::Model::Base
                                   #   adapted from "label" property if not provided
   property :uri, String
 
-  collection_of :types, :class_name => 'OmLinkedData::Type'
 
   timestamps!
 

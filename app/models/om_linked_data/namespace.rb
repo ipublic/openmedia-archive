@@ -9,7 +9,7 @@ class OmLinkedData::Namespace
 
     # authority => "civicopenmedia_us_dcgov"
     @authority = domain.gsub('.','_') + '_' + subdomain
-    @base_uri = "http://civicopenmedia.us/#{self.subdomain}"
+    @base_uri = "http://#{@domain}/#{@subdomain}"
   end
 
 private

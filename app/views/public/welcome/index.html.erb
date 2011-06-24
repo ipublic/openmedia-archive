@@ -8,12 +8,15 @@
     <div class="block">
 			<p>Browse and download published data by category</p>
 			<ul>
-				<% @collections.each do |c| %>
-					<% if current_site && c.members.size > 0 %>
-					  <li><%= link_to c.label, collection_path(rdf_id(c)) %></li>
+				<% if @collections.nil? %>
+					<li>No Collections found.</li>
+				<% else %>
+					<% @collections.each do |c| %>
+					  <li><%= link_to c.label, collection_path(c) %>
+						<%= OmLinkedData::Vocabulary.find_by_collection_id(c.identifier).length %></li>
 					<% end %>
 				<% end %>
-			</ul>
+			<ul>
 		</div>
 	</div>
 

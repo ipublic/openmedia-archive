@@ -11,7 +11,7 @@ describe OmLinkedData::Type do
                                               ).save
     
     @vocab_label = "Crime"
-    @vocabulary = OmLinkedData::Vocabulary.new(:base_uri => @uri,
+    @crime = OmLinkedData::Vocabulary.new(:base_uri => @uri,
                                               :term => @vocab_label, 
                                               :label => @vocab_label,
                                               :collection => @collection,
@@ -35,7 +35,7 @@ describe OmLinkedData::Type do
   it 'should fail to initialize instance without a label and vocabulary' do
     lambda {  @bad_vocab = OmLinkedData::Type.new().save! }.should raise_error
     lambda {  @bad_vocab = OmLinkedData::Type.new(:label => "integer").save! }.should raise_error
-    lambda {  @bad_vocab = OmLinkedData::Type.new(:vocabulary => @vocabulary).save! }.should raise_error
+    lambda {  @bad_vocab = OmLinkedData::Type.new(:vocabulary => @crime).save! }.should raise_error
   end
 
   it 'should save and generate an identifier correctly' do
@@ -84,51 +84,26 @@ describe OmLinkedData::Type do
   end
   
   it 'should save and return a Compound Type' do 
-    # geo = OmLinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2003/01/geo/", 
-    #                                    :label => "W3C Geo Vocabulary",
-    #                                    :term => "wgs84_pos",
-    #                                    :property_delimiter => "#",
-    #                                    :curie_prefix => "geo",
-    #                                    :collection => @collection
-    #                                   ).save
-    # 
-    # ::OmLinkedData::Type.create!(:vocabulary => geo, 
-    #                              :label => "Latitude", 
-    #                              :term => "lat",
-    #                              :tags => ["northing", "coordinate"]
-    #                              )
-    # 
-    # ::OmLinkedData::Type.create!(:vocabulary => geo_vocab, 
-    #                           :label => "Longitude", 
-    #                           :term => "long",
-    #                           :tags => ["easting", "coordinate"]
-    #                           )                              
-    # 
-    # point = OmLinkedData::Vocabulary.new(:base_uri => @ns.base_uri,
-    #                                      :collection => @collection,
-    #                                      :label => "Crime Reports",
-    #                                      :property_delimiter => "#",
-    #                                      :tags => ["police", "law enforcement", "justice"]
-    #                                      ).save
-    # 
-    # 
-    # method = OmLinkedData::Property.new(:vocabulary => crime, 
-    #                                      :label => "Method", 
-    #                                      :expected_type => @str).save
-    # 
-    # offense = OmLinkedData::Property.new(:vocabulary => crime, 
-    #                                       :label => "Offense", 
-    #                                       :expected_type => @str
-    #                                       ).save
-    # 
-    # 
-    # 
-    # @type.properties << method << offense
-    # @comp = @type.save
-    # 
-    # @comp.properties[0].label.should == "Method"
-    # @comp.properties[0].expected_type.label.should == "string"
-    # @comp.compound?.should == true
+    cr = OmLinkedData::Type.new(:vocabulary => @crime, 
+                                :label => "Crime Reports"
+                                )
+    
+    method = OmLinkedData::Property.new(:vocabulary => @crime, 
+                                         :label => "Method", 
+                                         :expected_type => @str).save
+    offense = OmLinkedData::Property.new(:vocabulary => @crime, 
+                                         :label => "Offense", 
+                                         :expected_type => @str).save
+
+                                     
+    cr.properties << method << offense
+    comp = cr.save
+    
+    res = OmLinkedData::Type.get comp.identifier
+    
+    res.properties[0].label.should == "Method"
+    res.properties[0].expected_type.label.should == "string"
+    res.compound?.should == true
   end
   
     

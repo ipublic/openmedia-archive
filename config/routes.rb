@@ -90,7 +90,10 @@ Openmedia::Application.routes.draw do
     
     namespace :om_linked_data do
       resources :collections do
-        resources :vocabularies
+        resources :vocabularies do
+          resources :types
+          resources :properties
+        end
       end
     end
 

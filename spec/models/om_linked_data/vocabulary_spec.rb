@@ -15,6 +15,7 @@ describe OmLinkedData::Vocabulary do
     
     @label = "Reading Proficiency-Third Grade"
     @vocabulary = OmLinkedData::Vocabulary.new(:label => @label, 
+                            :term => @label,
                             :collection => @collection,
                             :base_uri => @uri,
                             :tags => ["reading", "testing", "third grade"], 
@@ -38,11 +39,12 @@ describe OmLinkedData::Vocabulary do
 
   it 'should recognize a local vocabulary and generate correct URI' do
     lcl_vocab = ::OmLinkedData::Vocabulary.new(:label => "LocalVocabulary",
-                                                :base_uri => @uri, 
-                                                :collection => @collection,
-                                                :curie_prefix => "om",
-                                                :comment => "Datatypes defined on local OM site"
-                                                ).save
+                                               :term => "LocalVocabulary",
+                                               :base_uri => @uri, 
+                                               :collection => @collection,
+                                               :curie_prefix => "om",
+                                               :comment => "Datatypes defined on local OM site"
+                                               ).save
                                                 
     vocab = ::OmLinkedData::Vocabulary.get(lcl_vocab.identifier)
     vocab.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/LocalVocabulary"
@@ -50,6 +52,7 @@ describe OmLinkedData::Vocabulary do
   
   it 'should recognize an external vocabulary and generate correct URI' do
     xsd_vocab = ::OmLinkedData::Vocabulary.new(:label => "XMLSchema",
+                                                :term => "XMLSchema",
                                                 :base_uri => "http://www.w3.org/2001", 
                                                 :collection => @collection,
                                                 :curie_prefix => "xsd",

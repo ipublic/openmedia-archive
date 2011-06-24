@@ -39,6 +39,7 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
   view_by :label
   view_by :collection_id
   view_by :curie_prefix
+  view_by :authority
   view_by :uri
   
   view_by :tags,
@@ -99,6 +100,22 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
     
     all_vocabs.each do |v| 
       @sorted_vocabularies.key?(v.base_uri) ? @sorted_vocabularies[v.base_uri] << v : @sorted_vocabularies[v.base_uri] = Array.[](v)
+    end
+    @sorted_vocabularies
+  end
+  
+  ## Return a Hash with URIs as key's and Vocaulary hashes in an associated Array
+  ## Calling with an empty Collection_id will return all Vocaularies
+  def self.sort_by_authority(collection_id = '')
+    @sorted_vocabularies = Hash.new
+    if collection_id.empty?
+      all_vocabs = OmLinkedData::Vocabulary.all
+    else
+      all_vocabs = OmLinkedData::Vocabulary.by_collection_id(:key => collection_id)
+    end
+    
+    all_vocabs.each do |v| 
+      @sorted_vocabularies.key?(v.authority) ? @sorted_vocabularies[v.authority] << v : @sorted_vocabularies[v.authority] = Array.[](v)
     end
     @sorted_vocabularies
   end

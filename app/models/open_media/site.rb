@@ -10,6 +10,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   # General properties
   property :identifier #, :read_only => true
   property :url
+  property :base_uri
+  property :authority
   property :default_dashboard
   property :welcome_banner, :default => "Welcome to our Data Catalog"
   property :welcome_message, :default => "Your resource for government open data"
@@ -28,9 +30,9 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :municipality, OpenMedia::NamedPlace
 
   property :site_proxy_prefix
-  property :site_canonical_url, :default => "http://localhost"
-  property :site_default_city
-  property :site_default_state
+  # property :site_canonical_url, :default => "http://localhost"
+  # property :site_default_city
+  # property :site_default_state
   
   # Services properties
   # Default googlemap_api_key is for http://localhost
@@ -48,6 +50,7 @@ class OpenMedia::Site < CouchRest::Model::Base
 
   ## CouchDB Views
   view_by :identifier
+  view_by :authority
 
 
   def skos_collection
@@ -102,6 +105,9 @@ private
   def set_url
     if self.url.nil? && self.identifier
       self.url = "http://#{self.identifier}.#{OM_DOMAIN}#{OM_PORT == 80 ? '' : OM_PORT}"
+      ns = ::OmLinkedData::Namespace.new self.url
+      self.authority = ns.authority
+      self.base_uri = ns.base_uri
     end
   end
 end

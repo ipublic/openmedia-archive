@@ -3,7 +3,8 @@ class Admin::OmLinkedData::CollectionsController < Admin::BaseController
     before_filter :convert_hidden, :only=>[:update, :create]
 
     def index
-      @collections = ::OmLinkedData::Collection.by_base_uri(:key => current_site.url)
+      ns = ::OmLinkedData::Namespace.new current_site.url
+      @collections = ::OmLinkedData::Collection.by_base_uri(:key => ns.base_uri)
     end
 
     def new
@@ -27,11 +28,14 @@ class Admin::OmLinkedData::CollectionsController < Admin::BaseController
 
     def show
       @collection = ::OmLinkedData::Collection.find(params[:id])
-      @sorted_vocabs = ::OmLinkedData::Vocabulary.sort_by_base_uri
+      @sorted_vocabs = ::OmLinkedData::Vocabulary.sort_by_authority
       
-      @commons_vocabs = @sorted_vocabs.delete(om_site.url) { |val| val = [] }
-      @site_vocabs = @sorted_vocabs.delete(current_site.url) { |val| val = [] }
-#      @other_vocabs = 
+      site_ns = ::OmLinkedData::Namespace.new current_site.url
+      om_ns = ::OmLinkedData::Namespace.new om_site.url
+      
+      @site_vocabs = @sorted_vocabs.delete(site_ns.authority) { |val| val = [] }
+      @commons_vocabs = @sorted_vocabs.delete(om_ns.authority) { |val| val = [] }
+      @other_vocabs = @sorted_vocabs
     end
 
     def edit

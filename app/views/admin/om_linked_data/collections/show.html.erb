@@ -41,8 +41,8 @@
 			<hr />
 			<ul>
 				<%= "<li>None listed</li>".html_safe if @commons_vocabs.length == 0 %>
-				<% @commons_vocabs.sort.each do |v| %>
-					<li><%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v.identifier) %></LI>
+				<% @commons_vocabs.each do |v| %>
+					<li><%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v.identifier) %></li>
 				<% end %>
 			</ul>
 			<h5>Vocabularies created for this Collection</h5>
@@ -50,7 +50,7 @@
 			<ul>
 				<%= "<li>None listed</li>".html_safe if @site_vocabs.length == 0 %>
 				<% @site_vocabs.each do |v| %>
-					<li>add link <%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v) %> <%#= "(#{vocab.instance_count})" %></li>
+					<li><%= link_to v.label, admin_om_linked_data_collection_vocabulary_path(@collection, v) %> <%#= "(#{vocab.instance_count})" %></li>
 				<% end %>
 			</ul>
 			<p><%= link_to "Add Vocabulary", new_admin_om_linked_data_collection_vocabulary_path(@collection), {:class => 'add-element'} %><p>

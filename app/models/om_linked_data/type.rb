@@ -43,7 +43,7 @@ class OmLinkedData::Type < CouchRest::Model::Base
         }"
   
   def compound?
-    self.types.length > 0 ? true : false
+    self.properties.length > 0 ? true : false
   end
 
   def self.find_by_vocabulary_id(vocab_id)
@@ -52,7 +52,7 @@ class OmLinkedData::Type < CouchRest::Model::Base
 
 private
   def generate_uri
-    self.term ||= self.label.downcase
+    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
     rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.term
     self.uri = rdf_uri.to_s
   end

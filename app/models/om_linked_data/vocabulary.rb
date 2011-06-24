@@ -106,7 +106,7 @@ class OmLinkedData::Vocabulary < CouchRest::Model::Base
 private
   def generate_uri
     self.authority = self.collection.authority
-    self.term ||= self.label
+    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
     
     # If this is local vocabulary, construct the OM path
     if self.base_uri.include? "http://civicopenmedia.us/"

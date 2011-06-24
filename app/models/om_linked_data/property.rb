@@ -54,7 +54,7 @@ class OmLinkedData::Property < CouchRest::Model::Base
   
 private
   def generate_uri
-    self.term ||= escape_string(self.label)
+    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
     rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.term
     self.uri = rdf_uri.to_s
   end

@@ -65,7 +65,7 @@ private
   end
 
   def escape_string(str)
-    str.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+    str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
   end
 
 

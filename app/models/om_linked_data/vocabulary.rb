@@ -126,7 +126,7 @@ private
     self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
     
     # If this is local vocabulary, construct the OM path
-    if self.base_uri.include? "http://civicopenmedia.us/"
+    if self.base_uri.include?("http://civicopenmedia.us") && !self.base_uri.include?("vocabularies")
       rdf_uri = RDF::URI.new(self.base_uri)/"vocabularies"/escape_string(self.term)
     else
       rdf_uri = RDF::URI.new(self.base_uri)/self.term

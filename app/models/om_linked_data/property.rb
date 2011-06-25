@@ -4,6 +4,7 @@ class OmLinkedData::Property < CouchRest::Model::Base
   unique_id :identifier
 
   belongs_to :vocabulary, :class_name => "OmLinkedData::Vocabulary"
+  belongs_to :expected_type, :class_name => "OmLinkedData::Type"
   collection_of :synonyms, :class_name => 'OmLinkedData::Property'  # Props with same semantic meaning
 
   property :identifier
@@ -14,9 +15,6 @@ class OmLinkedData::Property < CouchRest::Model::Base
   property :term, String                              # Escaped vocabulary name suitable for inclusion in IRI
   property :uri, String
 
-  property :expected_type, OmLinkedData::Type         # Support type coercion
-  
-  property :enumerations                              # Hash of key/value lookups
   property :deprecated, TrueClass, :default => false  # Deprecated properties may not be used 
                                                        # for future vocabularies            
   timestamps!

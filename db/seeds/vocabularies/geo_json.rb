@@ -28,10 +28,11 @@ coord_type = ::OmLinkedData::Type.new(:vocabulary => vocab,
                                       :properties => [xcoord, ycoord, zcoord]
                                       ).save
 
-geometry_type = ::OmLinkedData::Type.new(:vocabulary => vocab, 
-                                          :label => "Point", 
-                                          :properties => [gj_prop, xcoord, ycoord, zcoord]
-                                          ).save
+point_type = ::OmLinkedData::Type.new(:vocabulary => vocab, 
+                                      :label => "Point", 
+                                      :term => "Point", 
+                                      :properties => [gj_prop, xcoord, ycoord, zcoord]
+                                      ).save
 
-vocab.types << geometry_type
+vocab.types << point_type
 vocab.save!

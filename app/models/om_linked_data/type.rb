@@ -15,6 +15,7 @@ class OmLinkedData::Type < CouchRest::Model::Base
   property :term, String          # type id appended to URI. preserves string case if provided, 
                                   #   adapted from "label" property if not provided
   property :uri, String
+  property :enumerations           # Hash of key/value lookups
 
 
   timestamps!

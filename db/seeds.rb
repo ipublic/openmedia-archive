@@ -55,6 +55,7 @@ require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'xml_schema')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'geo_json')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'geo')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'municipality')
+require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'vcard')
 
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})

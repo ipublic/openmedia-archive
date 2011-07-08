@@ -14,11 +14,12 @@
 						  <li><%= f.label :default_dashboard, :class => "wide"  %> 
 									<%= f.select :default_dashboard, dashboard_collection, {:prompt => 'Select Dashboard', :include_blank => true}, :class => "wide" %></li>
 
-						  <li><%= f.label :adminstrator_contact_id, 'Admin Contact', :class => "wide"  %> 
-								 <%= f.select :adminstrator_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
+						  <li><%= f.label :administrator_contact_id, 'Admin Contact', :class => "wide"  %> 
+									<%= f.select :administrator_contact_id, contacts_collection, {:prompt => 'Select Contact', :include_blank => true}, :class => "wide" %></li>
 						  <li><%= f.label :business_contact_id, 'Business Contact', :class => "wide"  %> 
-								 <%= f.select :business_contact_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide"   %></li>
-						  <li><%= f.label :terms_of_use, :class => "wide"  %> <%= f.text_area :terms_of_use, :rows => 15, :class => "wide"  %></li>
+									<%= f.select :business_contact_id, contacts_collection, {:prompt => 'Select Contact', :include_blank => true}, :class => "wide" %></li>
+								 <%#= f.collection_select :business_contact_id, @contacts, :_id, :name, {:prompt => 'Select Contact'}, {:class => "wide" } %></li>						  
+							<li><%= f.label :terms_of_use, :class => "wide"  %> <%= f.text_area :terms_of_use, :rows => 15, :class => "wide"  %></li>
 						</ol>
 					</fieldset>
 

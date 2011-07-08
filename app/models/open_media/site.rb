@@ -8,6 +8,10 @@ class OpenMedia::Site < CouchRest::Model::Base
   
   ## Property Definitions
   # General properties
+  
+  belongs_to :administrator_contact, :class_name => "Schemas::VCard::VCard"
+  belongs_to :business_contact, :class_name => "Schemas::VCard::VCard"
+  
   property :identifier #, :read_only => true
   property :url
   property :base_uri
@@ -17,8 +21,6 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :welcome_message, :default => "Your resource for government open data"
   property :openmedia_name, :default => "Civic OpenMedia"
   property :terms_of_use, :default => "By using data made available through this site the user agrees to all the conditions stated in the following paragraphs: This agency makes no claims as to the completeness, accuracy or content of any data contained in this application; makes any representation of any kind, including, but not limited to, warranty of the accuracy or fitness for a particular use; nor are any such warranties to be implied or inferred with respect to the information or data furnished herein. The data is subject to change as modifications and updates are complete. It is understood that the information obtained from this site is being used at one's own risk. These Terms of Use govern any use of this service and may be changed at any time, without notice by the sponsor agency."
-  property :adminstrator_contact_uri
-  property :business_contact_uri
   
   # Administration properties
   property :internal_couchdb_server_uri, :default => "http://localhost:5984"
@@ -62,15 +64,6 @@ class OpenMedia::Site < CouchRest::Model::Base
     collection
   end
 
-  def administrator_contact
-    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.adminstrator_contact_uri) if self.adminstrator_contact_uri
-  end
-
-  def business_contact
-    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.business_contact_uri) if self.business_contact_uri    
-  end
-
-
   def metadata_repository
     db_name = "#{self.identifier}_metadata"
     unless Spira.repository(db_name)
@@ -78,10 +71,6 @@ class OpenMedia::Site < CouchRest::Model::Base
       Spira.add_repository! db_name, RDF::CouchDB::Repository.new(:database=>db)
     end
     db_name    
-  end
-
-  def vcards_rdf_uri
-    RDF::URI.new('http://data.civicopenmedia.org')/self.identifier/"vcards"
   end
 
   def initialize_metadata

@@ -26,11 +26,11 @@
 			</tr>
 			<tr>
 				<th>Admin Contact:</th>
-				<td><%= vcard_formatted_name(@site.administrator_contact) %></td>
+				<td><%= @site.administrator_contact.name.full_name if @site.administrator_contact %></td>
 			</tr>
 			<tr>
 				<th>Business Contact:</th>
-				<td><%= vcard_formatted_name(@site.business_contact) %></td>
+				<td><%= @site.business_contact.name.full_name if @site.business_contact %></td>
 			</tr>
 			<tr>
 				<th>Terms of Use:</th>

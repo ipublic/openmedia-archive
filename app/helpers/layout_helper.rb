@@ -50,8 +50,8 @@ module LayoutHelper
     # @site_collections = @om_site.skos_collection.sub_collections
   end
 
-  def vcard_collection    
-    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.each.collect{|vc| [vcard_label(vc), vc.uri]}    
+  def contacts_collection    
+    Schemas::VCard::VCard.by_full_name.collect {|o| [ o.name.full_name, o['_id']] }
   end
 
   def dashboard_collection    

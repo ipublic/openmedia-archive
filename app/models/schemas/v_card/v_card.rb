@@ -14,7 +14,15 @@ class Schemas::VCard::VCard < CouchRest::Model::Base
   before_validate :generate_full_name
   
   # validates_presence_of :full_name
-  
+
+  view_by :full_name,
+    :map => 
+      "function(doc) {
+        if ((doc['couchrest-type'] == 'Schemas::VCard::VCard') && (doc.name.full_name)) { 
+          emit(doc.name.full_name, 1);
+          }
+        }"
+
   view_by :last_name,
     :map => 
       "function(doc) {

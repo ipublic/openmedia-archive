@@ -9,8 +9,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   ## Property Definitions
   # General properties
   
-  belongs_to :administrator_contact, :class_name => "Schemas::VCard::VCard"
-  belongs_to :business_contact, :class_name => "Schemas::VCard::VCard"
+  belongs_to :administrator_contact, :class_name => "VCard::VCard"
+  belongs_to :business_contact, :class_name => "VCard::VCard"
   
   property :identifier #, :read_only => true
   property :url
@@ -65,17 +65,17 @@ class OpenMedia::Site < CouchRest::Model::Base
   end
 
   def metadata_repository
-    db_name = "#{self.identifier}_metadata"
-    unless Spira.repository(db_name)
-      db = COUCHDB_SERVER.database!("#{db_name}")
-      Spira.add_repository! db_name, RDF::CouchDB::Repository.new(:database=>db)
-    end
-    db_name    
+    # db_name = "#{self.identifier}_metadata"
+    # unless Spira.repository(db_name)
+    #   db = COUCHDB_SERVER.database!("#{db_name}")
+    #   Spira.add_repository! db_name, RDF::CouchDB::Repository.new(:database=>db)
+    # end
+    # db_name    
   end
 
   def initialize_metadata
-    OpenMedia::Schema::VCard.configure_vcard(self)
-    OpenMedia::Schema::Metadata.configure_metadata(self)
+    # OpenMedia::Schema::VCard.configure_vcard(self)
+    # OpenMedia::Schema::Metadata.configure_metadata(self)
   end
   
   def geomarker

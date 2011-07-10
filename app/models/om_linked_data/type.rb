@@ -4,8 +4,15 @@ class OmLinkedData::Type < CouchRest::Model::Base
   unique_id :identifier
 
   belongs_to :vocabulary, :class_name => "OmLinkedData::Vocabulary"
+
+  # Properties denote a HAS A relationship. For example, iPublic Has a url (property) of
+  # http://ipublic.org (value)
   collection_of :properties, :class_name => 'OmLinkedData::Property' 
-  collection_of :types, :class_name => 'OmLinkedData::Type'
+  
+  # Included types support set-based inclusion for building atop existing vocabulary definitions and to support 
+  # inferencing.  For example, a resident is always a person, designating someone as a resident will 
+  # provide access both to resident and person properties. Note: included properties aren't inheritance
+  collection_of :included_types, :class_name => 'OmLinkedData::Type'
   
   property :identifier
   property :label, String         # User assigned name, RDFS#Label
@@ -42,7 +49,27 @@ class OmLinkedData::Type < CouchRest::Model::Base
             });
           }
         }"
-  
+
+  view_by :included_type_ids,
+    :map =>
+      "function(doc) {
+        if (doc['couchrest-type'] == 'OmLinkedData::Type' && doc.included_type_ids) {
+          doc.included_type_ids.forEach(function(included_type_id) {
+            emit(included_type_id, 1); 
+            });
+          }
+        }"
+
+  view_by :property_ids,
+    :map =>
+      "function(doc) {
+        if (doc['couchrest-type'] == 'OmLinkedData::Type' && doc.property_ids) {
+          doc.property_ids.forEach(function(property_id) {
+            emit(property_id, 1); 
+            });
+          }
+        }"
+
   def compound?
     self.properties.length > 0 ? true : false
   end

@@ -7,9 +7,7 @@ describe Schemas::VCard::VCard do
     @org_name = "Future Enterprises"
     @name = Schemas::VCard::Name.new(:first_name => "Harcourt",
                                       :middle_name => "Fenton",
-                                      :last_name => @last_name,
-                                      :nickname => "Harry",
-                                      :job_title => "Smuggler")
+                                      :last_name => @last_name)
     
     @addr = Schemas::VCard::Address.new(:type => "Home",
                                     :address_1 => "12 Rigel St",
@@ -33,7 +31,7 @@ describe Schemas::VCard::VCard do
   # end
   
   it 'should save and generate an identifier correctly' do
-    @vc = Schemas::VCard::VCard.new(:name => @name, :organization => @org)
+    @vc = Schemas::VCard::VCard.new(:name => @name, :organization => @org, :job_title => "Smuggler", :nickname => "Harry")
     @vc.address << @addr
     @vc.email << @email
     @vc.telephone << @phone1 << @phone2

@@ -51,7 +51,7 @@ module LayoutHelper
   end
 
   def contacts_collection    
-    Schemas::VCard::VCard.by_full_name.collect {|o| [ o.name.full_name, o['_id']] }
+    VCard::VCard.by_formatted_name.collect {|o| [ o.formatted_name, o['_id']] }
   end
 
   def dashboard_collection    

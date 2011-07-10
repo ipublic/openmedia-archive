@@ -2,11 +2,11 @@ class VCard::VCard < CouchRest::Model::Base
   
   use_database TYPES_DATABASE     # change to different DB?
 
-  property :address, [VCard::Address]            # :alias => :adr
-  property :email, [VCard::Email]                # :alias => :email
+  property :addresses, [VCard::Address]            # :alias => :adr
+  property :emails, [VCard::Email]                # :alias => :email
   property :name, VCard::Name                  # :alias => :n
   property :organization, VCard::Organization    # :alias => :org
-  property :telephone, [VCard::Telephone]        # :alias => :tel
+  property :telephones, [VCard::Telephone]        # :alias => :tel
 
   property :formatted_name, String                        # :alias fn
   property :nickname, String                              # :alias nickname
@@ -39,7 +39,7 @@ class VCard::VCard < CouchRest::Model::Base
           emit(doc.organization.name, 1);
           }
         }"
-
+        
 private
   def format_name
     self.formatted_name = ""

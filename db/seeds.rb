@@ -40,7 +40,7 @@ email1 = VCard::Email.new(:type => "Work", :value => "dan.thomas@ipublic.org")
 email2 = VCard::Email.new(:type => "Home", :value => "geoobject@gmail.com")
 org = VCard::Organization.new(:name => "iPublic.org")
 vcard = VCard::VCard.new(:name => name, :organization => org, :title => "Chief Technology Officer")
-vcard.email << email1 << email2
+vcard.emails << email1 << email2
 vcard.save
 
 # create om site w/ dan as admin

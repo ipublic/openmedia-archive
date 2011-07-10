@@ -127,6 +127,7 @@ Openmedia::Application.routes.draw do
     resources :settings
     resources :reports
     resources :vcards
+    resources :contacts
     resources :schedules
     resources :data_types
   end

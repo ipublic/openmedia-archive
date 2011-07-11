@@ -1,0 +1,36 @@
+<div class="grid_8">
+	<div class="box">
+	  <%= f.error_messages %>
+		<%= f.hidden_field :rev, :value => @contact['_rev'] if @contact['_rev'] %>
+		<%#= debug @contact.to_yaml %>
+		<fieldset>
+			<legend>Name</legend>
+				<%= render :partial => 'name', :locals => {:f => f, :name => @contact.name}  %>
+			<ol>
+				<li><%= f.label :title, "Job title", :class => "wide" %> <%= f.text_field :title, :class=>' wide' %></li>
+				<li><%= f.label :note, :class => "wide" %> <%= f.text_area :note, :rows => 3, :class=>' wide' %></li>
+			</ol>
+			<legend>Organization</legend>
+			<%= render :partial => 'organization', :locals => {:f => f, :organization => @contact.organization} %>
+		</fieldset>
+
+		<fieldset>
+			<legend>Email</legend>
+			<% for email in @contact.emails {|p1,p2| p1.type <=> p2.type} %>
+				<%= render :partial => 'email', :locals => {:email => email} %>
+			<% end %>
+	  	<a href="#" class="add-contact-email add-element">Add Contact Email</a>
+		</fieldset>
+	
+		<fieldset>
+			<legend>Telephone</legend>
+	   	<%= render :partial=>'telephone', :collection => @contact.telephones %>
+		</fieldset>
+
+		<fieldset class="submit">
+			<ol class ="submit-wide" >
+				<li><%= f.submit "Save" %> <%= link_to 'Back',  :back %></li> 
+			</ol>
+		</fieldset>
+	</div>
+</div>

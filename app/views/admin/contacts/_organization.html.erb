@@ -1,0 +1,6 @@
+<%= f.fields_for :organization, organization do |org| %>
+	<ol>
+		<li><%= org.label :name, :class => "wide" %> <%= org.text_field :name, :class=>' wide' %></li>
+		<li><%= org.label :department, :class => "wide" %> <%= org.text_field :department, :class => "wide" %></li>
+	</ol>
+<% end %>

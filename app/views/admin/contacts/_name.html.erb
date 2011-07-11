@@ -1,0 +1,8 @@
+<%= f.fields_for :name, name do |n| %>
+	<ol>
+		<li><%= n.label :prefix, :class => "wide" %> <%= n.text_field :prefix, :class=>"narrow" %></li>
+		<li><%= n.label :first_name, :class => "wide" %> <%= n.text_field :first_name, :class=>"wide" %></li>
+		<li><%= n.label :last_name, :class => "wide" %> <%= n.text_field :last_name, :class=>"wide" %></li>
+		<li><%= n.label :suffix, :class => "wide" %> <%= n.text_field :suffix, :class=>"narrow" %></li>
+	</ol>
+<% end %>

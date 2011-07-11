@@ -1,0 +1,14 @@
+<% title "Edit Contact: #{@contact.formatted_name}" %>
+<div class="grid_12" >
+  <p class="page-nav">
+    <%= link_to "All Contacts", admin_contacts_path %>
+  </p>
+  <hr />
+</div>
+<div class="clear"></div>
+<div id="forms">
+  <%= form_for :dashboard, :url => admin_contact_path(@contact), :html => {:method=>:put} do |f| %>
+	  <%= render :partial => 'form', :locals => {:f => f} %>
+  <% end %>
+</div>
+

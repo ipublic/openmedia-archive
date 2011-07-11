@@ -1,11 +1,9 @@
 <ol class="contact-email">
 	<li>
-    <input name="contact[emails][][type]" class="standard" type="text" value=<%= email.type %> >
-    <input name="contact[emails][][value]" class="standard" type="text" value=<%= email.value %> ></li>
-		<li><a href="#" class="delete-contact-email delete-element" alt="Delete">Delete email address</a></li>
-	<li><%= label_tag "contact[emails][][type]", 'Type', :class => "wide" %> 
-			<%= text_field_tag "contact[emails][][type]", email.type, :class=>'wide' %></li>
-	<li><%= label_tag "contact[emails][][value]", 'Email', :class => "wide" %> 
-			<%= text_field_tag "contact[emails][][value]", email.value, :class=>'wide' %></li>
+		<select name="contact[emails][][type]" type="text" value=<%= email.type %> >
+			<%= options_for_select(VCard::Email::EMAIL_TYPES, email.type) %>
+		</select>
+		<input name="contact[emails][][value]" type="text" class="standard" value=<%= email.value %> >
+	</li>
 	<li><a href="#" class="delete-contact-email delete-element" alt="Delete">Delete email address</a></li>
 </ol>

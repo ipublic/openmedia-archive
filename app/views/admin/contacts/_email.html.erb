@@ -1,0 +1,7 @@
+<ol class="contact-email">
+	<li><%= label_tag "#{base_name}#{email.type}_type", 'Type', :class => "wide" %> 
+			<%= text_field_tag "#{base_name}#{email.type}_type", email.type, :class=>'wide' %></li>
+	<li><%= label_tag "#{base_name}#{email.value}_value", 'Email', :class => "wide" %> 
+			<%= text_field_tag "#{base_name}#{email.value}_value", email.value, :class=>'wide' %></li>
+	<li><a href="#" class="delete-contact-email delete-element" alt="Delete">Delete email address</a></li>
+</ol>

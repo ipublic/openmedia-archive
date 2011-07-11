@@ -1,0 +1,44 @@
+<% title "Contact #{@contact.formatted_name}" %>
+
+<div class="grid_12" >
+  <p class="page-nav">
+    <%= link_to "All Contacts", admin_contacts_path %> | 
+    <%= link_to "Edit", edit_admin_contact_path(@contact) %> |
+    <%= link_to 'Delete', admin_contact_path(@contact), :confirm => 'Are you sure?', :method => :delete %>
+  </p>
+  <hr />
+</div>
+
+<div class="grid_5" >
+  <div class="box">
+    <div class="block">
+      <%= show_fields(@contact, [[:formatted_name, "Name"], :title]) %>
+      <% if @contact.organization.length > 0 %>
+      	<%= show_fields(@contact.organization, [:name, :department]) %>
+      <% end %>
+
+      <% @contact.emails.each do |e| %>
+ 	     <table class='property-table'>
+					<tr>
+						<th class='property-table'><%= e.type %></th> 
+						<td><%= e.value %></td>
+					</tr>
+	      </table>
+      <% end %>
+
+      <% if @contact.telephones.length > 0 %>
+ 	     <table class='property-table'>
+					<tr>
+						<th class='property-table'><%= @contact.telephone.type %></th> 
+						<td><%= @contact.telephone.value %></td>
+					</tr>
+	      </table>
+      <% end %>
+
+      <% if @contact.addresses.length > 0 %>
+      	<%= show_fields(@contact.addresses, [:type, :address_1, :address_2, :city, :state, :zipcode, :country]) %>
+      <% end %>
+
+    </div>
+  </div>
+</div>

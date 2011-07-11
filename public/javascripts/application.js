@@ -160,16 +160,42 @@ $(function() {
 				    $(event.target).next('input').val(ui.item.id);
 				}};
 
+	$('a.add-contact-email').live('click',
+		function() {
+		    var link = this;
+		    $.get('/admin/contacts/new_email',
+		    function(html) {
+		        $(html).insertBefore(link);
+		        $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+		        $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false
+		        });
+		    });
+		    return false;
+		});
 
-    $('a.add-class-property').live('click', function() {
-	var link = this;
-	$.get('/admin/schema/classes/new_property', function(html) {
-	    $(html).insertBefore(link);
-	    $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
-	    $(link).prev('ol').find('a.delete-element:last').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	$('a.delete-contact-email').live('click',
+		function() {
+		    $(this).closest('ol').remove();
+		    return false;
+		});
+		
+
+	$('a.add-class-property').live('click',
+	function() {
+	    var link = this;
+	    $.get('/admin/schema/classes/new_property',
+	    function(html) {
+	        $(html).insertBefore(link);
+	        $(link).prev('ol').find('.property-type-uri:last').autocomplete(typeAutoCompleteOpts);
+	        $(link).prev('ol').find('a.delete-element:last').button({
+	            icons: {
+	                primary: "ui-icon-circle-close"
+	            },
+	            text: false
+	        });
+	    });
+	    return false;
 	});
-	return false;
-    });
     
     $('a.delete-class-property').live('click', function() {
 	var deletedPropertyURI = $(this).closest('ol.class-property').find('.class-property-uri').val();
@@ -209,15 +235,26 @@ $(function() {
     });
 
     // Dashboard Admin
-    $('a.add-measure-group').live('click', function() {
-	var link = this;
-	$.get('/admin/dashboards/new_group', function(html) {
-	    $(html).insertBefore(link);
-	    $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
-	    $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false});    
+	$('a.add-measure-group').live('click',
+	function() {
+	    var link = this;
+	    $.get('/admin/dashboards/new_group',
+	    function(html) {
+	        $(html).insertBefore(link);
+	        $('a.add-element').button({
+	            icons: {
+	                primary: "ui-icon-circle-plus"
+	            }
+	        });
+	        $('a.delete-element').button({
+	            icons: {
+	                primary: "ui-icon-circle-close"
+	            },
+	            text: false
+	        });
+	    });
+	    return false;
 	});
-	return false;
-    });
 
     $('a.delete-dashboard-group').live('click', function() {
 	$(this).closest('ol').next('ol').remove();

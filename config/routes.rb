@@ -80,6 +80,13 @@ Openmedia::Application.routes.draw do
   namespace :admin do
     resource :site
     resource :community
+    resources :contacts do
+      collection do
+        get :new_email
+        get :new_telephone
+        get :new_address
+      end
+    end
     resources :dashboards do
       collection do
         get :new_group
@@ -127,7 +134,6 @@ Openmedia::Application.routes.draw do
     resources :settings
     resources :reports
     resources :vcards
-    resources :contacts
     resources :schedules
     resources :data_types
   end

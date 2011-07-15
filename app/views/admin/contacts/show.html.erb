@@ -3,6 +3,7 @@
 <div class="grid_12" >
   <p class="page-nav">
     <%= link_to "All Contacts", admin_contacts_path %> | 
+	  <%= link_to 'Add Contact', new_admin_contact_path %> |
     <%= link_to "Edit", edit_admin_contact_path(@contact) %> |
     <%= link_to 'Delete', admin_contact_path(@contact), :confirm => 'Are you sure?', :method => :delete %>
   </p>
@@ -20,17 +21,17 @@
       <% @contact.emails.each do |e| %>
  	     <table class='property-table'>
 					<tr>
-						<th class='property-table'><%= e.type %></th> 
+						<th class='property-table'><%= "#{e.type}:" %></th> 
 						<td><%= e.value %></td>
 					</tr>
 	      </table>
       <% end %>
 
-      <% if @contact.telephones.length > 0 %>
+      <% @contact.telephones.each do |t| %>
  	     <table class='property-table'>
 					<tr>
-						<th class='property-table'><%= @contact.telephone.type %></th> 
-						<td><%= @contact.telephone.value %></td>
+						<th class='property-table'><%= "#{t.type}:" %></th> 
+						<td><%= t.value %></td>
 					</tr>
 	      </table>
       <% end %>

@@ -2,6 +2,16 @@
 // This file is automatically included by javascript_include_tag :defaults
 $(function() {
 
+	$("ul.tabs li")
+		.mouseover(function() {
+			$("ul.tabs li").removeClass("active");			
+			}
+		)
+		.click(function() {
+		$("ul.tabs li").removeClass("active");
+		$(this).addClass("active"); 
+	});
+		
 // Example jQuery Sparklines 
 	/* Inline sparklines take their values from the contents of the tag */
 	$('.compositeline').sparkline('html', { fillColor: false }); 
@@ -179,6 +189,44 @@ $(function() {
 		    return false;
 		});
 		
+	$('a.add-contact-telephone').live('click',
+		function() {
+		    var link = this;
+		    $.get('/admin/contacts/new_telephone',
+		    function(html) {
+		        $(html).insertBefore(link);
+		        $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+		        $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false
+		        });
+		    });
+		    return false;
+		});
+
+	$('a.delete-contact-telephone').live('click',
+		function() {
+		    $(this).closest('ol').remove();
+		    return false;
+		});
+
+	$('a.add-contact-address').live('click',
+		function() {
+		    var link = this;
+		    $.get('/admin/contacts/new_address',
+		    function(html) {
+		        $(html).insertBefore(link);
+		        $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+		        $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false
+		        });
+		    });
+		    return false;
+		});
+
+	$('a.delete-contact-address').live('click',
+		function() {
+		    $(this).closest('ol').remove();
+		    return false;
+		});
+
 
 	$('a.add-class-property').live('click',
 	function() {

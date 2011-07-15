@@ -2,15 +2,15 @@ class VCard::VCard < CouchRest::Model::Base
   
   use_database TYPES_DATABASE     # change to different DB?
 
-  property :addresses, [VCard::Address]            # :alias => :adr
-  property :emails, [VCard::Email]                # :alias => :email
-  property :name, VCard::Name                  # :alias => :n
-  property :organization, VCard::Organization    # :alias => :org
-  property :telephones, [VCard::Telephone]        # :alias => :tel
+  property :addresses, [VCard::Address]         # :alias => :adr
+  property :emails, [VCard::Email]              # :alias => :email
+  property :name, VCard::Name                   # :alias => :n
+  property :organization, VCard::Organization   # :alias => :org
+  property :telephones, [VCard::Telephone]      # :alias => :tel
 
-  property :formatted_name, String                        # :alias fn
-  property :nickname, String                              # :alias nickname
-  property :sort_string, String                           # :alias sort-string
+  property :formatted_name, String              # :alias fn
+  property :nickname, String                    # :alias nickname
+  property :sort_string, String                 # :alias sort-string
   property :title, String
   property :note, String
 
@@ -47,7 +47,7 @@ private
     self.formatted_name << " #{self.name.first_name}" unless self.name.first_name.blank?
     self.formatted_name << " #{self.name.middle_name}" unless self.name.middle_name.blank?
     self.formatted_name << " #{self.name.last_name}" unless self.name.last_name.blank?
-    self.formatted_name << " , #{self.name.suffix}" unless self.name.suffix.blank?
+    self.formatted_name << ", #{self.name.suffix}" unless self.name.suffix.blank?
 
     self.formatted_name = self.formatted_name.strip
   end

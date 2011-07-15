@@ -16,6 +16,14 @@ class Admin::ContactsController < Admin::BaseController
     render :partial => 'email', :locals => {:email => VCard::Email.new }
   end
 
+  def new_telephone
+    render :partial => 'telephone', :locals => {:telephone => VCard::Telephone.new }
+  end
+
+  def new_address
+    render :partial => 'address', :locals => {:address => VCard::Address.new }
+  end
+
   def create
     @contact = VCard::VCard.new(params[:contact])
 

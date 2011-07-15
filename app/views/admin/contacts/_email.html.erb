@@ -1,6 +1,6 @@
 <ol class="contact-email">
-	<li>
-		<select name="contact[emails][][type]" type="text" value=<%= email.type %> >
+	<li  class="prefix_1" >
+		<select name="contact[emails][][type]" type="text"value=<%= email.type %> >
 			<%= options_for_select(VCard::Email::EMAIL_TYPES, email.type) %>
 		</select>
 		<input name="contact[emails][][value]" type="text" class="standard" value=<%= email.value %> >

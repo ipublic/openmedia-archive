@@ -21,7 +21,7 @@ var map;
 var basemap = new esri.layers.ArcGISTiledMapServiceLayer(
 	"http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer");
 var imagemap = new esri.layers.ArcGISTiledMapServiceLayer(
-	"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer"));
+	"http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer");
 
 // Washington, DC
 var initExtent = new esri.geometry.Extent(

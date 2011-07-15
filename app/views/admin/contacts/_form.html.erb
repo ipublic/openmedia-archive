@@ -1,5 +1,4 @@
 <div class="grid_8">
-	<div class="box">
 	  <%= f.error_messages %>
 		<%= f.hidden_field :rev, :value => @contact['_rev'] if @contact['_rev'] %>
 		<%#= debug @contact.to_yaml %>
@@ -24,7 +23,18 @@
 	
 		<fieldset>
 			<legend>Telephone</legend>
-	   	<%= render :partial=>'telephone', :collection => @contact.telephones %>
+			<% for telephone in @contact.telephones {|p1,p2| p1.type <=> p2.type} %>
+				<%= render :partial => 'telephone', :locals => {:telephone => telephone} %>
+			<% end %>
+	  	<a href="#" class="add-contact-telephone add-element">Add Contact Telephone</a>
+		</fieldset>
+
+		<fieldset>
+			<legend>Address</legend>
+			<% for address in @contact.addresses {|p1,p2| p1.type <=> p2.type} %>
+				<%= render :partial => 'address', :locals => {:address => address} %>
+			<% end %>
+	  	<a href="#" class="add-contact-address add-element">Add Contact Address</a>
 		</fieldset>
 
 		<fieldset class="submit">
@@ -32,5 +42,4 @@
 				<li><%= f.submit "Save" %> <%= link_to 'Back',  :back %></li> 
 			</ol>
 		</fieldset>
-	</div>
 </div>

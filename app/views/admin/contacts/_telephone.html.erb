@@ -1,9 +1,9 @@
-<% new_or_existing = telephone.new_record? ? 'new' : 'existing' %>
-<% prefix = "contact[#{new_or_existing}_telephone_attributes][]"%>
-
-<% fields_for prefix, telephone do |tel| -%>
-	<ol>
-		<li><%= tel.label :type, :class => "wide" %> <%= tel.text_field :type, :class=>'wide' %></li>
-		<li><%= tel.label :value, :class => "wide" %> <%= tel.text_field :value, :class => "wide" %></li>
-	</ol>
-<% end -%>
+<ol class="telephone-property">
+	<li class="prefix_1" >
+		<select name="contact[telephones][][type]" type="text"value=<%= telephone.type %> >
+			<%= options_for_select(VCard::Telephone::TELEPHONE_TYPES, telephone.type) %>
+		</select>
+		<input name="contact[telephones][][value]" type="text" class="standard" value=<%= telephone.value %> >
+	</li>
+	<li><a href="#" class="delete-contact-telephone delete-element" alt="Delete">Delete telephone number</a></li>
+</ol>

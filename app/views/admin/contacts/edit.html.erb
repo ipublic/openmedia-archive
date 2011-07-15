@@ -7,7 +7,7 @@
 </div>
 <div class="clear"></div>
 <div id="forms">
-  <%= form_for :dashboard, :url => admin_contact_path(@contact), :html => {:method=>:put} do |f| %>
+  <%= form_for :contact, :url => admin_contact_path(@contact), :html => {:method=>:put} do |f| %>
 	  <%= render :partial => 'form', :locals => {:f => f} %>
   <% end %>
 </div>

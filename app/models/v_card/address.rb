@@ -1,6 +1,10 @@
 class VCard::Address < Hash
   include CouchRest::Model::CastedModel    
 
+  ADDRESS_TYPES = %w(Home Work)
+  COUNTRY_TYPES = %w(USA)
+
+
   # based on vcard properties
   property :type, String
   property :address_1, String   # :alias => "street-address"

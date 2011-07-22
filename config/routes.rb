@@ -86,6 +86,9 @@ Openmedia::Application.routes.draw do
         get :new_telephone
         get :new_address
       end
+      member do
+        get :show_contact
+      end
     end
     resources :dashboards do
       collection do

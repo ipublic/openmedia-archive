@@ -2,10 +2,20 @@ class Admin::ContactsController < Admin::BaseController
 
   def index
     @contacts = VCard::VCard.all
+    @contact = @contacts.first unless @contacts.nil?
   end
 
   def show
     @contact = VCard::VCard.get(params[:id])
+  end
+  
+  def show_contact
+    @contact = VCard::VCard.get(params[:id])
+    
+    respond_to do |format|
+      format.html { redirect_to admin_contacts_path }
+      format.js
+    end
   end
 
   def new

@@ -1,0 +1,2 @@
+/* Replace contact information with newly selected contact */
+$(".v_card_v_card").html("<%= escape_javascript(render(:partial => 'show_contact', :locals => {:contact => @contact })) %>"); 

@@ -1,0 +1,28 @@
+<% div_for contact do %>
+	<%= show_fields(contact, [[:formatted_name, "Name"], :title]) %>
+	<% if contact.organization.length > 0 %>
+		<%= show_fields(contact.organization, [[:name, "Organization"], :department]) %>
+	<% end %>
+
+	<% contact.emails.each do |e| %>
+	 <table class='property-table'>
+			<tr>
+				<th class='property-table'><%= "#{e.type}:" %></th> 
+				<td><%= e.value %></td>
+			</tr>
+		</table>
+	<% end %>
+
+	<% contact.telephones.each do |t| %>
+		<table class='property-table'>
+			<tr>
+				<th class='property-table'><%= "#{t.type}:" %></th> 
+				<td><%= t.value %></td>
+			</tr>
+		</table>
+	<% end %>
+
+	<% if contact.addresses.length > 0 %>
+		<%= show_fields(contact.addresses, [:type, :address_1, :address_2, :city, :state, :zipcode, :country]) %>
+	<% end %>
+<% end %>

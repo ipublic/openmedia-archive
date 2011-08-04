@@ -13,7 +13,7 @@ class Admin::ContactsController < Admin::BaseController
     @contact = VCard::VCard.get(params[:id])
     
     respond_to do |format|
-      format.html { redirect_to admin_contacts_path }
+      format.html { redirect_to admin_contact_path(@contact) }
       format.js
     end
   end

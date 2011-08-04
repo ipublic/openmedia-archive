@@ -2,7 +2,7 @@ require 'open_media/no_site_defined'
 
 class OpenMedia::Site < CouchRest::Model::Base
 
-  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, PUBLIC_DATABASE.name, COMMONS_DATABASE.name]
+  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
   

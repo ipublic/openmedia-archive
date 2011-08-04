@@ -38,7 +38,6 @@ else
   STAGING_DATABASE = COUCHDB_SERVER.database!("staging#{db_suffix}")
   TYPES_DATABASE = COUCHDB_SERVER.database!("types#{db_suffix}")
   COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
-  PUBLIC_DATABASE = COUCHDB_SERVER.database!("public#{db_suffix}")
 end
 
 module CouchRest

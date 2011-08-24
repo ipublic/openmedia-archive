@@ -2,18 +2,20 @@
 
 <%= form_for :datasource, :url=>admin_datasources_path, :html=>{:multipart=>true} do |ds| %>
 
-<div class="grid_12">
+<div class="grid_12 alpha omega">
   <%= ds.hidden_field :source_type, :value=>OpenMedia::Datasource::TEXTFILE_TYPE %>
   <%= ds.error_messages %>
 </div>
 
-<div class="grid_7">
+<div class="grid_6 alpha">
+	<h2>Local Sources</h2>
   <fieldset class="omega">
     <%= ds.label :title %> <%= ds.text_field :title, :class=> 'wide' %>
   </fieldset>
-  <br/><br/><br/>
   <div id="upload-accordion">
-    <h2 tabindex="1"><a href="#">Text Files</a></h2>
+	  <br/><br/><br/>
+	
+    <h2 tabindex="1"><a href="#">Text File</a></h2>
     <div>
       <fieldset class="omega">
 				<ol>
@@ -36,7 +38,7 @@
       <div id="fixed-fields" class="import-ds-fields" style="display: none">Fixed fields</div>
     </div>
 
-    <h2 tabindex="2"><a href="#">Shape Files</a></h2>
+    <h2 tabindex="2"><a href="#">GIS Shape File</a></h2>
     <div>
       <fieldset class="omega">
 				<ol>
@@ -49,12 +51,12 @@
     <div>
       <fieldset class="omega">
 				<ol>
-				  <li><label class='narrow'>URL</label> <%= ds.text_field :webservice_url, :class => 'wide' %></li>
+				  <li><label class='narrow'>URL</label> <%= ds.text_field :webservice_url, :class => 'standard' %></li>
 				</ol>
       </fieldset>
     </div>
 
-    <h2 tabindex="3"><a href="#">Databases</a></h2>
+    <h2 tabindex="3"><a href="#">Database</a></h2>
     <div><p>Database connection properties</div>
   </div> <!-- Accordion -->
   <br/>
@@ -63,6 +65,14 @@
 			<li><%= ds.submit "Save" %> <%= link_to 'Back',  :back %></li> 
 		</ol>
 	</fieldset>
+</div>
+
+<div class="grid_6 omega">
+	<h2>OpenMedia Sources</h2>
+	<ul>
+		<li>here users can publish global data sources filtered by geography on their site
+		<li>lookup by autocomplete, keywords, category
+	</ul>
 </div>
 
 <% end %>

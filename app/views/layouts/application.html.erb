@@ -2,12 +2,12 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<meta name="viewport" content="width=960" />
 	<%= csrf_meta_tag %> 
-	<title><%= yield(:title).nil? ? "Civic OpenMedia" : "Civic OpenMedia: " + h(yield(:title)) %></title>
+	<title><%= yield(:title).nil? ? "Civic OpenMedia Online" : "Civic OpenMedia Online: " + h(yield(:title)) %></title>
 	
 	<!-- CSS - Use 960 framework -->
 	<%= stylesheet_link_tag "reset.css", :media => "screen" %>
-
 	<%= stylesheet_link_tag "text.css", :media => "screen" %>
 	<%= stylesheet_link_tag "960.css", :media => "screen" %>
 	<%= stylesheet_link_tag "layout.css", :media => "screen" %>
@@ -15,7 +15,6 @@
 	<%= stylesheet_link_tag "openmedia.css", :media => "screen" %>
 	<%= stylesheet_link_tag "jquery-ui-1.8.9.custom.css", :media => "screen" %>
 	<%= stylesheet_link_tag "jquery.tooltip.css", :media => "screen" %>
-
 	<%= stylesheet_link_tag "datatable_jqueryui.css", :media => "screen" %>
 
 	<%= yield(:head) %>
@@ -24,17 +23,23 @@
 	<!--[if IE 7]><%= stylesheet_link_tag "css/ie.css", :media => "screen" %><![endif]-->
 	<!--[if lt IE 9]><%= javascript_include_tag "http://html5shiv.googlecode.com/svn/trunk/html5.js" %><![endif]-->
 
-	<%= javascript_include_tag 'jquery-1.4.4.min.js', 'jquery-ui-1.8.9.custom.min.js', 'jquery.iframe-post-form.min.js', 'jquery.tooltip.js', 
-	    'jquery.sparkline.js', 'jquery.dataTables.min.js' %>
+	<%#= javascript_include_tag 'jquery-1.4.4.min.js', 'jquery-ui-1.8.9.custom.min.js', 'jquery.iframe-post-form.min.js',
+	 													 'jquery.tooltip.js', 'jquery.sparkline.js', 'jquery.dataTables.min.js' %>
+	<%#= javascript_include_tag :defaults %>		
+
+	<%#= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js' %>
+	<%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js' %>
+	<%= javascript_include_tag 'jquery-ui-1.8.9.custom.min.js', 'jquery.iframe-post-form.min.js',
+	 													 'jquery.tooltip.js', 'jquery.sparkline.js', 'jquery.dataTables.min.js' %>
 	<%= javascript_include_tag :defaults %>		
 </head>
 <body class="claro">
-	<div class="container_12">
-		<div class="grid_12">
-			<%= render :partial => 'shared/header' %>
+	<%= render :partial => 'shared/header' %>
+	<div id="wrapper" class="container_12">
+		<div class="grid_12 alpha omega">
 			<%= render :partial => 'shared/nav_main' %>
 		
-      <% if content_for?(:title) %>
+      <% if false #content_for?(:title) %>
 	  		<h2 id="page-heading"><%= h yield(:title) %></h2> 			  
       <% end %>
 
@@ -45,15 +50,10 @@
 	    </div><!-- notices -->
 		</div>
 		<div class="clear"></div>
-
     <%= yield :layout %>
-
-		<div class="clear"></div>
-		<div class="grid_12">
-		  <%= render :partial => 'shared/footer', :locals=>{:public=>false} %>
-		</div>
 		<div class="clear"></div>
 	</div><!--#container_12-->
-	<%= yield(:body) %>
+  <%= render :partial => 'shared/footer', :locals=>{:public=>false} %>
+	<%= yield :scripts %>
 </body>
 </html>

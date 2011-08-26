@@ -29,12 +29,12 @@
 
 	<li>
 	  <label for="datasource-creator" class="narrow">Creator</label> 
-	  <%= ds.select :creator_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
+		<%= ds.select :creator_contact_id, contacts_collection, {:prompt => 'Select Contact', :include_blank => true}, :class => "wide" %>
 	</li>
 
 	<li>
 	  <label for="datasource-publisher" class="narrow">Publisher</label> 
-	  <%= ds.select :publisher_uri, vcard_collection, {:prompt => 'Select Contact'}, :class => "wide" %>
+		<%= ds.select :publisher_contact_id, contacts_collection, {:prompt => 'Select Contact', :include_blank => true}, :class => "wide" %>
 	</li>
       </ol>
     </fieldset>

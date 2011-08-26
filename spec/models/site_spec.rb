@@ -13,17 +13,17 @@ describe OpenMedia::Site do
     @site.url.should == "http://somesite.#{OM_DOMAIN}"
   end
 
-  it 'should create skos collection on first access if it does not yet exist' do
-    @site.save!
-    lambda { @site.skos_collection }.should change(OpenMedia::Schema::SKOS::Collection, :count).by(1)
-    @site.skos_collection.should be_instance_of(OpenMedia::Schema::SKOS::Collection)
-    @site.skos_collection.uri.should === 'http://data.civicopenmedia.org/somesite/concepts'
-  end
-
-  describe 'metadata repository' do
-    it 'should return its metadata rdf repo (and create couch db if necessary)' do
-      @site.metadata_repository.should == "#{@site.identifier}_metadata"
-    end
-  end
+  # it 'should create skos collection on first access if it does not yet exist' do
+  #   @site.save!
+  #   lambda { @site.skos_collection }.should change(OpenMedia::Schema::SKOS::Collection, :count).by(1)
+  #   @site.skos_collection.should be_instance_of(OpenMedia::Schema::SKOS::Collection)
+  #   @site.skos_collection.uri.should === 'http://data.civicopenmedia.org/somesite/concepts'
+  # end
+  # 
+  # describe 'metadata repository' do
+  #   it 'should return its metadata rdf repo (and create couch db if necessary)' do
+  #     @site.metadata_repository.should == "#{@site.identifier}_metadata"
+  #   end
+  # end
 
 end

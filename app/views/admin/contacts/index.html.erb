@@ -3,28 +3,14 @@
   <p><%= link_to 'Add Contact', new_admin_contact_path %> </p>
   <hr />
 </div>
-<div class="grid_8">
-    <div class="block" id="tables">
-      <table>
-	<thead>
-	  <tr>
-	    <th>Name</th>
-	    <th>Organization</th>
-	    <th>Email</th>
-	  </tr>
-	</thead>
-	<% @contacts.each do |contact| %>
-	<tr>
-	  <td><%= link_to contact.formatted_name, admin_contact_path(contact) %></td>
-	  <td><%= contact.organization.name ? contact.organization.name : '' %></td>
-		<td>
-			<% unless contact.emails %>''<% end %>
-			<% contact.emails.each do |email| %>
-				<%= "#{email.type}: #{email.value}"%><br/>
-			<% end %>
-		</td>
-	</tr>
-	<% end %>
-      </table>
-    </div>
+<div class="grid_3">
+	<ul id="contact_list">
+		<h2>Name</h2>
+		<% @contacts.each do |contact| %>
+		  <li><%= link_to contact.formatted_name, show_contact_admin_contact_path(contact) + ".js", :remote => true %></li>
+		<% end %>
+  </ul>
+</div>
+<div class="grid_8 omega">
+	<%= render :partial => 'show_contact', :locals => {:contact => @contact } %>
 </div>

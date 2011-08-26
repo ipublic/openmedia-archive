@@ -38,6 +38,9 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   property :publisher_uri
   property :metadata_uri    
 
+  belongs_to :creator_contact, :class_name => "VCard::VCard"
+  belongs_to :publisher_contact, :class_name => "VCard::VCard"
+
   timestamps!
   
   validates :title, :presence=>true
@@ -56,11 +59,11 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def publisher
-    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.publisher_uri)
+    VCard::Vcard.get(self.publisher_contact_id)
   end
 
   def creator
-    OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(self.creator_uri)
+    VCard::Vcard.get(self.creator_contact_id)
   end
 
   def has_header_row=(hhr)
@@ -209,21 +212,23 @@ class OpenMedia::Datasource < CouchRest::Model::Base
   end
 
   def update_metadata(data={})
-    md_data = { :creator=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(creator_uri),
-      :publisher=>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(publisher_uri),
-      :language=>'en-US',
-      :conformsto=>rdfs_class,
-      :title=>rdfs_class.label,
-      :description=>rdfs_class.comment,
-      :resourcetype=>RDF::DCTYPE.Dataset
-    }.merge(data)
-    if metadata
-      metadata.update!(md_data)
-      puts "updated"
-    else
-      md = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreMetadataMetadata.for(RDF::METADATA.Metadata/"#{UUID.new.generate.gsub(/-/,'')}", md_data).save!
-      self.metadata_uri = md.uri.to_s      
-    end
+    md_data = {
+      :creator => self.creator,
+      :publisher => self.publisher,
+      :language => 'en-US',
+      :conformsto => rdfs_class,
+      :title => rdfs_class.label,
+      :description => rdfs_class.comment,
+      :resourcetype => RDF::DCTYPE.Dataset
+      }.merge(data)
+      
+      if metadata
+        metadata.update!(md_data)
+        puts "updated"
+      else
+        md = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreMetadataMetadata.for(RDF::METADATA.Metadata/"#{UUID.new.generate.gsub(/-/,'')}", md_data).save!
+        self.metadata_uri = md.uri.to_s      
+      end
   end
 
 

@@ -1,0 +1,19 @@
+<ol class="contact-address">
+	<li class="prefix_1" >
+		<select name="contact[addresses][][type]" type="text"value=<%= address.type %> >
+			<%= options_for_select(VCard::Address::ADDRESS_TYPES, address.type) %>
+		</select>
+		<input name="contact[addresses][][address_1]" type="text" class="standard" value=<%= address.value %> >
+	</li>
+	<li><%= label_tag "contact[addresses][][address_2]", "Address 2" %> 
+			<%= text_field_tag, "contact[addresses][][address_2]", address.address_2, :class => "wide" %></li>
+	<li><%= label_tag "contact[addresses][][city]", "City" %> 
+			<%= text_field_tag, "contact[addresses][][city]", address.city, :class => "wide" %></li>
+	<li><%= label_tag "contact[addresses][][state]", "State" %> 
+			<%= text_field_tag, "contact[addresses][][state]", address.state, :class => "wide" %></li>
+	<li><%= label_tag "contact[addresses][][zipcode]", "Zipcode" %> 
+			<%= text_field_tag, "contact[addresses][][zipcode]", address.zipcode, :class => "wide" %></li>
+	<li><%= label_tag "contact[addresses][][country]", "Country" %> 
+			<%= text_field_tag, "contact[addresses][][country]", address.country, :class => "wide" %></li>
+	<li><a href="#" class="delete-contact-address delete-element" alt="Delete">Delete address number</a></li>
+</ol>

@@ -62,6 +62,7 @@ GEM
       railties (~> 3.0.0)
       rspec (>= 2.0.0)
       tzinfo (~> 0.3.22)
+    crack (0.1.8)
     devise (1.1.9)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 1.0.2)
@@ -71,6 +72,8 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
+    gmaps4rails (0.10.2)
+      crack
     haml (3.1.1)
     i18n (0.6.0)
     json (1.5.1)
@@ -174,6 +177,7 @@ DEPENDENCIES
   devise_couch
   dynamic_form
   fastercsv
+  gmaps4rails
   linkeddata
   rails (= 3.0.5)
   rails3-generators!

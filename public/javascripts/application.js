@@ -1,5 +1,12 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
+
+jQuery.ajaxSetup({
+	'beforeSend': function(xhr){
+		xhr.setRequestHeader("Accept", "text/javascript")
+	}
+});
+
 $(function() {
 
 	$("ul.tabs li")
@@ -10,7 +17,11 @@ $(function() {
 		.click(function() {
 		$("ul.tabs li").removeClass("active");
 		$(this).addClass("active"); 
+		$(".tab_content").hide(); 
+		var activeTab = $(this).find("a").attr("name"); 
+		$(activeTab).fadeIn(); 
 	});
+	
 		
 // Example jQuery Sparklines 
 	/* Inline sparklines take their values from the contents of the tag */
@@ -170,25 +181,6 @@ $(function() {
 				    $(event.target).next('input').val(ui.item.id);
 				}};
 
-	$('a.add-contact-email').live('click',
-		function() {
-		    var link = this;
-		    $.get('/admin/contacts/new_email',
-		    function(html) {
-		        $(html).insertBefore(link);
-		        $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
-		        $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false
-		        });
-		    });
-		    return false;
-		});
-
-	$('a.delete-contact-email').live('click',
-		function() {
-		    $(this).closest('ol').remove();
-		    return false;
-		});
-		
 	$('a.add-contact-telephone').live('click',
 		function() {
 		    var link = this;

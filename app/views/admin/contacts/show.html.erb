@@ -15,7 +15,7 @@
     <div class="block">
       <%= show_fields(@contact, [[:formatted_name, "Name"], :title]) %>
       <% if @contact.organization.length > 0 %>
-      	<%= show_fields(@contact.organization, [:name, :department]) %>
+				<%= show_fields(contact.organization, [[:name, "Organization"], :department]) %>
       <% end %>
 
       <% @contact.emails.each do |e| %>

@@ -48,4 +48,7 @@ Openmedia::Application.configure do
   config.active_support.deprecation = :notify
 
   config.action_mailer.default_url_options = { :host => 'om.civicopenmedia.org' }
+  
+  # gmaps4rails, or run ‘rails generate gmaps4rails:install’ to copy the JS and CSS assets to /public 
+  config.serve_static_assets = true
 end

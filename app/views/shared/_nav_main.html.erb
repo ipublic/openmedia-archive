@@ -1,24 +1,11 @@
-<ul class="nav main ">
-	<li class="current"><%= link_to 'Home', admin_root_path, :title => "" %>
-	<li><%= link_to 'Data Sources', admin_datasources_path, :title => "" %>
-	<li><%= link_to 'Collections', admin_om_linked_data_collections_path, :title => "" %>
-	<li><%= link_to 'Schema', admin_schema_collections_path, :title => "" %>
-	<li><%= link_to 'Maps', admin_maps_path, :title => "" %>
-	<li><%= link_to 'Dashboards', admin_dashboards_path, :title => "" %>
-	<li><%= link_to 'Site', admin_site_path, :title => "" %>
-		<ul>
-			<li><%= link_to 'Settings', admin_site_path, :title => "" %>
-			<li><%= link_to 'Contacts', admin_contacts_path, :title => "" %>
-			<li><%= link_to 'Job Schedule', admin_schedules_path, :title => "" %>
-			<li><%= link_to 'Community', admin_root_path, :title => "" %>	
-		</ul>
-	<li><%= link_to 'Help', '/about', :title => "" %>
-		<ul>
-			<li><%= link_to 'FAQs', '/about', :title => "" %></li>
-			<li><%= link_to 'Wiki', '/about', :title => "" %></li>
-		</ul>
-	</li>
-	<li class="secondary">
-		<%= link_to 'Support', '/support', :title => "" %>
-	</li>
+<ul id="nav" class="tabs">
+	<li id="home" class="active"><%= link_to 'Home', admin_root_path %>
+	<li id="sources"><%= link_to 'Data Sources', admin_datasources_path, :title => "" %>
+	<li id="collections"><%= link_to 'Collections', admin_om_linked_data_collections_path, :title => "" %>
+	<li id="maps"><%= link_to 'Maps', admin_maps_path, :title => "" %>
+	<li id="dashboards"><%= link_to 'Dashboards', admin_dashboards_path, :title => "" %>
+	<li id="site"><%= link_to 'Site', admin_site_path, :title => "" %>	
+	<li id="contacts"><%= link_to 'Contacts', admin_contacts_path, :title => "" %>
+	<li id="help"><%= link_to 'Help', '/about', :title => "" %>
+	<li id="support"><%= link_to 'Support', '/support', :title => "" %></li>
 </ul>

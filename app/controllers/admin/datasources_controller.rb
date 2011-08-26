@@ -1,4 +1,5 @@
-require 'csv'
+# require 'csv'
+require_dependency 'csv'
 require 'tmpdir'
 
 class Admin::DatasourcesController < Admin::BaseController
@@ -81,7 +82,7 @@ class Admin::DatasourcesController < Admin::BaseController
      
   def edit
     @datasource = OpenMedia::Datasource.get(params[:id])
-    # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a    
+    # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
     if @datasource.nil?
       flash[:error] = 'Datasource not found.'
       redirect_to(admin_datasources_url)
@@ -100,7 +101,7 @@ class Admin::DatasourcesController < Admin::BaseController
         format.xml  { head :ok }    
       else
         format.html do
-          @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a                  
+          # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
           render :action => "edit"
         end
         format.xml  { render :xml => @datasource.errors, :status => :unprocessable_entity }
@@ -249,12 +250,12 @@ class Admin::DatasourcesController < Admin::BaseController
           redirect_to edit_admin_datasource_path(@datasource)
         else
           @datasources = OpenMedia::Datasource.all
-          @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a          
+          # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
           render :action=>'new_upload'
         end
       else
         @datasources = OpenMedia::Datasource.all
-        @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a        
+         # @vcards = OpenMedia::Schema::OWL::Class.for(RDF::VCARD.VCard).spira_resource.each.to_a
         render :action=>:new_upload
       end
       

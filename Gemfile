@@ -10,6 +10,7 @@ gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 gem 'linkeddata'
 gem 'spira'
 gem 'uuid'
+gem 'gmaps4rails'
 
 group :test, :development do
   gem "rspec-rails", "2.6.1"

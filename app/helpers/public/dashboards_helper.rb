@@ -26,9 +26,9 @@ module Public::DashboardsHelper
   def format_field(value, format)
     if !format.nil?
       value = case format
-      when "number": number_with_delimiter(value)
-      when "percentage": number_to_percentage(value, :precision => 2)
-      when "currency": number_to_currency(value, :precision => 0, :negative_format => "(%u%n)")
+      when "number" then number_with_delimiter(value)
+      when "percentage" then number_to_percentage(value, :precision => 2)
+      when "currency" then number_to_currency(value, :precision => 0, :negative_format => "(%u%n)")
       else value
     end
     else

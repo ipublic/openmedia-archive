@@ -1,25 +1,25 @@
-base: &base
+# base: &base
 
 development:
   host: localhost
   port: 5984
   database_suffix: _<%= Rails.env %>
-  <<: *base
+  # <<: *base
 
 dev_server:
   host: localhost
   port: 5984
   database_suffix: _<%= Rails.env %>
-  <<: *base
+  # <<: *base
 
 staging:
   host: localhost
   port: 5984
   database_suffix: _<%= Rails.env %>
-  <<: *base
+  # <<: *base
   
 test:
   host: localhost
   port: 5984
   database_suffix: _<%= Rails.env %>
-  <<: *base
+  # <<: *base

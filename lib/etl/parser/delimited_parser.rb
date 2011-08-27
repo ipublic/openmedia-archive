@@ -16,7 +16,7 @@ module ETL #:nodoc:
           ETL::Engine.logger.debug "parsing #{file}"
           line = 0
           lines_skipped = 0
-          FasterCSV.foreach(file, options) do |raw_row|
+          CSV.foreach(file, options) do |raw_row|
             if lines_skipped < source.skip_lines
               ETL::Engine.logger.debug "skipping line"
               lines_skipped += 1

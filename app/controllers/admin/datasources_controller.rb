@@ -175,7 +175,7 @@ class Admin::DatasourcesController < Admin::BaseController
       if @datasource.textfile_source? && textfile
         # parse first line of file and setup properties
         has_header_row = params.delete(:has_header_row)
-        data = FasterCSV.parse(textfile.read, {:col_sep=>@datasource.column_separator})
+        data = CSV.parse(textfile.read, {:col_sep=>@datasource.column_separator})
         if has_header_row
           @datasource.skip_lines = 1
           properties = data[0].collect{|pn| {:label=>pn, :range=>RDF::XSD.string}}

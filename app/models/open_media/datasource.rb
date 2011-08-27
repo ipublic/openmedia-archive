@@ -78,7 +78,7 @@ class OpenMedia::Datasource < CouchRest::Model::Base
     rows_parsed = 0    
     if self.textfile_source?
       if self.parser==DELIMITED_PARSER
-        FasterCSV.foreach(file.path, :col_sep=>self.column_separator) do |row|
+        CSV.foreach(file.path, :col_sep=>self.column_separator) do |row|
           rows_parsed += 1
           # create properties when processing first row
           if rows_parsed==1

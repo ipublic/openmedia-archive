@@ -35,7 +35,7 @@ class Public::ClassesController < ApplicationController
         property_names = @class.properties.collect{|p| p.identifier}.sort
         records = OpenMedia::Schema.get_records(@class.uri)
         self.response_body = lambda {|response, output|
-          csv = FasterCSV.new(OutputWrapper.new(output), :row_sep => "\r\n")
+          csv = CSV.new(OutputWrapper.new(output), :row_sep => "\r\n")
           csv << property_names
           records.each do |r|
             csv << property_names.collect{|pn| r[pn]}

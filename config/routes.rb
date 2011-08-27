@@ -78,6 +78,12 @@ Openmedia::Application.routes.draw do
   end
   
   namespace :admin do
+    resources :csvs do
+      collection do
+        get :import
+        post :upload
+      end
+    end
     resource :site
     resource :community
     resources :contacts do

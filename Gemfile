@@ -1,23 +1,24 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.5'
+# gem 'rails', '3.0.5'
+gem 'rails'
 gem 'couchrest_model'
 gem 'devise', '1.1.9'
 gem 'devise_couch'
 gem 'dynamic_form'
 gem 'fastercsv'
-gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
-gem 'linkeddata'
-gem 'spira'
-gem 'uuid'
+# gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
+# gem 'linkeddata'
+#gem 'spira'
+# gem 'uuid'
 gem 'gmaps4rails'
 
 group :test, :development do
   gem "rspec-rails", "2.6.1"
-  gem 'autotest'
-  gem 'autotest-rails'
-  gem 'rails3-generators', :git => 'git://github.com/shenoudab/rails3-generators.git'
-  gem 'spork', '~> 0.9.0.rc'
+#  gem 'autotest'
+#  gem 'autotest-rails'
+#  gem 'rails3-generators', :git => 'git://github.com/shenoudab/rails3-generators.git'
+#  gem 'spork', '~> 0.9.0.rc'
 end
 
 # Bundle edge Rails instead:

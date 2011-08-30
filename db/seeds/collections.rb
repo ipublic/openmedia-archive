@@ -1,4 +1,5 @@
 ## Initialize the Commons Collections
+require 'rdf/couchdb'
 
 ns = ::OmLinkedData::Namespace.new(@om_site.url)
 ::OmLinkedData::Collection.create!(:base_uri => ns.base_uri, 

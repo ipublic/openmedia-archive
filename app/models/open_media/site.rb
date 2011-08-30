@@ -45,7 +45,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   timestamps!
 
   # Validations
-  validates_presence_of :identifier, :municipality
+  validates_presence_of :identifier
+  validates_presence_of :municipality
   validates_uniqueness_of :identifier, :view => 'all'
 
   before_create :set_url

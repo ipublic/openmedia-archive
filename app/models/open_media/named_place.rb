@@ -1,4 +1,4 @@
-class OpenMedia::NamedPlace < Hash
+class OpenMedia::NamedPlace
 
   STATE_ABBREVIATIONS = [
     [ "Alabama", "AL" ], 
@@ -54,14 +54,14 @@ class OpenMedia::NamedPlace < Hash
     [ "Wyoming", "WY" ]
   ]
 
-  include CouchRest::Model::CastedModel    
+  include CouchRest::Model::Embeddable
   
-  property :name
-  property :state_abbreviation
-  property :source
-  property :source_id
-  property :type
-  property :description
+  property :name, String
+  property :state_abbreviation, String
+  property :source, String
+  property :source_id, String
+  property :type, String
+  property :description, String
   property :geometries, [GeoJson::Geometry]
 
 end

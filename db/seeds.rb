@@ -1,70 +1,33 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
-# Create RDF Statements defining core XSD types OpenMedia will use
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.base64Binary).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.boolean).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.byte).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.date).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.dateTime).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.double).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.duration).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.float).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.integer).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.long).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.short).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.string).save!
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::XSD.time).save!
-
-# OmLinkedData::DataType.new(:label => RDF::XSD.base64Binary.fragment.capitalize, :uri => RDF::XSD.base64Binary.uri).save!
-# RDF::URI.new('http://data.civicopenmedia.org')/"om"/"enum"
-
-
-# create datatype for JSON
-# OpenMedia::Schema::RDFS::Datatype.for(RDF::OM_CORE.GeoJson).save!
-
-#TYPES_RDF_REPOSITORY.load('http://www.w3.org/2006/vcard/ns');
-# TYPES_RDF_REPOSITORY.refresh_design_doc   # just in case
-# # 
-# OpenMedia::Schema::VCard.initialize_vcard
-# OpenMedia::Schema::Metadata.initialize_metadata
-
-# require File.join(File.dirname(__FILE__),'seeds', 'metadata')
-# require File.join(File.dirname(__FILE__),'seeds', 'vcard')
-
-# OpenMedia::Schema::VCard.initialize_vcard
-# OpenMedia::Schema::Metadata.initialize_metadata
-
 name = VCard::Name.new(:first_name => "Dan", :last_name => "Thomas")
 email1 = VCard::Email.new(:type => "Work", :value => "dan.thomas@ipublic.org")
 email2 = VCard::Email.new(:type => "Home", :value => "geoobject@gmail.com")
 org = VCard::Organization.new(:name => "iPublic.org")
 vcard = VCard::VCard.new(:name => name, :organization => org, :title => "Chief Technology Officer")
 vcard.emails << email1 << email2
-vcard.save
+vcard.save!
 
 # create om site w/ dan as admin
-# ec = OpenMedia::InferenceRules::GeographicName.find_by_name('Ellicott City').first
 ec = OpenMedia::NamedPlace.new(:name => "Ellicott City", 
-                                :state_abbreviation=>"MD", 
-                                :geometries=>[GeoJson::Geometry.new(:coordinates=>[-76.83419, 39.2722118], :type=>"Point")])
-@om_site = OpenMedia::Site.new(:identifier=>"om", 
-                                :openmedia_name=>'iPublic OpenMedia Portal', 
-                                :welcome_banner=>"Civic OpenMedia", 
-                                :welcome_message=>"A publishing system for government open data",
-                                :municipality=>ec).save
+                               :state_abbreviation=>"MD",
+                               :geometries => [
+                                 GeoJson::Geometry.new(:coordinates=>[-76.83419, 39.2722118], :type=>"Point")]
+                               )
+                                
+@om_site = OpenMedia::Site.create!(:identifier => "om", 
+                                :openmedia_name => 'iPublic OpenMedia Portal', 
+                                :welcome_banner => "Civic OpenMedia", 
+                                :welcome_message => "A publishing system for government open data",
+                                :municipality => ec)
 # @om_site.initialize_metadata
 
-dan = Admin.create!(:email=> email1.value, :password=>'ChangeMe',
-                    :password_confirmation=>'ChangeMe', :site=>@om_site, :confirmed_at=>Time.now)
-
-
-# name = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardName.new(:given_name=>'Dan', :family_name=>'Thomas').save!
-# email = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardEmail.new(:value=>'dan.thomas@ipublic.org', :type=>RDF::VCARD.Work.to_s).save!
-# vcard = OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(@om_site.vcards_rdf_uri/UUID.new.generate.gsub(/-/,''))
-# vcard.n = name
-# vcard.email = email
-# vcard.save!
+dan = Admin.new(:email => email1.value, 
+            :password => 'ChangeMe',
+            :password_confirmation => 'ChangeMe', 
+            :site => @om_site, 
+            :confirmed_at => Time.now).save!
 
 require File.join(File.dirname(__FILE__),'seeds', 'collections')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'xml_schema')

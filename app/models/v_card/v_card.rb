@@ -17,7 +17,7 @@ class VCard::VCard < CouchRest::Model::Base
   timestamps!
 
   ## Callbacks
-  before_validate :format_name
+  before_validation :format_name
   
   validates_presence_of :formatted_name
 

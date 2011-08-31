@@ -1,0 +1,43 @@
+ <div class="grid_8">
+		<div id="forms">
+		<%= form_for :collection, 
+		    :url => @collection.new? ? admin_linked_data_collections_path : admin_linked_data_collection_path(@collection), 
+		    :html => {:method => @collection.new? ? :post : :put } do |f| %>
+			<div class="form-errors"><%= f.error_messages %></div>
+			<%#= f.hidden_field :namespace_id, :value => @collection['namespace_id'] if @collection['namespace_id'] %>
+			<%#= f.hidden_field :identifier, :value => @collection['identifier'] if @collection['identifier'] %>
+			<fieldset class="omega">
+				<ol>
+				  <li><%= f.label :label, :class => "standard" %> <%= f.text_field :label, :class => "standard" %></li>
+				  <li><%= f.label :comment, 'Comment', :class => "standard" %> <%= f.text_area :comment, :rows => 5, :class => "wide" %></li>
+				  <li><%= f.label :tags, 'Tags', :class => "standard" %> 
+							<%= f.text_area :tags, {:rows => 3, :class => "wide", :prompt => 'Enter list of comma-separated terms'} %></li>
+			    <fieldset>
+			      <legend>Options</legend>
+			      <ol>
+							<li><%= f.check_box :hidden, {:class => 'checkbox'} %> <%= f.label :hidden, 'Hidden?' %></li>
+			      </ol>
+			    </fieldset>
+				</ol>
+			</fieldset>
+			<fieldset class="submit omega">
+				<ol>
+					<li><%= f.submit "Save", :class => "submit"%> <%= link_to 'Back', :back %></li> 
+				</ol>
+			</fieldset>
+		  <% end %>	
+     </div>
+</div>
+
+<div class="grid_4">
+	<div class="box articles">
+		<div class="block" id="articles">
+			<div class="first article">
+				<h3><a href="#">Article Heading</a></h3>
+				<h4>Subheading</h4>
+				<p class="meta">Vancouver, BC — Wednesday, 23 April 2008</p>
+				<p>Something here about role of Datasets in system</p>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,14 +1,15 @@
 ## Initialize the Commons Collections
 require 'rdf/couchdb'
 
-ns = ::OmLinkedData::Namespace.new(@om_site.url)
-::OmLinkedData::Collection.create!(:base_uri => ns.base_uri, 
+ns = LinkedData::Namespace.new(@om_site.url)
+LinkedData::Collection.create!(:base_uri => ns.base_uri, 
                                     :label=> 'Core', 
+                                    :term => "core",
                                     :authority => ns.authority, 
                                     :tags => ["intrinsic", "default", "base"], 
                                     :comment => "The Core collection includes OpenMedia built-in types.")
 
-::OmLinkedData::Collection.create!(:base_uri => ns.base_uri, :label=> 'Addresses', 
+LinkedData::Collection.create!(:base_uri => ns.base_uri, :label=> 'Addresses', :term => "addresses", 
   :authority => ns.authority, 
   :tags => ["residence", "house", "home", "headquarters", "place", "business", "location", "intersection", 
             "100 block", "site address", "po box", "url", "uri"], 
@@ -36,7 +37,7 @@ collections = [
   'Weather'
   ]
 
-collections.sort.each { |col| ::OmLinkedData::Collection.create!(:label=> col, 
+collections.sort.each { |col| LinkedData::Collection.create!(:term => col, 
                                                                 :base_uri => ns.base_uri,
                                                                 :authority => ns.authority
                                                                 )}

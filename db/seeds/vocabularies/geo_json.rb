@@ -1,38 +1,43 @@
-core_collection = ::OmLinkedData::Collection.find_by_label("Core")
-xsd_float = ::OmLinkedData::Type.find_by_term(:key => "float")
-xsd_string = ::OmLinkedData::Type.find_by_term(:key => "string")
+core_collection = LinkedData::Collection.find_by_label("Core")
+xsd_float = LinkedData::Type.find_by_term(:key => "float")
+xsd_string = LinkedData::Type.find_by_term(:key => "string")
 
 comment = "A geospatial data interchange format based on JavaScript Object Notation (JSON). See: http://geojson.org/geojson-spec.html"
 
-vocab = ::OmLinkedData::Vocabulary.new(:base_uri => "http://civicopenmedia.us/vocabularies/", 
+vocab = LinkedData::Vocabulary.create!(:base_uri => "http://civicopenmedia.us/vocabularies/", 
                                         :label => "GeoJSON",
                                         :term => "GeoJSON",
                                         :property_delimiter => "#",
                                         :collection => core_collection,
                                         :comment => comment
-                                        ).save
+                                        )
 
 
-gj_prop = ::OmLinkedData::Property.new(:vocabulary => vocab, 
-                                        :label => "type", 
+gj_prop = LinkedData::Property.create!(:vocabulary => vocab, 
+                                        :term => "type", 
                                         :enumerations => ["Point", "MultiPoint", "LineString", "MultiLineString",
                                           "Polygon", "MultiPolygon"],
-                                        :expected_type => xsd_string).save
+                                        :expected_type => xsd_string)
                                         
-xcoord = ::OmLinkedData::Property.new(:vocabulary => vocab, :label => "X", :expected_type => xsd_float).save
-ycoord = ::OmLinkedData::Property.new(:vocabulary => vocab, :label => "Y", :expected_type => xsd_float).save
-zcoord = ::OmLinkedData::Property.new(:vocabulary => vocab, :label => "Z", :expected_type => xsd_float).save
+xcoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "X", :expected_type => xsd_float)
+ycoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "Y", :expected_type => xsd_float)
+zcoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "Z", :expected_type => xsd_float)
 
-coord_type = ::OmLinkedData::Type.new(:vocabulary => vocab, 
+coord_type = LinkedData::Type.new(:vocabulary => vocab, 
                                       :label => "Position",
-                                      :properties => [xcoord, ycoord, zcoord]
-                                      ).save
+                                      :term => "Position"
+                                      )
 
-point_type = ::OmLinkedData::Type.new(:vocabulary => vocab, 
+coord_type.properties << xcoord << ycoord << zcoord
+coord_type.save!
+
+point_type = LinkedData::Type.new(:vocabulary => vocab, 
                                       :label => "Point", 
-                                      :term => "Point", 
-                                      :properties => [gj_prop, xcoord, ycoord, zcoord]
-                                      ).save
+                                      :term => "Point"
+                                      )
+
+point_type.properties << gj_prop << xcoord << ycoord << zcoord
+point_type.save!
 
 vocab.types << point_type
 vocab.save!

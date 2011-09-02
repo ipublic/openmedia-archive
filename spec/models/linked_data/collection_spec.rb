@@ -4,18 +4,22 @@ describe LinkedData::Collection do
 
   before(:each) do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
-    @uri = @ns.base_uri
-    @collection = LinkedData::Collection.new(:label=>"Education", 
-                                          :base_uri => @uri,
-                                          :authority => @ns.authority,
-                                          :tags => ["schools", "teachers", "students"], 
-                                          :comment => "Matters associated with public schools")
+    @term = "education"
+    @authority = @ns.authority
+    @base_uri = @ns.base_uri
+    @collection = LinkedData::Collection.new(:term => @term,
+                                             :label => "Education", 
+                                             :namespace => @ns,
+                                             :tags => ["schools", "teachers", "students"], 
+                                             :comment => "Matters associated with public schools")
   end
   
-  it 'should fail to initialize instance without both a label and base_uri' do
-    lambda {  @bad_collection = LinkedData::Collection.new().save! }.should raise_error
-    lambda {  @bad_collection = LinkedData::Collection.new(:label => @label).save! }.should raise_error
-    lambda {  @bad_collection = LinkedData::Collection.new(:base_uri => @uri).save! }.should raise_error
+  it 'should fail to initialize instance without a term, base_uri and authority propoerties' do
+    lambda { LinkedData::Collection.create!() }.should raise_error
+    lambda { LinkedData::Collection.create!(:term => @term) }.should raise_error
+    lambda { LinkedData::Collection.create!(:base_uri => @base_uri) }.should raise_error
+    lambda { LinkedData::Collection.create!(:authority => @authority) }.should raise_error
+    lambda { LinkedData::Collection.create!(:term => @term, :base_uri => @base_uri, :authority => @authority) }.should_not raise_error
   end
 
   it 'should save and generate an identifier correctly' do
@@ -30,8 +34,22 @@ describe LinkedData::Collection do
 
   it 'should generate a URI for the new collection' do
     @res = @collection.save
-    @col = LinkedData::Collection.find(@res["_id"])
+    @col = LinkedData::Collection.get(@res.id)
     @col.uri.should == 'http://civicopenmedia.us/dcgov/collections#education'
+  end
+  
+  it 'should provide a view by base_uri' do
+    @res = @collection.save
+    @col = LinkedData::Collection.by_base_uri(:key => @ns.base_uri)
+    @col.length.should be > 0
+    @col.rows[0].key.should == @ns.base_uri
+  end
+  
+  it 'should provide a view by authority' do
+    @res = @collection.save
+    @col = LinkedData::Collection.by_authority(:key => @ns.authority)
+    @col.length.should be > 0
+    @col.rows[0].key.should == @ns.authority
   end
   
   it 'should use tags view to return matching docs' do

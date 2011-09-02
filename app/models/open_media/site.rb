@@ -95,7 +95,7 @@ private
   def set_url
     if self.url.nil? && self.identifier
       self.url = "http://#{self.identifier}.#{OM_DOMAIN}#{OM_PORT == 80 ? '' : OM_PORT}"
-      ns = ::OmLinkedData::Namespace.new self.url
+      ns = ::LinkedData::Namespace.new(self.url)
       self.authority = ns.authority
       self.base_uri = ns.base_uri
     end

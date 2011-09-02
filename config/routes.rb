@@ -104,7 +104,7 @@ Openmedia::Application.routes.draw do
     end
     resources :maps
     
-    namespace :om_linked_data do
+    namespace :linked_data do
       resources :collections do
         resources :vocabularies do
           resources :types

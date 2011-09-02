@@ -1,4 +1,4 @@
-class OmLinkedData::Metadata < Hash
+class LinkedData::Metadata < Hash
   include CouchRest::Model::CastedModel
   
   property :creator   # =>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(creator_uri)

@@ -28,7 +28,7 @@ class LinkedData::Type < CouchRest::Model::Base
 
   timestamps!
 
-  validates_presence_of :label
+  validates_presence_of :term
   validates_presence_of :vocabulary_id
   validates_uniqueness_of :identifier, :view => 'all'
 
@@ -83,7 +83,7 @@ class LinkedData::Type < CouchRest::Model::Base
 
 private
   def generate_uri
-    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
+    self.label ||= self.term
     rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.term
     self.uri = rdf_uri.to_s
   end

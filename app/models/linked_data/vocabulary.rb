@@ -11,10 +11,10 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   property :comment, String     # RDFS#Comment
   property :tags, [String]
 
-  property :uri, String
   property :base_uri, String
   property :authority, String
   property :term, String
+  property :uri, String
   
   property :curie_prefix, String
   property :property_delimiter, String, :default => "/"
@@ -27,7 +27,7 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   
   timestamps!
 
-  validates_presence_of :label
+  validates_presence_of :term
   validates_presence_of :base_uri
   validates_presence_of :collection_id
   validates_uniqueness_of :identifier, :view => 'all'
@@ -65,6 +65,15 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   #         }
   #       }"
   
+  def namespace=(ns={})
+    self.base_uri = ns.base_uri unless ns.base_uri.nil?
+    self.authority = ns.authority unless ns.authority.nil?
+  end
+  
+  def namespace
+    Hash[:base_uri => self.base_uri, :authority => self.authority]
+  end
+
   ##
   # Returns the Vocabularies for passed Collection.
   #

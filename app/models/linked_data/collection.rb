@@ -5,21 +5,20 @@ class LinkedData::Collection < CouchRest::Model::Base
   unique_id :identifier
   
   property :identifier, String
+  property :term, String        # Escaped vocabulary name suitable for inclusion in IRI
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
   property :tags, [String]
   property :hidden, TrueClass, :default => false
-
+  
+  # property :namespace, LinkedData::Namespace
   property :base_uri, String
-  property :subdomain, String
   property :authority, String
-
   property :uri, String
-  property :term, String                 # Escaped vocabulary name suitable for inclusion in IRI
 
   timestamps!
-
-  validates_presence_of :label
+  
+  validates_presence_of :term
   validates_presence_of :base_uri
   validates_presence_of :authority
   validates_uniqueness_of :identifier, :view => 'all'
@@ -27,17 +26,37 @@ class LinkedData::Collection < CouchRest::Model::Base
   ## Callbacks
   before_create :generate_uri
   before_create :generate_identifier
-
-  # view_by :label
-  # view_by :authority
-  # view_by :base_uri
-  # view_by :term
   
+  def namespace=(ns={})
+    self.base_uri = ns.base_uri unless ns.base_uri.nil?
+    self.authority = ns.authority unless ns.authority.nil?
+  end
+  
+  def namespace
+    Hash[:base_uri => self.base_uri, :authority => self.authority]
+  end
+
   design do
     view :by_label
     view :by_term
     view :by_base_uri
     view :by_authority
+    
+    # view :by_base_uri,
+    #   :map =>
+    #     "function(doc) {
+    #       if (doc['type'] == 'LinkedData::Collection' && doc['namespace']['base_uri']) {
+    #         emit(doc['namespace']['base_uri']);
+    #         }
+    #       }"
+    # 
+    # view :by_authority,
+    # :map =>
+    #   "function(doc) {
+    #     if (doc['type'] == 'LinkedData::Collection' && doc['namespace']['authority']) {
+    #       emit(doc['namespace']['authority']);
+    #       }
+    #     }"
     
     view :tag_list,
       :map =>
@@ -55,9 +74,9 @@ class LinkedData::Collection < CouchRest::Model::Base
   def self.sort_by_base_uri(uri = '')
     @sorted_collections = Hash.new
     if uri.empty?
-      all_collections = OmLinkedData::Collection.all
+      all_collections = LinkedData::Collection.all
     else
-      all_collections = OmLinkedData::Collection.by_base_uri(:key => uri)
+      all_collections = LinkedData::Collection.by_base_uri(:key => uri)
     end
     
     all_collections.each do |c| 
@@ -68,8 +87,8 @@ class LinkedData::Collection < CouchRest::Model::Base
 
 private
   def generate_uri
-    self.term ||= self.label.downcase
-    rdf_uri = RDF::URI.new(self.base_uri)/"collections#"/escape_string(self.label.downcase)
+    self.label ||= self.term
+    rdf_uri = RDF::URI.new(self.base_uri)/"collections#"/escape_string(self.term)
     self.uri = rdf_uri.to_s
   end
 
@@ -80,7 +99,7 @@ private
   end
   
   def escape_string(str)
-    str.downcase.gsub(/[^a-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 
+    str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_')
   end
   
 end

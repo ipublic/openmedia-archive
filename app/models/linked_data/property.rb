@@ -4,10 +4,6 @@ class LinkedData::Property < CouchRest::Model::Base
   use_database TYPES_DATABASE
   unique_id :identifier
 
-  belongs_to :vocabulary, :class_name => "LinkedData::Vocabulary"
-  belongs_to :expected_type, :class_name => "LinkedData::Type"
-  collection_of :synonyms, :class_name => 'LinkedData::Property'  # Props with same semantic meaning
-
   property :identifier
   property :label, String                             # User assigned name, RDFS#Label
   property :comment, String                           # => RDFS#Comment
@@ -18,10 +14,13 @@ class LinkedData::Property < CouchRest::Model::Base
 
   property :deprecated, TrueClass, :default => false  # Deprecated properties may not be used 
                                                        # for future vocabularies            
+
+  belongs_to :vocabulary, :class_name => "LinkedData::Vocabulary"
+  belongs_to :expected_type, :class_name => "LinkedData::Type"
+  collection_of :synonyms, :class_name => 'LinkedData::Property'  # Props with same semantic meaning
   timestamps!
 
-  validates_presence_of :label
-  # validates_presence_of :expected_type
+  validates_presence_of :term
   validates_presence_of :vocabulary_id
   validates_uniqueness_of :identifier, :view => 'all'
   
@@ -55,7 +54,7 @@ class LinkedData::Property < CouchRest::Model::Base
   
 private
   def generate_uri
-    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
+    self.label ||= self.term
     rdf_uri = RDF::URI.new(self.vocabulary.uri)/self.vocabulary.property_delimiter + self.term
     self.uri = rdf_uri.to_s
   end

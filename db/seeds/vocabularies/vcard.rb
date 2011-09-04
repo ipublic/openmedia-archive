@@ -51,7 +51,7 @@ at_prop = LinkedData::Property.new(:label => "Type", :term => "adr-type",
                                                         },
                                       :expected_type => xsd_string.uri)
 
-ph_prop = LinkedData::Property.new(:label => "Photo", :term => "photo", :expected_type => xsd_base64Binary)
+ph_prop = LinkedData::Property.new(:label => "Photo", :term => "photo", :expected_type => xsd_base64Binary.uri)
 
 ## Define Types
 name_type = LinkedData::Type.new(:vocabulary => vocab, 

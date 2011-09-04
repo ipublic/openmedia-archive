@@ -2,9 +2,8 @@ require 'rdf/couchdb'
 class LinkedData::Collection < CouchRest::Model::Base
 
   use_database TYPES_DATABASE
-  unique_id :identifier
+  unique_id :uri
   
-  property :identifier, String
   property :term, String        # Escaped vocabulary name suitable for inclusion in IRI
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
@@ -21,11 +20,11 @@ class LinkedData::Collection < CouchRest::Model::Base
   validates_presence_of :term
   validates_presence_of :base_uri
   validates_presence_of :authority
-  validates_uniqueness_of :identifier, :view => 'all'
+  validates_uniqueness_of :uri, :view => 'all'
 
   ## Callbacks
   before_create :generate_uri
-  before_create :generate_identifier
+  # before_create :generate_identifier
   
   def namespace=(ns={})
     self.base_uri = ns.base_uri unless ns.base_uri.nil?
@@ -61,7 +60,7 @@ class LinkedData::Collection < CouchRest::Model::Base
     view :tag_list,
       :map =>
         "function(doc) {
-          if (doc['type'] == 'LinkedData::Collection' && doc.tags) {
+          if (doc['model'] == 'LinkedData::Collection' && doc.tags) {
             doc.tags.forEach(function(tag) {
               emit(tag, 1); 
               });

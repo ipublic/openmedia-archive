@@ -12,6 +12,8 @@ describe LinkedData::Collection do
                                              :namespace => @ns,
                                              :tags => ["schools", "teachers", "students"], 
                                              :comment => "Matters associated with public schools")
+                                             
+    @col_uri = @ns.base_uri + '/collections#' + @term
   end
   
   it 'should fail to initialize instance without a term, base_uri and authority propoerties' do
@@ -29,13 +31,13 @@ describe LinkedData::Collection do
   it 'should generate a Label view and return results correctly' do
     @res = @collection.save
     @col = LinkedData::Collection.find_by_label(@res.label)
-    @col.identifier.should == 'collection_civicopenmedia_us_dcgov_education'
+    @col.id.should == @col_uri
   end
 
   it 'should generate a URI for the new collection' do
     @res = @collection.save
     @col = LinkedData::Collection.get(@res.id)
-    @col.uri.should == 'http://civicopenmedia.us/dcgov/collections#education'
+    @col.uri.should == @col_uri
   end
   
   it 'should provide a view by base_uri' do
@@ -57,7 +59,7 @@ describe LinkedData::Collection do
     @res = LinkedData::Collection.tag_list(:key => "fire")
     @res.length.should == 0 
     @res = LinkedData::Collection.tag_list(:key => "teachers")
-    @res.rows[0].id.should == 'collection_civicopenmedia_us_dcgov_education'
+    @res.rows[0].id.should == @col_uri
   end
 
   # describe 'metadata repository' do

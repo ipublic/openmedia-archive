@@ -1,5 +1,5 @@
 # XMLSchema base types
-core_collection = LinkedData::Collection.find_by_label("Core")
+core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
 
 comment = "Element and attribute datatypes used in XML Schemas and other XML specifications"
 vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001", 
@@ -13,7 +13,7 @@ vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001",
                                           
 ["base64Binary", "boolean", "byte", "date", "dateTime", "double", "duration", 
   "float", "integer", "long", "short", "string", "time"].each do |term|
-  new_type = LinkedData::Type.new(:vocabulary => vocab, :term => term, :label => term).save
+  new_type = LinkedData::Type.new(:vocabulary => vocab, :term => term, :label => term.capitalize).save
   vocab.types << new_type
 end
 

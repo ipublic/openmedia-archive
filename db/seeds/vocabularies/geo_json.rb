@@ -1,6 +1,7 @@
-core_collection = LinkedData::Collection.find_by_label("Core")
-xsd_float = LinkedData::Type.find_by_term(:key => "float")
-xsd_string = LinkedData::Type.find_by_term(:key => "string")
+## Retrieve base types from Commons
+core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
+xsd_string = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#string")
+xsd_float = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#float")
 
 comment = "A geospatial data interchange format based on JavaScript Object Notation (JSON). See: http://geojson.org/geojson-spec.html"
 
@@ -13,15 +14,14 @@ vocab = LinkedData::Vocabulary.create!(:base_uri => "http://civicopenmedia.us/vo
                                         )
 
 
-gj_prop = LinkedData::Property.create!(:vocabulary => vocab, 
-                                        :term => "type", 
-                                        :enumerations => ["Point", "MultiPoint", "LineString", "MultiLineString",
+gj_prop = LinkedData::Property.new(:term => "type", 
+                                   :enumerations => ["Point", "MultiPoint", "LineString", "MultiLineString",
                                           "Polygon", "MultiPolygon"],
-                                        :expected_type => xsd_string)
+                                   :expected_type => xsd_string.uri)
                                         
-xcoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "X", :expected_type => xsd_float)
-ycoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "Y", :expected_type => xsd_float)
-zcoord = LinkedData::Property.create!(:vocabulary => vocab, :term => "Z", :expected_type => xsd_float)
+xcoord = LinkedData::Property.new(:term => "X", :expected_type => xsd_float.uri)
+ycoord = LinkedData::Property.new(:term => "Y", :expected_type => xsd_float.uri)
+zcoord = LinkedData::Property.new(:term => "Z", :expected_type => xsd_float.uri)
 
 coord_type = LinkedData::Type.new(:vocabulary => vocab, 
                                       :label => "Position",

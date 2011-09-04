@@ -1,7 +1,7 @@
-## Initialize the Commons Vocabularies
-core_collection = LinkedData::Collection.find_by_label("Core")
-xsd_float = LinkedData::Type.find_by_term(:key => "float")
-xsd_string = LinkedData::Type.find_by_term(:key => "string")
+## Retrieve base types from Commons
+core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
+xsd_string = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#string")
+xsd_float = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#float")
 
 comment = "A basic RDF vocabulary with a namespace for representing latitude, longitude and other information about spatially-located things, using WGS84 as a reference datum"
 
@@ -12,19 +12,17 @@ vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2003/01/geo/"
                                           :collection => core_collection,
                                           :label => "W3C Geo Vocabulary",
                                           :comment => comment
-                                          ).save
+                                          )
 
-prop_lat = LinkedData::Property.create!(:vocabulary => vocab, 
-                                        :label => "Latitude", 
+prop_lat = LinkedData::Property.new(:label => "Latitude", 
                                         :term => "lat",
-                                        :expected_type => xsd_float,
+                                        :expected_type => xsd_float.uri,
                                         :tags => ["northing", "coordinate"]
                                         )
                                       
-prop_lng = LinkedData::Property.create!(:vocabulary => vocab, 
-                                        :label => "Longitude", 
+prop_lng = LinkedData::Property.new(:label => "Longitude", 
                                         :term => "long",
-                                        :expected_type => xsd_float,
+                                        :expected_type => xsd_float.uri,
                                         :tags => ["easting", "coordinate"]
                                         )                              
 

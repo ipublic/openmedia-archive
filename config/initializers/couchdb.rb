@@ -40,6 +40,12 @@ else
   COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
 end
 
+# Set CouchRest Model property term to "model"
+CouchRest::Model::Base.configure do |config|
+  # config.mass_assign_any_attribute = true
+  config.model_type_key = 'model'
+end
+
 module CouchRest
   class Database
 

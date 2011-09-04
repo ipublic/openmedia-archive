@@ -2,24 +2,24 @@ require 'rdf/couchdb'
 class LinkedData::Vocabulary < CouchRest::Model::Base
   
   use_database TYPES_DATABASE
-  unique_id :identifier
+  unique_id :uri
 
   belongs_to :collection, :class_name => "LinkedData::Collection"
   
-  property :identifier, String, :alias => :subject
+  property :uri, String, :alias => :curie_suffix
+  property :term, String
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
   property :tags, [String]
 
   property :base_uri, String
   property :authority, String
-  property :term, String
-  property :uri, String
   
   property :curie_prefix, String
   property :property_delimiter, String, :default => "/"
+  property :context
   
-  collection_of :properties, :class_name => 'LinkedData::Property'
+  property :properties, [LinkedData::Property]
   collection_of :types, :class_name => 'LinkedData::Type'
 
   ## TODO -- move geometries into Properties
@@ -30,12 +30,12 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   validates_presence_of :term
   validates_presence_of :base_uri
   validates_presence_of :collection_id
-  validates_uniqueness_of :identifier, :view => 'all'
+  validates_uniqueness_of :uri, :view => 'all'
   
   
   ## Callbacks
   before_create :generate_uri
-  before_create :generate_identifier
+  # before_create :generate_identifier
 
   design do
     view :by_label
@@ -47,7 +47,7 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
     view :tag_list,
       :map =>
         "function(doc) {
-          if (doc['type'] == 'LinkedData::Vocabulary' && doc.tags) {
+          if (doc['model'] == 'LinkedData::Vocabulary' && doc.tags) {
             doc.tags.forEach(function(tag) {
               emit(tag, 1); 
               });
@@ -58,12 +58,16 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   # view_by :has_geometry,
   #   :map => 
   #     "function(doc) {
-  #       if ((doc['couchrest-type'] == 'LinkedData::Vocabulary') && (doc.geometries.length > 0 )) { 
+  #       if ((doc['model'] == 'LinkedData::Vocabulary') && (doc.geometries.length > 0 )) { 
   #         doc.geometries.forEach(function(geometry) {
   #           emit(geometry, 1);
   #           });
   #         }
   #       }"
+  
+  def curie
+    Hash[self.curie_prefix, self.curie_suffix] if self.curie_prefix && self.curie_suffix
+  end
   
   def namespace=(ns={})
     self.base_uri = ns.base_uri unless ns.base_uri.nil?
@@ -146,11 +150,11 @@ private
     self.uri = rdf_uri.to_s
   end
 
-  def generate_identifier
-    self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' + 
-                         escape_string(self.term.downcase) if new?
-  end
+  # def generate_identifier
+  #   self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
+  #                        self.authority + '_' + 
+  #                        escape_string(self.term.downcase) if new?
+  # end
 
   def escape_string(str)
     str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 

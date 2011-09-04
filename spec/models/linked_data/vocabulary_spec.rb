@@ -8,13 +8,12 @@ describe LinkedData::Vocabulary do
     @term = "education"
     @authority = @ns.authority
     @base_uri = @ns.base_uri
-    @collection = LinkedData::Collection.new(:term => @term,
-                                             :label => @col_label, 
-                                             :base_uri => @base_uri,
-                                             :authority => @ns.authority,
-                                             :tags=>["schools", "teachers", "students"], 
-                                             :comment => "Matters associated with public schools")
-    @collection.save!
+    @collection = LinkedData::Collection.create!(:term => @term,
+                                                 :label => @col_label, 
+                                                 :base_uri => @base_uri,
+                                                 :authority => @ns.authority,
+                                                 :tags=>["schools", "teachers", "students"], 
+                                                 :comment => "Matters associated with public schools")
     
     @label = "Reading Proficiency-Third Grade"
     @vocabulary = LinkedData::Vocabulary.new(:label => @label, 
@@ -23,6 +22,8 @@ describe LinkedData::Vocabulary do
                             :base_uri => @base_uri,
                             :tags => ["reading", "testing", "third grade"], 
                             :comment => "Percentage of children in third grade who read on grade level")
+                            
+    @vocab_uri = "http://civicopenmedia.us/dcgov/vocabularies/Reading_Proficiency_Third_Grade"
   
   end
   
@@ -37,33 +38,33 @@ describe LinkedData::Vocabulary do
   it 'should save and generate an identifier correctly' do
     lambda { @vocabulary.save! }.should change(LinkedData::Vocabulary, :count).by(1)
     @res = LinkedData::Vocabulary.by_label(:key => @label)
-    @res.rows[0].id.should == 'vocabulary_civicopenmedia_us_dcgov_reading_proficiency_third_grade'
+    @res.rows[0].id.should == @vocab_uri
   end
 
   it 'should recognize a local vocabulary and generate correct URI' do
-    lcl_vocab = ::LinkedData::Vocabulary.new(:label => "LocalVocabulary",
-                                             :term => "LocalVocabulary",
-                                             :base_uri => @base_uri, 
-                                             :collection => @collection,
-                                             :curie_prefix => "om",
-                                             :comment => "Datatypes defined on local OM site"
-                                             ).save
+    lcl_vocab = LinkedData::Vocabulary.create!(:label => "LocalVocabulary",
+                                                 :term => "LocalVocabulary",
+                                                 :base_uri => @base_uri, 
+                                                 :collection => @collection,
+                                                 :curie_prefix => "om",
+                                                 :comment => "Datatypes defined on local OM site"
+                                                 )
                                                 
-    vocab = ::LinkedData::Vocabulary.get(lcl_vocab.identifier)
-    vocab.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/LocalVocabulary"
+    vocab = LinkedData::Vocabulary.get(lcl_vocab.id)
+    vocab.id.should == "http://civicopenmedia.us/dcgov/vocabularies/LocalVocabulary"
   end
   
   it 'should recognize an external vocabulary and generate correct URI' do
-    xsd_vocab = ::LinkedData::Vocabulary.new(:label => "XMLSchema",
-                                              :term => "XMLSchema",
-                                              :base_uri => "http://www.w3.org/2001", 
-                                              :collection => @collection,
-                                              :curie_prefix => "xsd",
-                                              :comment => "Datatypes defined in XML schemas"
-                                              ).save
+    xsd_vocab = LinkedData::Vocabulary.create!(:label => "XMLSchema",
+                                                  :term => "XMLSchema",
+                                                  :base_uri => "http://www.w3.org/2001", 
+                                                  :collection => @collection,
+                                                  :curie_prefix => "xsd",
+                                                  :comment => "Datatypes defined in XML schemas"
+                                                  )
                                                 
-    vocab = ::LinkedData::Vocabulary.get(xsd_vocab.identifier)
-    vocab.uri.should == "http://www.w3.org/2001/XMLSchema"
+    vocab = LinkedData::Vocabulary.get(xsd_vocab.id)
+    vocab.id.should == "http://www.w3.org/2001/XMLSchema"
   end
   
 
@@ -72,13 +73,13 @@ describe LinkedData::Vocabulary do
     @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/Reading_Proficiency_Third_Grade"
     @vocabs = LinkedData::Vocabulary.by_uri(:key => @res.uri)
     @vocabs.length.should == 1
-    @vocabs.rows[0].id.should == "vocabulary_civicopenmedia_us_dcgov_reading_proficiency_third_grade"
+    @vocabs.rows[0].id.should == @vocab_uri
   end
   
   it 'should return this Vocabulary when searching by Collection' do
     @vocabulary.save!
-    @vocabs = LinkedData::Vocabulary.find_by_collection_id(@collection.identifier)
-    @vocabs.rows[0].id.should == 'vocabulary_civicopenmedia_us_dcgov_reading_proficiency_third_grade'
+    @vocabs = LinkedData::Vocabulary.find_by_collection_id(@collection.id)
+    @vocabs.rows[0].id.should == @vocab_uri
   end
   
   it 'should use tags view to return matching docs' do
@@ -86,7 +87,7 @@ describe LinkedData::Vocabulary do
     @res = LinkedData::Vocabulary.tag_list(:key => "xyxyxy")
     @res.length.should == 0 
     @res = LinkedData::Vocabulary.tag_list(:key => "testing")
-    @res.rows[0].id.should == 'vocabulary_civicopenmedia_us_dcgov_reading_proficiency_third_grade'
+    @res.rows[0].id.should == @vocab_uri
   end
 
   # it "should use has_geometry view to return matching docs" do

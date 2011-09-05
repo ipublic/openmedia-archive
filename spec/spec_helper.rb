@@ -1,112 +1,92 @@
-require 'spork'
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
-Spork.prefork do
-  # Loading more in this block will cause your tests to run faster. However,
-  # if you change any configuration or code from libraries loaded here, you'll
-  # need to restart spork for it take effect.
+require "bundler/setup"
+require "rubygems"
+require "rspec"
 
-  # This file is copied to spec/ when you run 'rails generate rspec:install'
-  ENV["RAILS_ENV"] ||= 'test'
-  require File.expand_path("../../config/environment", __FILE__)
-  require 'rspec/rails'
-  require 'devise/test_helpers'
-  
-  # Requires supporting ruby files with custom matchers and macros, etc,
-  # in spec/support/ and its subdirectories.
-  Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+# require 'couchrest_model'
 
-  RSpec.configure do |config|
-    # == Mock Framework
-    #
-    # If you prefer to use mocha, flexmock or RR, uncomment the appropriate line:
-    #
-    # config.mock_with :mocha
-    # config.mock_with :flexmock
-    # config.mock_with :rr
-    config.mock_with :rspec
+ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path(File.join(File.dirname(__FILE__),'..','config','environment'))
 
-    # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-    # config.fixture_path = "#{::Rails.root}/spec/fixtures"
+unless defined?(FIXTURE_PATH)
+  MODEL_PATH = File.join(File.dirname(__FILE__), "fixtures", "models")
+  $LOAD_PATH.unshift(MODEL_PATH)
 
-    # If you're not using ActiveRecord, or you'd prefer not to run each of your
-    # examples within a transaction, remove the following line or assign false
-    # instead of true.
-    # config.use_transactional_fixtures = true
-    config.include Devise::TestHelpers, :type => :controller
+  FIXTURE_PATH = File.join(File.dirname(__FILE__), '/fixtures')
+  SCRATCH_PATH = File.join(File.dirname(__FILE__), '/tmp')
 
-    WATCHED_DBS = [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE]
-    start_sequences = { }
-    config.before(:each) do
-      WATCHED_DBS.each do |db|
-        start_sequences[db] = db.info['update_seq']
-      end
-    end
+  COUCHHOST = "http://127.0.0.1:5984"
+  TESTDB    = 'couchrest-model-test'
+  TEST_SERVER    = CouchRest.new COUCHHOST
+  TEST_SERVER.default_database = TESTDB
+  DB = TEST_SERVER.database(TESTDB)
+end
 
-    config.after(:each) do
-      WATCHED_DBS.each do |db|
-        changes = db.get('_changes', :since=>start_sequences[db])
-        to_delete = changes['results'].select{|chg| !chg['deleted'] && !(chg['id'] =~ /_design/)}.collect{|chg| {'_id'=>chg['id'], '_rev'=>chg['changes'].first['rev'], '_deleted'=>true}}
-        db.bulk_save(to_delete)
-      end
-    end
+RSpec.configure do |config|
+  config.before(:all) do
+    reset_test_db!
   end
 
-
+  config.after(:all) do
+    [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE, DB].each { |db| db.delete! rescue nil }
+    # cr = TEST_SERVER
+    # test_dbs = cr.databases.select { |db| db =~ /^#{TESTDB}/ }
+    # test_dbs.each do |db|
+    #   cr.database(db).delete! rescue nil
+    # end
+  end
 end
 
-Spork.each_run do
-  # This code will be run each time you run your specs.
-  require 'spec_utils'
+# Require each of the fixture models
+ Dir[ File.join(MODEL_PATH, "*.rb") ].sort.each { |file| require File.basename(file) }
+
+class Basic < CouchRest::Model::Base
+  use_database TEST_SERVER.default_database
 end
-
-# --- Instructions ---
-# Sort the contents of this file into a Spork.prefork and a Spork.each_run
-# block.
-#
-# The Spork.prefork block is run only once when the spork server is started.
-# You typically want to place most of your (slow) initializer code in here, in
-# particular, require'ing any 3rd-party gems that you don't normally modify
-# during development.
-#
-# The Spork.each_run block is run each time you run your specs.  In case you
-# need to load files that tend to change during development, require them here.
-# With Rails, your application modules are loaded automatically, so sometimes
-# this block can remain empty.
-#
-# Note: You can modify files loaded *from* the Spork.each_run block without
-# restarting the spork server.  However, this file itself will not be reloaded,
-# so if you change any of the code inside the each_run block, you still need to
-# restart the server.  In general, if you have non-trivial code in this file,
-# it's advisable to move it into a separate file so you can easily edit it
-# without restarting spork.  (For example, with RSpec, you could move
-# non-trivial code into a file spec/support/my_helper.rb, making sure that the
-# spec/support/* files are require'd from inside the each_run block.)
-#
-# Any code that is left outside the two blocks will be run during preforking
-# *and* during each_run -- that's probably not what you want.
-#
-# These instructions should self-destruct in 10 seconds.  If they don't, feel
-# free to delete them.
-
-
-
-
-
 
 # def reset_test_db!
-#   SITE_DATABASE.recreate!
-#   OpenMedia::Site.instance_variable_set(:@instance, nil)
-#   STAGING_DATABASE.recreate!
-#   TYPES_DATABASE.recreate!
-#   TYPES_RDF_REPOSITORY.refresh_design_doc
-#   OpenMedia::Schema::DesignDoc.refresh
+#   DB.recreate! rescue nil 
+#   # Reset the Design Cache
+#   Thread.current[:couchrest_design_cache] = {}
+#   DB
 # end
-# 
-# def seed_test_db!
-#   load File.join(Rails.root, 'db', 'seeds.rb')
-#   OpenMedia::Schema::RDFS::Class.for(::RDF::METADATA.Metadata)
-#   OpenMedia::Schema::OWL::Class.for(::RDF::VCARD.VCard)
-#   OpenMedia::Schema::VCard.initialize_vcard
-#   OpenMedia::Schema::Metadata.initialize_metadata  
-# end
+
+def reset_test_db!
+  [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE, DB].each { |db| db.recreate! rescue nil }
+  # OpenMedia::Site.instance_variable_set(:@instance, nil)
+end
+
+def seed_test_db!
+  load File.join(Rails.root, 'db', 'seeds.rb')
+end
+
+def om_site
+  OpenMedia::Site.find_by_identifier('om')
+end
+
+def create_test_site(data={})
+  @test_site = OpenMedia::Site.create!({:identifier=>'testgov', :url=>'http://test.gov',
+                                         :municipality=>OpenMedia::NamedPlace.new(:name=>'My City')}.merge(data))
+  COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
+  @test_site
+end
+
+def create_test_admin(site)
+  Admin.create!(:email=>'test@ipublic.org', :password=>'ChangeMe',
+                    :password_confirmation=>'ChangeMe', :site=>site, :confirmed_at=>Time.now)
+end
+
+
+def couchdb_lucene_available?
+  lucene_path = "http://localhost:5985/"
+  url = URI.parse(lucene_path)
+  req = Net::HTTP::Get.new(url.path)
+  res = Net::HTTP.new(url.host, url.port).start { |http| http.request(req) }
+  true
+ rescue Exception => e
+  false
+end
+
 

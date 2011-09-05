@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe LinkedData::Type do
   before(:each) do
+    TYPES_DATABASE.recreate! rescue nil
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @uri = @ns.base_uri
     @col_label = "Public Safety"

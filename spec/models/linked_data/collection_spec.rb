@@ -3,6 +3,7 @@ require 'spec_helper'
 describe LinkedData::Collection do
 
   before(:each) do
+    TYPES_DATABASE.recreate! rescue nil
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @term = "education"
     @authority = @ns.authority

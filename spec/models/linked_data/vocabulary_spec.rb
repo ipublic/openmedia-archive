@@ -3,6 +3,7 @@ require 'spec_helper'
 describe LinkedData::Vocabulary do
 
   before(:each) do
+    TYPES_DATABASE.recreate! rescue nil
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @col_label = "Education"
     @term = "education"

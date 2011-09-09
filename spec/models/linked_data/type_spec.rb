@@ -35,13 +35,14 @@ describe LinkedData::Type do
 
   end
   
-  it 'should fail to initialize instance without a term and vocabulary' do
-    lambda { LinkedData::Type.create!() }.should raise_error
-    lambda { LinkedData::Type.create!(:term => "integer") }.should raise_error
-    lambda { LinkedData::Type.create!(:vocabulary => @crime) }.should raise_error
+  it 'should fail to initialize instance without term and vocabulary' do
+    @ldt = OpenMedia::Datasource.new
+    @ldt.should_not be_valid
+    @ldt.errors[:term].should_not be_nil
+    @ldt.errors[:vocabulary].should_not be_nil
     lambda { LinkedData::Type.create!(:vocabulary => @crime, :term => "integer") }.should_not raise_error
   end
-
+  
   it 'should save and generate an identifier correctly' do
     term = "integer"
     int = LinkedData::Type.new(:vocabulary => @xsd, :term => term)

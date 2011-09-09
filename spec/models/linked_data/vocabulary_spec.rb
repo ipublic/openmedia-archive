@@ -29,11 +29,13 @@ describe LinkedData::Vocabulary do
   end
   
   
-  it 'should fail to initialize instance without a label, collection and base_uri' do
-    lambda { LinkedData::Vocabulary.create!() }.should raise_error
-    lambda { LinkedData::Vocabulary.create!(:term => @term) }.should raise_error
-    lambda { LinkedData::Vocabulary.create!(:collection => @collection) }.should raise_error
-    lambda { LinkedData::Vocabulary.create!(:base_uri => @base_uri) }.should raise_error
+  it 'should fail to initialize instance without a term, collection and base_uri' do
+    @v = LinkedData::Vocabulary.new
+    @v.should_not be_valid
+    @v.errors[:term].should_not be_nil
+    @v.errors[:vocabulary].should_not be_nil
+    @v.errors[:base_uri].should_not be_nil
+    lambda { LinkedData::Vocabulary.create!(:base_uri => @base_uri, :term => "percent_promoted", :collection => @collection) }.should_not raise_error
   end
 
   it 'should save and generate an identifier correctly' do

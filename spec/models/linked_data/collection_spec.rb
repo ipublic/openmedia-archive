@@ -18,12 +18,15 @@ describe LinkedData::Collection do
   end
   
   it 'should fail to initialize instance without a term, base_uri and authority propoerties' do
-    lambda { LinkedData::Collection.create!() }.should raise_error
-    lambda { LinkedData::Collection.create!(:term => @term) }.should raise_error
-    lambda { LinkedData::Collection.create!(:base_uri => @base_uri) }.should raise_error
-    lambda { LinkedData::Collection.create!(:authority => @authority) }.should raise_error
+    @v = LinkedData::Vocabulary.new
+    @v.should_not be_valid
+    @v.errors[:term].should_not be_nil
+    @v.errors[:authority].should_not be_nil
+    @v.errors[:base_uri].should_not be_nil
     lambda { LinkedData::Collection.create!(:term => @term, :base_uri => @base_uri, :authority => @authority) }.should_not raise_error
+raise_error
   end
+
 
   it 'should save and generate an identifier correctly' do
     lambda { @collection.save! }.should change(LinkedData::Collection, :count).by(1)

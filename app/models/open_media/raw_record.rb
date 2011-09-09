@@ -2,18 +2,21 @@ class OpenMedia::RawRecord < CouchRest::Model::Base
  
   use_database STAGING_DATABASE
   
-  property :datasource_id
+  belongs_to :data_resource, :class_name=>'OpenMedia::DataResource'
+
   property :batch_serial_number
   property :published, Time
   timestamps!
 
-  belongs_to :datasource, :class_name=>'OpenMedia::Datasource'
-  
-  view_by :datasource_id
-  view_by :datasource_id, :published
-  view_by :unpublished, :map =>"function(doc) {
-                                  if (doc['couchrest-type']=='OpenMedia::RawRecord' && doc['published']==null) {
-                                    emit(doc.datasource_id, 1);
-                                  }
-                                }"
+
+  design do
+    view :by_data_resource_id
+    view :by_data_resource_id_and_published
+    view :by_unpublished, 
+            :map =>"function(doc) {
+                      if (doc['model']=='OpenMedia::RawRecord' && doc['published']==null) {
+                        emit(doc.data_resource_id, 1);
+                      }
+                    }"
+  end
 end

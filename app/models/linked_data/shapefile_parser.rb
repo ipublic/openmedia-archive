@@ -10,10 +10,10 @@ class LinkedData::ShapefileParser < LinkedData::Parser
     raise "Source file not found" unless File.exists?(source_file_name)
     @source_file_name = source_file_name
 
-    @output_projection = options["output_projection"] unless options["output_projection"].nil?
+    @output_projection = options[:output_projection] unless options[:output_projection].nil?
     @output_projection ||= "EPSG:4326"
     
-    @property_constants = options["property_constants"] unless options["property_constants"].nil?
+    @property_constants = options[:property_constants] unless options[:property_constants].nil?
   end
   
   def properties
@@ -56,6 +56,7 @@ class LinkedData::ShapefileParser < LinkedData::Parser
   end
   
   def parse
+    self.properties if @properties.nil?
     rows_parsed = 0
     Dir.mktmpdir do |temp_dir|
       zip_file = File.open(@source_file_name)
@@ -79,10 +80,9 @@ class LinkedData::ShapefileParser < LinkedData::Parser
         geojson['features'].each do |feature|
           rows_parsed += 1
           raw_record = OpenMedia::RawRecord.new
-          # @properties.each {|sp| raw_record[sp.identifier] = feature['properties'][sp.label]}
           @properties.each {|sp| raw_record[sp.term] = feature['properties'][sp.term]}
+          @property_constants.each {|k,v| raw_record[k] = v} unless @property_constants.nil?
           raw_record['geometry'] = feature['geometry']
-          raw_record.merge(@property_constants) unless @property_constants.nil?
           record_set << raw_record
         end
         record_set

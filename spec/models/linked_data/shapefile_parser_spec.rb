@@ -8,19 +8,40 @@ describe LinkedData::ShapefileParser do
                                   AMBULANCE RESCSQUAD MEDICUNIT TRUCK SPECIALTY DETAIL TYPE 
                                   ENGINE BATTALION RENSTATUS AID REL_UNITS WEB_URL geometry)
 
-    @parser = LinkedData::ShapefileParser.new(@shapefile_name)
-    @prop_list = @parser.properties
+    @property_constants = {:batch_serial_number => "bsn-123ABC", :data_resource_id => "dr-123ABC"}
+    @parser = LinkedData::ShapefileParser.new(@shapefile_name, :property_constants => @property_constants)
   end
   
   describe "class methods" do
     describe ".properties" do
-
+      before(:each) do
+          @prop_list = @parser.properties
+      end
+      
       it "should not return an empty property list" do
         @prop_list.size.should == @shapefile_property_list.size
       end
       
       it "should return all property names as terms" do
         @prop_list.each {|p| @shapefile_property_list.include?(p.term).should == true }
+      end
+    end
+    
+    describe ".parse" do
+      before(:each) do
+        @record_list = @parser.parse
+      end
+      
+      it "should not return an empty array of records" do
+        @record_list.size.should > 0
+      end
+      
+      it "should return an array of OpenMedia:RawRecord type" do
+        @record_list.first.is_a?(OpenMedia::RawRecord).should == true
+      end
+      
+      it "should append property constants to each OpenMedia:RawRecord" do
+        @property_constants.each {|k,v| @record_list.first[k].should == v}
       end
     end
   end

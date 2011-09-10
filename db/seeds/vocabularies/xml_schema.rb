@@ -1,5 +1,5 @@
 # XMLSchema base types
-core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
+# core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
 
 comment = "Element and attribute datatypes used in XML Schemas and other XML specifications"
 vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001", 
@@ -7,7 +7,7 @@ vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001",
                                         :term => "XMLSchema",
                                         :property_delimiter => "#",
                                         :curie_prefix => "xsd",
-                                        :collection => core_collection,
+                                        :authority => @om_site.authority,
                                         :comment => comment
                                         ).save
                                           

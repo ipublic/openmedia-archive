@@ -1,4 +1,4 @@
-core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
+# core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
 xsd_string = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#string")
 xsd_base64Binary = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#base64Binary")
 
@@ -8,7 +8,7 @@ vocab = LinkedData::Vocabulary.create!(:base_uri => "http://www.w3.org/2006/vcar
                                         :term => "ns",
                                         :property_delimiter => "#",
                                         :curie_prefix => "vcard",
-                                        :collection => core_collection,
+                                        :authority => @om_site.authority,
                                         :comment => comment
                                         )
 

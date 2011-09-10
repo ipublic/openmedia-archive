@@ -1,12 +1,12 @@
 # Municipality
-core_collection = LinkedData::Collection.find_by_label("Core")
+# core_collection = LinkedData::Collection.find_by_label("Core")
 xsd_string = LinkedData::Type.find_by_term(:key => "string")
 
 comment = "A vocabulary for describing a jurisdiction or incorporated area."
 tags = ["location", "place"]
 
 vocab = LinkedData::Vocabulary.create!(:base_uri => "http://civicopenmedia.us/vocabularies", 
-                                        :collection => core_collection,
+                                        :authority => @om_site.authority,
                                         :label => "OpenMedia Municipality Vocabulary",
                                         :term => "Municipality",
                                         :property_delimiter => "#",

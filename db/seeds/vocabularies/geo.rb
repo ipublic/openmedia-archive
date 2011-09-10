@@ -1,5 +1,5 @@
 ## Retrieve base types from Commons
-core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
+# core_collection = LinkedData::Collection.get("http://openmedia.dev/om/collections#core")
 xsd_string = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#string")
 xsd_float = LinkedData::Type.get("http://www.w3.org/2001/XMLSchema#float")
 
@@ -9,7 +9,7 @@ vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2003/01/geo/"
                                           :term => "wgs84_pos",
                                           :property_delimiter => "#",
                                           :curie_prefix => "geo",
-                                          :collection => core_collection,
+                                          :authority => @om_site.authority,
                                           :label => "W3C Geo Vocabulary",
                                           :comment => comment
                                           )

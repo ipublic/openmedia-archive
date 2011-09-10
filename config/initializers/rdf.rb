@@ -1,5 +1,5 @@
 # require 'linkeddata'
-# require 'rdf/couchdb'
+require 'rdf/couchdb'
 # require 'spira'
 # require 'open_media/schema'
 # 
@@ -29,7 +29,15 @@
 # TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
 # Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
 # 
-# begin
+begin
+  # Define vocabularies not built-in
+  RDF::OM_DATA = RDF::Vocabulary.new('http://data.civicopenmedia.org/')
+  RDF::OM_CORE = RDF::Vocabulary.new(RDF::OM_DATA['core/'])
+  RDF::DCTYPE = RDF::Vocabulary.new('http://purl.org/dc/dcmitype/')
+  RDF::VCARD = RDF::Vocabulary.new(RDF::OM_CORE['vcard/'])
+  RDF::METADATA = RDF::Vocabulary.new(RDF::OM_CORE['metadata/'])
+  
+  
 #   OpenMedia::Schema::DesignDoc.refresh
 # 
 #   OpenMedia::Schema::RDFS::Class.for(::RDF::METADATA.Metadata)
@@ -43,5 +51,5 @@
 #   OpenMedia::Schema::Metadata.initialize_metadata
 # rescue => e
 #   puts e.inspect
-# end
+end
 # 

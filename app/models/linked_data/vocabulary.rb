@@ -4,7 +4,7 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   use_database TYPES_DATABASE
   unique_id :uri
 
-  belongs_to :collection, :class_name => "LinkedData::Collection"
+  # belongs_to :collection, :class_name => "LinkedData::Collection"
   
   property :uri, String, :alias => :curie_suffix
   property :term, String
@@ -29,7 +29,8 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
 
   validates_presence_of :term
   validates_presence_of :base_uri
-  validates_presence_of :collection_id
+  validates_presence_of :authority
+  # validates_presence_of :collection_id
   validates_uniqueness_of :uri, :view => 'all'
   
   
@@ -40,7 +41,6 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   design do
     view :by_label
     view :by_uri
-    view :by_collection_id
     view :by_curie_prefix
     view :by_authority
   
@@ -82,15 +82,26 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   # Returns the Vocabularies for passed Collection.
   #
   # @return [Vocabulary]
-  def self.find_by_collection_id(col_id)
-    self.by_collection_id(:key => col_id)
-  end
+  # def self.find_by_collection_id(col_id)
+  #   self.by_collection_id(:key => col_id)
+  # end
 
   ##
-  # Returns a JSON-LD (Linked Data) representation of this vocabulary.
+  # Returns a JSON representation of this vocabulary.
   #
-  # @return {JSON-LD}
-  def to_jsonld
+  # @return {JSON}
+  def to_json
+    # all_props_hsh = Hash.new
+    # self.properties.each do |prop|
+    #   prop_hsh[prop.]
+    # end
+    # 
+    # prop_hash = Hash.new {}
+    # 
+    # self.types.each do |t|
+    #   
+    #   {|t| puts t.label ; t.properties.each {|p| puts '|-' + p.label}}
+    # end
 
   end
 
@@ -106,39 +117,38 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   
   ## Return a Hash with URIs as key's and Vocaulary hashes in an associated Array
   ## Calling with an empty Collection_id will return all Vocaularies
-  def self.sort_by_base_uri(collection_id = '')
-    @sorted_vocabularies = Hash.new
-    if collection_id.empty?
-      all_vocabs = LinkedData::Vocabulary.all
-    else
-      all_vocabs = LinkedData::Vocabulary.by_collection_id(:key => collection_id)
-    end
-    
-    all_vocabs.each do |v| 
-      @sorted_vocabularies.key?(v.base_uri) ? @sorted_vocabularies[v.base_uri] << v : @sorted_vocabularies[v.base_uri] = Array.[](v)
-    end
-    @sorted_vocabularies
-  end
+  # def self.sort_by_base_uri(collection_id = '')
+  #   @sorted_vocabularies = Hash.new
+  #   if collection_id.empty?
+  #     all_vocabs = LinkedData::Vocabulary.all
+  #   else
+  #     all_vocabs = LinkedData::Vocabulary.by_collection_id(:key => collection_id)
+  #   end
+  #   
+  #   all_vocabs.each do |v| 
+  #     @sorted_vocabularies.key?(v.base_uri) ? @sorted_vocabularies[v.base_uri] << v : @sorted_vocabularies[v.base_uri] = Array.[](v)
+  #   end
+  #   @sorted_vocabularies
+  # end
   
   ## Return a Hash with URIs as key's and Vocaulary hashes in an associated Array
   ## Calling with an empty Collection_id will return all Vocaularies
-  def self.sort_by_authority(collection_id = '')
-    @sorted_vocabularies = Hash.new
-    if collection_id.empty?
-      all_vocabs = LinkedData::Vocabulary.all
-    else
-      all_vocabs = LinkedData::Vocabulary.by_collection_id(:key => collection_id)
-    end
-    
-    all_vocabs.each do |v| 
-      @sorted_vocabularies.key?(v.authority) ? @sorted_vocabularies[v.authority] << v : @sorted_vocabularies[v.authority] = Array.[](v)
-    end
-    @sorted_vocabularies
-  end
+  # def self.sort_by_authority(collection_id = '')
+  #   @sorted_vocabularies = Hash.new
+  #   if collection_id.empty?
+  #     all_vocabs = LinkedData::Vocabulary.all
+  #   else
+  #     all_vocabs = LinkedData::Vocabulary.by_collection_id(:key => collection_id)
+  #   end
+  #   
+  #   all_vocabs.each do |v| 
+  #     @sorted_vocabularies.key?(v.authority) ? @sorted_vocabularies[v.authority] << v : @sorted_vocabularies[v.authority] = Array.[](v)
+  #   end
+  #   @sorted_vocabularies
+  # end
   
 private
   def generate_uri
-    self.authority = self.collection.authority
     self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
     
     # If this is local vocabulary, construct the OM path

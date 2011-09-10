@@ -7,6 +7,7 @@ describe LinkedData::Vocabulary do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @col_label = "Education"
     @term = "education"
+    @label = "Reading Proficiency-Third Grade"
     @authority = @ns.authority
     @base_uri = @ns.base_uri
     @collection = LinkedData::Collection.create!(:term => @term,
@@ -16,39 +17,38 @@ describe LinkedData::Vocabulary do
                                                  :tags=>["schools", "teachers", "students"], 
                                                  :comment => "Matters associated with public schools")
     
-    @label = "Reading Proficiency-Third Grade"
-    @vocabulary = LinkedData::Vocabulary.new(:label => @label, 
-                            :term => @label,
-                            :collection => @collection,
+    @vocabulary = LinkedData::Vocabulary.new(:label => @col_label,
+                            :term => @term,
                             :base_uri => @base_uri,
+                            :authority => @ns.authority,
                             :tags => ["reading", "testing", "third grade"], 
                             :comment => "Percentage of children in third grade who read on grade level")
                             
-    @vocab_uri = "http://civicopenmedia.us/dcgov/vocabularies/Reading_Proficiency_Third_Grade"
+    @vocab_uri = "http://civicopenmedia.us/dcgov/vocabularies/education"
   
   end
   
   
-  it 'should fail to initialize instance without a term, collection and base_uri' do
+  it 'should fail to initialize instance without a term, authority and base_uri' do
     @v = LinkedData::Vocabulary.new
     @v.should_not be_valid
     @v.errors[:term].should_not be_nil
-    @v.errors[:vocabulary].should_not be_nil
+    @v.errors[:authority].should_not be_nil
     @v.errors[:base_uri].should_not be_nil
-    lambda { LinkedData::Vocabulary.create!(:base_uri => @base_uri, :term => "percent_promoted", :collection => @collection) }.should_not raise_error
+    lambda { LinkedData::Vocabulary.create!(:base_uri => @base_uri, :term => "percent_promoted", :authority => @authority) }.should_not raise_error
   end
 
   it 'should save and generate an identifier correctly' do
     lambda { @vocabulary.save! }.should change(LinkedData::Vocabulary, :count).by(1)
-    @res = LinkedData::Vocabulary.by_label(:key => @label)
-    @res.rows[0].id.should == @vocab_uri
+    @res = LinkedData::Vocabulary.get(@vocab_uri)
+    @res.id.should == @vocab_uri
   end
 
   it 'should recognize a local vocabulary and generate correct URI' do
     lcl_vocab = LinkedData::Vocabulary.create!(:label => "LocalVocabulary",
                                                  :term => "LocalVocabulary",
                                                  :base_uri => @base_uri, 
-                                                 :collection => @collection,
+                                                 :authority => @authority,
                                                  :curie_prefix => "om",
                                                  :comment => "Datatypes defined on local OM site"
                                                  )
@@ -61,7 +61,7 @@ describe LinkedData::Vocabulary do
     xsd_vocab = LinkedData::Vocabulary.create!(:label => "XMLSchema",
                                                   :term => "XMLSchema",
                                                   :base_uri => "http://www.w3.org/2001", 
-                                                  :collection => @collection,
+                                                  :authority => @authority,
                                                   :curie_prefix => "xsd",
                                                   :comment => "Datatypes defined in XML schemas"
                                                   )
@@ -73,16 +73,13 @@ describe LinkedData::Vocabulary do
 
   it 'should return this Vocabulary when searching by URI' do
     @res = @vocabulary.save
-    @res.uri.should == "http://civicopenmedia.us/dcgov/vocabularies/Reading_Proficiency_Third_Grade"
+    @res.uri.should == @vocab_uri
     @vocabs = LinkedData::Vocabulary.by_uri(:key => @res.uri)
     @vocabs.length.should == 1
-    @vocabs.rows[0].id.should == @vocab_uri
+    @vocabs.rows.first.id.should == @vocab_uri
   end
   
   it 'should return this Vocabulary when searching by Collection' do
-    @vocabulary.save!
-    @vocabs = LinkedData::Vocabulary.find_by_collection_id(@collection.id)
-    @vocabs.rows[0].id.should == @vocab_uri
   end
   
   it 'should use tags view to return matching docs' do
@@ -90,7 +87,7 @@ describe LinkedData::Vocabulary do
     @res = LinkedData::Vocabulary.tag_list(:key => "xyxyxy")
     @res.length.should == 0 
     @res = LinkedData::Vocabulary.tag_list(:key => "testing")
-    @res.rows[0].id.should == @vocab_uri
+    @res.rows.first.id.should == @vocab_uri
   end
 
   # it "should use has_geometry view to return matching docs" do

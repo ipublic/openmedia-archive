@@ -6,28 +6,24 @@ describe LinkedData::Type do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @uri = @ns.base_uri
     @col_label = "Public Safety"
-    @collection = LinkedData::Collection.create!(:term => @col_label, 
-                                              :base_uri => @uri,
-                                              :authority => @ns.authority
-                                              )
     
     @vocab_label = "Crime"
     @crime = LinkedData::Vocabulary.create!(:base_uri => @uri,
-                                              :term => @vocab_label, 
-                                              :label => @vocab_label,
-                                              :collection => @collection,
-                                              :property_delimiter => "#"
-                                              )
+                                            :label => @vocab_label,
+                                            :term => @vocab_label, 
+                                            :authority => @ns.authority,
+                                            :property_delimiter => "#"
+                                            )
 
 
     @xsd = ::LinkedData::Vocabulary.create!(:base_uri => "http://www.w3.org/2001", 
-                                          :label => "XMLSchema",
-                                          :term => "XMLSchema",
-                                          :property_delimiter => "#",
-                                          :curie_prefix => "xsd",
-                                          :collection => @collection,
-                                          :comment => "Datatypes defined in XML schemas"
-                                          )
+                                            :label => "XMLSchema",
+                                            :term => "XMLSchema",
+                                            :property_delimiter => "#",
+                                            :curie_prefix => "xsd",
+                                            :authority => @ns.authority,
+                                            :comment => "Datatypes defined in XML schemas"
+                                            )
 
     @str = LinkedData::Type.create!(:vocabulary => @xsd, :term => "string")
     @str_uri = 'http://www.w3.org/2001/XMLSchema#string'

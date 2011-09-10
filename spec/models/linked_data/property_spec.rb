@@ -5,13 +5,8 @@ describe LinkedData::Property do
   before(:each) do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
                                       
-    @ps_collection = LinkedData::Collection.create!(:base_uri => @ns.base_uri, 
-                                                    :term => "public_safety",
-                                                    :label => "Public Safety",
-                                                    :authority => @ns.authority)
-
     @xsd = ::LinkedData::Vocabulary.create!(:base_uri => "http://www.w3.org/2001",
-                                            :collection => @ps_collection,
+                                            :authority => @ns.authority,
                                             :term => "XMLSchema",
                                             :property_delimiter => "#"
                                             )

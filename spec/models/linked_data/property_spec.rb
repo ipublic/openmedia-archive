@@ -1,19 +1,7 @@
 require 'spec_helper'
 
 describe LinkedData::Property do
-
-  before(:each) do
-    @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
-                                      
-    @xsd = ::LinkedData::Vocabulary.create!(:base_uri => "http://www.w3.org/2001",
-                                            :authority => @ns.authority,
-                                            :term => "XMLSchema",
-                                            :property_delimiter => "#"
-                                            )
-                                            
-    @str_type = LinkedData::Type.create!(:vocabulary => @xsd, :term => "string", :label => "String")
-  end
-
+  
   it 'should properly set and get properties' do
     @comment = "Crimes are classified by type, termed as an Offense"
     @offense = LinkedData::Property.new(:term => "offense",
@@ -25,6 +13,12 @@ describe LinkedData::Property do
                                         
     @offense.deprecated?.should == false
     @offense.comment.should == @comment
+  end
+  
+  it 'should use "term" property to set "label" property value when not provided' do
+    @prop_term = 'method'
+    @property = LinkedData::Property.new(:term => @prop_term)
+    @property.label.should == @prop_term
   end
    
 end

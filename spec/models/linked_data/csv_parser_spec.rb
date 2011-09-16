@@ -4,9 +4,10 @@ describe LinkedData::CsvParser do
 
   before(:each) do
     @csv_filename = File.join(FIXTURE_PATH, 'crime_incidents_current.csv')
-    @csv_property_list = ["NID", "CCN", "REPORTDATETIME", "SHIFT", "OFFENSE", "METHOD", "LASTMODIFIEDDATE",
-      "BLOCKSITEADDRESS", "LATITUDE", "LONGITUDE", "CITY", "STATE", "WARD", "ANC", "SMD", "DISTRICT", "PSA",
-      "NEIGHBORHOODCLUSTER", "HOTSPOT2006NAME", "HOTSPOT2005NAME", "HOTSPOT2004NAME", "BUSINESSIMPROVEMENTDISTRICT"]
+    @csv_property_list = ["NID", "CCN", "REPORTDATETIME", "SHIFT", "OFFENSE", "METHOD", 
+                          "LASTMODIFIEDDATE", "BLOCKSITEADDRESS", "LATITUDE", "LONGITUDE", "CITY", "STATE", 
+                          "WARD", "ANC", "SMD", "DISTRICT", "PSA", "NEIGHBORHOODCLUSTER", "HOTSPOT2006NAME", 
+                          "HOTSPOT2005NAME", "HOTSPOT2004NAME", "BUSINESSIMPROVEMENTDISTRICT"]
 
     @property_constants = {:batch_serial_number => "bsn-123ABC", :data_resource_id => "dr-123ABC"}
     @parser = LinkedData::CsvParser.new(@csv_filename, {:property_constants => @property_constants})
@@ -14,6 +15,21 @@ describe LinkedData::CsvParser do
 
   
   describe "class methods" do
+    describe ".first_row" do
+      before(:each) do
+        @parser.header_row = true
+        @row = @parser.first_row
+      end
+      
+      it "should not return an empty row" do
+        @row.length.should == @csv_property_list.length
+      end
+      
+      it "should return header row with all property names" do
+        @row.should == @csv_property_list
+      end
+    end
+
     describe ".properties" do
       before(:each) do
         @parser.header_row = true
@@ -27,15 +43,25 @@ describe LinkedData::CsvParser do
       it "should return all property names as terms" do
         @prop_list.each {|p| @csv_property_list.include?(p.term).should == true }
       end
+      
+      it "should assign an expected_type to property" do
+        @prop_list.first["expected_type"].should == RDF::XSD.integer.to_s
+      end
     end
 
     describe ".parse" do
       before(:each) do
+        @parser.header_row = true
         @record_list = @parser.parse
       end
 
-      it "should not return an empty array of records" do
-        @record_list.size.should > 0
+      it "should read all rows from the source file" do
+        @parser.parsed_rows_count.should == 305
+      end
+
+      it "should return an array with correct number of records" do
+        # this value should be one less than parsed_rows_count since first row is header
+        @record_list.length.should == 304
       end
 
       it "should return an array of OpenMedia:RawRecord type" do
@@ -45,10 +71,12 @@ describe LinkedData::CsvParser do
       it "should append property constants to each OpenMedia:RawRecord" do
         @property_constants.each {|k,v| @record_list.first[k].should == v}
       end
+
+      it "should import correct first and last CSV file values and types" do
+        @record_list.first["CCN"].should == 11067390
+        @record_list.last["CCN"].should == 11067384
+      end
     end
-  end
-  
-  describe "basics" do
   end
   
 end

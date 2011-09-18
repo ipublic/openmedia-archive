@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe LinkedData::Type do
   before(:each) do
-    TYPES_DATABASE.recreate! rescue nil
+    VOCABULARIES_DATABASE.recreate! rescue nil
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @uri = @ns.base_uri
     @col_label = "Public Safety"
@@ -28,6 +28,7 @@ describe LinkedData::Type do
     @str = LinkedData::Type.create!(:vocabulary => @xsd, :term => "string")
     @str_uri = 'http://www.w3.org/2001/XMLSchema#string'
     @int_uri = 'http://www.w3.org/2001/XMLSchema#integer'
+    @int_id = "type_civicopenmedia_us_dcgov_xmlschema_integer"
 
   end
   
@@ -44,8 +45,8 @@ describe LinkedData::Type do
     int = LinkedData::Type.new(:vocabulary => @xsd, :term => term)
 
     lambda { int.save! }.should change(LinkedData::Type, :count).by(1)
-    @res = LinkedData::Type.get(@int_uri)
-    @res.id.should == @int_uri
+    @res = LinkedData::Type.by_uri(:key => @int_uri)
+    @res.rows.first.id.should == @int_id
   end
   
   it 'should return this Type when searching by Vocabulary' do
@@ -53,7 +54,7 @@ describe LinkedData::Type do
     int = LinkedData::Type.create!(:vocabulary => @xsd, :term => term)
 
     @types = LinkedData::Type.find_by_vocabulary_id(@xsd.id)
-    @types.rows[0].id.should == @int_uri
+    @types.rows.first.id.should == @int_id
   end
   
   it 'should use tags view to return matching docs' do
@@ -64,7 +65,7 @@ describe LinkedData::Type do
     @res = LinkedData::Type.tag_list(:key => "xyxyxy")
     @res.length.should == 0 
     @res = LinkedData::Type.tag_list(:key => "intrinsic")
-    @res.rows[0].id.should == @int_uri
+    @res.rows.first.id.should == @int_id
   end
   
   it 'should save and return an external vocabulary and Type' do

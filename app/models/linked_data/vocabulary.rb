@@ -1,12 +1,13 @@
 require 'rdf/couchdb'
 class LinkedData::Vocabulary < CouchRest::Model::Base
   
-  use_database TYPES_DATABASE
-  unique_id :uri
+  use_database VOCABULARIES_DATABASE
+  unique_id :identifier
 
   # belongs_to :collection, :class_name => "LinkedData::Collection"
   
-  property :uri, String, :alias => :curie_suffix
+  property :identifier, String
+  property :uri, String
   property :term, String
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
@@ -31,12 +32,12 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   validates_presence_of :base_uri
   validates_presence_of :authority
   # validates_presence_of :collection_id
-  validates_uniqueness_of :uri, :view => 'all'
+  validates_uniqueness_of :identifier, :view => 'all'
   
   
   ## Callbacks
+  before_create :generate_identifier
   before_create :generate_uri
-  # before_create :generate_identifier
 
   design do
     view :by_label
@@ -53,6 +54,7 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
               });
             }
           }"
+          
   end
   
   # view_by :has_geometry,
@@ -149,7 +151,7 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   
 private
   def generate_uri
-    self.term.nil? ? self.term = escape_string(self.label.downcase) : self.term = escape_string(self.term)
+    self.label ||= self.term
     
     # If this is local vocabulary, construct the OM path
     if self.base_uri.include?("http://civicopenmedia.us") && !self.base_uri.include?("vocabularies")
@@ -160,11 +162,11 @@ private
     self.uri = rdf_uri.to_s
   end
 
-  # def generate_identifier
-  #   self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-  #                        self.authority + '_' + 
-  #                        escape_string(self.term.downcase) if new?
-  # end
+  def generate_identifier
+    self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
+                         self.authority + '_' + 
+                         escape_string(self.term.downcase) if new?
+  end
 
   def escape_string(str)
     str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_').gsub(/^\-|\-$/,'') 

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe LinkedData::Vocabulary do
 
   before(:each) do
-    TYPES_DATABASE.recreate! rescue nil
+    VOCABULARIES_DATABASE.recreate! rescue nil
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @col_label = "Education"
     @term = "education"
@@ -25,6 +25,7 @@ describe LinkedData::Vocabulary do
                             :comment => "Percentage of children in third grade who read on grade level")
                             
     @vocab_uri = "http://civicopenmedia.us/dcgov/vocabularies/education"
+    @vocab_id = "vocabulary_civicopenmedia_us_dcgov_education"
   
   end
   
@@ -40,8 +41,8 @@ describe LinkedData::Vocabulary do
 
   it 'should save and generate an identifier correctly' do
     lambda { @vocabulary.save! }.should change(LinkedData::Vocabulary, :count).by(1)
-    @res = LinkedData::Vocabulary.get(@vocab_uri)
-    @res.id.should == @vocab_uri
+    @res = LinkedData::Vocabulary.get(@vocab_id)
+    @res.uri.should == @vocab_uri
   end
 
   it 'should recognize a local vocabulary and generate correct URI' do
@@ -54,7 +55,7 @@ describe LinkedData::Vocabulary do
                                                  )
                                                 
     vocab = LinkedData::Vocabulary.get(lcl_vocab.id)
-    vocab.id.should == "http://civicopenmedia.us/dcgov/vocabularies/LocalVocabulary"
+    vocab.id.should == "vocabulary_civicopenmedia_us_dcgov_localvocabulary"
   end
   
   it 'should recognize an external vocabulary and generate correct URI' do
@@ -67,7 +68,7 @@ describe LinkedData::Vocabulary do
                                                   )
                                                 
     vocab = LinkedData::Vocabulary.get(xsd_vocab.id)
-    vocab.id.should == "http://www.w3.org/2001/XMLSchema"
+    vocab.id.should == "vocabulary_civicopenmedia_us_dcgov_xmlschema"
   end
   
 
@@ -76,7 +77,7 @@ describe LinkedData::Vocabulary do
     @res.uri.should == @vocab_uri
     @vocabs = LinkedData::Vocabulary.by_uri(:key => @res.uri)
     @vocabs.length.should == 1
-    @vocabs.rows.first.id.should == @vocab_uri
+    @vocabs.rows.first.id.should == "vocabulary_civicopenmedia_us_dcgov_education"
   end
   
   it 'should return this Vocabulary when searching by Collection' do
@@ -87,7 +88,7 @@ describe LinkedData::Vocabulary do
     @res = LinkedData::Vocabulary.tag_list(:key => "xyxyxy")
     @res.length.should == 0 
     @res = LinkedData::Vocabulary.tag_list(:key => "testing")
-    @res.rows.first.id.should == @vocab_uri
+    @res.rows.first.id.should == @vocab_id
   end
 
   # it "should use has_geometry view to return matching docs" do

@@ -1,4 +1,4 @@
-class GeoJson::Geometry < Hash
+class GeoJson::Geometry
 
   # Based on GeoJSON Geometry Objects: http://geojson.org/geojson-spec.html
   
@@ -15,7 +15,7 @@ class GeoJson::Geometry < Hash
 
   TYPES = [POINT_TYPE, MULTI_POINT_TYPE, LINE_STRING_TYPE, MULTI_LINE_STRING_TYPE, POLYGON_TYPE, MULTI_POLYGON_TYPE]
 
-  include CouchRest::Model::CastedModel
+  include CouchRest::Model::Embeddable
 
   property :type
   property :coordinates   # an array or positions

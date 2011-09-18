@@ -1,5 +1,5 @@
 class OpenMedia::DashboardMeasure < Hash
-  include CouchRest::Model::CastedModel    
+  include CouchRest::Model::Embeddable
   
   property :measure
   property :source_class 

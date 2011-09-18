@@ -1,5 +1,5 @@
 class OpenMedia::DashboardGroup < Hash
-  include CouchRest::Model::CastedModel    
+  include CouchRest::Model::Embeddable
   
   property :title
   property :description

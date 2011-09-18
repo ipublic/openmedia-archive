@@ -53,11 +53,11 @@ module OpenMedia
   module Schema
     def self.get_class_definition(class_uri)
       class_uri = class_uri.to_s if class_uri.is_a?(::RDF::URI)            
-      TYPES_DATABASE.list('schema/class_definition/schema_by_uri', :key=>class_uri)
+      VOCABULARIES_DATABASE.list('schema/class_definition/schema_by_uri', :key=>class_uri)
     end
 
     def self.get_skos_collections
-      TYPES_DATABASE.list('schema/skos_collections/schema_by_uri')
+      VOCABULARIES_DATABASE.list('schema/skos_collections/schema_by_uri')
     end
 
     def self.get_record_uris(class_uri)
@@ -85,7 +85,7 @@ module OpenMedia
     end
 
     def self.classes_with_geometry
-      TYPES_DATABASE.view('schema/classes_with_geometry')['rows'].collect{|r| r['key']}.collect{|uri| OpenMedia::Schema::RDFS::Class.for(::RDF::URI.new(uri))}
+      VOCABULARIES_DATABASE.view('schema/classes_with_geometry')['rows'].collect{|r| r['key']}.collect{|uri| OpenMedia::Schema::RDFS::Class.for(::RDF::URI.new(uri))}
     end
 
   end

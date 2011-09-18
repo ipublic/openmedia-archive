@@ -27,10 +27,11 @@ end
 RSpec.configure do |config|
   config.before(:all) do
     reset_test_db!
+    TEST_SITE = create_test_site
   end
 
   config.after(:all) do
-    [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE, DB].each { |db| db.delete! rescue nil }
+    [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, DB].each { |db| db.delete! rescue nil }
     # cr = TEST_SERVER
     # test_dbs = cr.databases.select { |db| db =~ /^#{TESTDB}/ }
     # test_dbs.each do |db|
@@ -54,7 +55,7 @@ end
 # end
 
 def reset_test_db!
-  [SITE_DATABASE, STAGING_DATABASE, TYPES_DATABASE, DB].each { |db| db.recreate! rescue nil }
+  [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, DB].each { |db| db.recreate! rescue nil }
   # OpenMedia::Site.instance_variable_set(:@instance, nil)
 end
 
@@ -67,7 +68,7 @@ def om_site
 end
 
 def create_test_site(data={})
-  @test_site = OpenMedia::Site.create!({:identifier=>'testgov', :url=>'http://test.gov',
+  @test_site = OpenMedia::Site.create!({:identifier=>'testgov', :url=>'http://testgov.civicopenmedia.org',
                                          :municipality=>OpenMedia::NamedPlace.new(:name=>'My City')}.merge(data))
   COUCHDB_SERVER.database!("#{@test_site.identifier}_metadata").recreate!
   @test_site

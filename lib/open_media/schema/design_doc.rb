@@ -138,7 +138,7 @@ module OpenMedia
         @design_doc = CouchRest::Design.new(SCHEMA_DESIGN_DOC)        
         stored_design_doc = nil
         begin
-          stored_design_doc = TYPES_DATABASE.get(SCHEMA_DESIGN_DOC_ID)
+          stored_design_doc = VOCABULARIES_DATABASE.get(SCHEMA_DESIGN_DOC_ID)
           changes = force
           @design_doc['views'].each do |name, view|
             if !compare_views(stored_design_doc['views'][name], view)
@@ -155,18 +155,18 @@ module OpenMedia
           end
           
           if changes
-            TYPES_DATABASE.save_doc(stored_design_doc)
+            VOCABULARIES_DATABASE.save_doc(stored_design_doc)
           end
           @design_doc = stored_design_doc          
         rescue => e
           @design_doc = CouchRest::Design.new(SCHEMA_DESIGN_DOC)
-          @design_doc.database = TYPES_DATABASE
+          @design_doc.database = VOCABULARIES_DATABASE
           @design_doc.save
         end        
       end
 
       def self.design_doc
-        @design_doc ||= TYPES_DATABASE.get(SCHEMA_DESIGN_DOC_ID)
+        @design_doc ||= VOCABULARIES_DATABASE.get(SCHEMA_DESIGN_DOC_ID)
       end
 
       # Return true if the two views match (borrowed this from couchrest-model)

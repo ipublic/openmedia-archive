@@ -9,7 +9,7 @@ namespace :openmedia do
   task :create_dbs => :environment do
     SITE_DATABASE.create!
     STAGING_DATABASE.create!
-    TYPES_DATABASE.create!
+    VOCABULARIES_DATABASE.create!
     COMMONS_DATABASE.create!
   end 
 
@@ -22,7 +22,7 @@ namespace :openmedia do
     end 
     SITE_DATABASE.delete! rescue nil
     STAGING_DATABASE.delete! rescue nil
-    TYPES_DATABASE.delete! rescue nil
+    VOCABULARIES_DATABASE.delete! rescue nil
     COMMONS_DATABASE.delete! rescue nil
   end
 

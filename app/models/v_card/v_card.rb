@@ -1,6 +1,6 @@
 class VCard::VCard < CouchRest::Model::Base
   
-  use_database TYPES_DATABASE     # change to different DB?
+  use_database VOCABULARIES_DATABASE     # change to different DB?
 
   property :addresses, [VCard::Address]         # :alias => :adr
   property :emails, [VCard::Email]              # :alias => :email

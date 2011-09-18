@@ -26,7 +26,7 @@ require 'rdf/couchdb'
 #  end
 # end
 # 
-# TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>TYPES_DATABASE)
+# TYPES_RDF_REPOSITORY = RDF::CouchDB::Repository.new(:database=>VOCABULARIES_DATABASE)
 # Spira.add_repository! 'types', TYPES_RDF_REPOSITORY
 # 
 begin

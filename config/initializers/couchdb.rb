@@ -36,7 +36,7 @@ else
 
   SITE_DATABASE = COUCHDB_SERVER.database!("site#{db_suffix}")
   STAGING_DATABASE = COUCHDB_SERVER.database!("staging#{db_suffix}")
-  TYPES_DATABASE = COUCHDB_SERVER.database!("types#{db_suffix}")
+  VOCABULARIES_DATABASE = COUCHDB_SERVER.database!("vocabularies#{db_suffix}")
   COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
 end
 

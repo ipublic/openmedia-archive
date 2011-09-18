@@ -1,14 +1,16 @@
 class GeoJson::MultiPoint < GeoJson::Geometry
   
-  def initialize(positions)
-    super
-    raise ArgumentError, 
-      "Coordinates must be an array of GeoJson::Position types" unless positions.is_a?(Array)
-    raise ArgumentError,
-      "Coordinates must be an array of GeoJson::Position types" unless positions.all? { |e| e.is_a?(GeoJson::Position) }
-    
-    self["type"] = GeoJson::Geometry::MULTI_POINT_TYPE
-    self["coordinates"] = positions
+  def initialize(coordinates)
+    raise ArgumentError, "Coordinates must be an array of GeoJson::Position types" unless coordinates.instance_of?(Array)
+    raise ArgumentError, "Coordinates must be an array of GeoJson::Position types" unless coordinates.all? { |e| e.instance_of?(GeoJson::Position) }
+
+    write_attribute('type', GeoJson::Geometry::MULTI_POINT_TYPE)
+    write_attribute('coordinates', coordinates)
   end
+  
+  def to_json
+    Hash[:geometry => {:type => @type, :coordinates => @coordinates}]
+  end
+
   
 end

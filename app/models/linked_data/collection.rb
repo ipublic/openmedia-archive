@@ -2,8 +2,9 @@ require 'rdf/couchdb'
 class LinkedData::Collection < CouchRest::Model::Base
 
   use_database VOCABULARIES_DATABASE
-  unique_id :uri
+  unique_id :identifier
   
+  property :identifier, String
   property :term, String        # Escaped vocabulary name suitable for inclusion in IRI
   property :label, String       # User assigned name, RDFS#Label
   property :comment, String     # RDFS#Comment
@@ -20,11 +21,11 @@ class LinkedData::Collection < CouchRest::Model::Base
   validates_presence_of :term
   validates_presence_of :base_uri
   validates_presence_of :authority
-  validates_uniqueness_of :uri, :view => 'all'
+  validates_uniqueness_of :identifier, :view => 'all'
 
   ## Callbacks
   before_create :generate_uri
-  # before_create :generate_identifier
+  before_create :generate_identifier
   
   def namespace=(ns={})
     self.base_uri = ns.base_uri unless ns.base_uri.nil?
@@ -38,6 +39,7 @@ class LinkedData::Collection < CouchRest::Model::Base
   design do
     view :by_label
     view :by_term
+    view :by_uri
     view :by_base_uri
     view :by_authority
     

@@ -15,6 +15,7 @@ describe LinkedData::Collection do
                                              :comment => "Matters associated with public schools")
                                              
     @col_uri = @ns.base_uri + '/collections#' + @term
+    @col_id = "collection_civicopenmedia_us_dcgov_education"
   end
   
   it 'should fail to initialize instance without a term, base_uri and authority propoerties' do
@@ -35,7 +36,7 @@ raise_error
   it 'should generate a Label view and return results correctly' do
     @res = @collection.save
     @col = LinkedData::Collection.find_by_label(@res.label)
-    @col.id.should == @col_uri
+    @col.id.should == @col_id
   end
 
   it 'should generate a URI for the new collection' do
@@ -48,14 +49,14 @@ raise_error
     @res = @collection.save
     @col = LinkedData::Collection.by_base_uri(:key => @ns.base_uri)
     @col.length.should be > 0
-    @col.rows[0].key.should == @ns.base_uri
+    @col.rows.first.key.should == @ns.base_uri
   end
   
   it 'should provide a view by authority' do
     @res = @collection.save
     @col = LinkedData::Collection.by_authority(:key => @ns.authority)
     @col.length.should be > 0
-    @col.rows[0].key.should == @ns.authority
+    @col.rows.first.key.should == @ns.authority
   end
   
   it 'should use tags view to return matching docs' do
@@ -63,7 +64,7 @@ raise_error
     @res = LinkedData::Collection.tag_list(:key => "fire")
     @res.length.should == 0 
     @res = LinkedData::Collection.tag_list(:key => "teachers")
-    @res.rows[0].id.should == @col_uri
+    @res.rows.first.id.should == @col_id
   end
 
   # describe 'metadata repository' do

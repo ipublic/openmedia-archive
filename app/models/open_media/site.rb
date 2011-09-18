@@ -2,7 +2,7 @@ require 'open_media/no_site_defined'
 
 class OpenMedia::Site < CouchRest::Model::Base
 
-  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, TYPES_DATABASE.name, COMMONS_DATABASE.name]
+  DATABASES = [SITE_DATABASE.name, STAGING_DATABASE.name, VOCABULARIES_DATABASE.name, COMMONS_DATABASE.name]
 
   use_database SITE_DATABASE
   
@@ -23,8 +23,8 @@ class OpenMedia::Site < CouchRest::Model::Base
   property :terms_of_use, :default => "By using data made available through this site the user agrees to all the conditions stated in the following paragraphs: This agency makes no claims as to the completeness, accuracy or content of any data contained in this application; makes any representation of any kind, including, but not limited to, warranty of the accuracy or fitness for a particular use; nor are any such warranties to be implied or inferred with respect to the information or data furnished herein. The data is subject to change as modifications and updates are complete. It is understood that the information obtained from this site is being used at one's own risk. These Terms of Use govern any use of this service and may be changed at any time, without notice by the sponsor agency."
   
   # Administration properties
-  property :internal_couchdb_server_uri, :default => "http://localhost:5984"
-  property :public_couchdb_server_uri, :default => "http://localhost:5984"
+  property :private_couchhost, :default => "http://localhost:5984"
+  property :public_couchhost, :default => "http://localhost:5984"
   property :replicate_om_types, TrueClass, :default => true
   property :replicate_push_datasets, TrueClass, :default => true
   

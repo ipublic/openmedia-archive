@@ -13,7 +13,10 @@ vocab = LinkedData::Vocabulary.new(:base_uri => "http://www.w3.org/2001",
                                           
 ["base64Binary", "boolean", "byte", "date", "dateTime", "double", "duration", 
   "float", "integer", "long", "short", "string", "time"].each do |term|
-  new_type = LinkedData::Type.new(:vocabulary => vocab, :term => term, :label => term.capitalize).save
+  new_type = LinkedData::Type.new(:vocabulary => vocab, 
+                                  :term => term, 
+                                  :label => term.capitalize,
+                                  :tags => ["intrinsic"]).save
   vocab.types << new_type
 end
 

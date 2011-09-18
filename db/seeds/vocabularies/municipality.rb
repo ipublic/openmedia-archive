@@ -1,6 +1,7 @@
 # Municipality
 # core_collection = LinkedData::Collection.find_by_label("Core")
-xsd_string = LinkedData::Type.find_by_term(:key => "string")
+xsd_string = RDF::XSD.string.to_s
+xsd_float = RDF::XSD.float.to_s
 
 comment = "A vocabulary for describing a jurisdiction or incorporated area."
 tags = ["location", "place"]

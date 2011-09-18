@@ -1,7 +1,7 @@
 require 'rdf/couchdb'
 class LinkedData::Collection < CouchRest::Model::Base
 
-  use_database TYPES_DATABASE
+  use_database VOCABULARIES_DATABASE
   unique_id :uri
   
   property :term, String        # Escaped vocabulary name suitable for inclusion in IRI

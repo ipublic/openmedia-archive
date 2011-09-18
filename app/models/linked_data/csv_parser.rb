@@ -11,7 +11,6 @@ class LinkedData::CsvParser < LinkedData::Parser
     @column_count = 0
     @parsed_rows_count = 0
     @column_types = []
-    @property_constants = options[:property_constants] unless options[:property_constants].nil?
 
     @delimiter = options[:delimiter] unless options[:delimiter].nil?
     @header_row = options[:header_row] unless options[:header_row].nil?
@@ -67,7 +66,6 @@ class LinkedData::CsvParser < LinkedData::Parser
         # end        
       end
         
-      @property_constants.each {|k,v| raw_record[k] = v} unless @property_constants.nil?
       record_set << raw_record
       @parsed_rows_count += 1
     end

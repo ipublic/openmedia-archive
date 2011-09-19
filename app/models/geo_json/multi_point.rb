@@ -9,7 +9,7 @@ class GeoJson::MultiPoint < GeoJson::Geometry
   end
   
   def to_json
-    Hash[:geometry => {:type => self.type, :coordinates => self.coordinates}]
+    Hash["type" => self.type, "coordinates" => self.coordinates]
   end
 
   

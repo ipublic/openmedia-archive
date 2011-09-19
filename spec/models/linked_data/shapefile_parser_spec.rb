@@ -39,10 +39,6 @@ describe LinkedData::ShapefileParser do
       it "should return an array of OpenMedia:RawRecord type" do
         @record_list.first.is_a?(OpenMedia::RawRecord).should == true
       end
-      
-      it "should append property constants to each OpenMedia:RawRecord" do
-        @property_constants.each {|k,v| @record_list.first[k].should == v}
-      end
     end
   end
   

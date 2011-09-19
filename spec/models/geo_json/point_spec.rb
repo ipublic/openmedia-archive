@@ -14,6 +14,15 @@ describe GeoJson::Point do
         @pt.coordinates.should == @pos1
       end
     end
+    
+    describe ".to_json" do
+      it 'should produce properly formed GeoJson output' do
+        @mp = GeoJson::Point.new([@pos1, @pos2])
+        gj = @mp.to_json
+        gj['type'].should == GeoJson::Geometry::POINT_TYPE.to_s
+        gj['coordinates'].should == @pos1
+      end
+    end
   end
 
 end

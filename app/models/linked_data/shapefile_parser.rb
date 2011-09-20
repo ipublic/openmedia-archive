@@ -53,7 +53,8 @@ class LinkedData::ShapefileParser < LinkedData::Parser
     @properties
   end
   
-  def parse
+private
+  def load_records
     self.properties if @properties.nil?
     rows_parsed = 0
     Dir.mktmpdir do |temp_dir|

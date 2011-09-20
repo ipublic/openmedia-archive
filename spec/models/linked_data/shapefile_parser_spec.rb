@@ -27,9 +27,9 @@ describe LinkedData::ShapefileParser do
       end
     end
     
-    describe ".parse" do
+    describe ".records" do
       before(:each) do
-        @record_list = @parser.parse
+        @record_list = @parser.records
       end
       
       it "should not return an empty array of records" do
@@ -40,9 +40,6 @@ describe LinkedData::ShapefileParser do
         @record_list.first.is_a?(OpenMedia::RawRecord).should == true
       end
     end
-  end
-  
-  describe "basics" do
   end
   
 end

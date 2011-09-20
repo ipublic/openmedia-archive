@@ -9,7 +9,7 @@ describe LinkedData::CsvParser do
                           "WARD", "ANC", "SMD", "DISTRICT", "PSA", "NEIGHBORHOODCLUSTER", "HOTSPOT2006NAME", 
                           "HOTSPOT2005NAME", "HOTSPOT2004NAME", "BUSINESSIMPROVEMENTDISTRICT"]
 
-    @parser = LinkedData::CsvParser.new(@csv_filename, {:property_constants => @property_constants})
+    @parser = LinkedData::CsvParser.new(@csv_filename)
   end
 
   
@@ -48,14 +48,14 @@ describe LinkedData::CsvParser do
       end
     end
 
-    describe ".parse" do
+    describe ".records" do
       before(:each) do
         @parser.header_row = true
-        @record_list = @parser.parse
+        @record_list = @parser.records
       end
 
       it "should read all rows from the source file" do
-        @parser.parsed_rows_count.should == 305
+        @parser.record_count.should == 305
       end
 
       it "should return an array with correct number of records" do

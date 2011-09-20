@@ -21,7 +21,11 @@ class LinkedData::Parser
     raise "abstract method - please override"
   end
   
-  def parse
+  def records
+    @records ||= load_records
+  end
+  
+  def load_records
     raise "abstract method - please override"
   end
   

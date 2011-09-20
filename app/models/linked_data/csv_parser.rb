@@ -3,13 +3,13 @@ require 'csv'
 class LinkedData::CsvParser < LinkedData::Parser
 
   attr_accessor :header_row, :delimiter
-  attr_reader :column_count, :column_types, :first_row, :parsed_rows_count
+  attr_reader :column_count, :column_types, :first_row, :record_count
   
   def initialize(source_file_name, options={})
     raise "Source file not found" unless File.exists?(source_file_name)
     @source_file_name = source_file_name
     @column_count = 0
-    @parsed_rows_count = 0
+    @record_count = 0
     @column_types = []
 
     @delimiter = options[:delimiter] unless options[:delimiter].nil?
@@ -45,9 +45,10 @@ class LinkedData::CsvParser < LinkedData::Parser
     @properties
   end
   
-  def parse
+private  
+  def load_records
     properties if @properties.nil?
-    @parsed_rows_count = 0
+    @record_count = 0
     record_set = []
     
     CSV.foreach(@source_file_name, {:col_sep => @delimiter, 
@@ -67,7 +68,7 @@ class LinkedData::CsvParser < LinkedData::Parser
       end
         
       record_set << raw_record
-      @parsed_rows_count += 1
+      @record_count += 1
     end
     record_set.delete_at(0) if header_row?
     record_set

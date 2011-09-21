@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 # Parent class for source data parsers
 class LinkedData::Parser
   
@@ -14,13 +12,13 @@ class LinkedData::Parser
   CSV_DATE_TIME_REGEX = / \A(?: (\w+,?\s+)?\w+\s+\d{1,2}\s+\d{1,2}:\d{1,2}:\d{1,2},?\s+\d{2,4} | \d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2} )\z /x
   BOOLEAN_REGEX = /^(true)|(false)$/i
   
-  attr_accessor :property_constants
-  attr_reader :data_resource, :source_file_name, :properties
+  attr_reader :data_resource, :source_file_name, :properties, :record_count, :column_count, :records
 
   def properties
     raise "abstract method - please override"
   end
   
+  # Return a list of key/value pairs for this data source
   def records
     @records ||= load_records
   end

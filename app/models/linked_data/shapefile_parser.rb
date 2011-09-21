@@ -6,14 +6,21 @@ class LinkedData::ShapefileParser < LinkedData::Parser
   
   attr_accessor :output_projection
   
+  # Initialization that is run when a Shapefile is imported
+  # 
+  # Options:
+  # * <tt>:output_projection</tt>: Reproject/transform to this SRS on output (default: EPSG:4326)
   def initialize(source_file_name, options={})
     raise "Source file not found" unless File.exists?(source_file_name)
     @source_file_name = source_file_name
+    @record_count = 0
+    @column_count = 0
 
     @output_projection = options[:output_projection] unless options[:output_projection].nil?
     @output_projection ||= "EPSG:4326"
   end
   
+  # Return a list of property names for this Shapefile
   def properties
     if @properties.nil?
       @properties = []
@@ -47,6 +54,7 @@ class LinkedData::ShapefileParser < LinkedData::Parser
             @properties << LinkedData::Property.new(:term => k, :label => k.upcase, :expected_type => range.to_s)
           end
           @properties << LinkedData::Property.new(:term =>'geometry', :label => "Geometry", :expected_type => RDF::OM_CORE.GeoJson.to_s)
+          @column_count = @properties.length
         end
       end
     end
@@ -55,8 +63,8 @@ class LinkedData::ShapefileParser < LinkedData::Parser
   
 private
   def load_records
-    self.properties if @properties.nil?
-    rows_parsed = 0
+    @properties ||= properties
+    @record_count = 0
     Dir.mktmpdir do |temp_dir|
       zip_file = File.open(@source_file_name)
       `#{UNZIP} #{zip_file.path} -d #{temp_dir}`
@@ -75,15 +83,15 @@ private
       File.open(@geojson_file_name) do |jsf|
         geojson = JSON.load(jsf)    # TODO stream this rather than load into memory all at once
 
-        record_set = []
+        @records = []
         geojson['features'].each do |feature|
-          rows_parsed += 1
-          raw_record = OpenMedia::RawRecord.new
+          @record_count += 1
+          raw_record = LinkedData::RawRecord.new
           @properties.each {|sp| raw_record[sp.term] = feature['properties'][sp.term]}
           raw_record['geometry'] = feature['geometry']
-          record_set << raw_record
+          @records << raw_record
         end
-        record_set
+        @records
       end
     end    
   end

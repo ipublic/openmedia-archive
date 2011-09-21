@@ -37,7 +37,7 @@ describe LinkedData::ShapefileParser do
       end
       
       it "should return an array of OpenMedia:RawRecord type" do
-        @record_list.first.is_a?(OpenMedia::RawRecord).should == true
+        @record_list.first.is_a?(LinkedData::RawRecord).should == true
       end
     end
   end

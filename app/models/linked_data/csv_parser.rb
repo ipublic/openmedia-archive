@@ -3,8 +3,14 @@ require 'csv'
 class LinkedData::CsvParser < LinkedData::Parser
 
   attr_accessor :header_row, :delimiter
-  attr_reader :column_count, :column_types, :first_row, :record_count
+  attr_reader :column_count, :column_types, :first_row
   
+  # Initialization that is run when a Shapefile is imported
+  # 
+  # Options:
+  # * <tt>:delimiter</tt>: character that seperates fields in a row (default: ',')
+  # * <tt>:header_row</tt>: Boolean field that indicates first row in file contains property names (default: false)
+  # * <tt>:header_converters</tt>: Transform header property names into symbols, replacing whitespace with underscore ('_'), etc. Use csv library settings here.  (default: "symbol").  
   def initialize(source_file_name, options={})
     raise "Source file not found" unless File.exists?(source_file_name)
     @source_file_name = source_file_name
@@ -27,15 +33,17 @@ class LinkedData::CsvParser < LinkedData::Parser
     @header_row
   end
   
+  # Return contents of first row in this file
   def first_row
-    top_rows if @first_row.nil?
-    @first_row
+    @first_row ||= top_rows
   end
   
+  # Return a list of property names for this file
   def properties
-    first_row if @first_row.nil?
+    @first_row ||= first_row
     
     @properties = []
+    # Either pull property names from first row of file or create generic names
     header_row? ? property_list = first_row : property_list = generate_property_names
     property_list.each_index do |i|
        @properties << LinkedData::Property.new(:term => property_list[i], 
@@ -47,31 +55,21 @@ class LinkedData::CsvParser < LinkedData::Parser
   
 private  
   def load_records
-    properties if @properties.nil?
+    @properties ||= properties
     @record_count = 0
-    record_set = []
+    @records = []
     
     CSV.foreach(@source_file_name, {:col_sep => @delimiter, 
                                     :header_converters => @header_converters.to_sym,
                                     :converters => @converters.to_sym }) do |row|
 
-      raw_record = OpenMedia::RawRecord.new
-      
-      @properties.each_index do |idx|
-        raw_record[@properties[idx].term] = row[idx]
-      
-        # val = case @properties[idx].expected_type
-        #   when RDF::XSD.integer.to_s then val = val.to_i
-        #   when RDF::XSD.float.to_s then val = val.to_f
-        #   else val = val.to_s
-        # end        
-      end
-        
-      record_set << raw_record
+      raw_record = LinkedData::RawRecord.new
+      @properties.each_index {|idx| raw_record[@properties[idx].term] = row[idx]}
+      @records << raw_record
       @record_count += 1
     end
-    record_set.delete_at(0) if header_row?
-    record_set
+    @records.delete_at(0) if header_row?
+    @records
   end
 
 private
@@ -82,6 +80,7 @@ private
       @second_row = csvf.readline
     end
     @column_count = @first_row.length
+    @first_row
   end
 
   def generate_property_names

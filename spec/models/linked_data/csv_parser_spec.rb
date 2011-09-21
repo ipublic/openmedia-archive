@@ -64,7 +64,7 @@ describe LinkedData::CsvParser do
       end
 
       it "should return an array of OpenMedia:RawRecord type" do
-        @record_list.first.is_a?(OpenMedia::RawRecord).should == true
+        @record_list.first.is_a?(LinkedData::RawRecord).should == true
       end
 
       it "should import correct first and last CSV file values and types" do

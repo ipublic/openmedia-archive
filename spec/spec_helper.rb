@@ -27,7 +27,7 @@ end
 RSpec.configure do |config|
   config.before(:all) do
     reset_test_db!
-    TEST_SITE = create_test_site
+    TEST_SITE ||= create_test_site
   end
 
   config.after(:all) do

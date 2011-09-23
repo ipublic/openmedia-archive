@@ -28,5 +28,8 @@ Enable resource sharing and content exchange with other OpenMedia community memb
 
 * Example: vocabulary schemas, transforms, addresses
 
+## Project Web Sites
+* Project wiki: http://wiki.ipublic.org/Civic_OpenMedia_project
+
 ## <a name="copyright">Copyright</a>
 Copyright (c) 2011 Dan Thomas and iPublic, LLC

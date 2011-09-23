@@ -25,10 +25,10 @@ describe LinkedData::DataSource do
   end
   
   describe "class methods" do
-    describe ".extract_serial_number" do
+    describe ".serial_number" do
       it "should generate a unique serial number using MD5 hash seeded by current time and random number" do
-        @sn1 = LinkedData::DataSource.extract_serial_number
-        @sn2 = LinkedData::DataSource.extract_serial_number
+        @sn1 = LinkedData::DataSource.serial_number
+        @sn2 = LinkedData::DataSource.serial_number
         @sn1.should_not == @sn2
       end
     end

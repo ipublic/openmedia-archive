@@ -4,13 +4,13 @@ class LinkedData::RawRecord < CouchRest::Model::Base
   
   belongs_to :data_source, :class_name => 'LinkedData::DataSource'
 
-  property :extract_serial_number, String
+  property :serial_number, String
   property :published, Time
   timestamps!
 
 
   design do
-    view :by_extract_serial_number
+    view :by_serial_number
     view :by_data_source_id
 
   #   # view :by_data_resource_id_and_published

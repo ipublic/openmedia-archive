@@ -8,8 +8,7 @@ describe LinkedData::ShapefileParser do
                                   AMBULANCE RESCSQUAD MEDICUNIT TRUCK SPECIALTY DETAIL TYPE 
                                   ENGINE BATTALION RENSTATUS AID REL_UNITS WEB_URL geometry)
 
-    @property_constants = {:batch_serial_number => "bsn-123ABC", :data_resource_id => "dr-123ABC"}
-    @parser = LinkedData::ShapefileParser.new(@shapefile_name, :property_constants => @property_constants)
+    @parser = LinkedData::ShapefileParser.new(@shapefile_name)
   end
   
   describe "class methods" do

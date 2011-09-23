@@ -3,19 +3,29 @@ Civic OpenMedia is a publishing system for open government data. Using OpenMedia
 
 ## OpenMedia Features
 Collect transaction and other data content housed in a variety of forms
+
 * Examples: database tables, CSV, XML files, ESRI GIS Shapefiles
+
 Organize content and add value
+
 * Add addresses, lat/longs, dates and other in-common dimensions
 * Filter and generalize private or sensitive content
 * Add metadata properties, e.g.; content type, source, coverage
 * Define relationships between content types
+
 Transform content into open standard structured vocabularies:
+
 * Examples: Open311, METAR, NIEM ucr, others
+
 Provide Internet access to content in machine-readable form
+
 * RESTful interfaces
 * Atom, RDFa, microformats
+
 Provide a public-facing data catalog Web site
+
 Enable resource sharing and content exchange with other OpenMedia community members
+
 * Example: vocabulary schemas, transforms, addresses
 
 ## <a name="copyright">Copyright</a>

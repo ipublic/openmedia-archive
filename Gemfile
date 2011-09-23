@@ -11,6 +11,8 @@ gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 #gem 'spira'
 # gem 'uuid'
 gem 'gmaps4rails'
+gem 'multi_json'
+gem 'yajl-ruby'
 
 group :test, :development do
   gem "rspec-rails", "2.6.1"

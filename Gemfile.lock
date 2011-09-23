@@ -49,7 +49,7 @@ GEM
       couchrest (~> 1.1.2)
       mime-types (~> 1.15)
       tzinfo (~> 0.3.22)
-    crack (0.1.8)
+    crack (0.3.1)
     devise (1.1.9)
       bcrypt-ruby (~> 2.1.2)
       warden (~> 1.0.2)
@@ -59,7 +59,7 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastercsv (1.5.4)
-    gmaps4rails (0.11.1)
+    gmaps4rails (1.1.7)
       crack
     i18n (0.5.0)
     mail (2.2.19)
@@ -70,7 +70,7 @@ GEM
     mime-types (1.16)
     multi_json (1.0.3)
     polyglot (0.3.2)
-    rack (1.2.3)
+    rack (1.2.4)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
@@ -115,6 +115,7 @@ GEM
     tzinfo (0.3.29)
     warden (1.0.5)
       rack (>= 1.0)
+    yajl-ruby (1.0.0)
 
 PLATFORMS
   ruby
@@ -126,6 +127,8 @@ DEPENDENCIES
   dynamic_form
   fastercsv
   gmaps4rails
+  multi_json
   rails
   rdf-couchdb!
   rspec-rails (= 2.6.1)
+  yajl-ruby

@@ -23,6 +23,9 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   property :properties, [LinkedData::Property]
   collection_of :types, :class_name => 'LinkedData::Type'
 
+  # p = {"clown" => {"c" => "circus", "r" => "rodeo"}, "category" => {"a" => "animal", "v" => "vegetable", "m" => "mineral"}}
+  property :enumerations, :default => {}
+
   ## TODO -- move geometries into Properties
   # property :geometries, [GeoJson::Geometry]
   
@@ -78,6 +81,10 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   
   def namespace
     Hash[:base_uri => self.base_uri, :authority => self.authority]
+  end
+
+  def decode(property_name, key)
+    self.enumerations[property_name][key]
   end
 
   ##

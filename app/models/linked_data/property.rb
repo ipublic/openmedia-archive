@@ -3,9 +3,9 @@ class LinkedData::Property
   
   property :term, String                              # Escaped vocabulary name suitable for inclusion in IRI
   property :label, String                             # RDFS#Label
-  property :expected_type, String                     # URI
+  property :expected_type, String                     # URI for data type
+  property :format, String                            # Output format styling
   property :comment, String                           # RDFS#Comment
-  property :enumerations
   property :deprecated, TrueClass, :default => false  # Deprecated properties may not be used 
                                                        # for future vocabularies            
 

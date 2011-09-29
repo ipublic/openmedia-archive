@@ -13,14 +13,16 @@ class LinkedData::Topic < CouchRest::Model::Base
   property :authority, String
   property :description, String
   property :instance_database_name, String
-  property :qwerty, String, :read_only => true
+  property :instance_design_doc_id, String
+  
+  
+  # property :qwerty, String, :read_only => true
   
   timestamps!
 
   validates_presence_of :term
   validates_presence_of :authority
   validates_presence_of :instance_database_name
-  validates_presence_of :qwerty #, :message => "value: #{self.qwerty}"
   
   ## Callbacks
   before_create :generate_identifier
@@ -29,6 +31,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   design do
     view :by_term
     view :by_label
+    view :by_instance_design_doc_id
   end
 
   # def qwerty=(val)
@@ -39,20 +42,28 @@ class LinkedData::Topic < CouchRest::Model::Base
   #   self.qwerty
   # end  
   
+  # def instance_design_doc_id
+  #   self.instance_design_doc_id ||= "_design/#{self.term}"
+  #   "_design/#{self.term}".to_s unless self.term.nil?
+  # end
+
+  def instance_database
+    COUCHDB_SERVER.database(self.instance_database_name) unless self.instance_database_name.nil?
+  end
+  
   def instance_design_doc
     db = instance_database
-    # db.get("_design/#{self.term}") unless self.term.nil?
-    db.get(self.qwerty) unless self.term.nil?
+    db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
   end  
   
-  def all_instance_docs
+  def instance_all_docs
     dsn = instance_design_doc
     dsn.view(:all)
   end
   
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
-    docs = all_instance_docs
+    docs = instance_all_docs
     docs.each {|doc| doc.destroy(true)}
     dsn.database.bulk_save
   end
@@ -64,12 +75,10 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
   
 private
-  def instance_database
-    COUCHDB_SERVER.database(self.instance_database_name) unless self.instance_database_name.nil?
-  end
-  
   def create_instance_design_doc
-    ddoc = CouchRest::Design.new(:language => "javascript",
+    self.instance_design_doc_id = "_design/#{self.term}"
+    ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
+                                 :language => "javascript",
                                   :views => {
                                     :all => {
                                       :map =>
@@ -78,12 +87,8 @@ private
                                     }
                                   )
     
-    # At 1.1.2, CouchRest doesn't accept name and database attributes in constructor
-    db = COUCHDB_SERVER.database(self.instance_database_name)
-    ddoc.name = self.term
-    # self.qwerty = ddoc.name
-    ddoc.database = db
-    ddoc.save!
+    db = instance_database
+    res = db.save_doc(ddoc)
   end
 
   def spatial_view
@@ -99,7 +104,6 @@ private
   end
 
   def generate_identifier
-    self.qwerty ||= "_design/#{self.term}"
     self.label ||= self.term
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 

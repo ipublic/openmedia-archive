@@ -7,11 +7,11 @@ describe LinkedData::Topic do
     @topic_term = "dc_addresses"
     @design_doc_id = '_design/' + @topic_term
     @topic_label = "District of Columbia Addresses"
-    @topic_db_instance_name = DB.name
+    @instance_db_name = DB.name
     @topic = LinkedData::Topic.new(:authority => @ns.authority, 
                                     :term => @topic_term, 
                                     :label => @topic_label,
-                                    :instance_database_name => @topic_db_instance_name)
+                                    :instance_database_name => @instance_db_name)
     @topic_id = "topic_civicopenmedia_us_dcgov_dc_addresses"
   end
 
@@ -24,6 +24,10 @@ describe LinkedData::Topic do
       @topic.errors[:instance_topic_name].should_not be_nil
     end
     
+    it 'should provide a valid CouchDB database for instances' do
+      @topic.instance_database.should be_a(::CouchRest::Database)
+    end
+    
     it 'should save and generate an identifier correctly' do
       lambda { @topic.save! }.should_not raise_error
       saved_topic = LinkedData::Topic.by_term(:key => @topic_term)
@@ -31,23 +35,24 @@ describe LinkedData::Topic do
     end
     
     it 'should create an associated CouchRest::Design document' do
-      dsn = @topic.instance_design_doc
+      saved_topic = LinkedData::Topic.get(@topic_id)
+      dsn = saved_topic.instance_design_doc
       dsn.should be_a(::CouchRest::Design)
-      dsn.name.should == @topic.term
-      dsn["_id"].should == @design_doc_id
-      dsn.has_view?(:all).should be_true
     end
   end
   
   describe "class methods" do
     before(:all) do
-      # @db = @topic.database
       
     end
     
     describe ".instance_design_document" do
       it "should return the Topic's CouchDB design document" do
-        @topic.instance_design_doc.should be_a(::CouchRest::Design)
+        saved_topic = LinkedData::Topic.get(@topic_id)
+        dsn = saved_topic.instance_design_doc
+        dsn.name.should == @topic.term
+        dsn["_id"].should == @design_doc_id
+        dsn.has_view?(:all).should be_true
       end
     end
 

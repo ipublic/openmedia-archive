@@ -13,7 +13,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   property :authority, String
   property :description, String
   property :instance_database_name, String
-  property :instance_design_doc_id, String
+  property :instance_design_doc_id, String, :read_only => true
   
   
   # property :qwerty, String, :read_only => true
@@ -33,19 +33,6 @@ class LinkedData::Topic < CouchRest::Model::Base
     view :by_label
     view :by_instance_design_doc_id
   end
-
-  # def qwerty=(val)
-  #   write_attribute('qwerty', val)
-  # end  
-  # 
-  # def qwerty
-  #   self.qwerty
-  # end  
-  
-  # def instance_design_doc_id
-  #   self.instance_design_doc_id ||= "_design/#{self.term}"
-  #   "_design/#{self.term}".to_s unless self.term.nil?
-  # end
 
   def instance_database
     COUCHDB_SERVER.database(self.instance_database_name) unless self.instance_database_name.nil?
@@ -76,7 +63,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   
 private
   def create_instance_design_doc
-    self.instance_design_doc_id = "_design/#{self.term}"
+    write_attribute(:instance_design_doc_id, "_design/#{self.term}")
     ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
                                  :language => "javascript",
                                   :views => {

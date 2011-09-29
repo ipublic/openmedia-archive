@@ -7,7 +7,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   belongs_to :creator, :class_name => "VCard::VCard"
   belongs_to :publisher, :class_name => "VCard::VCard"
 
-  property :identifier, String
+  property :identifier, String, :read_only => true
   property :term, String
   property :label, String
   property :authority, String
@@ -92,9 +92,10 @@ private
 
   def generate_identifier
     self.label ||= self.term
-    self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
+    id = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 
                          escape_string(self.term.downcase) if new?
+    write_attribute(:identifier, id)
   end
 
   def escape_string(str)

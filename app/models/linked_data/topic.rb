@@ -15,9 +15,6 @@ class LinkedData::Topic < CouchRest::Model::Base
   property :instance_database_name, String
   property :instance_design_doc_id, String, :read_only => true
   
-  
-  # property :qwerty, String, :read_only => true
-  
   timestamps!
 
   validates_presence_of :term
@@ -41,7 +38,35 @@ class LinkedData::Topic < CouchRest::Model::Base
   def instance_design_doc
     db = instance_database
     db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
-  end  
+  end
+  
+  # Create a dynamic CouchRest::Model::Base class for this Topic
+  def couchrest_model
+    return if self.term.nil? || instance_database.nil?
+    
+    model_name = self.term.camelize.singularize
+
+    if Object.const_defined?(model_name)
+      klass = Object.const_get(model_name)
+    else
+      db = instance_database
+      prop_list = self.vocabulary.properties.inject([]) {|memo, p| memo << p.term}
+      self.vocabulary.properties.each {|p| prop_list << p.term} unless self.vocabulary.nil?
+      klass = Object.const_set(model_name.intern, 
+        Class.new(CouchRest::Model::Base) do
+          use_database db
+          prop_list.each {|prop_name| property prop_name.to_sym}
+          timestamps!
+        end
+        )
+    end
+    klass
+  end
+  
+  # Provide a CouchRest::Document instance for this Topic
+  def instance_new_doc(options={})
+   couchrest_model.new unless couchrest_model.nil?
+  end
   
   def instance_all_docs
     dsn = instance_design_doc
@@ -101,6 +126,5 @@ private
   def escape_string(str)
     str.gsub(/[^A-Za-z0-9]/,'_').squeeze('_')
   end
-
 
 end

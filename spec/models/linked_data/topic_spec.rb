@@ -2,15 +2,34 @@ require 'spec_helper'
 
 describe LinkedData::Topic do
 
-  before(:each) do
+  before(:all) do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
+    # @address_vocab = LinkedData::Vocabulary.get("vocabulary_openmedia_dev_om_street_address")
     @topic_term = "dc_addresses"
     @design_doc_id = '_design/' + @topic_term
     @topic_label = "District of Columbia Addresses"
     @instance_db_name = DB.name
+
+    @prop_names = %W(formatted_address city state)
+    @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name, :expected_type => RDF::XSD.string.to_s)}
+    
+    [LinkedData::Property.new(:label => "Formatted address", :term => "formatted_address", :expected_type => RDF::XSD.string.to_s),
+                  LinkedData::Property.new(:label => "City", :term => "city", :expected_type =>RDF::XSD.string.to_s),
+                  LinkedData::Property.new(:label => "State", :term => "state", :expected_type => RDF::XSD.string.to_s),
+                 ]
+    @vocab = LinkedData::Vocabulary.create!(:label => "Street address",
+                                            :term => "street_address",
+                                            :namespace => @ns,
+                                            :property_delimiter => "#",
+                                            :curie_prefix => "addr",
+                                            :authority => "testgov_civicopenmedia_us",
+                                            :properties => @prop_list
+                                            )
+    
     @topic = LinkedData::Topic.new(:authority => @ns.authority, 
                                     :term => @topic_term, 
                                     :label => @topic_label,
+                                    :vocabulary => @vocab,
                                     :instance_database_name => @instance_db_name)
     @topic_id = "topic_civicopenmedia_us_dcgov_dc_addresses"
   end
@@ -24,7 +43,11 @@ describe LinkedData::Topic do
       @topic.errors[:instance_topic_name].should_not be_nil
     end
     
-    it 'should provide a valid CouchDB database for instances' do
+    it 'should return vocabulary properties' do
+      @topic.vocabulary.properties.first.should == @prop_list.first 
+    end
+    
+    it 'should provide a valid CouchDB database to store instance docs' do
       @topic.instance_database.should be_a(::CouchRest::Database)
     end
     
@@ -38,25 +61,39 @@ describe LinkedData::Topic do
       saved_topic = LinkedData::Topic.get(@topic_id)
       dsn = saved_topic.instance_design_doc
       dsn.should be_a(::CouchRest::Design)
+      dsn.name.should == @topic.term
+      dsn["_id"].should == @design_doc_id
+      dsn.has_view?(:all).should be_true
     end
   end
   
-  describe "class methods" do
+  describe "instance methods" do
     before(:all) do
-      
+      @model = @topic.couchrest_model
+      @doc = @topic.instance_new_doc
     end
     
-    describe ".instance_design_document" do
-      it "should return the Topic's CouchDB design document" do
-        saved_topic = LinkedData::Topic.get(@topic_id)
-        dsn = saved_topic.instance_design_doc
-        dsn.name.should == @topic.term
-        dsn["_id"].should == @design_doc_id
-        dsn.has_view?(:all).should be_true
+    describe ".couchrest_model" do
+      it "should provide a CouchRest model for the Topic" do
+        @model.name.should == @topic_term.camelize.singularize
+        @model.superclass.to_s.should == "CouchRest::Model::Base"
+      end
+
+      it "should point to the instance database to store docs" do
+        @model.database.name.should == @instance_db_name
       end
     end
-
-    describe ".all_instance_docs" do
+    
+    describe ".instance_new_doc" do
+      it "should populate properties from the associated Vocabulary" do
+        @doc['model'].should == @topic_term.camelize.singularize
+        all_props = @prop_names + %W(updated_at created_at)
+        # @doc.properties.should == all_props
+        @doc.properties.each {|p| all_props.include?(p.to_s).should == true}
+      end
+    end
+    
+    describe ".instance_all_docs" do
       it "should return all docs for this Topic" do
       end
     end
@@ -68,50 +105,5 @@ describe LinkedData::Topic do
     
   end
   
-  describe "instance methods" do
-    # before(:each) do
-    #   STAGING_DATABASE.recreate! rescue nil
-    #   @csv_filename = File.join(FIXTURE_PATH, 'crime_incidents_current.csv')
-    #   @parser = LinkedData::CsvParser.new(@csv_filename, {:header_row => true})
-    # end
-    # 
-    # describe ".extract!" do
-    #   it "should raise an error if DataSource doc isn't saved" do
-    #     lambda{@topic.extract!(@parser.records)}.should raise_error
-    #   end
-    #   
-    #   it "should store all parsed records in the Staging db" do
-    #     @topic.save
-    #     @stats = @topic.extract!(@parser.records)
-    #     @stats.record_count.should == 304
-    #   end
-    # end
-  end
 
-  describe "views" do
-    # before(:each) do
-    #   STAGING_DATABASE.recreate! rescue nil
-    # 
-    #   @csv_ds = LinkedData::DataSource.create!(:authority => @ns.authority, :term => @topic_term)
-    #   @csv_filename = File.join(FIXTURE_PATH, 'crime_incidents_current.csv')
-    #   @csv_parser = LinkedData::CsvParser.new(@csv_filename, {:header_row => true})
-    #   @csv_stats = @csv_ds.extract!(@csv_parser.records)
-    # 
-    #   @shp_ds_term = "dc_fire_stations"
-    #   @shp_ds = LinkedData::DataSource.create!(:authority => @ns.authority, :term => @shp_ds_term)
-    # 
-    #   @shapefile_name = File.join(FIXTURE_PATH, 'FireStnPt.zip')
-    #   @shp_parser = LinkedData::ShapefileParser.new(@shapefile_name)
-    #   @shp_stats = @shp_ds.extract!(@shp_parser.records)
-    # end
-    # 
-    # it "should return accurate counts for RawRecord and each DataSource" do
-    #   LinkedData::DataSource.all.length.should == 2
-    #   LinkedData::RawRecord.all.length.should == 339
-    #   @csv_ds.raw_record_count.should == 304
-    #   @csv_ds.last_extract.length.should == 304
-    #   @shp_ds.raw_record_count.should == 35
-    # end
-    # 
-  end
 end

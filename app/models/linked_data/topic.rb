@@ -13,6 +13,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   property :authority, String
   property :description, String
   property :instance_database_name, String
+  property :instance_class_name, String, :read_only => true
   property :instance_design_doc_id, String, :read_only => true
   
   timestamps!
@@ -30,7 +31,7 @@ class LinkedData::Topic < CouchRest::Model::Base
     view :by_label
     view :by_instance_design_doc_id
   end
-
+  
   def instance_database
     COUCHDB_SERVER.database(self.instance_database_name) unless self.instance_database_name.nil?
   end
@@ -44,15 +45,13 @@ class LinkedData::Topic < CouchRest::Model::Base
   def couchrest_model
     return if self.term.nil? || instance_database.nil?
     
-    model_name = self.term.camelize.singularize
-
-    if Object.const_defined?(model_name)
-      klass = Object.const_get(model_name)
+    if Object.const_defined?(self.instance_class_name)
+      klass = Object.const_get(self.instance_class_name)
     else
       db = instance_database
       prop_list = self.vocabulary.properties.inject([]) {|memo, p| memo << p.term}
       self.vocabulary.properties.each {|p| prop_list << p.term} unless self.vocabulary.nil?
-      klass = Object.const_set(model_name.intern, 
+      klass = Object.const_set(self.instance_class_name.intern, 
         Class.new(CouchRest::Model::Base) do
           use_database db
           prop_list.each {|prop_name| property prop_name.to_sym}
@@ -64,37 +63,43 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
   
   # Provide a CouchRest::Document instance for this Topic
-  def instance_new_doc(options={})
-   couchrest_model.new unless couchrest_model.nil?
+  def new_instance_doc(options={})
+   couchrest_model.new(options) unless couchrest_model.nil?
   end
   
-  def instance_all_docs
-    dsn = instance_design_doc
-    dsn.view(:all)
+  def instance_view(view_name)
+    instance_design_doc.view(view_name.to_sym)
   end
   
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
-    docs = instance_all_docs
-    docs.each {|doc| doc.destroy(true)}
-    dsn.database.bulk_save
+    docs = couchrest_model.all
+    destroy_count = docs.count
+    docs.each {|doc| doc.destroy}
+    # docs.each {|doc| doc.destroy(true)}
+    # instance_database.bulk_save
+    destroy_count
   end
   
   # Delete all data instance docs and design doc
   def destroy!
     destroy_instance_docs!
-    destroy_design_doc!
+    destroy_instance_design_doc!
   end
   
 private
   def create_instance_design_doc
     write_attribute(:instance_design_doc_id, "_design/#{self.term}")
+    write_attribute(:instance_class_name, self.term.singularize.camelize)
+
     ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
                                  :language => "javascript",
                                   :views => {
                                     :all => {
                                       :map =>
-                                        "function(doc) {if (doc['#{model_type_key}'] == '#{self.identifier}') {emit(doc['_id'],1);}}"
+                                        "function(doc) {
+                                           if (doc['#{model_type_key}'] == '#{self.instance_class_name}') 
+                                             {emit(doc['_id'],1);}}"
                                       }
                                     }
                                   )
@@ -111,8 +116,8 @@ private
     }
   end
   
-  def destroy_design_doc!
-    self.design_doc.destroy
+  def destroy_instance_design_doc!
+    instance_design_doc.destroy
   end
 
   def generate_identifier

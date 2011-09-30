@@ -13,10 +13,6 @@ describe LinkedData::Topic do
     @prop_names = %W(formatted_address city state)
     @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name, :expected_type => RDF::XSD.string.to_s)}
     
-    [LinkedData::Property.new(:label => "Formatted address", :term => "formatted_address", :expected_type => RDF::XSD.string.to_s),
-                  LinkedData::Property.new(:label => "City", :term => "city", :expected_type =>RDF::XSD.string.to_s),
-                  LinkedData::Property.new(:label => "State", :term => "state", :expected_type => RDF::XSD.string.to_s),
-                 ]
     @vocab = LinkedData::Vocabulary.create!(:label => "Street address",
                                             :term => "street_address",
                                             :namespace => @ns,
@@ -70,7 +66,7 @@ describe LinkedData::Topic do
   describe "instance methods" do
     before(:all) do
       @model = @topic.couchrest_model
-      @doc = @topic.instance_new_doc
+      @doc = @topic.new_instance_doc
     end
     
     describe ".couchrest_model" do
@@ -84,22 +80,37 @@ describe LinkedData::Topic do
       end
     end
     
-    describe ".instance_new_doc" do
+    describe ".new_instance_doc" do
       it "should populate properties from the associated Vocabulary" do
         @doc['model'].should == @topic_term.camelize.singularize
         all_props = @prop_names + %W(updated_at created_at)
-        # @doc.properties.should == all_props
         @doc.properties.each {|p| all_props.include?(p.to_s).should == true}
       end
-    end
-    
-    describe ".instance_all_docs" do
-      it "should return all docs for this Topic" do
+
+      it "should initialize properties and save an instance doc correctly" do
+        wh = @topic.new_instance_doc(:formatted_address =>"1600 Pennsylvania Ave", 
+                                     :city =>"Washington", :state =>"DC").save
+        wh.formatted_address.should == "1600 Pennsylvania Ave"
+        wh.city.should == "Washington"
+        wh.state.should == "DC"
+        wh.id.should_not be_nil
+      end
+
+      it "should find all instances for this Topic's model" do
+        elwood_blues = @topic.new_instance_doc(:formatted_address => "1060 West Addison Street", 
+                                               :city =>"Chicago", :state =>"IL").save
+        addr_docs = @model.all
+        addr_docs.length.should == 2
+        addr_docs.first.city.should == "Chicago"
       end
     end
     
-    describe ".destroy_design_document" do
-      it "should return the Topic's CouchDB design document" do
+    describe ".destroy_instance_docs!" do
+      it "should delete all Topic data documents in instance db" do
+        ct = @topic.destroy_instance_docs!
+        ct.should == 2
+        addr_docs = @model.all
+        addr_docs.length.should == 0
       end
     end
     

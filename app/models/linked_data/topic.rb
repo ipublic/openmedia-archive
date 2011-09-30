@@ -12,6 +12,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   property :label, String
   property :authority, String
   property :description, String
+  
   property :instance_database_name, String
   property :instance_class_name, String, :read_only => true
   property :instance_design_doc_id, String, :read_only => true
@@ -29,7 +30,6 @@ class LinkedData::Topic < CouchRest::Model::Base
   design do
     view :by_term
     view :by_label
-    view :by_instance_design_doc_id
   end
   
   def instance_database
@@ -76,8 +76,10 @@ class LinkedData::Topic < CouchRest::Model::Base
     docs = couchrest_model.all
     destroy_count = docs.count
     docs.each {|doc| doc.destroy}
+
     # docs.each {|doc| doc.destroy(true)}
     # instance_database.bulk_save
+
     destroy_count
   end
   
@@ -89,8 +91,8 @@ class LinkedData::Topic < CouchRest::Model::Base
   
 private
   def create_instance_design_doc
-    write_attribute(:instance_design_doc_id, "_design/#{self.term}")
     write_attribute(:instance_class_name, self.term.singularize.camelize)
+    write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
     ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
                                  :language => "javascript",

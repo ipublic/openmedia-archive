@@ -6,7 +6,7 @@ describe LinkedData::Topic do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     # @address_vocab = LinkedData::Vocabulary.get("vocabulary_openmedia_dev_om_street_address")
     @topic_term = "dc_addresses"
-    @design_doc_id = '_design/' + @topic_term
+    @design_doc_id = '_design/' + @topic_term.singularize.camelize
     @topic_label = "District of Columbia Addresses"
     @instance_db_name = DB.name
 
@@ -57,7 +57,7 @@ describe LinkedData::Topic do
       saved_topic = LinkedData::Topic.get(@topic_id)
       dsn = saved_topic.instance_design_doc
       dsn.should be_a(::CouchRest::Design)
-      dsn.name.should == @topic.term
+      dsn.name.should == @topic.term.singularize.camelize
       dsn["_id"].should == @design_doc_id
       dsn.has_view?(:all).should be_true
     end

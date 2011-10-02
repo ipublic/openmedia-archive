@@ -37,34 +37,68 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
   
   def instance_design_doc
-    db = instance_database
-    db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
+    return if self.instance_design_doc_id.nil?
+    self.couchrest_model.design_doc
+    # db = instance_database
+    # db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
   end
-  
+
   # Create a dynamic CouchRest::Model::Base class for this Topic
   def couchrest_model
-    return if self.term.nil? || instance_database.nil?
+    return if self.instance_class_name.nil? || instance_database.nil?
     
-    if Object.const_defined?(self.instance_class_name)
-      klass = Object.const_get(self.instance_class_name)
+    if Object.const_defined?(self.instance_class_name.intern)
+      klass = Object.const_get(self.instance_class_name.intern)
     else
       db = instance_database
-      prop_list = self.vocabulary.properties.inject([]) {|memo, p| memo << p.term}
-      self.vocabulary.properties.each {|p| prop_list << p.term} unless self.vocabulary.nil?
+      prop_list = instance_properties
+      type_list = instance_types
+      
+      # puts "Init class_name: #{self.instance_class_name}"
+      # puts "Init class_name.intern: #{self.instance_class_name.intern}"
+
       klass = Object.const_set(self.instance_class_name.intern, 
         Class.new(CouchRest::Model::Base) do
           use_database db
-          prop_list.each {|prop_name| property prop_name.to_sym}
+          prop_list.each {|p| property p.term.to_sym}
+          property :serial_number
+          property :data_source_id
           timestamps!
+
+          # type_list.each |t| do
+          #   property t.to_sym do
+          #     t.properties.each {|tp| property tp.term.to_sym}
+          #   end
+          # end
+          # 
+          design do
+            view :by_serial_number
+            view :by_data_source_id
+          end
+          
         end
         )
     end
+    puts "klass.design_doc_id: #{klass.design_doc_id}"
+    puts "klass.design_doc_slug: #{klass.design_doc_slug}"
+    puts "klass.design_doc_uri: #{klass.design_doc_uri}"
+    klass.save_design_doc
     klass
+  end
+  
+  def instance_properties
+    return [] if self.vocabulary.nil?
+    self.vocabulary.properties.inject([]) {|plist, p| plist << p}
+  end
+  
+  def instance_types
+    return [] if self.vocabulary.nil?
+    self.vocabulary.types.inject([]) {|tlist, t| tlist << t} 
   end
   
   # Provide a CouchRest::Document instance for this Topic
   def new_instance_doc(options={})
-   couchrest_model.new(options) unless couchrest_model.nil?
+   couchrest_model.new(options) #unless couchrest_model.nil?
   end
   
   def instance_view(view_name)
@@ -73,14 +107,17 @@ class LinkedData::Topic < CouchRest::Model::Base
   
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
-    docs = couchrest_model.all
-    destroy_count = docs.count
-    docs.each {|doc| doc.destroy}
+    couchrest_model.all.map{|doc| doc.destroy}
+    couchrest_model.database.bulk_delete
+    
+    # docs = couchrest_model.all
+    # destroy_count = docs.count
+    # docs.each {|doc| doc.destroy}
 
     # docs.each {|doc| doc.destroy(true)}
     # instance_database.bulk_save
 
-    destroy_count
+    # destroy_count
   end
   
   # Delete all data instance docs and design doc
@@ -94,20 +131,19 @@ private
     write_attribute(:instance_class_name, self.term.singularize.camelize)
     write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
-    ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
-                                 :language => "javascript",
-                                  :views => {
-                                    :all => {
-                                      :map =>
-                                        "function(doc) {
-                                           if (doc['#{model_type_key}'] == '#{self.instance_class_name}') 
-                                             {emit(doc['_id'],1);}}"
-                                      }
-                                    }
-                                  )
-    
-    db = instance_database
-    res = db.save_doc(ddoc)
+    # ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
+    #                              :language => "javascript",
+    #                              "couchrest-hash" => "",
+    #                              :views => {
+    #                               :all => {
+    #                                 :map =>
+    #                                   "function(doc) {if (doc['#{model_type_key}'] == '#{self.instance_class_name}'){emit(doc['_id'],1);}}"
+    #                                 }
+    #                               }
+    #                               )
+    # 
+    # db = instance_database
+    # res = db.save_doc(ddoc)
   end
 
   def spatial_view
@@ -124,10 +160,9 @@ private
 
   def generate_identifier
     self.label ||= self.term
-    id = self.class.to_s.split("::").last.downcase + '_' +
+    self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 
                          escape_string(self.term.downcase) if new?
-    write_attribute(:identifier, id)
   end
 
   def escape_string(str)

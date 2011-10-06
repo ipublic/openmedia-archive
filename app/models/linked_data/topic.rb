@@ -38,15 +38,17 @@ class LinkedData::Topic < CouchRest::Model::Base
   
   def instance_design_doc
     return if self.instance_design_doc_id.nil?
-    self.couchrest_model.design_doc
-    # db = instance_database
-    # db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
+    # self.couchrest_model.design_doc
+    db = instance_database
+    db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
   end
 
   # Create a dynamic CouchRest::Model::Base class for this Topic
   def couchrest_model
-    return if self.instance_class_name.nil? || instance_database.nil?
+    return if self.term.nil? || instance_database.nil?
     
+    write_attribute(:instance_class_name, self.term.singularize.camelize)
+
     if Object.const_defined?(self.instance_class_name.intern)
       klass = Object.const_get(self.instance_class_name.intern)
     else
@@ -79,10 +81,10 @@ class LinkedData::Topic < CouchRest::Model::Base
         end
         )
     end
-    puts "klass.design_doc_id: #{klass.design_doc_id}"
-    puts "klass.design_doc_slug: #{klass.design_doc_slug}"
-    puts "klass.design_doc_uri: #{klass.design_doc_uri}"
-    klass.save_design_doc
+    # puts "klass.design_doc_id: #{klass.design_doc_id}"
+    # puts "klass.design_doc_slug: #{klass.design_doc_slug}"
+    # puts "klass.design_doc_uri: #{klass.design_doc_uri}"
+    # klass.save_design_doc
     klass
   end
   
@@ -98,7 +100,12 @@ class LinkedData::Topic < CouchRest::Model::Base
   
   # Provide a CouchRest::Document instance for this Topic
   def new_instance_doc(options={})
-   couchrest_model.new(options) #unless couchrest_model.nil?
+    return if self.instance_class_name.nil?
+    params = options.merge(model_type_key.to_sym => self.instance_class_name)
+    doc = CouchRest::Document.new(params) 
+    doc.database = instance_database
+    doc
+   # couchrest_model.new(options) #unless couchrest_model.nil?
   end
   
   def instance_view(view_name)
@@ -107,43 +114,38 @@ class LinkedData::Topic < CouchRest::Model::Base
   
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
-    couchrest_model.all.map{|doc| doc.destroy}
-    couchrest_model.database.bulk_delete
+    # instance_design_doc.view.all.map{|doc| doc.destroy}
+    # couchrest_model.database.bulk_delete
     
-    # docs = couchrest_model.all
-    # destroy_count = docs.count
-    # docs.each {|doc| doc.destroy}
+    doc_list = instance_design_doc.view(:all)
+    destroy_count = doc_list['total_rows']
+    docs = instance_database.get_bulk(doc_list['rows'].inject([]) {|docs, rh| docs << rh['id']})
+    docs['rows'].each {|dh| dh.destroy(true)}
+    instance_database.bulk_save
 
-    # docs.each {|doc| doc.destroy(true)}
-    # instance_database.bulk_save
-
-    # destroy_count
+    destroy_count
   end
   
   # Delete all data instance docs and design doc
   def destroy!
     destroy_instance_docs!
-    destroy_instance_design_doc!
+    # destroy_instance_design_doc!
   end
   
 private
   def create_instance_design_doc
-    write_attribute(:instance_class_name, self.term.singularize.camelize)
-    write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
-    # ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
-    #                              :language => "javascript",
-    #                              "couchrest-hash" => "",
-    #                              :views => {
-    #                               :all => {
-    #                                 :map =>
-    #                                   "function(doc) {if (doc['#{model_type_key}'] == '#{self.instance_class_name}'){emit(doc['_id'],1);}}"
-    #                                 }
-    #                               }
-    #                               )
-    # 
-    # db = instance_database
-    # res = db.save_doc(ddoc)
+    ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
+                                 :language => "javascript",
+                                 :views => {
+                                  :all => {
+                                    :map =>
+                                      "function(doc) {if (doc['#{model_type_key}'] == '#{self.instance_class_name}'){emit(doc['_id'],1);}}"
+                                    }
+                                  }
+                                  )
+    
+    instance_database.save_doc(ddoc)
   end
 
   def spatial_view
@@ -154,12 +156,15 @@ private
     }
   end
   
-  def destroy_instance_design_doc!
-    instance_design_doc.destroy
-  end
+  # def destroy_instance_design_doc!
+  #   instance_design_doc.destroy
+  # end
 
   def generate_identifier
     self.label ||= self.term
+    write_attribute(:instance_class_name, self.term.singularize.camelize)
+    write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
+
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 
                          escape_string(self.term.downcase) if new?

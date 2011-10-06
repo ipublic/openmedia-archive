@@ -8,10 +8,10 @@ describe LinkedData::Topic do
     @topic_term = "dc_addresses"
     @design_doc_id = '_design/' + @topic_term.singularize.camelize
     @topic_label = "District of Columbia Addresses"
-    @instance_db_name = DB.name
+    @instance_db_name = COMMONS_DATABASE.name
 
     @prop_names = %W(formatted_address city state)
-    @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name, :expected_type => RDF::XSD.string.to_s)}
+    @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name)}
     
     @vocab = LinkedData::Vocabulary.create!(:label => "Street address",
                                             :term => "street_address",
@@ -31,16 +31,12 @@ describe LinkedData::Topic do
   end
 
   describe "initialization" do
-    it 'should fail to initialize instance without term and authority properties' do
+    it 'should fail to initialize instance without term, authority and instance_database_name properties' do
       @topic = LinkedData::Topic.new
       @topic.should_not be_valid
       @topic.errors[:term].should_not be_nil
       @topic.errors[:authority].should_not be_nil
-      @topic.errors[:instance_topic_name].should_not be_nil
-    end
-    
-    it 'should return vocabulary properties' do
-      @topic.vocabulary.properties.first.should == @prop_list.first 
+      @topic.errors[:instance_database_name].should_not be_nil
     end
     
     it 'should provide a valid CouchDB database to store instance docs' do
@@ -53,25 +49,32 @@ describe LinkedData::Topic do
       saved_topic.first.identifier.should == @topic_id
     end
     
-    it 'should create an associated CouchRest::Design document' do
-      saved_topic = LinkedData::Topic.get(@topic_id)
-      dsn = saved_topic.instance_design_doc
-      dsn.should be_a(::CouchRest::Design)
-      dsn.name.should == @topic.term.singularize.camelize
-      dsn["_id"].should == @design_doc_id
-      dsn.has_view?(:all).should be_true
+  end
+  
+  describe "vocabulary" do
+    it "should provide a list of properties from associated vocabulary" do
+      all_props = @prop_names # + %W(updated_at created_at data_source_id serial_number)
+      @topic.instance_properties.each {|p| all_props.include?(p.term).should == true}
+    end
+    
+    it "should provide a list of types from associated vocabulary" do
     end
   end
   
   describe "instance methods" do
     before(:all) do
       @model = @topic.couchrest_model
-      @doc = @topic.new_instance_doc
+      @model_name = @topic_term.camelize.singularize
+      @sn = "abc123"
+      @doc = @topic.new_instance_doc(:formatted_address =>"1600 Pennsylvania Ave", 
+                                      :city =>"Washington", :state =>"DC", :serial_number => @sn)
+      @resp = @topic.instance_database.save_doc @doc
+      @saved_doc = @topic.instance_database.get @resp['id']
     end
     
     describe ".couchrest_model" do
       it "should provide a CouchRest model for the Topic" do
-        @model.name.should == @topic_term.camelize.singularize
+        @model.name.should == @model_name
         @model.superclass.to_s.should == "CouchRest::Model::Base"
       end
 
@@ -81,36 +84,43 @@ describe LinkedData::Topic do
     end
     
     describe ".new_instance_doc" do
-      it "should populate properties from the associated Vocabulary" do
+      it "should set the documents model_type_key" do
         @doc['model'].should == @topic_term.camelize.singularize
-        all_props = @prop_names + %W(updated_at created_at)
-        @doc.properties.each {|p| all_props.include?(p.to_s).should == true}
       end
 
       it "should initialize properties and save an instance doc correctly" do
-        wh = @topic.new_instance_doc(:formatted_address =>"1600 Pennsylvania Ave", 
-                                     :city =>"Washington", :state =>"DC").save
-        wh.formatted_address.should == "1600 Pennsylvania Ave"
-        wh.city.should == "Washington"
-        wh.state.should == "DC"
-        wh.id.should_not be_nil
+        @saved_doc.id.should_not be_nil
+        @saved_doc['formatted_address'].should == "1600 Pennsylvania Ave"
+        @saved_doc['city'].should == "Washington"
+        @saved_doc['state'].should == "DC"
+        @saved_doc['serial_number'].should == @sn
       end
 
+      it 'should create an associated CouchRest::Design document' do
+        # dsn = @doc.design_doc
+        dsn = @topic.instance_design_doc
+        dsn.should be_a(::CouchRest::Design)
+        dsn.name.should == @topic_term.singularize.camelize
+        dsn["_id"].should == @design_doc_id
+        dsn.has_view?(:all).should be_true
+      end
+ 
       it "should find all instances for this Topic's model" do
         elwood_blues = @topic.new_instance_doc(:formatted_address => "1060 West Addison Street", 
-                                               :city =>"Chicago", :state =>"IL").save
-        addr_docs = @model.all
-        addr_docs.length.should == 2
-        addr_docs.first.city.should == "Chicago"
+                                               :city =>"Chicago", :state =>"IL", :serial_number => @sn).save
+        addr_docs = @topic.instance_design_doc.view(:all)
+        addr_docs['total_rows'].should == 2
+        saved_doc = @topic.instance_database.get addr_docs['rows'].first['id']
+        saved_doc['city'].should == "Chicago"
       end
     end
     
     describe ".destroy_instance_docs!" do
       it "should delete all Topic data documents in instance db" do
-        ct = @topic.destroy_instance_docs!
-        ct.should == 2
-        addr_docs = @model.all
-        addr_docs.length.should == 0
+        # ct = @topic.destroy_instance_docs!
+        # ct.should == 2
+        # addr_docs = @topic.instance_design_doc.view(:all)
+        # addr_docs['total_rows'].should == 0
       end
     end
     

@@ -114,14 +114,15 @@ class LinkedData::Topic < CouchRest::Model::Base
   
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
-    # instance_design_doc.view.all.map{|doc| doc.destroy}
-    # couchrest_model.database.bulk_delete
-    
     doc_list = instance_design_doc.view(:all)
     destroy_count = doc_list['total_rows']
-    docs = instance_database.get_bulk(doc_list['rows'].inject([]) {|docs, rh| docs << rh['id']})
-    docs['rows'].each {|dh| dh.destroy(true)}
-    instance_database.bulk_save
+    return destroy_count if destroy_count < 1
+    
+    # docs = instance_database.get_bulk(doc_list['rows'].inject([]) {|docs, rh| docs << rh['id']})
+    docs = instance_database.get_bulk(doc_list['rows'].map {|rh| rh['id']})
+    
+    docs['rows'].each {|rh| instance_database.delete_doc(rh['doc'], false)}
+    instance_database.bulk_delete
 
     destroy_count
   end

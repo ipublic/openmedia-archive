@@ -117,10 +117,12 @@ describe LinkedData::Topic do
     
     describe ".destroy_instance_docs!" do
       it "should delete all Topic data documents in instance db" do
-        # ct = @topic.destroy_instance_docs!
-        # ct.should == 2
-        # addr_docs = @topic.instance_design_doc.view(:all)
-        # addr_docs['total_rows'].should == 0
+        
+        ## This spec requires CouchDB configuration delayed_commits = false
+        lambda {@topic.instance_database.get @resp['id']}.should_not raise_error
+        ct = @topic.destroy_instance_docs!
+        ct.should == 2
+        lambda {@topic.instance_database.get @resp['id']}.should raise_error
       end
     end
     

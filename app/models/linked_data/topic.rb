@@ -56,9 +56,6 @@ class LinkedData::Topic < CouchRest::Model::Base
       prop_list = instance_properties
       type_list = instance_types
       
-      # puts "Init class_name: #{self.instance_class_name}"
-      # puts "Init class_name.intern: #{self.instance_class_name.intern}"
-
       klass = Object.const_set(self.instance_class_name.intern, 
         Class.new(CouchRest::Model::Base) do
           use_database db
@@ -81,10 +78,6 @@ class LinkedData::Topic < CouchRest::Model::Base
         end
         )
     end
-    # puts "klass.design_doc_id: #{klass.design_doc_id}"
-    # puts "klass.design_doc_slug: #{klass.design_doc_slug}"
-    # puts "klass.design_doc_uri: #{klass.design_doc_uri}"
-    # klass.save_design_doc
     klass
   end
   
@@ -135,6 +128,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   
 private
   def create_instance_design_doc
+    write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
     ddoc = CouchRest::Document.new(:_id => self.instance_design_doc_id,
                                  :language => "javascript",
@@ -164,7 +158,6 @@ private
   def generate_identifier
     self.label ||= self.term
     write_attribute(:instance_class_name, self.term.singularize.camelize)
-    write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
                          self.authority + '_' + 

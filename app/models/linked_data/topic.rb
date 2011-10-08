@@ -42,6 +42,49 @@ class LinkedData::Topic < CouchRest::Model::Base
     db = instance_database
     db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
   end
+  
+  def instance_properties
+    return [] if self.vocabulary.nil?
+    self.vocabulary.properties.inject([]) {|plist, p| plist << p}
+  end
+  
+  def instance_types
+    return [] if self.vocabulary.nil?
+    self.vocabulary.types.inject([]) {|tlist, t| tlist << t} 
+  end
+  
+  # Provide a CouchRest::Document instance for this Topic
+  def new_instance_doc(options={})
+    return if self.instance_class_name.nil?
+    params = options.merge(model_type_key.to_sym => self.instance_class_name)
+    doc = CouchRest::Document.new(params) 
+    doc.database = instance_database
+    doc
+   # couchrest_model.new(options) #unless couchrest_model.nil?
+  end
+  
+  def instance_view(view_name)
+    instance_design_doc.view(view_name.to_sym)
+  end
+  
+  # Use bulk_save to delete all data instances for this topic
+  def destroy_instance_docs!
+    doc_list = instance_design_doc.view(:all)
+    destroy_count = doc_list['total_rows']
+    return destroy_count if destroy_count < 1
+    
+    docs = instance_database.get_bulk(doc_list['rows'].map {|rh| rh['id']})
+    docs['rows'].each {|rh| instance_database.delete_doc(rh['doc'], false)}
+    instance_database.bulk_delete
+
+    destroy_count
+  end
+  
+  # Delete all data instance docs and design doc
+  def destroy_instance!
+    destroy_instance_docs!
+    # destroy_instance_design_doc!
+  end
 
   # Create a dynamic CouchRest::Model::Base class for this Topic
   def couchrest_model
@@ -79,51 +122,6 @@ class LinkedData::Topic < CouchRest::Model::Base
         )
     end
     klass
-  end
-  
-  def instance_properties
-    return [] if self.vocabulary.nil?
-    self.vocabulary.properties.inject([]) {|plist, p| plist << p}
-  end
-  
-  def instance_types
-    return [] if self.vocabulary.nil?
-    self.vocabulary.types.inject([]) {|tlist, t| tlist << t} 
-  end
-  
-  # Provide a CouchRest::Document instance for this Topic
-  def new_instance_doc(options={})
-    return if self.instance_class_name.nil?
-    params = options.merge(model_type_key.to_sym => self.instance_class_name)
-    doc = CouchRest::Document.new(params) 
-    doc.database = instance_database
-    doc
-   # couchrest_model.new(options) #unless couchrest_model.nil?
-  end
-  
-  def instance_view(view_name)
-    instance_design_doc.view(view_name.to_sym)
-  end
-  
-  # Use bulk_save to delete all data instances for this topic
-  def destroy_instance_docs!
-    doc_list = instance_design_doc.view(:all)
-    destroy_count = doc_list['total_rows']
-    return destroy_count if destroy_count < 1
-    
-    # docs = instance_database.get_bulk(doc_list['rows'].inject([]) {|docs, rh| docs << rh['id']})
-    docs = instance_database.get_bulk(doc_list['rows'].map {|rh| rh['id']})
-    
-    docs['rows'].each {|rh| instance_database.delete_doc(rh['doc'], false)}
-    instance_database.bulk_delete
-
-    destroy_count
-  end
-  
-  # Delete all data instance docs and design doc
-  def destroy!
-    destroy_instance_docs!
-    # destroy_instance_design_doc!
   end
   
 private

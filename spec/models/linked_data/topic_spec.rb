@@ -72,6 +72,25 @@ describe LinkedData::Topic do
       @saved_doc = @topic.instance_database.get @resp['id']
     end
     
+    describe ".instance_design_doc" do
+      it 'should create an associated CouchRest::Design document' do
+        # dsn = @doc.design_doc
+        dsn = @topic.instance_design_doc
+        dsn.should be_a(::CouchRest::Design)
+        dsn.name.should == @topic_term.singularize.camelize
+        dsn["_id"].should == @design_doc_id
+        dsn.has_view?(:all).should be_true
+      end
+
+      it "should be able to add a view definition" do
+        dsn = @topic.instance_design_doc
+        lambda{dsn.view @sn_prop_name.to_sym}.should raise_error
+        dsn.view_by :serial_number 
+        dsn.save
+        @topic.instance_design_doc.has_view?("by_serial_number").should == true
+      end
+    end
+    
     describe ".couchrest_model" do
       it "should provide a CouchRest model for the Topic" do
         @model.name.should == @model_name
@@ -96,15 +115,6 @@ describe LinkedData::Topic do
         @saved_doc['serial_number'].should == @sn
       end
 
-      it 'should create an associated CouchRest::Design document' do
-        # dsn = @doc.design_doc
-        dsn = @topic.instance_design_doc
-        dsn.should be_a(::CouchRest::Design)
-        dsn.name.should == @topic_term.singularize.camelize
-        dsn["_id"].should == @design_doc_id
-        dsn.has_view?(:all).should be_true
-      end
- 
       it "should find all instances for this Topic's model" do
         elwood_blues = @topic.new_instance_doc(:formatted_address => "1060 West Addison Street", 
                                                :city =>"Chicago", :state =>"IL", :serial_number => @sn).save

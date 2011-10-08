@@ -5,6 +5,7 @@ class LinkedData::Property
   property :label, String                             # RDFS#Label
   property :expected_type, String                     # URI for data type
   property :format, String                            # Output format styling
+  property :key, TrueClass, :default => false         # Create index on this property?
   property :comment, String                           # RDFS#Comment
   property :deprecated, TrueClass, :default => false  # Deprecated properties may not be used 
                                                        # for future vocabularies            

@@ -10,9 +10,12 @@ describe LinkedData::Topic do
     @topic_label = "District of Columbia Addresses"
     @instance_db_name = COMMONS_DATABASE.name
 
-    @prop_names = %W(formatted_address city state)
+    @prop_names = %W(formatted_address)
+    @key_props  = %W(city state)
+    @all_props = @prop_names + @key_props
     @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name)}
-    
+    @prop_list = @key_props.inject(@prop_list) {|memo, name| memo << LinkedData::Property.new(:term => name, :key => true)}
+
     @vocab = LinkedData::Vocabulary.create!(:label => "Street address",
                                             :term => "street_address",
                                             :namespace => @ns,
@@ -53,8 +56,7 @@ describe LinkedData::Topic do
   
   describe "vocabulary" do
     it "should provide a list of properties from associated vocabulary" do
-      all_props = @prop_names # + %W(updated_at created_at data_source_id serial_number)
-      @topic.instance_properties.each {|p| all_props.include?(p.term).should == true}
+      @topic.instance_properties.each {|p| @all_props.include?(p.term).should == true}
     end
     
     it "should provide a list of types from associated vocabulary" do
@@ -89,6 +91,13 @@ describe LinkedData::Topic do
         dsn.save
         @topic.instance_design_doc.has_view?("by_serial_number").should == true
       end
+
+      it "should add views for Vocabulary property keys" do
+        dsn = @topic.add_instance_vocabulary_views
+        dsn.has_view?("by_city").should == true
+        dsn.has_view?("by_state").should == true
+      end
+      
     end
     
     describe ".couchrest_model" do

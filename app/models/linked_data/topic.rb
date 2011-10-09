@@ -1,4 +1,6 @@
 class LinkedData::Topic < CouchRest::Model::Base
+  
+  attr_reader :instance_database, :instance_properties, :instance_types
 
   use_database VOCABULARIES_DATABASE
   unique_id :identifier
@@ -33,40 +35,73 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
   
   def instance_database
-    COUCHDB_SERVER.database(self.instance_database_name) unless self.instance_database_name.nil?
+    return if self.instance_database_name.nil?
+    @instance_database ||= COUCHDB_SERVER.database(self.instance_database_name)
   end
   
   def instance_design_doc
     return if self.instance_design_doc_id.nil?
-    # self.couchrest_model.design_doc
-    db = instance_database
-    db.get(self.instance_design_doc_id) # unless self.instance_design_doc_id.nil?
+    instance_database.get(self.instance_design_doc_id)
   end
   
   def instance_properties
     return [] if self.vocabulary.nil?
+    # @instance_properties ||= self.vocabulary.properties.inject([]) {|plist, p| plist << p}
     self.vocabulary.properties.inject([]) {|plist, p| plist << p}
   end
   
   def instance_types
     return [] if self.vocabulary.nil?
-    self.vocabulary.types.inject([]) {|tlist, t| tlist << t} 
+    @instance_types ||= self.vocabulary.types.inject([]) {|tlist, t| tlist << t} 
   end
   
-  # Provide a CouchRest::Document instance for this Topic
+  # Provide a CouchRest::Document for this Topic with set database and model_type_key
   def new_instance_doc(options={})
     return if self.instance_class_name.nil?
     params = options.merge(model_type_key.to_sym => self.instance_class_name)
     doc = CouchRest::Document.new(params) 
     doc.database = instance_database
     doc
-   # couchrest_model.new(options) #unless couchrest_model.nil?
   end
   
-  def instance_view(view_name)
-    instance_design_doc.view(view_name.to_sym)
+  def load_instance_docs(docs=[])
+    ts = Time.now
+    doc_list = []
+    docs_saved = 0
+    time_stamp = {:created_at => ts, :updated_at => ts}
+
+    # Reserved propoerties from source doc to ignore during load
+    rp = %W[_id _rev model created_at updated_at published]
+    db = instance_database
+
+    docs.each do |doc| 
+      pdoc = new_instance_doc(doc.to_hash.delete_if {|k, v| rp.include? k}) 
+      db.bulk_save_doc(pdoc.merge(time_stamp))
+      docs_saved += 1
+      db.bulk_save if docs_saved%500 == 0              
+    end
+    db.bulk_save
+    docs_saved
   end
   
+  # Add instance design_doc views for each key in vocaulary
+  def add_instance_vocabulary_views
+    return if instance_properties.nil?
+    
+    # puts "first instance_properties ct: " + instance_properties.length
+    puts instance_properties.last.term
+    key_list = []
+    instance_properties.each {|prop| key_list << prop.term if prop.key }
+    # instance_properties.inject([]) {|key_list, prop| key_list << prop.term if prop.key }
+    return if key_list.length < 1
+    
+    #TODO Change View to include CouchRest Model Key 
+    dsn = instance_design_doc
+    key_list.each {|k| dsn.view_by k.to_sym}
+    res = dsn.save
+    dsn
+  end
+
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
     doc_list = instance_design_doc.view(:all)

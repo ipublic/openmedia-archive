@@ -60,7 +60,7 @@ class LinkedData::DataSource < CouchRest::Model::Base
   def extract!(records)
     raise "DataSource must be saved to database first" if self.identifier.nil?
     esn = LinkedData::DataSource.serial_number
-    ts = Time.now
+    ts = Time.now.utc
     extract_prop_set = {:serial_number => esn, :data_source_id => self.identifier, 
                         :created_at => ts, :updated_at => ts}
     

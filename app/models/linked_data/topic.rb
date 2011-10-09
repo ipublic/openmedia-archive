@@ -59,24 +59,24 @@ class LinkedData::Topic < CouchRest::Model::Base
   def new_instance_doc(options={})
     return if self.instance_class_name.nil?
     params = options.merge(model_type_key.to_sym => self.instance_class_name)
-    doc = CouchRest::Document.new(params) 
+    doc = CouchRest::Document.new(params)
+    
     doc.database = instance_database
     doc
   end
-  
+   
   def load_instance_docs(docs=[])
-    ts = Time.now
-    doc_list = []
     docs_saved = 0
+    ts = Time.now.utc
     time_stamp = {:created_at => ts, :updated_at => ts}
 
-    # Reserved propoerties from source doc to ignore during load
+    # Reserved properties from source doc to ignore during load
     rp = %W[_id _rev model created_at updated_at published]
     db = instance_database
 
     docs.each do |doc| 
-      pdoc = new_instance_doc(doc.to_hash.delete_if {|k, v| rp.include? k}) 
-      db.bulk_save_doc(pdoc.merge(time_stamp))
+      pub_doc = new_instance_doc(doc.to_hash.delete_if {|k, v| rp.include? k}.merge(time_stamp)) 
+      pub_doc.save(true)
       docs_saved += 1
       db.bulk_save if docs_saved%500 == 0              
     end

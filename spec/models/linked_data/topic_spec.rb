@@ -141,6 +141,16 @@ describe LinkedData::Topic do
         lambda {@topic.instance_database.get @resp['id']}.should raise_error
       end
     end
+
+    describe ".load_instance_docs" do
+      it "should store a collection of documents" do
+        docs = []
+        %W[animal vegetable mineral person place thing].each {|i| docs << @topic.new_instance_doc(:classification => i)}
+        @res = @topic.load_instance_docs(docs)
+        @res.should == 6
+      end
+    end
+    
     
   end
   

@@ -52,6 +52,10 @@ describe LinkedData::Topic do
       saved_topic.first.identifier.should == @topic_id
     end
     
+    it "should automatically add views for Vocabulary property keys" do
+      @topic.instance_design_doc.has_view?("by_city").should == true
+      @topic.instance_design_doc.has_view?("by_state").should == true
+    end
   end
   
   describe "vocabulary" do
@@ -91,13 +95,6 @@ describe LinkedData::Topic do
         dsn.save
         @topic.instance_design_doc.has_view?("by_serial_number").should == true
       end
-
-      it "should add views for Vocabulary property keys" do
-        dsn = @topic.add_instance_vocabulary_views
-        dsn.has_view?("by_city").should == true
-        dsn.has_view?("by_state").should == true
-      end
-      
     end
     
     describe ".couchrest_model" do

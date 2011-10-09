@@ -84,24 +84,22 @@ class LinkedData::Topic < CouchRest::Model::Base
     docs_saved
   end
   
-  # Add instance design_doc views for each key in vocaulary
-  def add_instance_vocabulary_views
-    return if instance_properties.nil?
-    
-    # puts "first instance_properties ct: " + instance_properties.length
-    puts instance_properties.last.term
-    key_list = []
-    instance_properties.each {|prop| key_list << prop.term if prop.key }
-    # instance_properties.inject([]) {|key_list, prop| key_list << prop.term if prop.key }
-    return if key_list.length < 1
-    
-    #TODO Change View to include CouchRest Model Key 
+  def add_instance_view(*keys)
+    return if instance_class_name.nil?
+    opts = keys.pop if keys.last.is_a?(Hash)
+    opts ||= {}
+    ducktype = opts.delete(:ducktype)
+    unless ducktype || opts[:map]
+      opts[:guards] ||= []
+      # opts[:guards].push "(doc['#{model_type_key}'] == '#{self.instance_class_name}')"
+      opts[:guards].push "(doc['model'] == '#{self.instance_class_name}')"
+    end
+    keys.push opts
     dsn = instance_design_doc
-    key_list.each {|k| dsn.view_by k.to_sym}
-    res = dsn.save
-    dsn
+    dsn.view_by(*keys)
+    dsn.save
   end
-
+  
   # Use bulk_save to delete all data instances for this topic
   def destroy_instance_docs!
     doc_list = instance_design_doc.view(:all)
@@ -123,6 +121,7 @@ class LinkedData::Topic < CouchRest::Model::Base
 
   # Create a dynamic CouchRest::Model::Base class for this Topic
   def couchrest_model
+    ## TODO - deprecate this method
     return if self.term.nil? || instance_database.nil?
     
     write_attribute(:instance_class_name, self.term.singularize.camelize)
@@ -160,6 +159,7 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
   
 private
+  # Instantiate a CouchDB Design Document for this Topic's data
   def create_instance_design_doc
     write_attribute(:instance_design_doc_id, "_design/#{self.instance_class_name}")
 
@@ -174,6 +174,14 @@ private
                                   )
     
     instance_database.save_doc(ddoc)
+    add_instance_vocabulary_views
+  end
+
+  # Add instance CouchDB Design Document views for each key in Vocaulary
+  def add_instance_vocabulary_views
+    return if instance_properties.nil?
+    self.vocabulary.key_list.each {|k| add_instance_view(k)} unless self.vocabulary.nil?
+    instance_design_doc
   end
 
   def spatial_view

@@ -1,6 +1,8 @@
 require 'rdf/couchdb'
 class LinkedData::Vocabulary < CouchRest::Model::Base
   
+  attr_accessor :key_list
+  
   use_database VOCABULARIES_DATABASE
   unique_id :identifier
 
@@ -17,13 +19,15 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   property :authority, String
   
   property :curie_prefix, String
+  property :curie_suffix, String
   property :property_delimiter, String, :default => "/"
   property :context
   
   property :properties, [LinkedData::Property]
   collection_of :types, :class_name => 'LinkedData::Type'
 
-  # p = {"clown" => {"c" => "circus", "r" => "rodeo"}, "category" => {"a" => "animal", "v" => "vegetable", "m" => "mineral"}}
+  # Provide enumerations in the following example format:
+    # p = {"clown" => {"c" => "circus", "r" => "rodeo"}, "category" => {"a" => "animal", "v" => "vegetable", "m" => "mineral"}}
   property :enumerations, :default => {}
 
   ## TODO -- move geometries into Properties
@@ -69,6 +73,12 @@ class LinkedData::Vocabulary < CouchRest::Model::Base
   #           });
   #         }
   #       }"
+  
+  
+  def key_list
+    return [] if self.properties.nil?
+    @key_list ||= self.properties.inject([]) {|list, k| k.key ? list.push(k.term) : list }
+  end
   
   def curie
     Hash[self.curie_prefix, self.curie_suffix] if self.curie_prefix && self.curie_suffix

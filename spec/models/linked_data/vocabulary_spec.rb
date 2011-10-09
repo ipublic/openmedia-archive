@@ -10,6 +10,12 @@ describe LinkedData::Vocabulary do
     @label = "Reading Proficiency-Third Grade"
     @authority = @ns.authority
     @base_uri = @ns.base_uri
+    @prop_names = %W(enrollment)
+    @key_props  = %W(school_name city)
+    @all_props = @prop_names + @key_props
+    @prop_list = @prop_names.inject([]) {|memo, name| memo << LinkedData::Property.new(:term => name)}
+    @prop_list = @key_props.inject(@prop_list) {|memo, name| memo << LinkedData::Property.new(:term => name, :key => true)}
+    
     @collection = LinkedData::Collection.create!(:term => @term,
                                                  :label => @col_label, 
                                                  :base_uri => @base_uri,
@@ -20,6 +26,7 @@ describe LinkedData::Vocabulary do
     @vocabulary = LinkedData::Vocabulary.new(:label => @col_label,
                             :term => @term,
                             :namespace => @ns,
+                            :properties => @prop_list,
                             :tags => ["reading", "testing", "third grade"], 
                             :comment => "Percentage of children in third grade who read on grade level")
                             
@@ -42,6 +49,12 @@ describe LinkedData::Vocabulary do
         lambda { @vocabulary.save! }.should change(LinkedData::Vocabulary, :count).by(1)
         @res = LinkedData::Vocabulary.get(@vocab_id)
         @res.uri.should == @vocab_uri
+      end
+    end
+    
+    describe ".key_list" do
+      it 'should provide an array of Property Key names' do
+        @key_props.should ==  @vocabulary.key_list
       end
     end
     

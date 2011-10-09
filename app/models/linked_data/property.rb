@@ -2,6 +2,7 @@ class LinkedData::Property
   include CouchRest::Model::Embeddable
   
   property :term, String                              # Escaped vocabulary name suitable for inclusion in IRI
+  property :alias, String                             # Alternate term
   property :label, String                             # RDFS#Label
   property :expected_type, String                     # URI for data type
   property :format, String                            # Output format styling

@@ -27,7 +27,7 @@ dan = Admin.new(:email => email1.value,
             :password => 'ChangeMe',
             :password_confirmation => 'ChangeMe', 
             :site => @om_site, 
-            :confirmed_at => Time.now).save!
+            :confirmed_at => Time.now.utc).save!
 
 require File.join(File.dirname(__FILE__),'seeds', 'collections')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'xml_schema')
@@ -35,6 +35,9 @@ require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'geo_json')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'geo')
 # require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'municipality')
 require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'vcard')
+require File.join(File.dirname(__FILE__),'seeds', 'vocabularies', 'street_address')
+
+require File.join(File.dirname(__FILE__),'seeds', 'topics', 'street_addresses')
 
 
 d = OpenMedia::Dashboard.new({:title => "MiDashboard"})

@@ -35,12 +35,6 @@ class LinkedData::Topic < CouchRest::Model::Base
     view :by_label
   end
   
-  def initialize(*args)
-    super(*args)
-    @rows_written = 0
-    @rows_read = 0             
-  end
-  
   def instance_database
     return if self.instance_database_name.nil?
     @instance_database ||= COUCHDB_SERVER.database(self.instance_database_name)

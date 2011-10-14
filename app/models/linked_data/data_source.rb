@@ -1,4 +1,6 @@
 class LinkedData::DataSource < CouchRest::Model::Base
+
+  attr_accessor :docs_read, :docs_written
   
   use_database STAGING_DATABASE
   unique_id :identifier
@@ -11,6 +13,7 @@ class LinkedData::DataSource < CouchRest::Model::Base
   property :identifier, String
   property :label, String
   property :authority, String
+  property :properties, [LinkedData::Property]
   
   property :extract_sets do
     property :serial_number, String
@@ -75,6 +78,34 @@ class LinkedData::DataSource < CouchRest::Model::Base
     self.save
     extract_sets.last
   end
+  
+  
+  def transform!
+    # generate ctl from dataset and source definition
+    ctl = "source :in, {:datasource=>'#{self.id}'}, #{instance_properties}\n"
+    ctl << "destination :out,{:order=> #{instance_properties}}\n"
+
+    
+    # ctl = "source :in, {:datasource=>'#{self.id}'}, ["+
+    #   self.source_properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]\n"
+    # ctl << "destination :out, {:rdfs_class=>'#{self.rdfs_class_uri}'}, {:order=>[" +
+    #   self.rdfs_class.properties.collect{|p| p.identifier}.collect{|p| ":#{p}"}.join(',') + "]}\n"
+
+    ETL::Engine.init(:datasource=>self)
+    ETL::Engine.process_string(self, ctl)
+    ETL::Engine.import = nil
+    metadata.update!(:modified=>DateTime.now)
+    ETL::Engine.rows_written
+  end
+  
+  def docs_read
+    @docs_read ||= 0
+  end
+  
+  def docs_written
+    @docs_written ||= 0
+  end
+  
 
 private
   def generate_identifier

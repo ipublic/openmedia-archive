@@ -14,6 +14,7 @@ class LinkedData::DataSource < CouchRest::Model::Base
   property :label, String
   property :authority, String
   property :properties, [LinkedData::Property]
+
   
   property :extract_sets do
     property :serial_number, String

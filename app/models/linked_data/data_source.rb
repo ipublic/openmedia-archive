@@ -18,7 +18,7 @@ class LinkedData::DataSource < CouchRest::Model::Base
   
   property :extract_sets do
     property :serial_number, String
-    property :record_count, Integer
+    property :docs_written, Integer
     property :extracted_at, Time
   end
 
@@ -49,11 +49,11 @@ class LinkedData::DataSource < CouchRest::Model::Base
     LinkedData::RawRecord.by_unpublished({:key=>self.id}.merge(view_opts))
   end  
   
-  def raw_record_count
+  def raw_doc_count
     LinkedData::RawRecord.by_data_source_id(:key=>self.id, :include_docs=>false)['rows'].size
   end
 
-  def published_raw_record_count(view_opts={})
+  def raw_doc_published_count(view_opts={})
     LinkedData::RawRecord.by_data_source_id_and_published(:startkey=>[self.id], :endkey=>[self.id, {}], :include_docs=>false)['rows'].size
   end
   
@@ -68,15 +68,14 @@ class LinkedData::DataSource < CouchRest::Model::Base
     extract_prop_set = {:serial_number => esn, :data_source_id => self.identifier, 
                         :created_at => ts, :updated_at => ts}
     
-    recs_saved = 0
     records.each do |rec|
       LinkedData::RawRecord.database.bulk_save_doc(rec.merge(extract_prop_set))
-      recs_saved += 1
-      LinkedData::RawRecord.database.bulk_save if recs_saved%500 == 0              
+      self.docs_written += 1
+      LinkedData::RawRecord.database.bulk_save if docs_written%500 == 0              
     end
     LinkedData::RawRecord.database.bulk_save
-    extract_sets << Hash[:serial_number => esn, :record_count => recs_saved, :extracted_at => ts]
-    self.save
+    extract_sets << Hash[:serial_number => esn, :docs_written => docs_written, :extracted_at => ts]
+    self.save # Persist the updated extract_sets array 
     extract_sets.last
   end
   

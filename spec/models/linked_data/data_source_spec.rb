@@ -58,7 +58,7 @@ describe LinkedData::DataSource do
         # @ds.save
         saved_ds = LinkedData::DataSource.get @ds_id
         @stats = saved_ds.extract!(@parser.records)
-        @stats.record_count.should == 304
+        @stats.docs_written.should == 304
       end
     end
   end
@@ -83,9 +83,9 @@ describe LinkedData::DataSource do
     it "should return accurate counts for RawRecord and each DataSource" do
       LinkedData::DataSource.all.length.should == 2
       LinkedData::RawRecord.all.length.should == 339
-      @csv_ds.raw_record_count.should == 304
+      @csv_ds.raw_doc_count.should == 304
       @csv_ds.last_extract.length.should == 304
-      @shp_ds.raw_record_count.should == 35
+      @shp_ds.raw_doc_count.should == 35
     end
 
   end

@@ -148,6 +148,7 @@ describe LinkedData::Topic do
         %W[animal vegetable mineral person place thing].each {|i| docs << @topic.new_instance_doc(:classification => i)}
         @res = @topic.load_instance_docs(docs)
         @res.should == 6
+        @topic.docs_read.should == @topic.docs_written
       end
     end
     

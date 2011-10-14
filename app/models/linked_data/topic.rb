@@ -1,6 +1,7 @@
 class LinkedData::Topic < CouchRest::Model::Base
   
   attr_reader :instance_database, :instance_properties, :instance_types
+  attr_accessor :docs_read, :docs_written
 
   use_database VOCABULARIES_DATABASE
   unique_id :identifier
@@ -32,6 +33,12 @@ class LinkedData::Topic < CouchRest::Model::Base
   design do
     view :by_term
     view :by_label
+  end
+  
+  def initialize(*args)
+    super(*args)
+    @rows_written = 0
+    @rows_read = 0             
   end
   
   def instance_database
@@ -66,7 +73,6 @@ class LinkedData::Topic < CouchRest::Model::Base
   end
    
   def load_instance_docs(docs=[])
-    docs_saved = 0
     ts = Time.now.utc
     time_stamp = {:created_at => ts, :updated_at => ts}
 
@@ -76,12 +82,14 @@ class LinkedData::Topic < CouchRest::Model::Base
 
     docs.each do |doc| 
       pub_doc = new_instance_doc(doc.to_hash.delete_if {|k, v| rp.include? k}.merge(time_stamp)) 
+      self.docs_read += 1
+
       pub_doc.save(true)
-      docs_saved += 1
-      db.bulk_save if docs_saved%500 == 0              
+      self.docs_written += 1
+      db.bulk_save if @docs_written%500 == 0              
     end
     db.bulk_save
-    docs_saved
+    docs_written
   end
   
   def add_instance_view(*keys)
@@ -111,6 +119,14 @@ class LinkedData::Topic < CouchRest::Model::Base
     instance_database.bulk_delete
 
     destroy_count
+  end
+  
+  def docs_read
+    @docs_read ||= 0
+  end
+  
+  def docs_written
+    @docs_written ||= 0
   end
   
   # Delete all data instance docs and design doc
@@ -157,7 +173,7 @@ class LinkedData::Topic < CouchRest::Model::Base
     end
     klass
   end
-  
+    
 private
   # Instantiate a CouchDB Design Document for this Topic's data
   def create_instance_design_doc

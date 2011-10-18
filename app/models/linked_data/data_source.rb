@@ -12,9 +12,16 @@ class LinkedData::DataSource < CouchRest::Model::Base
   property :term, String
   property :identifier, String
   property :label, String
-  property :authority, String
   property :properties, [LinkedData::Property]
 
+  # property :transform_model do
+  #   property :exe_order, Float
+  #   property :source_property_term, String
+  #   property :destination_topic_id, String
+  #   property :destination_topic_property_term, String
+  #   property :method, String
+  #   property :parameters, String
+  # end
   
   property :extract_sets do
     property :serial_number, String
@@ -25,7 +32,6 @@ class LinkedData::DataSource < CouchRest::Model::Base
   timestamps!
 
   validates_presence_of :term
-  validates_presence_of :authority
   
   ## Callbacks
   before_create :generate_identifier
@@ -111,7 +117,6 @@ private
   def generate_identifier
     self.label ||= self.term
     self['identifier'] = self.class.to_s.split("::").last.downcase + '_' +
-                         self.authority + '_' + 
                          escape_string(self.term.downcase) if new?
   end
 

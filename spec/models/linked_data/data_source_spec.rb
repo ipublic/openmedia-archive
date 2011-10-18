@@ -6,7 +6,7 @@ describe LinkedData::DataSource do
     @ns = LinkedData::Namespace.new("http://dcgov.civicopenmedia.us")
     @ds_term = "reported_crimes"
     @ds = LinkedData::DataSource.new(:authority => @ns.authority, :term => @ds_term)
-    @ds_id = "datasource_civicopenmedia_us_dcgov_reported_crimes"
+    @ds_id = "datasource_reported_crimes"
 
     # STAGING_DATABASE.recreate! rescue nil
     @csv_filename = File.join(FIXTURE_PATH, 'crime_incidents_current.csv')

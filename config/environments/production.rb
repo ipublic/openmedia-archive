@@ -51,4 +51,16 @@ Openmedia::Application.configure do
   
   # gmaps4rails, or run ‘rails generate gmaps4rails:install’ to copy the JS and CSS assets to /public 
   config.serve_static_assets = true
+  
+  ### Rails 3.1
+    # Compress JavaScripts and CSS
+    config.assets.compress = true
+    
+    # Don't falback to assets pipeline if a precompiled asset is missed
+    config.assets.compile = false
+
+    # Generate digests for assets URLs
+    config.assets.digest = true
+  ###
+  
 end

@@ -38,4 +38,14 @@ Openmedia::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+  
+  ### Rails 3.1
+    # Configure static asset server for tests with Cache-Control for performanace
+    config.serve_static_assets = true
+    config.static_cache_control = "public, max-age=3600"
+
+    # Allow pass debug_assets=true as a quirey parameter to load pages with unpack
+    config.assets.allow_debugging = true
+  ###
+  
 end

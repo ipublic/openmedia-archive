@@ -1,8 +1,10 @@
 source 'http://rubygems.org'
 
-gem 'rails' #, '3.0.5'
+gem 'rails', '3.1.1'
 gem 'couchrest_model'
-gem 'devise', '1.1.9'
+# gem 'devise', '1.1.9'
+# gem 'devise_couch'
+gem 'devise'
 gem 'devise_couch'
 gem 'dynamic_form'
 gem 'fastercsv'
@@ -13,6 +15,19 @@ gem 'rdf-couchdb', :git => 'git://github.com/ipublic/rdf-couchdb.git'
 gem 'gmaps4rails'
 gem 'multi_json'
 gem 'yajl-ruby'
+
+# ETL support
+gem 'spreadsheet'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+	gem 'sass-rails', " ~> 3.1.0"
+	gem 'coffee-rails', " ~> 3.1.0"
+	gem 'uglifier'
+end
+
+gem 'jquery-rails'
 
 group :test, :development do
   gem "rspec-rails", "2.6.1"

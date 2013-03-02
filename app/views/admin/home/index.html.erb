@@ -32,9 +32,9 @@
 				</thead>
 				<% @collections.each do |c| %>
 				<tr>
-				  <td><%= link_to c.label, admin_schema_collection_path(rdf_id(c)) %></td>
+				  <td><%= link_to c.label, admin_schema_collection_path(c["_id"]) %></td>
 				  <% if current_site %>
-				  <td><%= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
+				  <td><%#= c.members.select{|c| c.parent.parent==current_site.skos_collection.uri.parent }.size %></td>
 				  <% else %>
 				  <td><%= c.members.size %></td>
 				  <% end %>

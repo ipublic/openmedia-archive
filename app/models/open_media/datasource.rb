@@ -1,5 +1,5 @@
-require 'etl'
-require 'md5'
+# require 'etl'
+require 'digest/md5'
 
 class OpenMedia::Datasource < CouchRest::Model::Base
 

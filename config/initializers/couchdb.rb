@@ -21,7 +21,6 @@ begin
     "#{CGI.escape(username)}:#{CGI.escape(password)}@#{host}"
 
 rescue
-
   raise "There was a problem with your config/couchdb.yml file. Check and make sure it's present and the syntax is correct."
 
 else
@@ -34,10 +33,10 @@ else
 
   COUCHDB_SERVER = CouchRest.new COUCHDB_CONFIG[:host_path]
 
-  SITE_DATABASE = COUCHDB_SERVER.database!("site#{db_suffix}")
-  STAGING_DATABASE = COUCHDB_SERVER.database!("staging#{db_suffix}")
-  VOCABULARIES_DATABASE = COUCHDB_SERVER.database!("vocabularies#{db_suffix}")
-  COMMONS_DATABASE = COUCHDB_SERVER.database!("commons#{db_suffix}")    
+  SITE_DATABASE = COUCHDB_SERVER.database!([db_prefix, "site", db_suffix].join("_"))
+  STAGING_DATABASE = COUCHDB_SERVER.database!([db_prefix, "staging", db_suffix].join("_"))
+  VOCABULARIES_DATABASE = COUCHDB_SERVER.database!([db_prefix, "vocabularies", db_suffix].join("_"))
+  COMMONS_DATABASE = COUCHDB_SERVER.database!([db_prefix, "vocabularies", db_suffix].join("_"))
 end
 
 # Set CouchRest Model property term to "model"

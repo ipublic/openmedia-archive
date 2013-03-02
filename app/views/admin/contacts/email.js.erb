@@ -1,0 +1,18 @@
+$('a.add-contact-email').live('click',
+	function() {
+	    var link = this;
+	    $.get('/admin/contacts/new_email',
+	    function(html) {
+	        $(html).insertBefore(link);
+	        $('a.add-element').button({icons: {primary: "ui-icon-circle-plus"}});
+	        $('a.delete-element').button({icons: {primary: "ui-icon-circle-close"}, text: false
+	        });
+	    });
+	    return false;
+	});
+
+$('a.delete-contact-email').live('click',
+	function() {
+	    $(this).closest('ol').remove();
+	    return false;
+	});

@@ -13,6 +13,8 @@ class Admin::Schema::CollectionsController < Admin::BaseController
   end
 
   def show
+    @collection = ::OmLinkedData::Collection.get(params[:id])
+    
     @collection = OpenMedia::Schema::SKOS::Collection.for(params[:id])
     @classes = @collection.concepts.collect {|c| c.rdfs_class}.select{|c| current_site.skos_collection.uri.parent==c.uri.parent.parent}
   end

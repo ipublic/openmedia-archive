@@ -1,12 +1,12 @@
 class LinkedData::Metadata < Hash
-  include CouchRest::Model::CastedModel
+  include CouchRest::Model::Embeddable
   
-  property :creator   # =>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(creator_uri)
-  property :publisher # =>OpenMedia::Schema::OWL::Class::HttpDataCivicopenmediaOrgCoreVcardVcard.for(publisher_uri)
+  # property :creator
+  # property :publisher 
+  # property :title 
   property :language, :default => 'en-US'
-  property :conforms_to # =>rdfs_class
-  property :title       # =>rdfs_class.label
-  property :description # =>rdfs_class.comment
+  property :conforms_to 
+  property :description
   property :resourcetype, :default => "RDF::DCTYPE.Dataset"
 
 end

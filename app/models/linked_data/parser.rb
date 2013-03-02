@@ -1,5 +1,12 @@
 # Parent class for source data parsers
 class LinkedData::Parser
+  include Enumerable
+  
+  class << self
+    def class_for_name(name)
+      LinkedData::Parser.const_get("#{name.to_s.camelize}Parser")
+    end
+  end
   
   INTEGER_REGEX = /^[-+]?\d+([,]\d+)*$/
   FLOAT_REGEX = /[-+]?[0-9]*\.[0-9]+/

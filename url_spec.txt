@@ -1,0 +1,96 @@
+OpenMedia Route Requirements
+Admin site - authenticated access
+Public data site - open access (later optional authenticated access for throttling)
+Data URIs - must be the same unique value for any one record regardless of access point (local, cloud)
+Respect delimiter limitations of CouchDB and CouchModel
+
+"http://"
+"dcgov/om/"
+"concepts/public_safety"
+
+"http://dcgov/om/concepts/public_safety"
+
+
+"http://data.civicopenmedia.org/"
+"dcgov/"
+"concepts/public_safety"
+
+# Objective: specify a simple, unique identifier scheme for data that enables resource retrieval using HTTP protocol from OM cloud and local hosted sites 
+
+Dereferenceable URI 
+
+Two parts. Part A is opaque to URI processing and refers to the Web address of the resource.  Part A is handled by DNS and Web servers (including rewrite rules).  
+
+Part B starts with a unique namespace, typically derived from organization Web domain name (e.g.; 'dc.gov' -> 'dcgov') with delimiting period characters removed.  
+
+# current scheme (deprecated)
+"http://data.civicopenmedia.org/" + "ipubliccivicopenmedialocal/concepts/public_safety"
+"http://ipublic.civicopenmedia.org/" + "ipubliccivicopenmedialocal/concepts/public_safety"
+
+# potential delimiters (from rfc3986): ":", "/", "?", "[", "]", "@"
+
+# access data from OM cloud
+# Part A + Part B
+"http://data.civicopenmedia.org/" + "dcgov/concepts/public_safety"
+"http://dcgov.civicopenmedia.org/" + "dcgov/concepts/public_safety"
+
+# access data from local site
+"http://data.dc.gov/" + "dcgov/concepts/public_safety"
+"http://dc.gov/" + "dcgov/concepts/public_safety"
+
+
+
+Current 
+Web_server + CouchDB
+"http://dcgov.civicopenmedia.org/"
+"http://dcgov.civicopenmedia.org/" + "admins"
+"http://dcgov.civicopenmedia.org/" + "dcgovcivicopenmedialocal/concepts/public_safety"
+
+Commons
+"http://data.civicopenmedia.org/ipubliccivicopenmedialocal/concepts/public_safety"
+
+"http://data.civicopenmedia.org/ipublic/concepts/public_safety"
+"http://data.ipublic.com/civicopenmedia/concepts/public_safety"
+
+Cloud-hosted site URLs
+
+Web_server + CouchDB
+"http://civicopenmedia.org/" + "dcgov"
+"http://civicopenmedia.org/" + "dcgov/admin"
+
+"http://data.civicopenmedia.org/" + "concepts/public_safety"
+
+
+Local-hosted site URLs
+Replication add the site prefix to destination.  Make replication pull from OM site so we can manage.  Site setup will do push first with useful data and pull to verify proper firewall config.
+
+"http://dc.gov/" + "dcgov"
+"http://dc.gov/" + "dcgov/admin"
+
+"http://data.dc.gov/" + "concepts/public_safety"
+
+
+civicopenmedialocal/concepts/public_safety"
+
+
+
+
+
+Data URIs
+"http://data.civicopenmedia.org/ipubliccivicopenmedialocal/concepts/public_safety"
+
+"http://civicopenmedia.org/ dcgov/concepts/public_safety"
+
+
+Commons
+
+OM Data
+
+Site data
+
+
+"http://data.civicopenmedia.org/  ipublic/concepts/public_safety"
+
+"http://data.civicopenmedia.org/  ipublic/concepts/public_safety"
+
+"http://data.ipublic.com/  civicopenmedia/concepts/public_safety"

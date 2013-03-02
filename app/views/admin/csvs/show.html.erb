@@ -1,0 +1,12 @@
+<table class="import_table">
+	<% 0.upto(@row_index_max) do |row_index| %>
+		<% row = @import_cells.select { |cell| cell.row_index == row_index } %>
+		<tr>
+			<% 0.upto(@column_index.max) do |column_index| %>
+				<td>
+					<%= row.select { |cell| cell.column_index == column_index }[0].contents %>
+				</td>
+			<% end %>
+		</tr>
+	<% end %>
+</table>

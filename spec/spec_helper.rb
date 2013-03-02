@@ -32,7 +32,7 @@ RSpec.configure do |config|
   end
 
   config.after(:all) do
-    [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, DB].each { |db| db.delete! rescue nil }
+    [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, COMMONS_DATABASE, DB].each { |db| db.delete! rescue nil }
     # cr = TEST_SERVER
     # test_dbs = cr.databases.select { |db| db =~ /^#{TESTDB}/ }
     # test_dbs.each do |db|
@@ -56,7 +56,7 @@ end
 # end
 
 def reset_test_db!
-  [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, DB].each { |db| db.recreate! rescue nil }
+  [SITE_DATABASE, STAGING_DATABASE, VOCABULARIES_DATABASE, COMMONS_DATABASE, DB].each { |db| db.recreate! rescue nil }
   # OpenMedia::Site.instance_variable_set(:@instance, nil)
 end
 

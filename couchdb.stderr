@@ -1,0 +1,75 @@
+
+heart_beat_kill_pid = 9512
+heart_beat_timeout = 11
+heart: Thu Mar 31 15:33:00 2011: Erlang has closed.
+heart: Thu Mar 31 15:33:00 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 9733
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 1132
+heart_beat_timeout = 11
+heart: Wed Apr  6 23:52:10 2011: heart-beat time-out.
+heart: Thu Apr  7 07:58:18 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 553
+heart_beat_timeout = 11
+heart: Wed Apr 13 07:36:42 2011: heart-beat time-out.
+heart: Wed Apr 13 08:25:30 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 2090
+heart_beat_timeout = 11
+heart: Thu Apr 14 15:57:32 2011: heart-beat time-out.
+heart: Thu Apr 14 15:57:35 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 10992
+heart_beat_timeout = 11
+heart: Mon May  2 07:03:00 2011: heart-beat time-out.
+heart: Mon May  2 07:35:06 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 1301
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 815
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 1478
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 573
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 766
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 3279
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 28129
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 629
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 568
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 3347
+heart_beat_timeout = 11
+heart: Tue May 17 13:52:39 2011: Erlang has closed.
+/usr/local/bin/couchdb: line 288: echo: write error: Broken pipe
+heart: Tue May 17 13:52:39 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 6120
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 648
+heart_beat_timeout = 11
+heart: Thu May 19 00:47:27 2011: heart-beat time-out.
+heart: Thu May 19 07:42:56 2011: Executed "/usr/local/bin/couchdb -k". Terminating.
+
+heart_beat_kill_pid = 3952
+heart_beat_timeout = 11
+
+heart_beat_kill_pid = 595
+heart_beat_timeout = 11

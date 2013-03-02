@@ -12,6 +12,9 @@ class LinkedData::CsvParser < LinkedData::Parser
   # * <tt>:header_row</tt>: Boolean field that indicates first row in file contains property names (default: false)
   # * <tt>:header_converters</tt>: Transform header property names into symbols, replacing whitespace with underscore ('_'), etc. Use csv library settings here.  (default: "symbol").  
   def initialize(source_file_name, options={})
+    super
+    # configure
+    
     raise "Source file not found" unless File.exists?(source_file_name)
     @source_file_name = source_file_name
     @column_count = 0
@@ -27,6 +30,12 @@ class LinkedData::CsvParser < LinkedData::Parser
     @header_row ||= false 
     @header_converters ||= "symbol"
     @converters ||= "all"
+  end
+  
+  def each
+    Dir.glob(file).each do |file|
+      
+    end
   end
   
   def header_row?
@@ -53,6 +62,12 @@ class LinkedData::CsvParser < LinkedData::Parser
     @properties
   end
   
+  def fields
+    File.open(@source_file_name) do |input|
+      fields = CSV.parse(input.readline).first
+    end
+  end
+  
 private  
   def load_records
     @properties ||= properties
@@ -72,8 +87,6 @@ private
     @records
   end
 
-private
-
   def top_rows
     CSV.open(@source_file_name, {:col_sep => @delimiter}) do |csvf|
       @first_row = csvf.readline
@@ -88,8 +101,31 @@ private
     property_list = []
     1.upto(@column_count) {|i| property_list << "Col_%03i"%i }
     property_list
+  end  
+
+  def configure
+    source.definition.each do |options|
+      case options
+      when Symbol
+        fields << Field.new(options)
+      when Hash
+        fields << Field.new(options[:name])
+      else
+        raise DefinitionError, "Each field definition must either be a symbol or a hash"
+      end
+    end
   end
 
+  
+  def validate_row(row, line, file)
+    ETL::Engine.logger.debug "validating line #{line} in file #{file}"
+    if row.length != fields.length
+      raise_with_info( MismatchError, 
+        "The number of columns from the source (#{row.length}) does not match the number of columns in the definition (#{fields.length})", 
+        line, file
+      )
+    end
+  end
   
   
 end

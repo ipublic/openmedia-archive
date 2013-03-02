@@ -1,7 +1,9 @@
 .bundle
+Gemfile.lock
 db/*.sqlite3
 log/*.log
 tmp/**/*
+config/deploy.rb
 .rvmrc
 .DS_Store
-config/deploy.rb
+.sass-cache/

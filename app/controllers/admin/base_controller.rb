@@ -6,8 +6,8 @@ private
   def check_for_subdomain
     if request.subdomains.size == 0
       redirect_to root_path
-    elsif current_admin && (current_admin.site.identifier != request.subdomains.first)
-      redirect_to "#{current_admin.site.url}/admin"
+    elsif current_user && (current_user.site.identifier != request.subdomains.first)
+      redirect_to "#{current_user.site.url}/admin"
     end
   end
   
